@@ -2,7 +2,7 @@ import React from "react";
 import { useStateValue } from '../state.js';
 import { apiInstanceAction } from "../api.js";
 
-function ObjInstanceActionsSection(props) {
+function ObjInstanceResourceActionsSection(props) {
 	if (props.section == "divider") {
 		return (
 			<div className="dropdown-divider"></div>
@@ -11,18 +11,18 @@ function ObjInstanceActionsSection(props) {
 	return (
 		<div className={props.section["class"]}>
 			{props.section.actions.map((action, i) => (
-				<ObjInstanceAction node={props.node} path={props.path} action={action} />
+				<ObjInstanceResourceAction rid={props.rid} node={props.node} path={props.path} action={action} />
 			))}
 		</div>
 	)
 }
 
-function ObjInstanceAction(props) {
+function ObjInstanceResourceAction(props) {
 	const [{}, dispatch] = useStateValue();
 	function handleClick(e) {
 		e.stopPropagation()
 		var action = e.target.getAttribute("value")
-		apiInstanceAction(props.node, props.path, action, {}, (data) => dispatch({type: "parseApiResponse", data: data}))
+		apiInstanceAction(props.node, props.path, action, {"rid": props.rid}, (data) => dispatch({type: "parseApiResponse", data: data}))
 	}
 	if (props.action.disable) {
 		return (
@@ -35,9 +35,9 @@ function ObjInstanceAction(props) {
 	}
 }
 
-function ObjInstanceActions(props) {
+function ObjInstanceResourceActions(props) {
 	const [{cstat}, dispatch] = useStateValue();
-	const idata = cstat.monitor.nodes[props.node].services.status[props.path]
+	const rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources[props.rid]
 	var actions = [
 		{
 			"section": "safe",
@@ -49,23 +49,9 @@ function ObjInstanceActions(props) {
 					"disable": disable_start()
 				},
 				{
-					"value": "freeze",
-					"text": "Freeze",
-					"disable": disable_freeze()
-				},
-				{
-					"value": "thaw",
-					"text": "Thaw",
-					"disable": disable_thaw()
-				},
-				{
 					"value": "enable",
 					"text": "Enable",
-					"disable": disable_thaw()
-				},
-				{
-					"value": "status",
-					"text": "Refresh",
+					"disable": disable_enable()
 				}
 			]
 		},
@@ -97,10 +83,6 @@ function ObjInstanceActions(props) {
 			"class": "border-left-4 border-danger",
 			"actions": [
 				{
-					"value": "purge",
-					"text": "Purge",
-				},
-				{
 					"value": "delete",
 					"text": "Delete",
 				},
@@ -114,52 +96,49 @@ function ObjInstanceActions(props) {
 	]
 
 	function disable_enable() {
-		if (idata.disable) {
+		if (rdata.disable) {
 			return false
 		}
 		return true
 	}
 	function disable_disable() {
-		if (idata.disable) {
+		if (rdata.disable) {
 			return true
 		}
 		return false
-	}
-	function disable_freeze() {
-		if (idata.frozen) {
-			return true
-		}
-		return false
-	}
-	function disable_thaw() {
-		if (idata.frozen) {
-			return false
-		}
-		return true
 	}
 	function disable_start() {
-		if (idata.avail == "up") {
+		if (rdata.status == "n/a") {
+			return true
+		}
+		if (rdata.status == "up") {
 			return true
 		}
 		return false
 	}
 	function disable_stop() {
-		if (idata.avail == "down") {
+		if (rdata.status == "n/a") {
+			return true
+		}
+		if (rdata.status == "stdby down") {
+			return true
+		}
+		if (rdata.status == "down") {
 			return true
 		}
 		return false
 	}
 	function disable_provision() {
-		if (idata.provisioned) {
+		if (rdata.provisioned && rdata.provisioned.state) {
 			return true
 		}
 		return false
 	}
 	function disable_unprovision() {
-		if (!idata.provisioned) {
-			return true
+		if (rdata.provisioned && rdata.provisioned.state) {
+			return false
 		}
-		return false
+		return true
 	}
 
 	return (
@@ -167,7 +146,7 @@ function ObjInstanceActions(props) {
 			<button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{props.text}</button>
 			<div className="dropdown-menu">
 				{actions.map((section, i) => (
-					<ObjInstanceActionsSection key={i} node={props.node} path={props.path} section={section} />
+					<ObjInstanceResourceActionsSection key={i} rid={props.rid} node={props.node} path={props.path} section={section} />
 				))}
 			</div>
 		</div>
@@ -175,5 +154,5 @@ function ObjInstanceActions(props) {
 }
 
 export {
-	ObjInstanceActions
+	ObjInstanceResourceActions
 }

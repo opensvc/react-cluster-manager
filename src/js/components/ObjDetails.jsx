@@ -3,15 +3,10 @@ import { useStateValue } from '../state.js';
 import { apiObjGetConfig } from "../api.js";
 import { splitPath } from "../utils.js";
 import { ObjAvail } from "./ObjAvail.jsx";
-import { ObjOverall } from "./ObjOverall.jsx";
-import { ObjFrozen } from "./ObjFrozen.jsx";
-import { ObjProvisioned } from "./ObjProvisioned.jsx";
 import { ObjActions } from "./ObjActions.jsx";
-import { ObjState } from "./ObjState.jsx";
+import { ObjDigest } from "./ObjDigest.jsx";
+import { ObjInstanceState } from "./ObjInstanceState.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
-import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
-import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
-import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
 
 function ObjDetails(props) {
 	//
@@ -32,36 +27,9 @@ function ObjDetails(props) {
 					/>
 				</div>
 			</div>
-			<ObjStates path={props.path} />
+			<ObjDigest path={props.path} />
 			<ObjInstances path={props.path} />
 			<ObjConfig path={props.path} />
-		</div>
-	)
-}
-
-function ObjStates(props) {
-	const [{ cstat }, dispatch] = useStateValue();
-	const sp = splitPath(props.path)
-	return (
-		<div className="table-responsive">
-			<table className="table table-hover">
-				<thead>
-				</thead>
-				<tbody>
-					<tr>
-						<td className="text-secondary">Availability</td>
-						<td><ObjAvail avail={cstat.monitor.services[props.path].avail} /></td>
-					</tr>
-					<tr>
-						<td className="text-secondary">State</td>
-						<td><ObjState path={props.path} /></td>
-					</tr>
-					<tr>
-						<td className="text-secondary">Instances</td>
-						<td><ObjInstanceCounts path={props.path} /></td>
-					</tr>
-				</tbody>
-			</table>
 		</div>
 	)
 }
@@ -140,33 +108,20 @@ function InstanceLine(props) {
 	if (!cstat.monitor.nodes[props.node].services.status[props.path]) {
 		return null
 	}
-	return (
-		<tr>
-			<td>{props.node}</td>
-			<td><ObjAvail avail={cstat.monitor.nodes[props.node].services.status[props.path].avail} /></td>
-			<td><InstanceState node={props.node} path={props.path} /></td>
-			<td className="text-right"><ObjInstanceActions node={props.node} path={props.path} /></td>
-		</tr>
-	)
-}
-
-function InstanceState(props) {
-	//
-	// props.path
-	// props.node
-	//
-	const [{ cstat }, dispatch] = useStateValue();
-	if (cstat.monitor === undefined) {
-		return null
+	function handleClick(e) {
+		dispatch({
+			type: "setNav",
+			page: "ObjectInstance",
+			links: ["Objects", props.path, props.node]
+		})
 	}
 	return (
-		<div>
-			<ObjOverall overall={cstat.monitor.nodes[props.node].services.status[props.path].overall} />
-			<ObjFrozen frozen={cstat.monitor.nodes[props.node].services.status[props.path].frozen} />
-			<ObjProvisioned provisioned={cstat.monitor.nodes[props.node].services.status[props.path].provisioned} />
-			<MonitorStatusBadge state={cstat.monitor.nodes[props.node].services.status[props.path].monitor.status} />
-			<MonitorTargetBadge target={cstat.monitor.nodes[props.node].services.status[props.path].monitor.global_expect} />
-		</div>
+		<tr onClick={handleClick}>
+			<td>{props.node}</td>
+			<td><ObjAvail avail={cstat.monitor.nodes[props.node].services.status[props.path].avail} /></td>
+			<td><ObjInstanceState node={props.node} path={props.path} /></td>
+			<td className="text-right"><ObjInstanceActions node={props.node} path={props.path} /></td>
+		</tr>
 	)
 }
 
