@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { useStateValue } from '../state.js';
-import { apiInstanceAction, apiObjGetConfig } from "../api.js";
+import { apiObjGetConfig } from "../api.js";
 import { splitPath } from "../utils.js";
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjOverall } from "./ObjOverall.jsx";
 import { ObjFrozen } from "./ObjFrozen.jsx";
 import { ObjProvisioned } from "./ObjProvisioned.jsx";
 import { ObjActions } from "./ObjActions.jsx";
+import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
 import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
 import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
 
@@ -110,7 +111,7 @@ function InstanceLine(props) {
 			<td>{props.node}</td>
 			<td><ObjAvail avail={cstat.monitor.nodes[props.node].services.status[props.path].avail} /></td>
 			<td><InstanceState node={props.node} path={props.path} /></td>
-			<td className="text-right"><InstanceActions node={props.node} path={props.path} /></td>
+			<td className="text-right"><ObjInstanceActions node={props.node} path={props.path} /></td>
 		</tr>
 	)
 }
@@ -132,31 +133,6 @@ function InstanceState(props) {
 			<ObjProvisioned provisioned={cstat.monitor.nodes[props.node].services.status[props.path].provisioned} />
 			<MonitorStatusBadge state={cstat.monitor.nodes[props.node].services.status[props.path].monitor.status} />
 			<MonitorTargetBadge target={cstat.monitor.nodes[props.node].services.status[props.path].monitor.global_expect} />
-		</div>
-	)
-}
-
-function InstanceActions(props) {
-	const [{}, dispatch] = useStateValue();
-	function handleClick(e) {
-		var action = e.target.getAttribute("value")
-		apiInstanceAction(props.node, props.path, action, {}, (data) => dispatch({type: "parseApiResponse", data: data}))
-	}
-	return (
-		<div className="dropdown">
-			<button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-			<div className="dropdown-menu">
-				<a className="dropdown-item" value="start" onClick={handleClick}>Start</a>
-				<a className="dropdown-item" value="freeze" onClick={handleClick}>Freeze</a>
-				<a className="dropdown-item" value="thaw" onClick={handleClick}>Thaw</a>
-				<div className="dropdown-divider"></div>
-				<a className="dropdown-item text-warning" value="provision" onClick={handleClick}>Provision</a>
-				<a className="dropdown-item text-warning" value="stop" onClick={handleClick}>Stop</a>
-				<div className="dropdown-divider"></div>
-				<a className="dropdown-item text-danger" value="delete" onClick={handleClick}>Delete</a>
-				<a className="dropdown-item text-danger" value="purge" onClick={handleClick}>Purge</a>
-				<a className="dropdown-item text-danger" value="unprovision" onClick={handleClick}>Unprovision</a>
-			</div>
 		</div>
 	)
 }
