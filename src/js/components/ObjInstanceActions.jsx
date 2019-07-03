@@ -2,26 +2,148 @@ import React, { Component } from "react";
 import { useStateValue } from '../state.js';
 import { apiInstanceAction } from "../api.js";
 
-function ObjInstanceActions(props) {
-	const [{cstat}, dispatch] = useStateValue();
+function ObjInstanceActionsSection(props) {
+	console.log(props)
+	if (props.section == "divider") {
+		return (
+			<div className="dropdown-divider"></div>
+		)
+	}
+	return (
+		<div className={props.section["class"]}>
+			{props.section.actions.map((action, i) => (
+				<ObjInstanceAction node={props.node} path={props.path} action={action} />
+			))}
+		</div>
+	)
+}
+
+function ObjInstanceAction(props) {
+	const [{}, dispatch] = useStateValue();
 	function handleClick(e) {
 		var action = e.target.getAttribute("value")
 		apiInstanceAction(props.node, props.path, action, {}, (data) => dispatch({type: "parseApiResponse", data: data}))
 	}
+	if (props.action.disable) {
+		return (
+			<a href="#dummy" className="dropdown-item disabled" value={props.action.value}>{props.action.text}</a>
+		)
+	} else {
+		return (
+			<a href="#dummy" className="dropdown-item" value={props.action.value} onClick={handleClick}>{props.action.text}</a>
+		)
+	}
+}
+
+function ObjInstanceActions(props) {
+	const [{cstat}, dispatch] = useStateValue();
+	const idata = cstat.monitor.nodes[props.node].services.status[props.path]
+	var actions = [
+		{
+			"section": "safe",
+			"class": "border-left-4 border-secondary",
+			"actions": [
+				{
+					"value": "start",
+					"text": "Start",
+					"disable": disable_start()
+				},
+				{
+					"value": "freeze",
+					"text": "Freeze",
+					"disable": disable_freeze()
+				},
+				{
+					"value": "thaw",
+					"text": "Thaw",
+					"disable": disable_thaw()
+				}
+			]
+		},
+		"divider",
+		{
+			"section": "impacting",
+			"class": "border-left-4 border-warning",
+			"actions": [
+				{
+					"value": "stop",
+					"text": "Stop",
+					"disable": disable_stop()
+				},
+				{
+					"value": "provision",
+					"text": "Provision",
+					"disable": disable_provision()
+				}
+			]
+		},
+		"divider",
+		{
+			"section": "dangerous",
+			"class": "border-left-4 border-danger",
+			"actions": [
+				{
+					"value": "purge",
+					"text": "Purge",
+				},
+				{
+					"value": "delete",
+					"text": "Delete",
+				},
+				{
+					"value": "unprovision",
+					"text": "Unprovision",
+					"disable": disable_unprovision()
+				}
+			]
+		},
+	]
+
+	function disable_freeze() {
+		if (idata.frozen) {
+			return true
+		}
+		return false
+	}
+	function disable_thaw() {
+		if (idata.frozen) {
+			return false
+		}
+		return true
+	}
+	function disable_start() {
+		if (idata.avail == "up") {
+			return true
+		}
+		return false
+	}
+	function disable_stop() {
+		if (idata.avail == "down") {
+			return true
+		}
+		return false
+	}
+	function disable_provision() {
+		if (idata.provisioned) {
+			return true
+		}
+		return false
+	}
+	function disable_unprovision() {
+		if (!idata.provisioned) {
+			return true
+		}
+		return false
+	}
+	console.log(actions)
+
 	return (
-		<div className="dropdown">
+		<div className="dropdown position-static">
 			<button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
 			<div className="dropdown-menu">
-				<a className="dropdown-item" value="start" onClick={handleClick}>Start</a>
-				<a className="dropdown-item" value="freeze" onClick={handleClick}>Freeze</a>
-				<a className="dropdown-item" value="thaw" onClick={handleClick}>Thaw</a>
-				<div className="dropdown-divider"></div>
-				<a className="dropdown-item text-warning" value="provision" onClick={handleClick}>Provision</a>
-				<a className="dropdown-item text-warning" value="stop" onClick={handleClick}>Stop</a>
-				<div className="dropdown-divider"></div>
-				<a className="dropdown-item text-danger" value="delete" onClick={handleClick}>Delete</a>
-				<a className="dropdown-item text-danger" value="purge" onClick={handleClick}>Purge</a>
-				<a className="dropdown-item text-danger" value="unprovision" onClick={handleClick}>Unprovision</a>
+				{actions.map((section, i) => (
+					<ObjInstanceActionsSection key={i} node={props.node} path={props.path} section={section} />
+				))}
 			</div>
 		</div>
 	)
