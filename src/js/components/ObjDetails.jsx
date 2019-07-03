@@ -7,7 +7,9 @@ import { ObjOverall } from "./ObjOverall.jsx";
 import { ObjFrozen } from "./ObjFrozen.jsx";
 import { ObjProvisioned } from "./ObjProvisioned.jsx";
 import { ObjActions } from "./ObjActions.jsx";
+import { ObjState } from "./ObjState.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
+import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
 import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
 import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
 
@@ -30,8 +32,36 @@ function ObjDetails(props) {
 					/>
 				</div>
 			</div>
+			<ObjStates path={props.path} />
 			<ObjInstances path={props.path} />
 			<ObjConfig path={props.path} />
+		</div>
+	)
+}
+
+function ObjStates(props) {
+	const [{ cstat }, dispatch] = useStateValue();
+	const sp = splitPath(props.path)
+	return (
+		<div className="table-responsive">
+			<table className="table table-hover">
+				<thead>
+				</thead>
+				<tbody>
+					<tr>
+						<td className="text-secondary">Availability</td>
+						<td><ObjAvail avail={cstat.monitor.services[props.path].avail} /></td>
+					</tr>
+					<tr>
+						<td className="text-secondary">State</td>
+						<td><ObjState path={props.path} /></td>
+					</tr>
+					<tr>
+						<td className="text-secondary">Instances</td>
+						<td><ObjInstanceCounts path={props.path} /></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	)
 }
@@ -133,7 +163,6 @@ function InstanceState(props) {
 		<div>
 			<ObjOverall overall={cstat.monitor.nodes[props.node].services.status[props.path].overall} />
 			<ObjFrozen frozen={cstat.monitor.nodes[props.node].services.status[props.path].frozen} />
-			<ObjProvisioned provisioned={cstat.monitor.nodes[props.node].services.status[props.path].provisioned} />
 			<ObjProvisioned provisioned={cstat.monitor.nodes[props.node].services.status[props.path].provisioned} />
 			<MonitorStatusBadge state={cstat.monitor.nodes[props.node].services.status[props.path].monitor.status} />
 			<MonitorTargetBadge target={cstat.monitor.nodes[props.node].services.status[props.path].monitor.global_expect} />

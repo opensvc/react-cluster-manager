@@ -27,7 +27,6 @@ function NodeState(props) {
 			<NodeSpeakerBadge speaker={props.data.speaker} />
 			<MonitorStatusBadge state={props.data.monitor.status} />
 			<MonitorTargetBadge target={props.data.monitor.global_expect} />
-			<NodeCpuSparkline />
 		</div>
 	)
 }
