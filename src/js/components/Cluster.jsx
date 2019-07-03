@@ -1,6 +1,7 @@
 import React from "react";
 import { useStateValue } from '../state.js';
-import { compatIssue, versionIssue, threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue } from "../issues.js";
+import { state } from '../utils.js';
+import { threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue } from "../issues.js";
 import { ClusterTools } from "./ClusterTools.jsx";
 import { Threads } from "./Threads.jsx";
 import { HeartbeatsDetails } from "./HeartbeatsDetails.jsx";
@@ -13,7 +14,7 @@ function ThreadsLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	var cl = "text-" + threadsIssue(cstat).color
 	return (
-		<a className={cl} href="#threads">Threads</a>
+		<a className={cl} href="#threads" onClick={() => dispatch({type: "setNav", page: "Threads", links: ["Threads"]})}>Threads</a>
 	)
 }
 
@@ -21,14 +22,15 @@ function NodesLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	var cl = "text-" + nodesIssue(cstat).color
 	return (
-		<a className={cl} href="#nodes">Nodes</a>
+		<a className={cl} href="#nodes" onClick={() => dispatch({type: "setNav", page: "Nodes", links: ["Nodes"]})}>Nodes</a>
 	)
 }
 
 function ObjectsLink(props) {
+	const [{ cstat }, dispatch] = useStateValue();
 	var cl = "text-secondary"
 	return (
-		<a className={cl} href="#objects">Objects</a>
+		<a className={cl} href="#objects" onClick={() => dispatch({type: "setNav", page: "Objects", links: ["Objects"]})}>Objects</a>
 	)
 }
 
@@ -36,7 +38,7 @@ function ArbitratorsLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	var cl = "text-" + arbitratorsIssue(cstat).color
 	return (
-		<a className={cl} href="#arbitrators">Arbitrators</a>
+		<a className={cl} href="#arbitrators" onClick={() => dispatch({type: "setNav", page: "Arbitrators", links: ["Arbitrators"]})}>Arbitrators</a>
 	)
 }
 
@@ -44,7 +46,7 @@ function HeartbeatsLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	var cl = "text-" + heartbeatsIssue(cstat).color
 	return (
-		<a className={cl} href="#heartbeats">Heartbeats</a>
+		<a className={cl} href="#heartbeats" onClick={() => dispatch({type: "setNav", page: "Heartbeats", links: ["Heartbeats"]})}>Heartbeats</a>
 	)
 }
 
@@ -75,14 +77,35 @@ function Cluster(props) {
 	if (!cstat.cluster) {
 		return null
 	}
+	var threads, heartbeats, arbitrators, nodes
+	if (threadsIssue(cstat) != state.OPTIMAL) {
+		var threads = (
+			<Threads />
+		)
+	}
+	if (heartbeatsIssue(cstat) != state.OPTIMAL) {
+		var heartbeats = (
+			<HeartbeatsDetails />
+		)
+	}
+	if (arbitratorsIssue(cstat) != state.OPTIMAL) {
+		var arbitrators = (
+			<ArbitratorsDetails />
+		)
+	}
+	if (nodesIssue(cstat) != state.OPTIMAL) {
+		var nodes = (
+			<Nodes />
+		)
+	}
 	return (
 		<div>
 			<SubsysLinks />
 			<ClusterTools />
-			<Threads />
-			<HeartbeatsDetails />
-			<ArbitratorsDetails />
-			<Nodes />
+			{threads}
+			{heartbeats}
+			{arbitrators}
+			{nodes}
 			<Objs />
 		</div>
 	)
