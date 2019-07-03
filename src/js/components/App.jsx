@@ -64,6 +64,9 @@ const App = () => {
 				};
 
 			case 'loadCstat':
+				if (document.title != action.data.cluster.name) {
+					document.title = action.data.cluster.name
+				}
 				return {
 					...state,
 					cstat: action.data
