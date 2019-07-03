@@ -240,7 +240,7 @@ function ObjActions(props) {
 
 	return (
 		<div className="dropdown position-static">
-			<button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={handleClick}></button>
+			<button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={handleClick}>{props.text}</button>
 			<div className="dropdown-menu">
 				{actions.map((section, i) => (
 					<ObjActionsSection key={i} node={props.node} path={props.path} section={section} />

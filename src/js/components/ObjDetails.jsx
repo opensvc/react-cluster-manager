@@ -18,14 +18,18 @@ function ObjDetails(props) {
 	const sp = splitPath(props.path)
 	return (
 		<div>
-			<div className="float-right ml-2">
-				<ObjActions
-					path={props.path}
-					splitpath={sp}
-					text="Object Actions"
-				/>
+			<div className="clearfix">
+				<div className="float-left">
+					<h2>{props.path}</h2>
+				</div>
+				<div className="float-right">
+					<ObjActions
+						path={props.path}
+						splitpath={sp}
+						text="Object Actions"
+					/>
+				</div>
 			</div>
-			<h2>{props.path}</h2>
 			<ObjInstances path={props.path} />
 			<ObjConfig path={props.path} />
 		</div>

@@ -7,6 +7,7 @@ import { ObjFrozen } from "./ObjFrozen.jsx";
 import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
 import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
 import { NodeActions } from "./NodeActions.jsx";
+import { ClusterActions } from "./ClusterActions.jsx";
 import { Sparklines, SparklinesLine, SparklinesReferenceLine, SparklinesNormalBand } from 'react-sparklines';
 
 function NodeCpuSparkline(props) {
@@ -82,7 +83,14 @@ function Nodes(props) {
 	}
 	return (
 		<div id="nodes">
-			<h2><a className="text-dark" href="#" onClick={handleTitleClick}>Nodes</a></h2>
+			<div className="clearfix">
+				<div className="float-left">
+					<h2><a className="text-dark" href="#" onClick={handleTitleClick}>Nodes</a></h2>
+				</div>
+				<div className="float-right">
+					<ClusterActions />
+				</div>
+			</div>
 			<div className="table-responsive">
 				<table className="table table-hover">
 					<thead>
