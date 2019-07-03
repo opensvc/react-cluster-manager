@@ -1,9 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import { useStateValue } from '../state.js';
 import { apiInstanceAction } from "../api.js";
 
 function ObjInstanceActionsSection(props) {
-	console.log(props)
 	if (props.section == "divider") {
 		return (
 			<div className="dropdown-divider"></div>
@@ -135,7 +134,6 @@ function ObjInstanceActions(props) {
 		}
 		return false
 	}
-	console.log(actions)
 
 	return (
 		<div className="dropdown position-static">
