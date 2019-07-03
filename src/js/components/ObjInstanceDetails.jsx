@@ -23,9 +23,10 @@ function ObjInstanceDetails(props) {
 	const sp = splitPath(props.path)
 	return (
 		<div>
+			<h2>{props.path} @ {props.node}</h2>
 			<div className="clearfix">
 				<div className="float-left">
-					<h2>{props.path}</h2>
+					<h3>Object</h3>
 				</div>
 				<div className="float-right">
 					<ObjActions
@@ -38,7 +39,7 @@ function ObjInstanceDetails(props) {
 			<ObjDigest path={props.path} />
 			<div className="clearfix">
 				<div className="float-left">
-					<h2>{props.path} @ {props.node}</h2>
+					<h3>Instance</h3>
 				</div>
 				<div className="float-right">
 					<ObjInstanceActions
