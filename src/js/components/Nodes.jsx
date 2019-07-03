@@ -6,39 +6,8 @@ import { compatIssue, versionIssue } from "../issues.js";
 import { ObjFrozen } from "./ObjFrozen.jsx";
 import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
 import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
-
+import { NodeActions } from "./NodeActions.jsx";
 import { Sparklines, SparklinesLine, SparklinesReferenceLine, SparklinesNormalBand } from 'react-sparklines';
-
-
-function NodeActions(props) {
-	const [{}, dispatch] = useStateValue();
-	function handleClick(e) {
-		var action = e.target.getAttribute("value")
-		apiNodeAction(props.node, action, {}, (data) => dispatch({type: "parseApiResponse", data: data}))
-	}
-	return (
-		<div className="dropdown">
-			<button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown"  data-boundary="window" aria-haspopup="true" aria-expanded="false"></button>
-			<div className="dropdown-menu">
-				<a className="dropdown-item" value="freeze" onClick={handleClick}>Freeze</a>
-				<a className="dropdown-item" value="thaw" onClick={handleClick}>Thaw</a>
-				<div className="dropdown-divider"></div>
-				<a className="dropdown-item" value="pushasset" onClick={handleClick}>Asset</a>
-				<a className="dropdown-item" value="checks" onClick={handleClick}>Checks</a>
-				<a className="dropdown-item" value="pushdisks" onClick={handleClick}>Disks</a>
-				<a className="dropdown-item" value="pushpatch" onClick={handleClick}>Patches</a>
-				<a className="dropdown-item" value="pushpkg" onClick={handleClick}>Packages</a>
-				<a className="dropdown-item" value="pushstats" onClick={handleClick}>Stats</a>
-				<a className="dropdown-item" value="sysreport" onClick={handleClick}>Sysreport</a>
-				<div className="dropdown-divider"></div>
-				<a className="dropdown-item text-warning" value="daemon_restart" onClick={handleClick}>Daemon Restart</a>
-				<div className="dropdown-divider"></div>
-				<a className="dropdown-item text-danger" value="reboot" onClick={handleClick}>Reboot</a>
-				<a className="dropdown-item text-danger" value="shutdown" onClick={handleClick}>Shutdown</a>
-			</div>
-		</div>
-	)
-}
 
 function NodeCpuSparkline(props) {
 	var sampleData = [3, 2, 2, 1, 3, 5, 2]
