@@ -162,9 +162,13 @@ function ObjInstanceActions(props) {
 		return false
 	}
 
+	function handleClick(e) {
+		e.stopPropagation()
+	}
+
 	return (
 		<div className="dropdown position-static">
-			<button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{props.text}</button>
+			<button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={handleClick}>{props.text}</button>
 			<div className="dropdown-menu">
 				{actions.map((section, i) => (
 					<ObjInstanceActionsSection key={i} node={props.node} path={props.path} section={section} />
