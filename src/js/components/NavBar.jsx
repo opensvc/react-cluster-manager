@@ -31,7 +31,10 @@ function NavLink(props) {
 		})
 	}
 	return (
-		<div>&nbsp;&gt;&nbsp;<a href="#" className="text-dark" onClick={handleClick}>{props.link}</a></div>
+		<div>
+			<span className="pr-2 text-secondary">&nbsp;&middot;</span>
+			<a href="#" className="text-dark" onClick={handleClick}>{props.link}</a>
+		</div>
 	)
 }
 
