@@ -105,6 +105,61 @@ function heartbeatsIssue(cstat) {
 	return state.WARNING
 }
 
+function objectInstanceIssue(cstat, path, node) {
+	var idata = cstat.monitor.nodes[node].services.status[path]
+	if (idata === undefined) {
+		// no instance of path on node
+		return state.NOTAPPLICABLE
+	}
+	if (idata.monitor === undefined) {
+		return state.NOTAPPLICABLE
+	}
+	if (idata.monitor.status.match(/failed/)) {
+		return state.WARNING
+	}
+	return state.OPTIMAL
+}
+
+function objectInstancesIssue(cstat, path) {
+	var s = state.OPTIMAL
+	for (var node in cstat.monitor.nodes) {
+		s = mergeStates(s, objectInstanceIssue(cstat, path, node))
+	}
+	return s
+}
+
+function objectIssue(cstat, path) {
+	var odata = cstat.monitor.services[path]
+	if (odata.avail === undefined) {
+		return state.NOTAPPLICABLE
+	}
+	if (odata.avail == "down") {
+		return state.DANGER
+	}
+	if (odata.avail == "warn") {
+		return state.WARNING
+	}
+	if (odata.overall == "warn") {
+		return state.WARNING
+	}
+	if (odata.placement == "non-optimal") {
+		return state.WARNING
+	}
+	return state.OPTIMAL
+}
+
+function objectsIssue(cstat) {
+	if (cstat.monitor === undefined) {
+		return state.NOTAPPLICABLE
+	}
+	var s = state.OPTIMAL
+	for (var path in cstat.monitor.services) {
+		s = mergeStates(s, objectIssue(cstat, path))
+		s = mergeStates(s, objectInstancesIssue(cstat, path))
+	}
+	return s
+}
+
 function nodesIssue(cstat) {
 	var s = compatIssue(cstat)
 	s = mergeStates(s, versionIssue(cstat))
@@ -117,7 +172,17 @@ function clusterIssue(cstat) {
 	s = mergeStates(s, versionIssue(cstat))
 	s = mergeStates(s, arbitratorsIssue(cstat))
 	s = mergeStates(s, heartbeatsIssue(cstat))
+	s = mergeStates(s, objectsIssue(cstat))
 	return s
 }
 
-export { compatIssue, versionIssue, threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue, clusterIssue };
+export {
+	compatIssue,
+	versionIssue,
+	threadsIssue,
+	arbitratorsIssue,
+	heartbeatsIssue,
+	nodesIssue,
+	objectsIssue,
+	clusterIssue
+}

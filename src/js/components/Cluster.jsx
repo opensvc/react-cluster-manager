@@ -1,7 +1,7 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 import { state } from '../utils.js';
-import { threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue } from "../issues.js";
+import { threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue, objectsIssue } from "../issues.js";
 import { ClusterTools } from "./ClusterTools.jsx";
 import { Threads } from "./Threads.jsx";
 import { HeartbeatsDetails } from "./HeartbeatsDetails.jsx";
@@ -28,7 +28,7 @@ function NodesLink(props) {
 
 function ObjectsLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
-	var cl = "text-secondary"
+	var cl = "text-" + objectsIssue(cstat).color
 	return (
 		<a className={cl} href="#objects" onClick={() => dispatch({type: "setNav", page: "Objects", links: ["Objects"]})}>Objects</a>
 	)

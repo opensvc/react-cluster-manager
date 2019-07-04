@@ -23,6 +23,12 @@ const state = {
 }
 
 function mergeStates(s1, s2) {
+	if (s1 == state.NOTAPPLICABLE) {
+		return s2
+	}
+	if (s2 == state.NOTAPPLICABLE) {
+		return s1
+	}
 	if ((s1 == state.DANGER) || (s2 == state.DANGER)) {
 		return state.DANGER
 	}
