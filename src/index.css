@@ -7,3 +7,17 @@ html {
 .border-left-4 {
 	border-left: 4px solid #dee2e6!important;
 }
+.metrics {
+	display: flex;
+	flex-wrap: wrap;
+	margin: -0.5em;
+}
+.metrics hr {
+	margin-top: -0.05rem;
+	margin-bottom: -0.05rem;
+}
+.metrics > div {
+	text-align: center;
+	flex: 1 1;
+	margin: 0.4em;
+}

@@ -89,4 +89,37 @@ function parseIni(text) {
 	return data
 }
 
-export { state, mergeStates, parseIni, splitPath };
+function fancySizeMB(size) {
+	if (size < 0) {
+		var sign = "- "
+		size = - size
+	} else {
+		var sign = ""
+	}
+	if (size<1024) {
+		var unit = 'm'
+		var _size = size
+	} else if (size<1048576) {
+		var unit = 'g'
+		var _size = size / 1024
+	} else {
+		var unit = 't'
+		var _size = size / 1048576
+	}
+	if (_size>=100) {
+		_size = Math.round(_size)
+	} else if (_size>=10) {
+		_size = Math.round(_size*10)/10
+	} else {
+		_size = Math.round(_size*100)/100
+	}
+	return sign + _size + unit
+}
+
+export {
+	state,
+	mergeStates,
+	parseIni,
+	splitPath,
+	fancySizeMB
+}

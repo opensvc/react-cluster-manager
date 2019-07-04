@@ -28,6 +28,34 @@ function versionIssue(cstat) {
 	return state.OPTIMAL
 }
 
+function nodeMemOverloadIssue(cstat, node) {
+	var ndata = cstat.monitor.nodes[node]
+	if (ndata.min_avail_mem > ndata.stats.avail_mem) {
+		return state.WARNING
+	}
+	return state.OPTIMAL
+}
+
+function nodeSwapOverloadIssue(cstat, node) {
+	var ndata = cstat.monitor.nodes[node]
+	if (ndata.min_avail_swap > ndata.stats.avail_swap) {
+		return state.WARNING
+	}
+	return state.OPTIMAL
+}
+
+function nodesOverloadIssue(cstat, node) {
+	var s = state.OPTIMAL
+	for (var node in cstat.monitor.nodes) {
+		s = mergeStates(s, nodeMemOverloadIssue(cstat, node))
+		s = mergeStates(s, nodeSwapOverloadIssue(cstat, node))
+		if (s == state.WARNING) {
+			break
+		}
+	}
+	return s
+}
+
 function threadsIssue(cstat) {
 	var threads = ["listener", "dns", "monitor", "scheduler"]
  	for (var section in cstat) {
@@ -124,6 +152,9 @@ function objectInstancesIssue(cstat, path) {
 	var s = state.OPTIMAL
 	for (var node in cstat.monitor.nodes) {
 		s = mergeStates(s, objectInstanceIssue(cstat, path, node))
+		if (s == state.WARNING) {
+			break
+		}
 	}
 	return s
 }
@@ -156,6 +187,9 @@ function objectsIssue(cstat) {
 	for (var path in cstat.monitor.services) {
 		s = mergeStates(s, objectIssue(cstat, path))
 		s = mergeStates(s, objectInstancesIssue(cstat, path))
+		if (s == state.DANGER) {
+			break
+		}
 	}
 	return s
 }
@@ -163,6 +197,7 @@ function objectsIssue(cstat) {
 function nodesIssue(cstat) {
 	var s = compatIssue(cstat)
 	s = mergeStates(s, versionIssue(cstat))
+	s = mergeStates(s, nodesOverloadIssue(cstat))
 	return s
 }
 
@@ -184,5 +219,8 @@ export {
 	heartbeatsIssue,
 	nodesIssue,
 	objectsIssue,
-	clusterIssue
+	clusterIssue,
+	nodesOverloadIssue,
+	nodeSwapOverloadIssue,
+	nodeMemOverloadIssue
 }

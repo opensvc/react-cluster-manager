@@ -1,8 +1,8 @@
 import React from "react";
 import { useStateValue } from '../state.js';
-import { state } from "../utils.js";
+import { state, fancySizeMB } from "../utils.js";
 import { apiNodeAction } from "../api.js";
-import { compatIssue, versionIssue } from "../issues.js";
+import { nodeMemOverloadIssue, nodeSwapOverloadIssue, compatIssue, versionIssue } from "../issues.js";
 import { ObjFrozen } from "./ObjFrozen.jsx";
 import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
 import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
@@ -40,6 +40,85 @@ function NodeSpeakerBadge(props) {
 	)
 }
 
+function NodeMetric(props) {
+	console.log(props)
+	const [{ cstat }, dispatch] = useStateValue();
+	if (props.issue == state.WARNING) {
+		var cl = "text-strong text-warning"
+	} else {
+		var cl = "text-strong"
+	}
+	var refer
+	if (props.refer) {
+		refer = ( <small className="text-secondary pl-1">{props.refer}</small> )
+	}
+	return (
+		<div>
+			<small className="text-secondary text-nowrap">{props.label}</small>
+			<hr />
+			<div className={cl}>
+				{props.value}{props.unit}
+				{refer}
+			</div>
+		</div>
+	)
+}
+function NodeScore(props) {
+	const [{ cstat }, dispatch] = useStateValue();
+	return (
+		<NodeMetric
+			label="Score"
+			value={cstat.monitor.nodes[props.node].stats.score}
+			unit=""
+		/>
+	)
+}function NodeLoad(props) {
+	const [{ cstat }, dispatch] = useStateValue();
+	return (
+		<NodeMetric
+			label="Load15m"
+			value={cstat.monitor.nodes[props.node].stats.load_15m}
+			unit=""
+		/>
+	)
+}
+function NodeMem(props) {
+	const [{ cstat }, dispatch] = useStateValue();
+	var memIssue = nodeMemOverloadIssue(cstat, props.node)
+	return (
+		<NodeMetric
+			label="Avail Mem"
+			value={cstat.monitor.nodes[props.node].stats.mem_avail}
+			unit="%"
+			issue={memIssue}
+			refer={fancySizeMB(cstat.monitor.nodes[props.node].stats.mem_total)}
+		/>
+	)
+}
+function NodeSwap(props) {
+	const [{ cstat }, dispatch] = useStateValue();
+	var swapIssue = nodeSwapOverloadIssue(cstat, props.node)
+	return (
+		<NodeMetric
+			label="Avail Swap"
+			value={cstat.monitor.nodes[props.node].stats.mem_avail}
+			unit="%"
+			issue={swapIssue}
+			refer={fancySizeMB(cstat.monitor.nodes[props.node].stats.swap_total)}
+		/>
+	)
+}
+function NodeMetrics(props) {
+	return (
+		<div className="metrics">
+			<NodeScore node={props.node} />
+			<NodeLoad node={props.node} />
+			<NodeMem node={props.node} />
+			<NodeSwap node={props.node} />
+		</div>
+	)
+}
+
 function Node(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	if (cstat.monitor === undefined) {
@@ -60,6 +139,7 @@ function Node(props) {
 		<tr>
 			<td>{props.node}</td>
 			<td><NodeState data={data} /></td>
+			<td><NodeMetrics node={props.node} /></td>
 			<td><span className={vcl}>{data.agent}</span><span className={ccl}>{data.compat}</span></td>
 			<td className="text-right"><NodeActions node={props.node} /></td>
 		</tr>
@@ -96,6 +176,7 @@ function Nodes(props) {
 						<tr className="text-secondary">
 							<td>Name</td>
 							<td>State</td>
+							<td className="text-center">Load</td>
 							<td>Version</td>
 							<td className="text-right">Actions</td>
 						</tr>
