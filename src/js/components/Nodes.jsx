@@ -173,10 +173,10 @@ function Nodes(props) {
 						<tr className="text-secondary">
 							<td>Name</td>
 							<td>State</td>
-							<td className="text-center">Score</td>
-							<td className="text-center">Load15m</td>
-							<td className="text-center">Mem Avail</td>
-							<td className="text-center">Swap Avail</td>
+							<td>Score</td>
+							<td>Load15m</td>
+							<td>Mem Avail</td>
+							<td>Swap Avail</td>
 							<td>Version</td>
 							<td className="text-right">Actions</td>
 						</tr>

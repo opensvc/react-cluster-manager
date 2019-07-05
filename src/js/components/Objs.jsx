@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { splitPath } from "../utils.js";
 import { DeployButton } from "./Deploy.jsx";
@@ -6,6 +6,7 @@ import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjState } from "./ObjState.jsx";
 import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
+import { Input, InputGroup, InputGroupButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 function ObjsKindFilterButton(props) {
 	const [{}, dispatch] = useStateValue();
@@ -34,7 +35,8 @@ function ObjsKindFilter(props) {
 }
 
 function ObjsFilter(props) {
-	const [{ filters }, dispatch] = useStateValue();
+	const [{ filters }, dispatch] = useStateValue()
+	const [isOpen, setIsOpen] = useState()
 	function handleChange(e) {
 		var t = e.target.getAttribute("t")
 		dispatch({"type": "setFilter", "filter_type": t, "filter_value": e.target.value})
@@ -46,17 +48,19 @@ function ObjsFilter(props) {
 	}
 	var currentType = Object.keys(filters)[0]
 	return (
-		<div className="input-group">
-			<div className="input-group-prepend">
-				<button className="btn btn-outline-secondary dropdown-toggle text-capitalize" type="button" data-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false">{currentType}</button>
-				<div className="dropdown-menu">
-					<a className="dropdown-item" value="name" onClick={handleClick}>Name</a>
-					<a className="dropdown-item" value="namespace" onClick={handleClick}>Namespace</a>
-					<a className="dropdown-item" value="path" onClick={handleClick}>Path</a>
-				</div>
-			</div>
-			<input type="text" className="form-control" placeholder="regexp" aria-label="Filter" t={currentType} onChange={handleChange} value={filters[currentType]}/>
-		</div>
+		<InputGroup>
+			<InputGroupButtonDropdown addonType="prepend" isOpen={isOpen} toggle={() => {setIsOpen(isOpen ? false : true)}}>
+				<DropdownToggle caret className="text-capitalize" color="outline-secondary">
+					{currentType}
+				</DropdownToggle>
+				<DropdownMenu>
+					<DropdownItem value="name" onClick={handleClick}>Name</DropdownItem>
+					<DropdownItem value="namespace" onClick={handleClick}>Namespace</DropdownItem>
+					<DropdownItem value="path" onClick={handleClick}>Path</DropdownItem>
+				</DropdownMenu>
+			</InputGroupButtonDropdown>
+			<Input placeholder="regexp" t={currentType} onChange={handleChange} value={filters[currentType]} />
+		</InputGroup>
 	)
 }
 
