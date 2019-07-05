@@ -13,7 +13,7 @@ function ThreadsLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	var color = threadsIssue(cstat).color
 	return (
-		<div className={"m-1 alert alert-"+color}>
+		<div className={"text-center flex-grow-1 m-1 alert alert-"+color}>
 			<a className={"text-"+color} href="#threads" onClick={() => dispatch({type: "setNav", page: "Threads", links: ["Threads"]})}>Threads</a>
 		</div>
 	)
@@ -23,7 +23,7 @@ function NodesLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	var color = nodesIssue(cstat).color
 	return (
-		<div className={"m-1 alert alert-"+color}>
+		<div className={"text-center flex-grow-1 m-1 alert alert-"+color}>
 			<a className={"text-"+color} href="#nodes" onClick={() => dispatch({type: "setNav", page: "Nodes", links: ["Nodes"]})}>Nodes</a>
 		</div>
 	)
@@ -33,7 +33,7 @@ function ObjectsLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	var color = objectsIssue(cstat).color
 	return (
-		<div className={"m-1 alert alert-"+color}>
+		<div className={"text-center flex-grow-1 m-1 alert alert-"+color}>
 			<a className={"text-"+color} href="#objects" onClick={() => dispatch({type: "setNav", page: "Objects", links: ["Objects"]})}>Objects</a>
 		</div>
 	)
@@ -43,7 +43,7 @@ function ArbitratorsLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	var color = arbitratorsIssue(cstat).color
 	return (
-		<div className={"m-1 alert alert-"+color}>
+		<div className={"text-center flex-grow-1 m-1 alert alert-"+color}>
 			<a className={"text-"+color} href="#arbitrators" onClick={() => dispatch({type: "setNav", page: "Arbitrators", links: ["Arbitrators"]})}>Arbitrators</a>
 		</div>
 	)
@@ -53,7 +53,7 @@ function HeartbeatsLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	var color = heartbeatsIssue(cstat).color
 	return (
-		<div className={"m-1 alert alert-"+color}>
+		<div className={"text-center flex-grow-1 m-1 alert alert-"+color}>
 			<a className={"text-"+color} href="#heartbeats" onClick={() => dispatch({type: "setNav", page: "Heartbeats", links: ["Heartbeats"]})}>Heartbeats</a>
 		</div>
 	)
@@ -61,7 +61,7 @@ function HeartbeatsLink(props) {
 
 function SubsysLinks(props) {
 	return (
-		<div className="d-flex flex-wrap p-0 m-0 h6">
+		<div className="d-flex flex-wrap mb-2">
 			<ThreadsLink />
 			<HeartbeatsLink />
 			<ArbitratorsLink />
