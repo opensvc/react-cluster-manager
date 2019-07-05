@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useStateValue } from '../state.js';
 import { Progress, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 const MenuContext = React.createContext({section: {}})
@@ -42,6 +43,7 @@ function ActionsDropdownSection(props) {
 
 function ActionsDropdownItemWrapped(props) {
 	const [confirms, setConfirms] = useState(props.section.confirms)
+	const [{user}, dispatch] = useStateValue()
 	function handleClick(e) {
 		if (confirms>1) {
 			setConfirms(confirms-1)
@@ -51,9 +53,31 @@ function ActionsDropdownItemWrapped(props) {
 		props.toggleIsOpen()
 		props.menu.submit(props)
 	}
+	function disabled() {
+		if (props.disabled) {
+			return true
+		}
+		if (props.requires === undefined) {
+			return false
+		}
+		if (user.grant === undefined) {
+			// not initialized yet
+			return true
+		}
+		console.log(user.grant)
+		if (props.requires.role && !(props.requires.role in user.grant)) {
+			//console.log("item", props.value, "disabled: user must have the", props.requires.role, "role")
+			return true
+		}
+		if (props.requires.namespace && !user.grant[props.requires.role].includes(props.requires.namespace)) {
+			//console.log("item", props.value, "disabled: user is not", props.requires.role, "on namespace", props.requires.namespace)
+			return true
+		}
+		return false
+	}
 	if (confirms < props.section.confirms) {
 		return (
-			<DropdownItem toggle={false} disabled={props.disabled} onClick={handleClick}>
+			<DropdownItem toggle={false} disabled={disabled()} onClick={handleClick}>
 				{props.text}
 				<div className="pl-1 text-small text-secondary">This action is <b>{props.section.name}</b>.</div>
 				<div className="pl-1 text-small text-secondary">{confirms} more confirmation clicks required.</div>
@@ -62,7 +86,7 @@ function ActionsDropdownItemWrapped(props) {
 		)
 	}
 	return (
-		<DropdownItem toggle={false} disabled={props.disabled} onClick={handleClick}>{props.text}</DropdownItem>
+		<DropdownItem toggle={false} disabled={disabled()} onClick={handleClick}>{props.text}</DropdownItem>
 	)
 }
 
