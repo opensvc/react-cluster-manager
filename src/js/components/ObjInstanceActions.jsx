@@ -1,118 +1,24 @@
 import React from "react";
 import { useStateValue } from '../state.js';
+import { splitPath } from "../utils.js";
 import { apiInstanceAction } from "../api.js";
+import { ActionsDropdown, ActionsDropdownSection, ActionsDropdownItem, ActionsDropdownDivider } from './ActionsDropdown.jsx';
 
-function ObjInstanceActionsSection(props) {
-	if (props.section == "divider") {
-		return (
-			<div className="dropdown-divider"></div>
-		)
-	}
-	return (
-		<div className={props.section["class"]}>
-			{props.section.actions.map((action, i) => (
-				<ObjInstanceAction node={props.node} path={props.path} action={action} />
-			))}
-		</div>
-	)
-}
-
-function ObjInstanceAction(props) {
-	const [{}, dispatch] = useStateValue();
-	function handleClick(e) {
-		e.stopPropagation()
-		var action = e.target.getAttribute("value")
-		apiInstanceAction(props.node, props.path, action, {}, (data) => dispatch({type: "parseApiResponse", data: data}))
-	}
-	if (props.action.disable) {
-		return (
-			<a href="#dummy" className="dropdown-item disabled" value={props.action.value}>{props.action.text}</a>
-		)
-	} else {
-		return (
-			<a href="#dummy" className="dropdown-item" value={props.action.value} onClick={handleClick}>{props.action.text}</a>
-		)
-	}
-}
 
 function ObjInstanceActions(props) {
 	const [{cstat}, dispatch] = useStateValue();
+	const sp = splitPath(props.path)
 	const idata = cstat.monitor.nodes[props.node].services.status[props.path]
-	var actions = [
-		{
-			"section": "safe",
-			"class": "border-left-4 border-secondary",
-			"actions": [
-				{
-					"value": "start",
-					"text": "Start",
-					"disable": disable_start()
-				},
-				{
-					"value": "freeze",
-					"text": "Freeze",
-					"disable": disable_freeze()
-				},
-				{
-					"value": "thaw",
-					"text": "Thaw",
-					"disable": disable_thaw()
-				},
-				{
-					"value": "enable",
-					"text": "Enable",
-					"disable": disable_thaw()
-				},
-				{
-					"value": "status",
-					"text": "Refresh",
-				}
-			]
-		},
-		"divider",
-		{
-			"section": "impacting",
-			"class": "border-left-4 border-warning",
-			"actions": [
-				{
-					"value": "stop",
-					"text": "Stop",
-					"disable": disable_stop()
-				},
-				{
-					"value": "provision",
-					"text": "Provision",
-					"disable": disable_provision()
-				},
-				{
-					"value": "disable",
-					"text": "Disable",
-					"disable": disable_disable()
-				}
-			]
-		},
-		"divider",
-		{
-			"section": "dangerous",
-			"class": "border-left-4 border-danger",
-			"actions": [
-				{
-					"value": "purge",
-					"text": "Purge",
-				},
-				{
-					"value": "delete",
-					"text": "Delete",
-				},
-				{
-					"value": "unprovision",
-					"text": "Unprovision",
-					"disable": disable_unprovision()
-				}
-			]
-		},
-	]
 
+	function submit(props) {
+		apiInstanceAction(
+			props.menu.node,
+			props.menu.path,
+			props.value,
+			{},
+			(data) => dispatch({type: "parseApiResponse", data: data})
+		)
+	}
 	function disable_enable() {
 		if (idata.disable) {
 			return false
@@ -166,18 +72,62 @@ function ObjInstanceActions(props) {
 		e.stopPropagation()
 	}
 
-	return (
-		<div className="dropdown position-static">
-			<button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={handleClick}>{props.text}</button>
-			<div className="dropdown-menu">
-				{actions.map((section, i) => (
-					<ObjInstanceActionsSection key={i} node={props.node} path={props.path} section={section} />
-				))}
-			</div>
-		</div>
-	)
+	if ((sp.kind == "svc") || (sp.kind == "vol")) {
+		return (
+			<ActionsDropdown path={props.path} node={props.node} title={props.title} submit={submit}>
+				<ActionsDropdownSection name="safe" color="secondary" confirms={0}>
+					<ActionsDropdownItem value="start" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="freeze" text="Freeze" disabled={disable_freeze()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="thaw" text="Thaw" disabled={disable_thaw()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="enable" text="Enable" disabled={disable_enable()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="status" text="Refresh" requires={{role: "operator", namespace: sp.namespace}} />
+				</ActionsDropdownSection>
+				<ActionsDropdownDivider />
+				<ActionsDropdownSection name="impacting" color="warning" confirms={3}>
+					<ActionsDropdownItem value="stop" text="Stop" disabled={disable_stop()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="provision" text="Provision" disabled={disable_provision()} requires={{role: "admin", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="disable" text="Disable" disabled={disable_provision()} requires={{role: "operator", namespace: sp.namespace}} />
+				</ActionsDropdownSection>
+				<ActionsDropdownDivider />
+				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
+					<ActionsDropdownItem value="purge" text="Purge" requires={{role: "admin", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="unprovision" text="Unprovision" disabled={disable_unprovision()} requires={{role: "admin", namespace: sp.namespace}} />
+				</ActionsDropdownSection>
+			</ActionsDropdown>
+		)
+	} else if (sp.kind == "ccfg") {
+		return null
+	} else if (sp.kind == "cfg") {
+		return (
+			<ActionsDropdown path={props.path} node={props.node} title={props.title} submit={submit}>
+				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
+					<ActionsDropdownItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
+				</ActionsDropdownSection>
+			</ActionsDropdown>
+		)
+	} else if (sp.kind == "sec") {
+		return (
+			<ActionsDropdown path={props.path} node={props.node} title={props.title} submit={submit}>
+				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
+					<ActionsDropdownItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
+				</ActionsDropdownSection>
+			</ActionsDropdown>
+		)
+	} else if (sp.kind == "usr") {
+		return (
+			<ActionsDropdown path={props.path} node={props.node} title={props.title} submit={submit}>
+				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
+					<ActionsDropdownItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
+				</ActionsDropdownSection>
+			</ActionsDropdown>
+		)
+	}
 }
 
 export {
 	ObjInstanceActions
 }
+
+
+

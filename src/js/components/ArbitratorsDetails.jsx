@@ -53,7 +53,7 @@ function ArbitratorsDetails(props) {
 	return (
 		<div id="arbitrators">
 			<h2><a className="text-dark" href="#" onClick={handleClick}>Arbitrators</a></h2>
-			<div className="table-responsive">
+			<div className="table-adaptative">
 				<table className="table table-hover">
 					<thead>
 						<tr className="text-secondary">
@@ -85,10 +85,13 @@ function ArbitratorDetails(props) {
 
 	return (
 		<tr>
-			<td>{props.node}</td>
+			<td data-title="Node">{props.node}</td>
 			{ans.map((adata, i) => (
-				<td key={i} className={adata.status == "up" ? "text-"+state.OPTIMAL.color : "text-"+state.DANGER.color}>{adata.status}</td>
+				<td key={i} data-title={adata.name} className={adata.status == "up" ? "text-"+state.OPTIMAL.color : "text-"+state.DANGER.color}>{adata.status}</td>
 			))}
+			<td className="flex-trailer"/>
+			<td className="flex-trailer" />
+			<td className="flex-trailer" />
 		</tr>
 	)
 }

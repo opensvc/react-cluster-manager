@@ -23,7 +23,7 @@ function ObjDetails(props) {
 					<ObjActions
 						path={props.path}
 						splitpath={sp}
-						text="Object Actions"
+						title="Object Actions"
 					/>
 				</div>
 			</div>
@@ -75,7 +75,7 @@ function ObjInstances(props) {
 	return (
 		<div>
 			<h3>Instances</h3>
-			<div className="table-responsive">
+			<div className="table-adaptative">
 				<table className="table table-hover">
 					<thead>
 						<tr className="text-secondary">
@@ -117,10 +117,13 @@ function InstanceLine(props) {
 	}
 	return (
 		<tr onClick={handleClick}>
-			<td>{props.node}</td>
-			<td><ObjAvail avail={cstat.monitor.nodes[props.node].services.status[props.path].avail} /></td>
-			<td><ObjInstanceState node={props.node} path={props.path} /></td>
-			<td className="text-right"><ObjInstanceActions node={props.node} path={props.path} /></td>
+			<td data-title="Node">{props.node}</td>
+			<td data-title="Availability"><ObjAvail avail={cstat.monitor.nodes[props.node].services.status[props.path].avail} /></td>
+			<td data-title="State"><ObjInstanceState node={props.node} path={props.path} /></td>
+			<td data-title="Actions" className="text-right"><ObjInstanceActions node={props.node} path={props.path} /></td>
+			<td className="flex-trailer"/>
+			<td className="flex-trailer" />
+			<td className="flex-trailer" />
 		</tr>
 	)
 }

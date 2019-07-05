@@ -81,7 +81,7 @@ function Objs(props) {
 				<div className="mr-2 mb-2 flex-grow-1"><ObjsFilter /></div>
 				<div className="mr-2 mb-2"><DeployButton /></div>
 			</div>
-			<div className="table-responsive">
+			<div className="table-adaptative">
 				<table className="table table-hover">
 					<thead>
 						<tr className="text-secondary">
@@ -142,13 +142,16 @@ function ObjLine(props) {
 	}
 	return (
 		<tr onClick={handleClick}>
-			<td>{sp.namespace}</td>
-			<td>{sp.kind}</td>
-			<td>{sp.name}</td>
-			<td><ObjAvail avail={cstat.monitor.services[props.path].avail} /></td>
-			<td><ObjState path={props.path} /></td>
-			<td><ObjInstanceCounts path={props.path} /></td>
-			<td className="text-right"><ObjActions path={props.path} splitpath={sp} /></td>
+			<td data-title="Namespace">{sp.namespace}</td>
+			<td data-title="Kind">{sp.kind}</td>
+			<td data-title="Name">{sp.name}</td>
+			<td data-title="Availability"><ObjAvail avail={cstat.monitor.services[props.path].avail} /></td>
+			<td data-title="State"><ObjState path={props.path} /></td>
+			<td data-title="Instances"><ObjInstanceCounts path={props.path} /></td>
+			<td data-title="Actions" className="text-right"><ObjActions path={props.path} splitpath={sp} title="" /></td>
+			<td className="flex-trailer"/>
+			<td className="flex-trailer" />
+			<td className="flex-trailer" />
 		</tr>
 	)
 }

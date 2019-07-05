@@ -38,7 +38,7 @@ function HeartbeatsDetails(props) {
 	return (
 		<div id="heartbeats">
 			<h2><a className="text-dark" href="#" onClick={handleClick}>Heartbeats</a></h2>
-			<div className="table-responsive">
+			<div className="table-adaptative">
 				<table className="table table-hover">
 					<thead>
 						<tr className="text-secondary">
@@ -62,7 +62,7 @@ function HeartbeatsDetails(props) {
 function NodeHeartbeats(props) {
 	return (
 		<tr>
-			<td>{props.node}</td>
+			<td data-title="Node">{props.node}</td>
 			{props.hbNames.map((hbName, i) => (
 				<NodeHeartbeat key={i} node={props.node} hbName={hbName} />
 			))}
@@ -87,7 +87,7 @@ function NodeHeartbeat(props) {
 		return cl
 	}
 	return (
-		<td>
+		<td data-title={props.hbName}>
 			<span className={badge(cstat[props.hbName+".rx"].peers[props.node].beating)}>rx</span>
 			<span className="text-secondary">&nbsp;&#47;&nbsp;</span>
 			<span className={badge(cstat[props.hbName+".tx"].peers[props.node].beating)}>tx</span>

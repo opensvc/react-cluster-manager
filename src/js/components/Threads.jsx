@@ -23,7 +23,7 @@ function Threads(props) {
 	return (
 		<div id="threads">
 			<h2><a className="text-dark" href="#" onClick={handleTitleClick}>Threads</a></h2>
-			<div className="table-responsive">
+			<div className="table-adaptative">
 				<table className="table table-hover">
 					<thead>
 						<tr className="text-secondary">
@@ -50,8 +50,11 @@ function Thread(props) {
 	}
 	return (
 		<tr>
-			<td>{props.name}</td>
-			<td className={cl}>{props.data.state}</td>
+			<td data-title="Name">{props.name}</td>
+			<td data-title="State" className={cl}>{props.data.state}</td>
+			<td className="flex-trailer"/>
+			<td className="flex-trailer" />
+			<td className="flex-trailer" />
 		</tr>
 	)
 }

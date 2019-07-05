@@ -32,7 +32,7 @@ function ObjInstanceDetails(props) {
 					<ObjActions
 						path={props.path}
 						splitpath={sp}
-						text="Object Actions"
+						title="Object Actions"
 					/>
 				</div>
 			</div>
@@ -69,7 +69,7 @@ function ObjInstancesResources(props) {
 	return (
 		<div>
 			<h3>Resources</h3>
-			<div className="table-responsive">
+			<div className="table-adaptative">
 				<table className="table table-hover">
 					<thead>
 						<tr className="text-secondary">
@@ -107,11 +107,14 @@ function ObjInstanceResourceLine(props) {
 	}
 	return (
 		<tr>
-			<td>{props.rid}</td>
-			<td><ObjAvail avail={rdata.status} /></td>
-			<td><ObjInstanceResourceState rid={props.rid} node={props.node} path={props.path} /></td>
-			<td>{rdata.label}</td>
-			<td className="text-right"><ObjInstanceResourceActions rid={props.rid} node={props.node} path={props.path} /></td>
+			<td data-title="Id">{props.rid}</td>
+			<td data-title="Availability"><ObjAvail avail={rdata.status} /></td>
+			<td data-title="State"><ObjInstanceResourceState rid={props.rid} node={props.node} path={props.path} /></td>
+			<td data-title="Desc">{rdata.label}</td>
+			<td data-title="Actions" className="text-right"><ObjInstanceResourceActions rid={props.rid} node={props.node} path={props.path} /></td>
+			<td className="flex-trailer"/>
+			<td className="flex-trailer" />
+			<td className="flex-trailer" />
 		</tr>
 	)
 }

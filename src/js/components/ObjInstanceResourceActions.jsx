@@ -1,100 +1,25 @@
 import React from "react";
 import { useStateValue } from '../state.js';
+import { splitPath } from '../utils.js';
 import { apiInstanceAction } from "../api.js";
-
-function ObjInstanceResourceActionsSection(props) {
-	if (props.section == "divider") {
-		return (
-			<div className="dropdown-divider"></div>
-		)
-	}
-	return (
-		<div className={props.section["class"]}>
-			{props.section.actions.map((action, i) => (
-				<ObjInstanceResourceAction rid={props.rid} node={props.node} path={props.path} action={action} />
-			))}
-		</div>
-	)
-}
-
-function ObjInstanceResourceAction(props) {
-	const [{}, dispatch] = useStateValue();
-	function handleClick(e) {
-		e.stopPropagation()
-		var action = e.target.getAttribute("value")
-		apiInstanceAction(props.node, props.path, action, {"rid": props.rid}, (data) => dispatch({type: "parseApiResponse", data: data}))
-	}
-	if (props.action.disable) {
-		return (
-			<a href="#dummy" className="dropdown-item disabled" value={props.action.value}>{props.action.text}</a>
-		)
-	} else {
-		return (
-			<a href="#dummy" className="dropdown-item" value={props.action.value} onClick={handleClick}>{props.action.text}</a>
-		)
-	}
-}
+import { ActionsDropdown, ActionsDropdownSection, ActionsDropdownItem, ActionsDropdownDivider } from './ActionsDropdown.jsx';
 
 function ObjInstanceResourceActions(props) {
 	const [{cstat}, dispatch] = useStateValue();
 	const rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources[props.rid]
-	var actions = [
-		{
-			"section": "safe",
-			"class": "border-left-4 border-secondary",
-			"actions": [
-				{
-					"value": "start",
-					"text": "Start",
-					"disable": disable_start()
-				},
-				{
-					"value": "enable",
-					"text": "Enable",
-					"disable": disable_enable()
-				}
-			]
-		},
-		"divider",
-		{
-			"section": "impacting",
-			"class": "border-left-4 border-warning",
-			"actions": [
-				{
-					"value": "stop",
-					"text": "Stop",
-					"disable": disable_stop()
-				},
-				{
-					"value": "provision",
-					"text": "Provision",
-					"disable": disable_provision()
-				},
-				{
-					"value": "disable",
-					"text": "Disable",
-					"disable": disable_disable()
-				}
-			]
-		},
-		"divider",
-		{
-			"section": "dangerous",
-			"class": "border-left-4 border-danger",
-			"actions": [
-				{
-					"value": "delete",
-					"text": "Delete",
-				},
-				{
-					"value": "unprovision",
-					"text": "Unprovision",
-					"disable": disable_unprovision()
-				}
-			]
-		},
-	]
+	const sp = splitPath(props.path)
 
+	function submit(props) {
+		apiInstanceAction(
+			props.menu.node,
+			props.menu.path,
+			props.value,
+			{
+				"rid": props.menu.rid
+			},
+			(data) => dispatch({type: "parseApiResponse", data: data})
+		)
+	}
 	function disable_enable() {
 		if (rdata.disable) {
 			return false
@@ -146,14 +71,23 @@ function ObjInstanceResourceActions(props) {
 	}
 
 	return (
-		<div className="dropdown position-static">
-			<button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={handleClick}>{props.text}</button>
-			<div className="dropdown-menu">
-				{actions.map((section, i) => (
-					<ObjInstanceResourceActionsSection key={i} rid={props.rid} node={props.node} path={props.path} section={section} />
-				))}
-			</div>
-		</div>
+		<ActionsDropdown rid={props.rid} path={props.path} node={props.node} title={props.title} submit={submit}>
+			<ActionsDropdownSection name="safe" color="secondary" confirms={0}>
+				<ActionsDropdownItem value="start" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: sp.namespace}} />
+				<ActionsDropdownItem value="enable" text="Enable" disabled={disable_enable()} requires={{role: "operator", namespace: sp.namespace}} />
+			</ActionsDropdownSection>
+			<ActionsDropdownDivider />
+			<ActionsDropdownSection name="impacting" color="warning" confirms={3}>
+				<ActionsDropdownItem value="stop" text="Stop" disabled={disable_stop()} requires={{role: "operator", namespace: sp.namespace}} />
+				<ActionsDropdownItem value="provision" text="Provision" disabled={disable_provision()} requires={{role: "admin", namespace: sp.namespace}} />
+				<ActionsDropdownItem value="disable" text="Disable" disabled={disable_provision()} requires={{role: "operator", namespace: sp.namespace}} />
+			</ActionsDropdownSection>
+			<ActionsDropdownDivider />
+			<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
+				<ActionsDropdownItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
+				<ActionsDropdownItem value="unprovision" text="Unprovision" disabled={disable_unprovision()} requires={{role: "admin", namespace: sp.namespace}} />
+			</ActionsDropdownSection>
+		</ActionsDropdown>
 	)
 }
 

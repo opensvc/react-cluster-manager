@@ -6,7 +6,7 @@ function ClusterTools(props) {
 	return (
 		<div className="d-flex flex-wrap px-0 h6">
 			<div className="mb-2 mr-2">
-				<ClusterActions />
+				<ClusterActions title="Cluster Actions" />
 			</div>
 			<ReloadButton />
 		</div>

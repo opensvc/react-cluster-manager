@@ -41,7 +41,6 @@ function NodeSpeakerBadge(props) {
 }
 
 function NodeMetric(props) {
-	console.log(props)
 	const [{ cstat }, dispatch] = useStateValue();
 	if (props.issue == state.WARNING) {
 		var cl = "text-strong text-warning"
@@ -53,13 +52,9 @@ function NodeMetric(props) {
 		refer = ( <small className="text-secondary pl-1">{props.refer}</small> )
 	}
 	return (
-		<div>
-			<small className="text-secondary text-nowrap">{props.label}</small>
-			<hr />
-			<div className={cl}>
-				{props.value}{props.unit}
-				{refer}
-			</div>
+		<div className={cl}>
+			{props.value}{props.unit}
+			{refer}
 		</div>
 	)
 }
@@ -108,16 +103,6 @@ function NodeSwap(props) {
 		/>
 	)
 }
-function NodeMetrics(props) {
-	return (
-		<div className="metrics">
-			<NodeScore node={props.node} />
-			<NodeLoad node={props.node} />
-			<NodeMem node={props.node} />
-			<NodeSwap node={props.node} />
-		</div>
-	)
-}
 
 function Node(props) {
 	const [{ cstat }, dispatch] = useStateValue();
@@ -137,11 +122,17 @@ function Node(props) {
 	}
 	return (
 		<tr>
-			<td>{props.node}</td>
-			<td><NodeState data={data} /></td>
-			<td><NodeMetrics node={props.node} /></td>
-			<td><span className={vcl}>{data.agent}</span><span className={ccl}>{data.compat}</span></td>
-			<td className="text-right"><NodeActions node={props.node} /></td>
+			<td data-title="Name">{props.node}</td>
+			<td data-title="State"><NodeState data={data} /></td>
+			<td data-title="Score"><NodeScore node={props.node} /></td>
+			<td data-title="Load15m"><NodeLoad node={props.node} /></td>
+			<td data-title="Mem Avail"><NodeMem node={props.node} /></td>
+			<td data-title="Swap Avail"><NodeSwap node={props.node} /></td>
+			<td data-title="Version" className="text-nowrap"><span className={vcl}>{data.agent}</span><span className={ccl}>{data.compat}</span></td>
+			<td data-title="Actions" className="text-right"><NodeActions node={props.node} /></td>
+			<td className="flex-trailer"/>
+			<td className="flex-trailer" />
+			<td className="flex-trailer" />
 		</tr>
 	)
 }
@@ -167,16 +158,19 @@ function Nodes(props) {
 					<h2><a className="text-dark" href="#" onClick={handleTitleClick}>Nodes</a></h2>
 				</div>
 				<div className="float-right">
-					<ClusterActions />
+					<ClusterActions title="Cluster Actions" />
 				</div>
 			</div>
-			<div className="table-responsive">
+			<div className="table-adaptative">
 				<table className="table table-hover">
 					<thead>
 						<tr className="text-secondary">
 							<td>Name</td>
 							<td>State</td>
-							<td className="text-center">Load</td>
+							<td className="text-center">Score</td>
+							<td className="text-center">Load15m</td>
+							<td className="text-center">Mem Avail</td>
+							<td className="text-center">Swap Avail</td>
 							<td>Version</td>
 							<td className="text-right">Actions</td>
 						</tr>

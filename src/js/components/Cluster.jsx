@@ -8,7 +8,6 @@ import { HeartbeatsDetails } from "./HeartbeatsDetails.jsx";
 import { ArbitratorsDetails } from "./ArbitratorsDetails.jsx";
 import { Nodes } from "./Nodes.jsx";
 import { Objs } from "./Objs.jsx";
-import { ClusterActions } from "./ClusterActions.jsx";
 
 function ThreadsLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();

@@ -1,164 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { useStateValue } from '../state.js';
+import { splitPath } from '../utils.js';
 import { apiObjSetMonitor } from "../api.js";
-
-function ObjActionsSection(props) {
-	if (props.section == "divider") {
-		return (
-			<div className="dropdown-divider"></div>
-		)
-	}
-	return (
-		<div className={props.section["class"]}>
-			{props.section.actions.map((action, i) => (
-				<ObjAction node={props.node} path={props.path} action={action} />
-			))}
-		</div>
-	)
-}
-
-function ObjAction(props) {
-	const [{}, dispatch] = useStateValue();
-	function handleClick(e) {
-		e.stopPropagation()
-		var target = e.target.getAttribute("value")
-		apiObjSetMonitor(props.path, target, (data) => dispatch({type: "parseApiResponse", data: data}))
-	}
-	if (props.action.disable) {
-		return (
-			<a href="#dummy" className="dropdown-item disabled" value={props.action.value}>{props.action.text}</a>
-		)
-	} else {
-		return (
-			<a href="#dummy" className="dropdown-item" value={props.action.value} onClick={handleClick}>{props.action.text}</a>
-		)
-	}
-}
+import { ActionsDropdown, ActionsDropdownSection, ActionsDropdownItem, ActionsDropdownDivider } from './ActionsDropdown.jsx';
 
 function ObjActions(props) {
 	const [{cstat}, dispatch] = useStateValue();
 	const odata = cstat.monitor.services[props.path]
 	const nInstances = nInstancesGet()
-	if ((props.splitpath.kind == "svc") || (props.splitpath.kind == "vol")) {
-		var actions = [
-			{
-				"section": "safe",
-				"class": "border-left-4 border-secondary",
-				"actions": [
-					{
-						"value": "started",
-						"text": "Start",
-						"disable": disable_start()
-					},
-					{
-						"value": "frozen",
-						"text": "Freeze",
-						"disable": disable_freeze()
-					},
-					{
-						"value": "thawed",
-						"text": "Thaw",
-						"disable": disable_thaw()
-					},
-					{
-						"value": "placed",
-						"text": "Giveback",
-						"disable": disable_giveback()
-					},
-					{
-						"value": "placed@<peer>",
-						"text": "Switch",
-						"disable": disable_switch()
-					},
-					{
-						"value": "aborted",
-						"text": "Abort",
-						"disable": disable_abort()
-					}
-				]
-			},
-			"divider",
-			{
-				"section": "impacting",
-				"class": "border-left-4 border-warning",
-				"actions": [
-					{
-						"value": "stopped",
-						"text": "Stop",
-						"disable": disable_stop()
-					},
-					{
-						"value": "provisioned",
-						"text": "Provision",
-						"disable": disable_provision()
-					}
-				]
-			},
-			"divider",
-			{
-				"section": "dangerous",
-				"class": "border-left-4 border-danger",
-				"actions": [
-					{
-						"value": "purged",
-						"text": "Purge",
-					},
-					{
-						"value": "deleted",
-						"text": "Delete",
-					},
-					{
-						"value": "unprovisioned",
-						"text": "Unprovision",
-						"disable": disable_unprovision()
-					}
-				]
-			},
-		]
-	} else if (props.splitpath.kind == "ccfg") {
-		var actions = [
-		]
-	} else if (props.splitpath.kind == "cfg") {
-		var actions = [
-			{
-				"section": "dangerous",
-				"class": "border-left-4 border-danger",
-				"actions": [
-					{
-						"value": "deleted",
-						"text": "Delete",
-					}
-				]
-			}
-		]
-	} else if (props.splitpath.kind == "sec") {
-		var actions = [
-			{
-				"section": "dangerous",
-				"class": "border-left-4 border-danger",
-				"actions": [
-					{
-						"value": "deleted",
-						"text": "Delete",
-					}
-				]
-			}
-		]
-	} else if (props.splitpath.kind == "usr") {
-		var actions = [
-			{
-				"section": "dangerous",
-				"class": "border-left-4 border-danger",
-				"actions": [
-					{
-						"value": "deleted",
-						"text": "Delete",
-					}
-				]
-			}
-		]
-	}
+	const sp = splitPath(props.path)
 
+	function submit(props) {
+		apiObjSetMonitor(
+			props.menu.path,
+			props.value,
+			(data) => dispatch({type: "parseApiResponse", data: data})
+		)
+	}
 	function nInstancesGet() {
 		var count = 0
 		for (var node in cstat.monitor.nodes) {
@@ -234,20 +92,59 @@ function ObjActions(props) {
 		}
 		return false
 	}
-	function handleClick(e) {
-		e.stopPropagation()
+
+	if ((props.splitpath.kind == "svc") || (props.splitpath.kind == "vol")) {
+		return (
+			<ActionsDropdown path={props.path} node={props.node} title={props.title} submit={submit}>
+				<ActionsDropdownSection name="safe" color="secondary" confirms={0}>
+					<ActionsDropdownItem value="started" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="frozen" text="Freeze" disabled={disable_freeze()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="thawed" text="Thaw" disabled={disable_thaw()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="placed" text="Giveback" disabled={disable_giveback()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="placed@<peer>" text="Switch" disabled={disable_switch()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="aborted" text="Abort" disabled={disable_abort()} requires={{role: "operator", namespace: sp.namespace}} />
+				</ActionsDropdownSection>
+				<ActionsDropdownDivider />
+				<ActionsDropdownSection name="impacting" color="warning" confirms={3}>
+					<ActionsDropdownItem value="stopped" text="Stop" disabled={disable_stop()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="provisioned" text="Provision" disabled={disable_provision()} requires={{role: "admin", namespace: sp.namespace}} />
+				</ActionsDropdownSection>
+				<ActionsDropdownDivider />
+				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
+					<ActionsDropdownItem value="purged" text="Purge" requires={{role: "admin", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
+					<ActionsDropdownItem value="unprovisioned" text="Unprovision" disabled={disable_unprovision()} requires={{role: "admin", namespace: sp.namespace}} />
+				</ActionsDropdownSection>
+			</ActionsDropdown>
+		)
+	} else if (props.splitpath.kind == "ccfg") {
+		return null
+	} else if (props.splitpath.kind == "cfg") {
+		return (
+			<ActionsDropdown path={props.path} node={props.node} title={props.title} submit={submit}>
+				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
+					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
+				</ActionsDropdownSection>
+			</ActionsDropdown>
+		)
+	} else if (props.splitpath.kind == "sec") {
+		return (
+			<ActionsDropdown path={props.path} node={props.node} title={props.title} submit={submit}>
+				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
+					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
+				</ActionsDropdownSection>
+			</ActionsDropdown>
+		)
+	} else if (props.splitpath.kind == "usr") {
+		return (
+			<ActionsDropdown path={props.path} node={props.node} title={props.title} submit={submit}>
+				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
+					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
+				</ActionsDropdownSection>
+			</ActionsDropdown>
+		)
 	}
 
-	return (
-		<div className="dropdown position-static">
-			<button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={handleClick}>{props.text}</button>
-			<div className="dropdown-menu">
-				{actions.map((section, i) => (
-					<ObjActionsSection key={i} node={props.node} path={props.path} section={section} />
-				))}
-			</div>
-		</div>
-	)
 }
 
 export {
