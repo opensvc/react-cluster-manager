@@ -22,7 +22,7 @@ function DeployButton(props) {
 }
 
 function Deploy(props) {
-	[tab, setTab] = useState("empty")
+	const [tab, setTab] = useState("empty")
 	var title
 	if ((props.noTitle === undefined) || !props.noTitle) {
 		title = (
