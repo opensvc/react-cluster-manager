@@ -73,9 +73,16 @@ function Objs(props) {
 			links: ["Objects"],
 		})
 	}
+	var title
+	if ((props.noTitle === undefined) || !props.noTitle) {
+		title = (
+			<h2><a className="text-dark" href="#" onClick={handleTitleClick}>Objects</a></h2>
+		)
+	}
+
 	return (
 		<div id="objects">
-			<h2><a className="text-dark" href="#" onClick={handleTitleClick}>Objects</a></h2>
+			{title}
 			<div className="d-flex btn-toolbar justify-content-between pb-3">
 				<div className="mr-2 mb-2 flex-grow-1"><ObjsKindFilter /></div>
 				<div className="mr-2 mb-2 flex-grow-1"><ObjsFilter /></div>

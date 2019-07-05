@@ -20,9 +20,15 @@ function Threads(props) {
 			threads.push(section)
 		}
 	}
+	var title
+	if ((props.noTitle === undefined) || !props.noTitle) {
+		title = (
+			<h2><a className="text-dark" href="#" onClick={handleTitleClick}>Threads</a></h2>
+		)
+	}
 	return (
 		<div id="threads">
-			<h2><a className="text-dark" href="#" onClick={handleTitleClick}>Threads</a></h2>
+			{title}
 			<div className="table-adaptative">
 				<table className="table table-hover">
 					<thead>

@@ -35,9 +35,16 @@ function HeartbeatsDetails(props) {
 		}
 	}
 	var nodes = Object.keys(cstat.monitor.nodes)
+	var title
+	if ((props.noTitle === undefined) || !props.noTitle) {
+		title = (
+			<h2><a className="text-dark" href="#" onClick={handleClick}>Heartbeats</a></h2>
+		)
+	}
+
 	return (
 		<div id="heartbeats">
-			<h2><a className="text-dark" href="#" onClick={handleClick}>Heartbeats</a></h2>
+			{title}
 			<div className="table-adaptative">
 				<table className="table table-hover">
 					<thead>

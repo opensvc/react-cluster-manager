@@ -13,7 +13,7 @@ function NavBar(props) {
 	}
 	return (
 		<div className="navbar navbar-light px-0">
-			<div className="h2">
+			<div className="h3">
 				<NavLinks links={nav.links} />
 			</div>
 		</div>

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { useStateValue } from '../state.js';
 import { apiObjGetConfig, apiObjCreate } from "../api.js";
 
@@ -21,40 +21,34 @@ function DeployButton(props) {
 	)
 }
 
-class Deploy extends Component {
-	constructor(props) {
-		super(props)
-		this.state = {
-			tab: "empty"
-		}
-		this.setTab = this.setTab.bind(this);
-	}
-	setTab(e) {
-		this.setState({
-			tab: e.target.id
-		})
-	}
-	render() {
-		return (
-			<div>
-				<h2>Deploy</h2>
-				<nav>
-					<div className="nav nav-tabs mb-3">
-						<Tab active={this.state.tab} id="empty" text="Empty" setTab={this.setTab} />
-						<Tab active={this.state.tab} id="clone" text="Clone" setTab={this.setTab} />
-						<Tab active={this.state.tab} id="template" text="Template" setTab={this.setTab} />
-					</div>
-				</nav>
-				<div className="tab-content">
-					<div className="tab-pane show active">
-						<DeployCurrentTab
-							tab={this.state.tab}
-						/>
-					</div>
-				</div>
-			</div>
+function Deploy(props) {
+	[tab, setTab] = useState("empty")
+	var title
+	if ((props.noTitle === undefined) || !props.noTitle) {
+		title = (
+			<h2>Deploy</h2>
 		)
 	}
+
+	return (
+		<div>
+			{title}
+			<nav>
+				<div className="nav nav-tabs mb-3">
+					<Tab active={tab} id="empty" text="Empty" setTab={setTab} />
+					<Tab active={tab} id="clone" text="Clone" setTab={setTab} />
+					<Tab active={tab} id="template" text="Template" setTab={setTab} />
+				</div>
+			</nav>
+			<div className="tab-content">
+				<div className="tab-pane show active">
+					<DeployCurrentTab
+						tab={tab}
+					/>
+				</div>
+			</div>
+		</div>
+	)
 }
 
 function Tab(props) {
@@ -71,7 +65,7 @@ function Tab(props) {
 		cl += " text-secondary"
 	}
 	return (
-		<a className={cl} id={props.id} onClick={props.setTab}>{props.text}</a>
+		<a className={cl} id={props.id} onClick={() => {props.setTab(props.id)}}>{props.text}</a>
 	)
 }
 

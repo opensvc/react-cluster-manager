@@ -11,62 +11,62 @@ import { Objs } from "./Objs.jsx";
 
 function ThreadsLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
-	var cl = "text-" + threadsIssue(cstat).color
+	var color = threadsIssue(cstat).color
 	return (
-		<a className={cl} href="#threads" onClick={() => dispatch({type: "setNav", page: "Threads", links: ["Threads"]})}>Threads</a>
+		<div className={"m-1 alert alert-"+color}>
+			<a className={"text-"+color} href="#threads" onClick={() => dispatch({type: "setNav", page: "Threads", links: ["Threads"]})}>Threads</a>
+		</div>
 	)
 }
 
 function NodesLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
-	var cl = "text-" + nodesIssue(cstat).color
+	var color = nodesIssue(cstat).color
 	return (
-		<a className={cl} href="#nodes" onClick={() => dispatch({type: "setNav", page: "Nodes", links: ["Nodes"]})}>Nodes</a>
+		<div className={"m-1 alert alert-"+color}>
+			<a className={"text-"+color} href="#nodes" onClick={() => dispatch({type: "setNav", page: "Nodes", links: ["Nodes"]})}>Nodes</a>
+		</div>
 	)
 }
 
 function ObjectsLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
-	var cl = "text-" + objectsIssue(cstat).color
+	var color = objectsIssue(cstat).color
 	return (
-		<a className={cl} href="#objects" onClick={() => dispatch({type: "setNav", page: "Objects", links: ["Objects"]})}>Objects</a>
+		<div className={"m-1 alert alert-"+color}>
+			<a className={"text-"+color} href="#objects" onClick={() => dispatch({type: "setNav", page: "Objects", links: ["Objects"]})}>Objects</a>
+		</div>
 	)
 }
 
 function ArbitratorsLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
-	var cl = "text-" + arbitratorsIssue(cstat).color
+	var color = arbitratorsIssue(cstat).color
 	return (
-		<a className={cl} href="#arbitrators" onClick={() => dispatch({type: "setNav", page: "Arbitrators", links: ["Arbitrators"]})}>Arbitrators</a>
+		<div className={"m-1 alert alert-"+color}>
+			<a className={"text-"+color} href="#arbitrators" onClick={() => dispatch({type: "setNav", page: "Arbitrators", links: ["Arbitrators"]})}>Arbitrators</a>
+		</div>
 	)
 }
 
 function HeartbeatsLink(props) {
 	const [{ cstat }, dispatch] = useStateValue();
-	var cl = "text-" + heartbeatsIssue(cstat).color
+	var color = heartbeatsIssue(cstat).color
 	return (
-		<a className={cl} href="#heartbeats" onClick={() => dispatch({type: "setNav", page: "Heartbeats", links: ["Heartbeats"]})}>Heartbeats</a>
+		<div className={"m-1 alert alert-"+color}>
+			<a className={"text-"+color} href="#heartbeats" onClick={() => dispatch({type: "setNav", page: "Heartbeats", links: ["Heartbeats"]})}>Heartbeats</a>
+		</div>
 	)
 }
 
 function SubsysLinks(props) {
 	return (
 		<div className="d-flex flex-wrap p-0 m-0 h6">
-			<div className="mb-2 mr-2">
-				<ThreadsLink />
-			</div>
-			<div className="mb-2 mr-2">
-				<HeartbeatsLink />
-			</div>
-			<div className="mb-2 mr-2">
-				<ArbitratorsLink />
-			</div>
-			<div className="mb-2 mr-2">
-				<NodesLink />
-			</div>
-			<div className="mb-2 mr-2">
-				<ObjectsLink />
-			</div>
+			<ThreadsLink />
+			<HeartbeatsLink />
+			<ArbitratorsLink />
+			<NodesLink />
+			<ObjectsLink />
 		</div>
 	)
 }
@@ -100,7 +100,6 @@ function Cluster(props) {
 	return (
 		<div>
 			<SubsysLinks />
-			<ClusterTools />
 			{threads}
 			{heartbeats}
 			{arbitrators}

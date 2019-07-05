@@ -151,12 +151,18 @@ function Nodes(props) {
 			"links": ["Nodes"],
 		})
 	}
+	var title
+	if ((props.noTitle === undefined) || !props.noTitle) {
+		title = (
+			<div className="float-left">
+				<h2><a className="text-dark" href="#" onClick={handleTitleClick}>Nodes</a></h2>
+			</div>
+		)
+	}
 	return (
 		<div id="nodes">
 			<div className="clearfix">
-				<div className="float-left">
-					<h2><a className="text-dark" href="#" onClick={handleTitleClick}>Nodes</a></h2>
-				</div>
+				{title}
 				<div className="float-right">
 					<ClusterActions title="Cluster Actions" />
 				</div>

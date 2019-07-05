@@ -21,9 +21,16 @@ function ObjInstanceDetails(props) {
 	// props.node
 	//
 	const sp = splitPath(props.path)
+	var title
+	if ((props.noTitle === undefined) || !props.noTitle) {
+		title = (
+			<h2>{props.path} @ {props.node}</h2>
+		)
+	}
+
 	return (
 		<div>
-			<h2>{props.path} @ {props.node}</h2>
+			{title}
 			<div className="clearfix">
 				<div className="float-left">
 					<h3>Object</h3>
@@ -46,7 +53,7 @@ function ObjInstanceDetails(props) {
 						path={props.path}
 						splitpath={sp}
 						node={props.node}
-						text="Instance Actions"
+						title="Instance Actions"
 					/>
 				</div>
 			</div>

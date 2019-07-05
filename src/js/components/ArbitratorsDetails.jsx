@@ -50,9 +50,16 @@ function ArbitratorsDetails(props) {
 	if (!arbNames.length) {
 		return null
 	}
+	var title
+	if ((props.noTitle === undefined) || !props.noTitle) {
+		title = (
+			<h2><a className="text-dark" href="#" onClick={handleClick}>Arbitrators</a></h2>
+		)
+	}
+
 	return (
 		<div id="arbitrators">
-			<h2><a className="text-dark" href="#" onClick={handleClick}>Arbitrators</a></h2>
+			{title}
 			<div className="table-adaptative">
 				<table className="table table-hover">
 					<thead>

@@ -13,11 +13,19 @@ function ObjDetails(props) {
 	// props.path
 	//
 	const sp = splitPath(props.path)
+	var title
+	if ((props.noTitle === undefined) || !props.noTitle) {
+		title = (
+			<h2>{props.path}</h2>
+		)
+	}
+
 	return (
 		<div>
+			{title}
 			<div className="clearfix">
 				<div className="float-left">
-					<h2>{props.path}</h2>
+					<h3>Object</h3>
 				</div>
 				<div className="float-right">
 					<ObjActions

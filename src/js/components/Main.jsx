@@ -15,33 +15,34 @@ function Main(props) {
 	const [{ nav }, dispatch] = useStateValue();
 
 	if (nav.page == "Cluster") {
-		return ( <Cluster /> )
+		return ( <Cluster noTitle /> )
 	}
 	if (nav.page == "Threads") {
-		return ( <Threads /> )
+		return ( <Threads noTitle /> )
 	}
 	if (nav.page == "Nodes") {
-		return ( <Nodes /> )
+		return ( <Nodes noTitle /> )
 	}
 	if (nav.page == "Objects") {
-		return ( <Objs /> )
+		return ( <Objs noTitle /> )
 	}
 	if (nav.page == "Deploy") {
-		return ( <Deploy /> )
+		return ( <Deploy noTitle /> )
 	}
 	if (nav.page == "Heartbeats") {
-		return ( <HeartbeatsDetails /> )
+		return ( <HeartbeatsDetails noTitle /> )
 	}
 	if (nav.page == "Arbitrators") {
-		return ( <ArbitratorsDetails /> )
+		return ( <ArbitratorsDetails noTitle /> )
 	}
 	if (nav.page == "User") {
-		return ( <User /> )
+		return ( <User noTitle /> )
 	}
 	if (nav.page == "Object") {
 		return (
 			<ObjDetails
 				path={nav.links[nav.links.length-1]}
+				noTitle
 			/>
 		)
 	}
@@ -50,6 +51,7 @@ function Main(props) {
 			<ObjInstanceDetails
 				path={nav.links[nav.links.length-2]}
 				node={nav.links[nav.links.length-1]}
+				noTitle
 			/>
 		)
 	}
@@ -57,6 +59,7 @@ function Main(props) {
 		return (
 			<ObjDetails
 				path={nav.links[nav.links.length-1]}
+				noTitle
 			/>
 		)
 	}
