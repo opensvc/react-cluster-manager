@@ -96,6 +96,36 @@ const App = () => {
 					alerts: new_alerts
 				}
 
+			case 'setDeployTemplateUri':
+				return {
+					...state,
+					deployTemplateUri: action.value
+				}
+
+			case 'setDeployTemplateText':
+				return {
+					...state,
+					deployTemplateText: action.value
+				}
+
+			case 'setDeployTemplateData':
+				return {
+					...state,
+					deployTemplateData: action.value
+				}
+
+			case 'setDeployTemplateName':
+				return {
+					...state,
+					deployTemplateName: action.value
+				}
+
+			case 'setDeployTemplateNamespace':
+				return {
+					...state,
+					deployTemplateNamespace: action.value
+				}
+
 			default:
 				return state;
 		}
