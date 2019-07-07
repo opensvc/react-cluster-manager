@@ -64,24 +64,36 @@ function splitPath(path) {
 function parseIni(text) {
 	let data = {};
 	let currentKey = null;
+	let kvPair = null;
 	const keyValuePair = kvStr => {
 		const kvPair = kvStr.split('=').map( val => val.trim() );
 		return { key: kvPair[0], value: kvPair[1] };
 	};
 	text
 		.split( /\n/ )
-		.map( line => line.replace( /^\s+|\r/g, "" ) )
+		//.map( line => line.replace( /^\s+|\r/g, "" ) )
+		.map( line => line.replace( /\r/g, "" ) )		// empty line
+		.map( line => line.replace( /\s*[#;].*$/g, "" ) )	// EOF comments
 		.forEach( line =>  {
-			line = line.trim();
-			if (line.startsWith('#') || line.startsWith(';')) {
+			if (line.match(/^\s*[#;]/)) {
 				return false;
 			}
+			if (line.match(/^\s+/)) {
+				if (currentKey && kvPair) {
+					// line continuation
+					data[currentKey][kvPair.key] += " " + line.trim()
+					return true
+				} else {
+					return false
+				}
+			}
+			line = line.trim();
 			if (line.length) {
 				if (/^\[/.test(line)) {
 					currentKey = line.replace(/\[|\]/g,'');
 					data[currentKey] = {};
 				} else if ( currentKey.length ) {
-					const kvPair = keyValuePair(line);
+					kvPair = keyValuePair(line);
 					data[currentKey][kvPair.key] = kvPair.value;
 				}
 			}
