@@ -113,7 +113,7 @@ function Node(props) {
 	if (props.compatIssue == state.OPTIMAL) {
 		var ccl = "badge badge-secondary"
 	} else {
-		var ccl = "badge badge-"+props.versionIssue.color
+		var ccl = "badge badge-"+props.compatIssue.color
 	}
 	if (props.versionIssue == state.OPTIMAL) {
 		var vcl = "badge text-secondary"
