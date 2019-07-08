@@ -24,6 +24,7 @@
     "postcss-loader": "^3.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
+    "react-bootstrap-typeahead": "^3.4.5",
     "react-dom": "^16.8.6",
     "react-sparklines": "^1.7.0",
     "reactstrap": "^8.0.0",

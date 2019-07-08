@@ -3,7 +3,7 @@ import { useStateValue } from '../state.js';
 import { apiObjGetConfig, apiObjCreate } from "../api.js";
 import { parseIni } from "../utils.js";
 import { Col, Row, Form, Button, FormGroup, FormFeedback, Label, Input } from 'reactstrap';
-
+import { ObjKindSelector } from './ObjKindSelector.jsx';
 
 function DeployButton(props) {
 	//
@@ -86,10 +86,11 @@ function DeployCurrentTab(props) {
 
 function DeployEmpty(props) {
 	const [{}, dispatch] = useStateValue();
+	const [kind, setKind] = useState("svc");
 	function createEmpty(e) {
 		var namespace = e.target.parentNode.querySelector("input#namespace").value
 		var name = e.target.parentNode.querySelector("input#name").value
-		var path = [namespace, "svc", name].join("/")
+		var path = [namespace, kind, name].join("/")
 		var data = {
 			namespace: namespace,
 			provision: false,
@@ -99,6 +100,9 @@ function DeployEmpty(props) {
 		data.data[path] = {}
 		apiObjCreate(data, (data) => dispatch({type: "parseApiResponse", data: data}))
 	}
+	function handleObjKindClick(kind) {
+		setKind(kind)
+	}
 	return (
 		<div>
 			<p className="text-secondary">Deploy an empty service to a single node, to configure later.</p>
@@ -107,6 +111,7 @@ function DeployEmpty(props) {
 				<Label for="namespace">Namespace</Label>
 				<Input id="namespace" placeholder="test"/>
 			</FormGroup>
+			<ObjKindSelector value={kind} onClick={handleObjKindClick} />
 			<FormGroup>
 				<Label for="name">Name</Label>
 				<Input id="name" placeholder="mysvc1"/>
