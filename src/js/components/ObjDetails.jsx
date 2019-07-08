@@ -53,7 +53,7 @@ class ObjConfig extends Component {
 		}
 	}
 	componentDidMount() {
-		apiObjGetConfig({svcpath: this.props.path}, (data) => {
+		apiObjGetConfig({path: this.props.path}, (data) => {
 			this.setState({data: data})
 		})
 	}

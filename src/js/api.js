@@ -92,7 +92,7 @@ function apiInstanceAction(node, path, action, options, callback) {
 		},
 		method: "POST",
 		body: JSON.stringify({
-			svcpath: path,
+			path: path,
 			action: action,
 			options: options
 		})
@@ -130,7 +130,7 @@ function apiObjSetMonitor(path, global_expect, callback) {
 		},
 		method: "POST",
 		body: JSON.stringify({
-			svcpath: path,
+			path: path,
 			global_expect: global_expect
 		})
 	})

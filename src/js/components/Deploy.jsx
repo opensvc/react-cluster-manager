@@ -130,7 +130,7 @@ function DeployClone(props) {
 			restore: false,
 			data: {}
 		}
-		apiObjGetConfig({svcpath: srcpath, format: "json"}, (cdata) => {
+		apiObjGetConfig({path: srcpath, format: "json"}, (cdata) => {
 			if ("metadata" in cdata) {
 				delete cdata["metadata"]
 			}
