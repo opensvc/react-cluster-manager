@@ -59,7 +59,7 @@ html {
 	.table-adaptative td {
 		border: none!important;
 		position: relative;
-		padding-top: 2.0rem !important;
+		padding-top: 1.5rem !important;
 		white-space: normal;
 		text-align: left;
 		flex: 1 1 7em;
@@ -67,7 +67,7 @@ html {
 	}
 	.table-adaptative td:before {
 		position: absolute;
-		top: 0.75rem;
+		top: 0.4rem;
 		white-space: nowrap;
 		text-align: left;
 		color: #6c757d;
