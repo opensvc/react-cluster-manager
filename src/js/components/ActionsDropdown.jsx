@@ -64,6 +64,9 @@ function ActionsDropdownItemWrapped(props) {
 			// not initialized yet
 			return true
 		}
+		if ("root" in user.grant) {
+			return false
+		}
 		if (props.requires.role && !(props.requires.role in user.grant)) {
 			//console.log("item", props.value, "disabled: user must have the", props.requires.role, "role")
 			return true
