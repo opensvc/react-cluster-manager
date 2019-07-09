@@ -1,7 +1,7 @@
 import React from "react";
 import { useStateValue } from './state.js';
 
-function parseApiResponse(data) {
+function parseApiResponse(data, ok) {
 	var alerts = []
 	var date = new Date()
 	console.log("parse api response", data)
@@ -37,6 +37,13 @@ function parseApiResponse(data) {
 			"date": date,
 			"level": "dark",
 			"body": (<div>{data.info}</div>)
+		})
+	}
+	if (ok && (data.status == 0) && (alerts.length == 0)) {
+		alerts.push({
+			"date": date,
+			"level": "dark",
+			"body": (<div>{ok}</div>)
 		})
 	}
 	return alerts
@@ -165,6 +172,30 @@ function apiObjGetConfig(options, callback) {
 	.catch(console.log)
 }
 
+function apiPostAny(path, options, callback) {
+	fetch(path, {
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+			'o-node': 'ANY'
+		},
+		method: "POST",
+		body: JSON.stringify(options)
+	})
+	.then(res => res.json())
+	.then(data => {
+		// {nodes: {n1: {...}} => {...}
+		// because the user ask for only one cf data
+		var _data = null
+		for (var node in data.nodes) {
+			_data = data.nodes[node]
+			break
+		}
+		if (callback) { callback(_data) }
+	})
+	.catch(console.log)
+}
+
 function apiObjCreate(data, callback) {
 	fetch('/create', {
 		headers: {
@@ -192,5 +223,6 @@ export {
 	apiNodeSetMonitor,
 	apiObjSetMonitor,
 	apiObjGetConfig,
-	apiObjCreate
+	apiObjCreate,
+	apiPostAny
 }

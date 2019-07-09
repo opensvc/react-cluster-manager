@@ -3,7 +3,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { StateProvider, StateContext } from '../state.js';
-import { parseApiResponse, apiWhoAmI } from "../api.js";
+import { apiPostAny, parseApiResponse, apiWhoAmI } from "../api.js";
 import { Alerts } from "./Alerts.jsx";
 import { NavBar } from "./NavBar.jsx";
 import { Main } from "./Main.jsx";
@@ -30,7 +30,20 @@ const App = () => {
 			page: "Cluster",
 			links: [],
 		},
-		alerts: []      // ex: [{level: "warning", body: (<div>foo</div>)}]
+		alerts: [],      // ex: [{level: "warning", body: (<div>foo</div>)}],
+		deployTemplateUri: "",
+                deployTemplateText: "",
+                deployTemplateData: null,
+                deployTemplateName: "",
+                deployTemplateNamespace: [],
+		catalogs: [],
+		deployCatalogCatalog: "",
+		deployCatalogTemplates: [],
+		deployCatalogTemplate: "",
+		deployCatalogText: "",
+		deployCatalogData: null,
+		deployCatalogName: "",
+		deployCatalogNamespace: []
 	}
 
 	const reducer = (state, action) => {
@@ -73,7 +86,7 @@ const App = () => {
 				};
 
 			case 'parseApiResponse':
-				var new_alerts = state.alerts.concat(parseApiResponse(action.data))
+				var new_alerts = state.alerts.concat(parseApiResponse(action.data, action.ok))
 				return {
 					...state,
 					alerts: new_alerts
@@ -124,6 +137,54 @@ const App = () => {
 				return {
 					...state,
 					deployTemplateNamespace: action.value
+				}
+
+			case 'setDeployCatalogNamespace':
+				return {
+					...state,
+					deployCatalogNamespace: action.value
+				}
+
+			case 'setDeployCatalogName':
+				return {
+					...state,
+					deployCatalogName: action.value
+				}
+
+			case 'setDeployCatalogText':
+				return {
+					...state,
+					deployCatalogText: action.value
+				}
+
+			case 'setDeployCatalogData':
+				return {
+					...state,
+					deployCatalogData: action.value
+				}
+
+			case 'setDeployCatalogCatalog':
+				return {
+					...state,
+					deployCatalogCatalog: action.value
+				}
+
+			case 'setDeployCatalogTemplates':
+				return {
+					...state,
+					deployCatalogTemplates: action.value
+				}
+
+			case 'setDeployCatalogTemplate':
+				return {
+					...state,
+					deployCatalogTemplate: action.value
+				}
+
+			case 'setCatalogs':
+				return {
+					...state,
+					catalogs: action.value
 				}
 
 			default:
@@ -207,10 +268,21 @@ class WrappedApp extends Component {
 			})
 		})
 	}
+	loadCatalogs() {
+		const [{}, dispatch] = this.context
+		apiPostAny("/get_catalogs", {}, (data) => {
+			console.log("catalogs", data)
+                        dispatch({
+				"type": "setCatalogs",
+				"value": data
+			})
+                })
+	}
 
 	componentDidMount() {
 		this.loadCstat()
 		this.loadUser()
+		this.loadCatalogs()
 		this.initEventSource()
 	}
 	componentWillUnmount() {

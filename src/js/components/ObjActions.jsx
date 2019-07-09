@@ -10,6 +10,10 @@ function ObjActions(props) {
 	const nInstances = nInstancesGet()
 	const sp = splitPath(props.path)
 
+	if (odata === undefined) {
+		return null
+	}
+
 	function submit(props) {
 		apiObjSetMonitor(
 			props.menu.path,

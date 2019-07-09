@@ -8,6 +8,9 @@ import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
 function ObjDigest(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	const sp = splitPath(props.path)
+	if (cstat.monitor.services[props.path] === undefined) {
+		return null
+	}
 	return (
 		<div className="table-responsive">
 			<table className="table table-hover">

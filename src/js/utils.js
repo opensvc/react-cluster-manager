@@ -72,19 +72,17 @@ function parseIni(text) {
 	text
 		.split( /\n/ )
 		//.map( line => line.replace( /^\s+|\r/g, "" ) )
-		.map( line => line.replace( /\r/g, "" ) )		// empty line
-		.map( line => line.replace( /\s*[#;].*$/g, "" ) )	// EOF comments
+		.map( line => line.replace( /\r/g, "" ) )		// strip empty line
+		.map( line => line.replace( /\s+[#;].*$/g, "" ) )	// strip EOL comments
 		.forEach( line =>  {
 			if (line.match(/^\s*[#;]/)) {
-				return false;
+				return false;				// discard comment line
 			}
 			if (line.match(/^\s+/)) {
 				if (currentKey && kvPair) {
 					// line continuation
 					data[currentKey][kvPair.key] += " " + line.trim()
 					return true
-				} else {
-					return false
 				}
 			}
 			line = line.trim();
@@ -128,10 +126,54 @@ function fancySizeMB(size) {
 	return sign + _size + unit
 }
 
+function namespaceValid(namespace) {
+	if (Array.isArray(namespace)) {
+		for (var ns of namespace) {
+			if (!namespaceValid(ns)) {
+				return false
+			}
+		}
+		return true
+	}
+	if (namespace === undefined) {
+		return false
+	}
+	if (!namespace) {
+		return false
+	}
+	if (!namespace.match(/^[a-z]+[a-z0-9_\-\.]*$/i)) {
+		return false
+	}
+	return true
+}
+
+function nameValid(name) {
+	if (Array.isArray(name)) {
+		for (var n of name) {
+			if (!nameValid(n)) {
+				return false
+			}
+		}
+		return true
+	}
+	if (name === undefined) {
+		return false
+	}
+	if (!name) {
+		return false
+	}
+	if (!name.match(/^[a-z]+[a-z0-9_\-\.]*$/i)) {
+		return false
+	}
+	return true
+}
+
 export {
 	state,
 	mergeStates,
 	parseIni,
 	splitPath,
-	fancySizeMB
+	fancySizeMB,
+	nameValid,
+	namespaceValid
 }
