@@ -9,7 +9,8 @@ html {
 	cursor: pointer;
 }
 .border-left-4 {
-	border-left: 4px solid #dee2e6!important;
+	border-left-width: 4px;
+	border-left-style: solid;
 }
 .metrics {
 	display: flex;
