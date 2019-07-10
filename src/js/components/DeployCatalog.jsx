@@ -17,6 +17,7 @@ function DeployCatalog(props) {
 		deployCatalogName,
 		deployCatalogNamespace
 	}, dispatch] = useStateValue()
+	const [envs, setEnvs] = useState({})
 
 	function loadCatalog(catalog) {
 		apiPostAny("/get_templates", {catalog: catalog[0].name}, (data) => {
@@ -30,12 +31,18 @@ function DeployCatalog(props) {
 		})
 	}
 	function templateValid(template) {
+		if (template[0] === undefined) {
+			return false
+		}
 		if (deployCatalogTemplates.filter(t => t.name==template[0].name).length > 0) {
 			return true
 		}
 		return false
 	}
 	function catalogValid(catalog) {
+		if (catalog[0] === undefined) {
+			return false
+		}
 		if (catalogs.filter(c => c.name==catalog[0].name).length > 0) {
 			return true
 		}
@@ -62,7 +69,8 @@ function DeployCatalog(props) {
 			var data = {
 				"provision": true,
 				"namespace": deployCatalogNamespace[0],
-				"data": deployCatalogEnvData
+				"template": deployCatalogTemplate[0].id,
+				"data": envs
 			}
 			var nObj = Object.keys(data).length
 			if (nObj > 1) {
@@ -73,11 +81,11 @@ function DeployCatalog(props) {
 		} else {
 			var path = deployCatalogNamespace[0]+"/svc/"+deployCatalogName
 			var data = {
+				"path": path,
 				"provision": true,
 				"namespace": deployCatalogNamespace[0],
-				"data": {
-					[path]: deployCatalogData
-				}
+				"template": deployCatalogTemplate[0].id,
+				"data": envs
 			}
 			var ok = "Object " + path + " deployed."
 		}
@@ -177,11 +185,84 @@ function DeployCatalog(props) {
 					onChange={handleCatalogTemplateChange}
 					selected={deployCatalogTemplate}
 					className="flex-grow-1"
+					highlightOnlyResult={true}
+					selectHintOnEnter={true}
 				/>
 			</FormGroup>
 		)
 	} else {
 		var templates
+	}
+
+	function objEnv(path, data) {
+		var c = []
+		if (data === undefined) {
+			return []
+		}
+		for (var key in data) {
+			if (key.match(/\./)) {
+				continue
+			}
+			var commentKey = key + ".comment"
+			var requiredKey = key + ".required"
+			var defaultValue = data[key] ? data[key] : ""
+			try {
+				var value = envs[path][key]
+			} catch(e) {
+				var value = defaultValue
+			}
+			if (value === undefined) {
+				value = ""
+			}
+			var label = key
+			var id = path + "-" + key
+
+			if (commentKey in data) {
+				label = data[commentKey]
+			}
+			c.push(
+				<FormGroup key={id}>
+					<Label for={id}>{label}</Label>
+					<Input
+						id={id}
+						kw={key}
+						path={path}
+						value={value}
+						onChange={(e) => {
+							var newEnvs = {...envs}
+							var key = e.target.getAttribute("kw")
+							var path = e.target.getAttribute("path")
+							if (!(path in newEnvs)) {
+								newEnvs[path] = {}
+							}
+							newEnvs[path][key] = e.target.value
+							setEnvs(newEnvs)
+						}}
+					/>
+				</FormGroup>
+			)
+		}
+		if (c.length) {
+			var item = (
+				<legend key={path}>
+					{path} customization
+				</legend>
+			)
+			c.splice(0, 0, item)
+		}
+		return c
+	}
+
+	var env = []
+	if (deployCatalogData) {
+		if (hasPathKey()) {
+			for (var path in deployCatalogData) {
+				env = env.concat(objEnv(path, deployCatalogData[path].env))
+			}
+		} else if (deployCatalogNamespace && deployCatalogName) {
+			var path = deployCatalogNamespace+"/svc/"+deployCatalogName
+			env = env.concat(objEnv(path, deployCatalogData.env))
+		}
 	}
 
 	return (
@@ -198,6 +279,8 @@ function DeployCatalog(props) {
 					onChange={handleCatalogChange}
 					selected={deployCatalogCatalog}
 					className="flex-grow-1"
+					highlightOnlyResult={true}
+					selectHintOnEnter={true}
 				/>
 			</FormGroup>
 			{templates}
@@ -228,6 +311,7 @@ function DeployCatalog(props) {
 				<FormFeedback>Must start with an aplha and continue with aplhanum, dot, underscore or hyphen.</FormFeedback>
 			</FormGroup>
 			{name}
+			{env}
 			<Button color="primary" disabled={submitDisabled()} onClick={handleSubmit}>Submit</Button>
 		</Form>
 	)

@@ -53,6 +53,8 @@ function NamespaceSelector(props) {
 			newSelectionPrefix="Add a new namespace: "
 			invalid={!namespaceValid(props.selected)}
 			valid={namespaceValid(props.selected)}
+			highlightOnlyResult={true}
+			selectHintOnEnter={true}
 		/>
 	)
 }

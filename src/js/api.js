@@ -5,6 +5,14 @@ function parseApiResponse(data, ok) {
 	var alerts = []
 	var date = new Date()
 	console.log("parse api response", data)
+	function fmt(log) {
+		if (!Array.isArray(log)) {
+			log = [log]
+		}
+		return log.map((e, i) => (
+			<div key={i}>{e}</div>
+		))
+	}
 	if (data.status) {
 		if ("nodes" in data) {
 			for (var node in data.nodes) {
@@ -13,14 +21,14 @@ function parseApiResponse(data, ok) {
 					alerts.push({
 						"date": date,
 						"level": "danger",
-						"body": (<div><strong>{node}</strong><br/><div>{_data.error}</div></div>)
+						"body": (<div><strong>{node}</strong><br/><div>{fmt(_data.error)}</div></div>)
 					})
 				}
 				if (_data.info) {
 					alerts.push({
 						"date": date,
 						"level": "dark",
-						"body": (<div><strong>{node}</strong><br/><div>{_data.info}</div></div>)
+						"body": (<div><strong>{node}</strong><br/><div>{fmt(_data.info)}</div></div>)
 					})
 				}
 			}
@@ -28,7 +36,7 @@ function parseApiResponse(data, ok) {
 			alerts.push({
 				"date": date,
 				"level": "danger",
-				"body": (<div>{data.error}</div>)
+				"body": (<div>{fmt(data.error)}</div>)
 			})
 		}
 	}
@@ -36,7 +44,7 @@ function parseApiResponse(data, ok) {
 		alerts.push({
 			"date": date,
 			"level": "dark",
-			"body": (<div>{data.info}</div>)
+			"body": (<div>{fmt(data.info)}</div>)
 		})
 	}
 	if (ok && (data.status == 0) && (alerts.length == 0)) {

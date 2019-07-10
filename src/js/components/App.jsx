@@ -276,6 +276,18 @@ class WrappedApp extends Component {
 				"type": "setCatalogs",
 				"value": data
 			})
+			if (data.length > 0) {
+				dispatch({
+					"type": "setDeployCatalogCatalog",
+					"value": [data[0]]
+				})
+				apiPostAny("/get_templates", {"catalog": data[0].name}, (data) => {
+					dispatch({
+						"type": "setDeployCatalogTemplates",
+						"value": data
+					})
+				})
+			}
                 })
 	}
 
