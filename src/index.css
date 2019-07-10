@@ -1,6 +1,10 @@
 html {
 	scroll-behavior: smooth;
 }
+/* dropdown menu over sticky header */
+.dropdown-menu {
+	z-index: 1020;
+}
 .cursor-pointer {
 	cursor: pointer;
 }
