@@ -120,8 +120,15 @@ function Node(props) {
 	} else {
 		var vcl = "badge text-"+props.versionIssue.color
 	}
+	function handleClick(e) {
+		dispatch({
+			"type": "setNav",
+			"page": props.node,
+			"links": ["Nodes", props.node]
+		})
+	}
 	return (
-		<tr>
+		<tr className="clickable" onClick={handleClick}>
 			<td data-title="Name">{props.node}</td>
 			<td data-title="State"><NodeState data={data} /></td>
 			<td data-title="Score"><NodeScore node={props.node} /></td>

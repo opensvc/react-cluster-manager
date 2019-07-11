@@ -180,6 +180,30 @@ function apiObjGetConfig(options, callback) {
 	.catch(console.log)
 }
 
+function apiPostNode(node, path, options, callback) {
+	fetch(path, {
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+			'o-node': node,
+		},
+		method: "POST",
+		body: JSON.stringify(options)
+	})
+	.then(res => res.json())
+	.then(data => {
+		// {nodes: {n1: {...}} => {...}
+		// because the user ask for only one cf data
+		var _data = null
+		for (var node in data.nodes) {
+			_data = data.nodes[node]
+			break
+		}
+		if (callback) { callback(_data) }
+	})
+	.catch(console.log)
+}
+
 function apiPostAny(path, options, callback) {
 	fetch(path, {
 		headers: {
@@ -232,5 +256,6 @@ export {
 	apiObjSetMonitor,
 	apiObjGetConfig,
 	apiObjCreate,
-	apiPostAny
+	apiPostAny,
+	apiPostNode,
 }

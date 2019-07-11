@@ -3,6 +3,7 @@ import { useStateValue } from '../state.js';
 import { Cluster } from "./Cluster.jsx";
 import { Threads } from "./Threads.jsx";
 import { Nodes } from "./Nodes.jsx";
+import { NodeDetails } from "./NodeDetails.jsx";
 import { Objs } from "./Objs.jsx";
 import { ObjDetails } from "./ObjDetails.jsx";
 import { ObjInstanceDetails } from "./ObjInstanceDetails.jsx";
@@ -50,6 +51,14 @@ function Main(props) {
 		return (
 			<ObjInstanceDetails
 				path={nav.links[nav.links.length-2]}
+				node={nav.links[nav.links.length-1]}
+				noTitle
+			/>
+		)
+	}
+	if (nav.links[nav.links.length-2] == "Nodes") {
+		return (
+			<NodeDetails
 				node={nav.links[nav.links.length-1]}
 				noTitle
 			/>
