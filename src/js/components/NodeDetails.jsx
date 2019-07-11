@@ -146,10 +146,10 @@ function NetworkInterface(props) {
 function NetworkLine(props) {
 	return (
 		<tr>
-			<td data-title="Interface">{props.data.intf}</td>
-			<td data-title="L2 Address">{props.mac}</td>
-			<td data-title="L3 Address">{props.data.addr}</td>
-			<td data-title="L3 Mask">{props.data.mask}</td>
+			<td data-title="Interface" style={{"flexBasis": "11rem"}}>{props.data.intf}</td>
+			<td data-title="L2 Address" style={{"flexBasis": "11rem"}}>{props.mac}</td>
+			<td data-title="L3 Address" style={{"flexBasis": "11rem"}}>{props.data.addr}</td>
+			<td data-title="L3 Mask" style={{"flexBasis": "11rem"}}>{props.data.mask}</td>
 		</tr>
 	)
 }
@@ -222,7 +222,7 @@ function HardwareLine(props) {
 			<td data-title="Path">{props.data.path}</td>
 			<td data-title="Class">{props.data.class}</td>
 			<td data-title="Driver">{props.data.driver}</td>
-			<td data-title="Description">{props.data.description}</td>
+			<td data-title="Description"  style={{"flexBasis": "100%"}} >{props.data.description}</td>
 		</tr>
 	)
 }
