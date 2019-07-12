@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useStateValue } from '../state.js';
 import { apiPostNode } from "../api.js";
-import { Spinner, Nav, NavItem, NavLink } from "reactstrap"
+import { Button, Spinner, Nav, NavItem, NavLink, Dropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap"
+import { Log } from "./Log.jsx"
 
 const tabs = {
+	INFO: ["Main", "Network", "Initiators", "Hardware", "Users", "Groups"],
 	MAIN: "Main",
 	NET: "Network",
 	HBA: "Initiators",
 	HW: "Hardware",
 	USR: "Users",
 	GRP: "Groups",
+	LOG: "Log",
 }
 
 function Title(props) {
@@ -23,7 +26,9 @@ function Title(props) {
 
 function NodeDetails(props) {
 	const [nodeData, setNodeData] = useState()
+	const [infoOpen, setInfoOpen] = useState()
 	const [active, setActive] = useState(tabs.MAIN)
+	const [{user}, dispatch] = useStateValue()
 
 	useEffect(() => {
 		if (nodeData) {
@@ -37,22 +42,27 @@ function NodeDetails(props) {
 	const handleClick = (e) => {
 		setActive(e.target.textContent)
 	}
+	const toggleInfo = (e) => {
+		setInfoOpen(infoOpen ? false : true)
+	}
 
 	return (
 		<div>
 			<Title node={props.node} noTitle={props.noTitle} />
 			<Nav tabs>
+				<Dropdown nav isOpen={infoOpen} toggle={toggleInfo}>
+					<DropdownToggle nav caret className={tabs.INFO.includes(active) ? "active" : null} >
+						{tabs.INFO.includes(active) ? active : "Info"}
+					</DropdownToggle>
+					<DropdownMenu>
+						<DropdownItem href="#" active={active == tabs.MAIN} onClick={handleClick}>{tabs.MAIN}</DropdownItem>
+						<DropdownItem href="#" active={active == tabs.NET} onClick={handleClick}>{tabs.NET}</DropdownItem>
+						<DropdownItem href="#" active={active == tabs.HBA} onClick={handleClick}>{tabs.HBA}</DropdownItem>
+						<DropdownItem href="#" active={active == tabs.HW} onClick={handleClick}>{tabs.HW}</DropdownItem>
+					</DropdownMenu>
+				</Dropdown>
 				<NavItem>
-					<NavLink href="#" active={active == tabs.MAIN} onClick={handleClick} className="text-secondary">{tabs.MAIN}</NavLink>
-				</NavItem>
-				<NavItem>
-					<NavLink href="#" active={active == tabs.NET} onClick={handleClick} className="text-secondary">{tabs.NET}</NavLink>
-				</NavItem>
-				<NavItem>
-					<NavLink href="#" active={active == tabs.HBA} onClick={handleClick} className="text-secondary">{tabs.HBA}</NavLink>
-				</NavItem>
-				<NavItem>
-					<NavLink href="#" active={active == tabs.HW} onClick={handleClick} className="text-secondary">{tabs.HW}</NavLink>
+					<NavLink href="#" active={active == tabs.LOG} onClick={handleClick} disabled={!("root" in user.grant)}>{tabs.LOG}</NavLink>
 				</NavItem>
 			</Nav>
 			<div>
@@ -60,6 +70,7 @@ function NodeDetails(props) {
 				<Network active={active} nodeData={nodeData} />
 				<Initiators active={active} nodeData={nodeData} />
 				<Hardware active={active} nodeData={nodeData} />
+				<NodeLog active={active} node={props.node} />
 			</div>
 		</div>
 	)
@@ -251,6 +262,30 @@ function Hardware(props) {
 				))}
 			</tbody>
 		</table>
+	)
+}
+
+function NodeLog(props) {
+	if (props.active != tabs.LOG) {
+		return null
+	}
+	return (
+		<div className="pt-3">
+			<Log url={"/node/"+props.node} noTitle />
+		</div>
+	)
+}
+
+function NodeLogButton(props) {
+	return (
+		<Button
+			color="outline-secondary"
+			size="sm"
+			onClick={(e) => setNav({
+				"page": props.node + " Log",
+				"links": ["Nodes", props.node, "Log"]
+			})}
+		>Log</Button>
 	)
 }
 

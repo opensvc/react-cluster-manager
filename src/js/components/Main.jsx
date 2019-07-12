@@ -56,7 +56,8 @@ function Main(props) {
 			/>
 		)
 	}
-	if (nav.links[nav.links.length-2] == "Nodes") {
+	var n = nav.links.length
+	if (nav.links[n-2] == "Nodes") {
 		return (
 			<NodeDetails
 				node={nav.links[nav.links.length-1]}
@@ -64,10 +65,26 @@ function Main(props) {
 			/>
 		)
 	}
-	if (nav.links[nav.links.length-2] == "Objects") {
+	if (nav.links[n-2] == "Objects") {
 		return (
 			<ObjDetails
-				path={nav.links[nav.links.length-1]}
+				path={nav.links[n-1]}
+				noTitle
+			/>
+		)
+	}
+	if ([nav.links[n-3], nav.links[n-1]] == ["Objects", "Log"]) {
+		return (
+			<Log
+				url={"/object/"+nav.links[n-2]}
+				noTitle
+			/>
+		)
+	}
+	if ([nav.links[n-3], nav.links[n-1]] == ["Nodes", "Log"]) {
+		return (
+			<Log
+				url={"/node/"+nav.links[n-2]}
 				noTitle
 			/>
 		)

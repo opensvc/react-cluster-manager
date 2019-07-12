@@ -2,7 +2,7 @@
 
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import { StateProvider, StateContext } from '../state.js';
+import { useStateValue, StateProvider, StateContext } from '../state.js';
 import { apiPostAny, parseApiResponse, apiWhoAmI } from "../api.js";
 import { Alerts } from "./Alerts.jsx";
 import { NavBar } from "./NavBar.jsx";
@@ -43,7 +43,9 @@ const App = () => {
 		deployCatalogText: "",
 		deployCatalogData: null,
 		deployCatalogName: "",
-		deployCatalogNamespace: []
+		deployCatalogNamespace: [],
+		logEventSources: {},
+		logs: {},
 	}
 
 	const reducer = (state, action) => {
