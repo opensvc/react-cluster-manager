@@ -7,6 +7,7 @@ import { apiPostAny, parseApiResponse, apiWhoAmI } from "../api.js";
 import { Alerts } from "./Alerts.jsx";
 import { NavBar } from "./NavBar.jsx";
 import { Main } from "./Main.jsx";
+import "../json_delta.js"
 
 const App = () => {
 	const initialState = {
@@ -207,7 +208,9 @@ class WrappedApp extends Component {
 		this.timer = null
 		this.eventSource = null
 		this.lastReload = 0
+		this.lastPatchId = 0
 		this.refreshQueued = false
+		this.cstatRef = React.createRef()
 	}
 	static contextType = StateContext
 
@@ -224,9 +227,7 @@ class WrappedApp extends Component {
                 console.log("initEventSource")
                 this.eventSource = new EventSource("/events")
                 this.eventSource.onmessage = (e) => {
-                        console.log("event", e.data);
-                        //var data = JSON.parse(e.data);
-                        this.loadCstat()
+			this.handleEvent(e)
                 }
                 //this.eventSource.onerror = () => {
                 //      this.stopEventSource()
@@ -235,6 +236,37 @@ class WrappedApp extends Component {
                 //      this.stopEventSource()
                 //})
         }
+
+	handleEvent(e) {
+		const [{}, dispatch] = this.context
+		if (!this.cstatRef.current) {
+			console.log("initial cluster status fetch")
+			this.loadCstat()
+			return
+		}
+		var data = JSON.parse(e.data)
+		console.log("event", e.data);
+		if (data.kind != "patch") {
+			return
+		}
+		try {
+			if (this.lastPatchId && (this.lastPatchId+1 != data.id)) {
+				console.log("broken patch chain")
+				this.loadCstat()
+				return
+			}
+			this.cstatRef.current = JSON_delta.patch(this.cstatRef.current, data.data)
+			dispatch({
+				"type": "loadCstat",
+				"data": this.cstatRef.current
+			})
+			this.lastPatchId = data.id
+			console.log("patched cluster status, id", data.id)
+		} catch(e) {
+			console.log("error patching cstat:", e)
+			this.loadCstat()
+		}
+	}
 
 	loadCstat(last) {
 		const now = + new Date()
@@ -256,7 +288,11 @@ class WrappedApp extends Component {
 			.then(res => res.json())
 			.then((data) => {
 				console.log(data)
-				dispatch({type: "loadCstat", data: data})
+				this.cstatRef.current = data
+				dispatch({
+					"type": "loadCstat",
+					"data": data
+				})
 			})
 			.catch(console.log)
 	}

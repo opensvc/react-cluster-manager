@@ -110,6 +110,9 @@ function Node(props) {
 		return null
 	}
 	var data = cstat.monitor.nodes[props.node]
+	if (data == undefined) {
+		return null
+	}
 	if (props.compatIssue == state.OPTIMAL) {
 		var ccl = "badge badge-secondary"
 	} else {

@@ -17,6 +17,9 @@ function ObjActive(props) {
 		if (idata === undefined) {
 			continue
 		}
+		if (idata.monitor === undefined) {
+			continue
+		}
 		if (idata.monitor.global_expect || (idata.monitor.status != "idle")) {
 			return ( <Spinner type="grow" color="primary" size="sm" /> )
 		}

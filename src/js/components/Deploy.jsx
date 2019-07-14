@@ -23,7 +23,7 @@ function DeployButton(props) {
 }
 
 function Deploy(props) {
-	const [tab, setTab] = useState("empty")
+	const [tab, setTab] = useState("catalog")
 	var title
 	if ((props.noTitle === undefined) || !props.noTitle) {
 		title = (
@@ -36,10 +36,10 @@ function Deploy(props) {
 			{title}
 			<nav>
 				<div className="nav nav-tabs mb-3">
-					<Tab active={tab} id="empty" text="Empty" setTab={setTab} />
-					<Tab active={tab} id="clone" text="Clone" setTab={setTab} />
 					<Tab active={tab} id="catalog" text="Catalog" setTab={setTab} />
+					<Tab active={tab} id="empty" text="Empty" setTab={setTab} />
 					<Tab active={tab} id="template" text="Template" setTab={setTab} />
+					<Tab active={tab} id="clone" text="Clone" setTab={setTab} />
 				</div>
 			</nav>
 			<div className="tab-content">
