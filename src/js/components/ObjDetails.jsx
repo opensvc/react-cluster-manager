@@ -1,28 +1,73 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
+import { Button, Spinner, Nav, NavItem, NavLink, Dropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap"
 import { useStateValue } from '../state.js';
-import { apiObjGetConfig } from "../api.js";
+import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { splitPath } from "../utils.js";
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjDigest } from "./ObjDigest.jsx";
 import { ObjInstanceState } from "./ObjInstanceState.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
+import { Log } from "./Log.jsx"
+
+const tabs = {
+	MAIN: "Main",
+	CONF: "Config",
+	LOG: "Log",
+}
+
+function Title(props) {
+	if (props.noTitle) {
+		return null
+	}
+	return (
+		<h2>{props.path}</h2>
+	)
+}
 
 function ObjDetails(props) {
 	//
 	// props.path
 	//
+	const [active, setActive] = useState(tabs.MAIN)
+	const [{user}, dispatch] = useStateValue()
 	const sp = splitPath(props.path)
-	var title
-	if ((props.noTitle === undefined) || !props.noTitle) {
-		title = (
-			<h2>{props.path}</h2>
-		)
+
+	const handleClick = (e) => {
+		setActive(e.target.textContent)
 	}
 
 	return (
 		<div>
-			{title}
+			<Title path={props.path} noTitle={props.noTitle} />
+			<Nav tabs>
+				<NavItem>
+					<NavLink href="#" active={active == tabs.MAIN} onClick={handleClick}>{tabs.MAIN}</NavLink>
+				</NavItem>
+				<NavItem>
+					<NavLink href="#" active={active == tabs.CONF} onClick={handleClick}>{tabs.CONF}</NavLink>
+				</NavItem>
+				<NavItem>
+					<NavLink href="#" active={active == tabs.LOG} onClick={handleClick}>{tabs.LOG}</NavLink>
+				</NavItem>
+			</Nav>
+			<div className="pt-3">
+				<ObjMain active={active} path={props.path} />
+				<ObjConfig active={active} path={props.path} />
+				<ObjLog active={active} path={props.path} />
+			</div>
+		</div>
+	)
+}
+
+function ObjMain(props) {
+	if (props.active != tabs.MAIN) {
+		return null
+	}
+	const sp = splitPath(props.path)
+
+	return (
+		<div>
 			<div className="clearfix">
 				<div className="float-left">
 					<h3>Object</h3>
@@ -37,39 +82,29 @@ function ObjDetails(props) {
 			</div>
 			<ObjDigest path={props.path} />
 			<ObjInstances path={props.path} />
-			<ObjConfig path={props.path} />
 		</div>
 	)
 }
 
-class ObjConfig extends Component {
+function ObjConfig(props) {
 	//
 	// props.path
 	//
-	constructor(props) {
-		super(props)
-		this.state = {
-			data: {}
-		}
+	if (props.active != tabs.CONF) {
+		return null
 	}
-	componentDidMount() {
-		apiObjGetConfig({path: this.props.path}, (data) => {
-			this.setState({data: data})
-		})
+	const data = useObjConfig(props.path)
+	if (!data) {
+		return ( <Spinner type="grow" size="sm" /> )
 	}
-	render() {
-		if (!this.state.data) {
-			return null
-		}
-		var date = new Date(this.state.data.mtime * 1000)
-		return (
-			<div>
-				<h3>Configuration</h3>
-				<p className="text-secondary">Last Modified {date.toLocaleString()}</p>
-				<pre>{this.state.data.data}</pre>
-			</div>
-		)
-	}
+	const date = new Date(data.mtime * 1000)
+
+	return (
+		<div>
+			<p className="text-secondary">Last Modified {date.toLocaleString()}</p>
+			<pre>{data.data}</pre>
+		</div>
+	)
 }
 
 function ObjInstances(props) {
@@ -133,6 +168,30 @@ function InstanceLine(props) {
 			<td className="flex-trailer" />
 			<td className="flex-trailer" />
 		</tr>
+	)
+}
+
+function ObjLog(props) {
+	if (props.active != tabs.LOG) {
+		return null
+	}
+	return (
+		<div className="pt-3">
+			<Log url={"/object/"+props.path} noTitle />
+		</div>
+	)
+}
+
+function ObjLogButton(props) {
+	return (
+		<Button
+			color="outline-secondary"
+			size="sm"
+			onClick={(e) => setNav({
+				"page": props.path + " Log",
+				"links": ["Objects", props.path, "Log"]
+			})}
+		>Log</Button>
 	)
 }
 
