@@ -253,6 +253,7 @@ class WrappedApp extends Component {
 			if (this.lastPatchId && (this.lastPatchId+1 != data.id)) {
 				console.log("broken patch chain")
 				this.loadCstat()
+				this.lastPatchId = data.id
 				return
 			}
 			this.cstatRef.current = JSON_delta.patch(this.cstatRef.current, data.data)
@@ -265,6 +266,7 @@ class WrappedApp extends Component {
 		} catch(e) {
 			console.log("error patching cstat:", e)
 			this.loadCstat()
+			this.lastPatchId = data.id
 		}
 	}
 
