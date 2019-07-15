@@ -1,5 +1,6 @@
 import React from "react";
 import { useStateValue } from '../state.js';
+import { splitPath, fmtPath } from '../utils.js'
 
 function slaveInstancesCount(path, cstat) {
 	var live = 0
@@ -27,6 +28,7 @@ function ObjInstanceCounts(props) {
 	var live = 0
 	var total = 0
 	var target = 0
+	var sp = splitPath(props.path)
 	for (var node in cstat.monitor.nodes) {
 		var nstat = cstat.monitor.nodes[node]
 		var instance = nstat.services.status[props.path]
@@ -40,6 +42,7 @@ function ObjInstanceCounts(props) {
 		if ("scale" in instance) {
 			target = instance.scale
 			for (var slavePath of instance.scaler_slaves) {
+				slavePath = fmtPath(slavePath, sp.namespace, sp.kind)
 				live += slaveInstancesCount(slavePath, cstat)
 			}
 			return (

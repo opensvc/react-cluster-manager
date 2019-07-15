@@ -61,6 +61,18 @@ function splitPath(path) {
 	return d
 }
 
+function fmtPath(name, namespace, kind) {
+	if (!namespace || (namespace == "root")) {
+		if (!kind || (kind == "svc")) {
+			return name
+		} else {
+			return [kind, name].join("/")
+		}
+	} else {
+		return [namespace, kind, name].join("/")
+	}
+}
+
 function parseIni(text) {
 	let data = {};
 	let currentKey = null;
@@ -173,6 +185,7 @@ export {
 	mergeStates,
 	parseIni,
 	splitPath,
+	fmtPath,
 	fancySizeMB,
 	nameValid,
 	namespaceValid
