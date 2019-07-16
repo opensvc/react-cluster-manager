@@ -1,5 +1,19 @@
 import React, { useState } from "react";
-import { Button, Spinner, Nav, NavItem, NavLink, Dropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap"
+import {
+	Button,
+	Spinner,
+	Nav,
+	NavItem,
+	NavLink,
+	Dropdown,
+	DropdownMenu,
+	DropdownItem,
+	DropdownToggle,
+	InputGroupAddon,
+	InputGroup,
+	Input,
+	FormGroup
+} from "reactstrap"
 import { useStateValue } from '../state.js';
 import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { fmtPath, splitPath } from "../utils.js";
@@ -9,6 +23,7 @@ import { ObjDigest } from "./ObjDigest.jsx";
 import { ObjInstanceState } from "./ObjInstanceState.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
 import { Log } from "./Log.jsx"
+import { apiInstanceAction } from "../api.js"
 
 const tabs = {
 	MAIN: "Main",
@@ -64,12 +79,36 @@ function ObjMain(props) {
 		return null
 	}
 	const sp = splitPath(props.path)
+	if ((sp.kind == "svc") || (sp.kind == "vol")) {
+		return <SvcMain path={props.path} />
+	} else if ((sp.kind == "cfg") || (sp.kind == "sec") || (sp.kind == "ccfg")) {
+		return <CfgMain path={props.path} />
+	} else if ((sp.kind == "usr") || (sp.kind == "sec") || (sp.kind == "ccfg")) {
+		return <UsrMain path={props.path} />
+	} else {
+		return null
+	}
+}
 
+function SvcMain(props) {
+	const sp = splitPath(props.path)
+	const [{ cstat }, dispatch] = useStateValue();
+
+	if (cstat.monitor === undefined) {
+		return null
+	}
+	if ("scale" in cstat.monitor.services[props.path]) {
+		var title = "Scaler"
+	} else if (cstat.monitor.services[props.path].scaler_slave) {
+		var title = "Scaler Slice"
+	} else {
+		var title = "Object"
+	}
 	return (
 		<div>
 			<div className="clearfix">
 				<div className="float-left">
-					<h3>Object</h3>
+					<h3>{title}</h3>
 				</div>
 				<div className="float-right">
 					<ObjActions
@@ -80,8 +119,44 @@ function ObjMain(props) {
 				</div>
 			</div>
 			<ObjDigest path={props.path} />
+			<ObjScale path={props.path} />
 			<ObjInstances path={props.path} />
 		</div>
+	)
+}
+
+function ObjScale(props) {
+	const [{ cstat }, dispatch] = useStateValue();
+
+	if (cstat.monitor === undefined) {
+		return null
+	}
+	if (!("scale" in cstat.monitor.services[props.path])) {
+		return null
+	}
+	const [ scale, setScale] = useState(cstat.monitor.services[props.path].scale)
+	function handleChange(e) {
+		setScale(e.target.value)
+	}
+	function handleSubmit() {
+		apiInstanceAction(
+			"ANY",
+			props.path,
+			"scale",
+			{"to": scale},
+			(data) => dispatch({type: "parseApiResponse", data: data})
+		)
+	}
+	return (
+		<FormGroup>
+			<InputGroup>
+				<InputGroupAddon addonType="prepend">Scale Target</InputGroupAddon>
+				<Input value={scale} min={0} max={1000} type="number" step="1" onChange={handleChange} />
+				<InputGroupAddon addonType="append">
+					<Button color="outline-secondary" onClick={handleSubmit}>Submit</Button>
+				</InputGroupAddon>
+			</InputGroup>
+		</FormGroup>
 	)
 }
 
@@ -162,13 +237,15 @@ function InstanceLine(props) {
 		return null
 	}
 	if ("scaler_slaves" in instance) {
-		return instance.scaler_slaves.sort().map((slaveName) => {
-			var slavePath = fmtPath(slaveName, props.sp.namespace, props.sp.kind)
-			var slaveSp = {
-				name: slaveName,
-				namespace: props.sp.namespace,
-				kind: props.sp.kind
+		var slavePaths = []
+		const re = RegExp("^"+fmtPath("[0-9]+\."+props.sp.name, props.sp.namespace, props.sp.kind)+"$")
+		for (var path in cstat.monitor.services) {
+			if (path.match(re)) {
+				slavePaths.push(path)
 			}
+		}
+		return slavePaths.sort().map((slavePath) => {
+			var slaveSp = splitPath(slavePath)
 			return ( <InstanceLine key={props.node+"-"+slavePath} node={props.node} path={slavePath} sp={slaveSp} slice={true} /> )
 		})
 	}
