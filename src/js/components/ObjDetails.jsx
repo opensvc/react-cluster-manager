@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Spinner, Nav, NavItem, NavLink, Dropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap"
 import { useStateValue } from '../state.js';
 import { useObjConfig } from "../hooks/ObjConfig.jsx";
-import { splitPath } from "../utils.js";
+import { fmtPath, splitPath } from "../utils.js";
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjDigest } from "./ObjDigest.jsx";
@@ -31,7 +31,6 @@ function ObjDetails(props) {
 	//
 	const [active, setActive] = useState(tabs.MAIN)
 	const [{user}, dispatch] = useStateValue()
-	const sp = splitPath(props.path)
 
 	const handleClick = (e) => {
 		setActive(e.target.textContent)
@@ -112,8 +111,17 @@ function ObjInstances(props) {
 	// props.path
 	//
 	const [{ cstat }, dispatch] = useStateValue();
+	const sp = splitPath(props.path)
 	if (cstat.monitor === undefined) {
 		return null
+	}
+	if (cstat.monitor.services[props.path] === undefined) {
+		return null
+	}
+	if ("scale" in cstat.monitor.services[props.path]) {
+		var slice = <td>Slice</td>
+	} else {
+		var slice
 	}
 	return (
 		<div>
@@ -122,6 +130,7 @@ function ObjInstances(props) {
 				<table className="table table-hover">
 					<thead>
 						<tr className="text-secondary">
+							{slice}
 							<td>Node</td>
 							<td>Availability</td>
 							<td>State</td>
@@ -130,7 +139,7 @@ function ObjInstances(props) {
 					</thead>
 					<tbody>
 						{Object.keys(cstat.monitor.nodes).sort().map((node) => (
-							<InstanceLine key={node} node={node} path={props.path} />
+							<InstanceLine key={node} node={node} path={props.path} sp={sp} />
 						))}
 					</tbody>
 				</table>
@@ -148,8 +157,20 @@ function InstanceLine(props) {
 	if (cstat.monitor === undefined) {
 		return null
 	}
-	if (!cstat.monitor.nodes[props.node].services.status[props.path]) {
+	const instance = cstat.monitor.nodes[props.node].services.status[props.path]
+	if (!instance) {
 		return null
+	}
+	if ("scaler_slaves" in instance) {
+		return instance.scaler_slaves.sort().map((slaveName) => {
+			var slavePath = fmtPath(slaveName, props.sp.namespace, props.sp.kind)
+			var slaveSp = {
+				name: slaveName,
+				namespace: props.sp.namespace,
+				kind: props.sp.kind
+			}
+			return ( <InstanceLine key={props.node+"-"+slavePath} node={props.node} path={slavePath} sp={slaveSp} slice={true} /> )
+		})
 	}
 	function handleClick(e) {
 		dispatch({
@@ -158,8 +179,15 @@ function InstanceLine(props) {
 			links: ["Objects", props.path, props.node]
 		})
 	}
+	if (props.slice) {
+		var n = splitPath(props.path).name.replace(/\..*$/, "")
+		var slice = <td data-title="Slice">{n}</td>
+	} else {
+		var slice
+	}
 	return (
 		<tr onClick={handleClick}>
+			{slice}
 			<td data-title="Node">{props.node}</td>
 			<td data-title="Availability"><ObjAvail avail={cstat.monitor.nodes[props.node].services.status[props.path].avail} /></td>
 			<td data-title="State"><ObjInstanceState node={props.node} path={props.path} /></td>
@@ -176,7 +204,7 @@ function ObjLog(props) {
 		return null
 	}
 	return (
-		<div className="pt-3">
+		<div>
 			<Log url={"/object/"+props.path} noTitle />
 		</div>
 	)

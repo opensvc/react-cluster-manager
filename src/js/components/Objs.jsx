@@ -143,6 +143,10 @@ function ObjLine(props) {
 		}
 	} catch (e) {}
 
+	if (!props.withScalerSlaves && sp.name.match(/[0-9]+\./)) {
+		// discard scaler slaves
+		return null
+	}
 
 	function handleClick(e) {
 		dispatch({
