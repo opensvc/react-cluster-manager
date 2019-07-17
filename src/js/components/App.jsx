@@ -7,6 +7,7 @@ import { apiPostAny, parseApiResponse, apiWhoAmI } from "../api.js";
 import { Alerts } from "./Alerts.jsx";
 import { NavBar } from "./NavBar.jsx";
 import { Main } from "./Main.jsx";
+import { Button } from "reactstrap"
 import "../json_delta.js"
 
 const App = () => {
@@ -349,7 +350,59 @@ class WrappedApp extends Component {
 					<NavBar />
 					<Alerts />
 				</div>
-				<Main />
+				<ErrorBoundary>
+					<Main />
+				</ErrorBoundary>
+			</div>
+		)
+	}
+}
+
+class ErrorBoundary extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			error: null,
+			errorInfo: null,
+		}
+	}
+	static contextType = StateContext
+
+	componentDidCatch(error, info) {
+		// You can also log the error to an error reporting service
+		//console.log("xx", error, info);
+		this.setState({
+			error: error,
+			errorInfo: info
+		})
+	}
+
+	handleResetButtonClick = () => {
+		const [{}, dispatch] = this.context
+		dispatch({
+			"type": "setNav",
+			"page": "Cluster",
+			"links": [],
+		})
+		this.setState(prevState => ({
+			error: null,
+			errorInfo: null,
+		}))
+	}
+
+	render() {
+		if (!this.state.error) {
+			return this.props.children;
+		}
+		return (
+			<div>
+				<h3>Something went wrong.</h3>
+				<Button onClick={this.handleResetButtonClick} color="outline-secondary" size="sm">Clear</Button>
+				<details className="pt-2" style={{ whiteSpace: 'pre-wrap' }}>
+					{this.state.error && this.state.error.toString()}
+					<br />
+					{this.state.errorInfo.componentStack}
+				</details>
 			</div>
 		)
 	}
