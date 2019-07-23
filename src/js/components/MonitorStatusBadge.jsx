@@ -1,4 +1,5 @@
 import React from "react";
+import Typography from '@material-ui/core/Typography';
 
 function MonitorStatusBadge(props) {
 	if (!props.state) {
@@ -8,7 +9,9 @@ function MonitorStatusBadge(props) {
 		return null
 	}
 	return (
-		<span className="ml-1 mr-1 badge badge-secondary">{props.state}</span>
+		<Typography className={props.className} color="primary" component="span">
+			{props.state}
+		</Typography>
 	)
 }
 

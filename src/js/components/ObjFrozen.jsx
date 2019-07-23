@@ -1,13 +1,17 @@
 import React from "react";
+import AcUnitIcon from '@material-ui/icons/AcUnit';
+import Typography from '@material-ui/core/Typography';
 
 function ObjFrozen(props) {
 	if (!props.frozen) {
-		return (<span />)
+		return null
 	} else if (props.frozen == "thawed") {
-		return (<span />)
+		return null
 	}
 	return (
-		<span className="ml-1 mr-1 badge badge-info" title={props.frozen}>frozen</span>
+		<Typography component="span" className={props.className}>
+			<AcUnitIcon color="primary" title="Frozen" />
+		</Typography>
 	)
 }
 

@@ -1,18 +1,44 @@
 import React, {useState, useEffect} from "react";
-import { Spinner } from "reactstrap"
 import { useLog } from "../hooks/Log.jsx"
-import { Input, FormGroup, Label } from 'reactstrap';
+
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import clsx from 'clsx'
+
+const useStyles = makeStyles(theme => ({
+	textField: {
+		width: "100%",
+	},
+	logLine: {
+		width: "100%",
+		borderLeftWidth: "4px",
+		borderLeftStyle: "solid",
+		borderLeftColor: theme.palette.text.secondary,
+		paddingLeft: theme.spacing(1),
+		paddingBottom: theme.spacing(1),
+	},
+	log: {
+		display: "flex",
+		flexDirection: "column-reverse",
+		wordWrap: "break-word",
+		paddingTop: theme.spacing(2),
+	},
+	ERROR: {
+		borderColor: theme.status.error[500],
+	},
+	WARNING: {
+		borderColor: theme.status.warning[500],
+	},
+}))
 
 function Log(props) {
 	const log = useLog(props.url)
 	const [search, setSearch] = useState("")
 	const [skip, setSkip] = useState()
+	const classes = useStyles()
 
-	if (props.noTitle) {
-		var title = null
-	} else {
-		var title = ( <h3>Logs</h3> )
-	}
 	function handleChange(e) {
 		setSearch(e.target.value)
 		location.href = "#"
@@ -24,12 +50,20 @@ function Log(props) {
 		}
 	})
 	return (
-		<div className="pb-3">
-			{title}
-			<FormGroup>
-				<Label for="search">Filter</Label>
-				<Input id="search" placeholder="RegExp" onChange={handleChange} value={search} />
-			</FormGroup>
+		<div>
+			<Typography variant="h4" component="h2">
+				Logs
+			</Typography>
+			<TextField
+				className={classes.textField}
+				id="search"
+				label="Search Regular Expression"
+				type="search"
+				margin="normal"
+				variant="outlined"
+				onChange={handleChange}
+				value={search}
+			/>
 			<LogLines
 				log={log}
 				search={search}
@@ -41,8 +75,9 @@ function Log(props) {
 }
 
 function LogLines(props) {
+	const classes = useStyles()
 	if (!props.log) {
-		return ( <Spinner type="grow" color="primary" size="sm" /> )
+		return ( <CircularProgress color="primary" /> )
 	}
 	if (props.search && (props.search.length>1)) {
 		var re = RegExp(props.search, "i")
@@ -50,7 +85,7 @@ function LogLines(props) {
 		var re
 	}
 	return (
-		<div className="d-flex flex-column-reverse text-break">
+		<div className={classes.log}>
 			{props.log.map((line, i) => (
 				<LogLine
 					key={i}
@@ -66,28 +101,22 @@ function LogLines(props) {
 }
 
 function LogLine(props) {
+	const classes = useStyles()
 	var l = props.data.split(" - ")
-	var cl = "border-left-4 p-1 pl-2 clickable "
-	if (l[2] == "INFO") {
-	} else if (l[2] == "WARNING") {
-		cl += "border-warning"
-	} else if (l[2] == "ERROR") {
-		cl += "border-danger"
-	} else if (l[2] == "DEBUG") {
-		cl += "border-muted"
-	}
+	var level = l[2]
 	if (props.re && !props.data.match(props.re)) {
 		return null
 	}
-
 	function handleClick(e) {
 		props.setSearch("")
 		props.setSkip(props.id)
 	}
 	return (
-		<div className={cl} id={props.id} onClick={handleClick}>
-			<div className="text-secondary small">{l[0]} - {l[1]}</div>
-			<div>{l.slice(3).join(" - ")}</div>
+		<div className={clsx([classes.logLine, classes[level]])} id={props.id} onClick={handleClick}>
+			<Typography variant="caption" color="textSecondary" display="block">
+				{l[0]} - {l[1]}
+			</Typography>
+			{l.slice(3).join(" - ")}
 		</div>
 	)
 }

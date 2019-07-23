@@ -1,14 +1,18 @@
 import React from "react";
+import WarningIcon from '@material-ui/icons/Warning';
+import Typography from '@material-ui/core/Typography';
 
 function ObjProvisioned(props) {
 	if (props.provisioned == false) {
 		return (
-			<span className="ml-1 mr-1 badge badge-danger" title={props.provisioned.toString()}>unprovisioned</span>
+			<Typography component="span" className={props.className}>
+				<WarningIcon color="error" title="Not Provisionned" />
+			</Typography>
 		)
 	} else if (props.provisioned == true) {
-		return (<span />)
+		return null
 	} else {
-		return (<span />)
+		return null
 	}
 }
 

@@ -1,10 +1,27 @@
 import React, { useState } from "react";
 import { useStateValue } from '../state.js';
-import { Button } from 'reactstrap';
 import { DeployEmpty } from "./DeployEmpty.jsx";
 import { DeployClone } from "./DeployClone.jsx";
 import { DeployCatalog } from "./DeployCatalog.jsx";
 import { DeployTemplate } from "./DeployTemplate.jsx";
+
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Box from '@material-ui/core/Box';
+
+const useStyles = makeStyles(theme => ({
+        root: {
+                padding: theme.spacing(3, 2),
+                marginTop: theme.spacing(3),
+        },
+        tabContent: {
+                paddingTop: theme.spacing(2),
+        },
+}))
 
 function DeployButton(props) {
 	const [ {}, dispatch ] = useStateValue()
@@ -16,73 +33,62 @@ function DeployButton(props) {
 		})
 	}
 	return (
-		<div className="dropright">
-			<Button color="outline-secondary" type="button" onClick={handleClick}>Deploy</Button>
-		</div>
+		<Button color="primary" variant="contained" onClick={handleClick}>Deploy</Button>
 	)
 }
+
+const tabs = [
+        {
+                name: "Empty",
+                disabled: false,
+        },
+        {
+                name: "Clone",
+                disabled: false,
+        },
+        {
+                name: "Catalog",
+                disabled: false,
+        },
+        {
+                name: "Template",
+                disabled: false,
+        },
+]
 
 function Deploy(props) {
-	const [tab, setTab] = useState("catalog")
-	var title
-	if ((props.noTitle === undefined) || !props.noTitle) {
-		title = (
-			<h2>Deploy</h2>
-		)
-	}
+	const classes = useStyles()
+        const [active, setActive] = useState(0)
+
+        const handleChange = (event, newValue) => {
+                setActive(newValue)
+        }
 
 	return (
-		<div>
-			{title}
-			<nav>
-				<div className="nav nav-tabs mb-3">
-					<Tab active={tab} id="catalog" text="Catalog" setTab={setTab} />
-					<Tab active={tab} id="empty" text="Empty" setTab={setTab} />
-					<Tab active={tab} id="template" text="Template" setTab={setTab} />
-					<Tab active={tab} id="clone" text="Clone" setTab={setTab} />
-				</div>
-			</nav>
-			<div className="tab-content">
-				<div className="tab-pane show active">
-					<DeployCurrentTab
-						tab={tab}
-					/>
-				</div>
-			</div>
-		</div>
+		<Paper className={classes.root}>
+			<Typography variant="h4" component="h2">
+				Deploy
+			</Typography>
+                        <Tabs
+                                value={active}
+                                onChange={handleChange}
+                                indicatorColor="primary"
+                                textColor="primary"
+                                variant="scrollable"
+                                scrollButtons="auto"
+                        >
+                                {tabs.map((tab, i) => (
+                                        <Tab key={i} href="#" label={tab.name} disabled={tab.disabled} />
+                                ))}
+                        </Tabs>
+                        <Box className={classes.tabContent}>
+                                {active === 0 && <DeployEmpty />}
+                                {active === 1 && <DeployClone />}
+                                {active === 2 && <DeployCatalog />}
+                                {active === 3 && <DeployTemplate />}
+                        </Box>
+		</Paper>
 	)
-}
-
-function Tab(props) {
-	//
-	// props.setTab
-	// props.id
-	// props.name
-	// props.active
-	//
-	var cl = "nav-item nav-link"
-	if (props.active == props.id) {
-		cl += " active"
-	} else {
-		cl += " text-secondary"
-	}
-	return (
-		<a className={cl} id={props.id} onClick={() => {props.setTab(props.id)}}>{props.text}</a>
-	)
-}
-
-function DeployCurrentTab(props) {
-	if (props.tab == "empty") {
-		return ( <DeployEmpty /> )
-	} else if (props.tab == "clone") {
-		return ( <DeployClone /> )
-	} else if (props.tab == "catalog") {
-		return ( <DeployCatalog /> )
-	} else if (props.tab == "template") {
-		return ( <DeployTemplate /> )
-	} else {
-		return null
-	}
 }
 
 export {

@@ -16,34 +16,33 @@ function Main(props) {
 	const [{ nav }, dispatch] = useStateValue();
 
 	if (nav.page == "Cluster") {
-		return ( <Cluster noTitle /> )
+		return ( <Cluster /> )
 	}
 	if (nav.page == "Threads") {
-		return ( <Threads noTitle /> )
+		return ( <Threads /> )
 	}
 	if (nav.page == "Nodes") {
-		return ( <Nodes noTitle /> )
+		return ( <Nodes /> )
 	}
 	if (nav.page == "Objects") {
-		return ( <Objs noTitle /> )
+		return ( <Objs /> )
 	}
 	if (nav.page == "Deploy") {
-		return ( <Deploy noTitle /> )
+		return ( <Deploy /> )
 	}
 	if (nav.page == "Heartbeats") {
-		return ( <HeartbeatsDetails noTitle /> )
+		return ( <HeartbeatsDetails /> )
 	}
 	if (nav.page == "Arbitrators") {
-		return ( <ArbitratorsDetails noTitle /> )
+		return ( <ArbitratorsDetails /> )
 	}
 	if (nav.page == "User") {
-		return ( <User noTitle /> )
+		return ( <User /> )
 	}
 	if (nav.page == "Object") {
 		return (
 			<ObjDetails
 				path={nav.links[nav.links.length-1]}
-				noTitle
 			/>
 		)
 	}
@@ -52,7 +51,6 @@ function Main(props) {
 			<ObjInstanceDetails
 				path={nav.links[nav.links.length-2]}
 				node={nav.links[nav.links.length-1]}
-				noTitle
 			/>
 		)
 	}
@@ -61,7 +59,6 @@ function Main(props) {
 		return (
 			<NodeDetails
 				node={nav.links[nav.links.length-1]}
-				noTitle
 			/>
 		)
 	}
@@ -69,7 +66,6 @@ function Main(props) {
 		return (
 			<ObjDetails
 				path={nav.links[n-1]}
-				noTitle
 			/>
 		)
 	}
@@ -77,7 +73,6 @@ function Main(props) {
 		return (
 			<Log
 				url={"/object/"+nav.links[n-2]}
-				noTitle
 			/>
 		)
 	}
@@ -85,11 +80,12 @@ function Main(props) {
 		return (
 			<Log
 				url={"/node/"+nav.links[n-2]}
-				noTitle
 			/>
 		)
 	}
 	return ( <div>Page not found</div> )
 }
 
-export { Main };
+export {
+	Main
+}

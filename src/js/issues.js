@@ -4,7 +4,7 @@ import { state, mergeStates } from "./utils.js";
 // Issue finders
 //
 function compatIssue(cstat) {
-	if (!("monitor" in cstat)) {
+	if (cstat.monitor === undefined) {
 		return state.NOTAPPLICABLE
 	}
 	if (cstat.monitor.compat == false) {
@@ -16,7 +16,7 @@ function compatIssue(cstat) {
 function versionIssue(cstat) {
 	var version_aligned = true
 	var version
-	if (!("monitor" in cstat)) {
+	if (cstat.monitor === undefined) {
 		return state.NOTAPPLICABLE
 	}
 	for (var node in cstat.monitor.nodes) {
@@ -29,6 +29,9 @@ function versionIssue(cstat) {
 }
 
 function nodeMemOverloadIssue(cstat, node) {
+	if (cstat.monitor === undefined) {
+		return state.NOTAPPLICABLE
+	}
 	var ndata = cstat.monitor.nodes[node]
 	if (ndata.min_avail_mem > ndata.stats.avail_mem) {
 		return state.WARNING
@@ -37,6 +40,9 @@ function nodeMemOverloadIssue(cstat, node) {
 }
 
 function nodeSwapOverloadIssue(cstat, node) {
+	if (cstat.monitor === undefined) {
+		return state.NOTAPPLICABLE
+	}
 	var ndata = cstat.monitor.nodes[node]
 	if (ndata.min_avail_swap > ndata.stats.avail_swap) {
 		return state.WARNING
@@ -45,6 +51,9 @@ function nodeSwapOverloadIssue(cstat, node) {
 }
 
 function nodesOverloadIssue(cstat, node) {
+	if (cstat.monitor === undefined) {
+		return state.NOTAPPLICABLE
+	}
 	var s = state.OPTIMAL
 	for (var node in cstat.monitor.nodes) {
 		s = mergeStates(s, nodeMemOverloadIssue(cstat, node))
@@ -134,6 +143,9 @@ function heartbeatsIssue(cstat) {
 }
 
 function objectInstanceIssue(cstat, path, node) {
+	if (cstat.monitor === undefined) {
+		return state.NOTAPPLICABLE
+	}
 	var idata = cstat.monitor.nodes[node].services.status[path]
 	if (idata === undefined) {
 		// no instance of path on node
@@ -149,6 +161,9 @@ function objectInstanceIssue(cstat, path, node) {
 }
 
 function objectInstancesIssue(cstat, path) {
+	if (cstat.monitor === undefined) {
+		return state.NOTAPPLICABLE
+	}
 	var s = state.OPTIMAL
 	for (var node in cstat.monitor.nodes) {
 		s = mergeStates(s, objectInstanceIssue(cstat, path, node))
@@ -160,6 +175,9 @@ function objectInstancesIssue(cstat, path) {
 }
 
 function objectIssue(cstat, path) {
+	if (cstat.monitor === undefined) {
+		return state.NOTAPPLICABLE
+	}
 	var odata = cstat.monitor.services[path]
 	if (odata.avail === undefined) {
 		return state.NOTAPPLICABLE
@@ -202,6 +220,9 @@ function nodesIssue(cstat) {
 }
 
 function clusterIssue(cstat) {
+	if (!cstat) {
+		return state.NOTAPPLICABLE
+	}
 	var s = nodesIssue(cstat)
 	s = mergeStates(s, threadsIssue(cstat))
 	s = mergeStates(s, versionIssue(cstat))

@@ -1,16 +1,15 @@
 import React from "react";
 
+import { useColorStyles } from '../styles.js'
+import Typography from '@material-ui/core/Typography';
+import clsx from 'clsx';
+
 function ObjAvail(props) {
-	var cl = "text-secondary"
-	if (props.avail == "up") {
-		cl = "text-success"
-	} else if (props.avail == "down") {
-		cl = "text-danger"
-	} else if (props.avail == "warn") {
-		cl = "text-warning"
-	}
+	const classes = useColorStyles()
 	return (
-		<span className={cl}>{props.avail}</span>
+		<Typography component="span" className={clsx(props.className, classes[props.avail])}>
+			{props.avail}
+		</Typography>
 	)
 }
 

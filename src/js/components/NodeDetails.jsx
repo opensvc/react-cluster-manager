@@ -1,33 +1,70 @@
 import React, { useState, useEffect } from "react";
 import { useStateValue } from '../state.js';
 import { apiPostNode } from "../api.js";
-import { Button, Spinner, Nav, NavItem, NavLink, Dropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap"
 import { Log } from "./Log.jsx"
 
-const tabs = {
-	INFO: ["Main", "Network", "Initiators", "Hardware", "Users", "Groups"],
-	MAIN: "Main",
-	NET: "Network",
-	HBA: "Initiators",
-	HW: "Hardware",
-	USR: "Users",
-	GRP: "Groups",
-	LOG: "Log",
-}
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Box from '@material-ui/core/Box';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
+
+const useStyles = makeStyles(theme => ({
+        root: {
+                padding: theme.spacing(3, 2),
+                marginTop: theme.spacing(3),
+        },
+	tabContent: {
+                paddingTop: theme.spacing(2),
+	},
+	tableWrapper: {
+                overflowX: 'auto',
+	},
+}))
+
+const tabs = [
+	{
+		name: "Main",
+		disabled: false,
+	},
+	{
+		name: "Network",
+		disabled: false,
+	},
+	{
+		name: "Initiators",
+		disabled: false,
+	},
+	{
+		name: "Hardware",
+		disabled: false,
+	},
+	{
+		name: "Log",
+		disabled: false,
+	},
+]
 
 function Title(props) {
-	if (props.noTitle) {
-		return null
-	}
 	return (
-		<h2>{props.node}</h2>
+		<Typography variant="h5" component="h3">
+			{props.node}
+		</Typography>
 	)
 }
 
 function NodeDetails(props) {
+	const classes = useStyles()
 	const [nodeData, setNodeData] = useState()
-	const [infoOpen, setInfoOpen] = useState()
-	const [active, setActive] = useState(tabs.MAIN)
+	const [active, setActive] = useState(0)
 	const [{user}, dispatch] = useStateValue()
 
 	useEffect(() => {
@@ -39,78 +76,76 @@ function NodeDetails(props) {
 		})
 	})
 
-	const handleClick = (e) => {
-		setActive(e.target.textContent)
+	const handleChange = (event, newValue) => {
+		setActive(newValue)
 	}
-	const toggleInfo = (e) => {
-		setInfoOpen(infoOpen ? false : true)
+
+	if (!("root" in user.grant)) {
+		tabs[4].disabled = true
 	}
 
 	return (
-		<div>
-			<Title node={props.node} noTitle={props.noTitle} />
-			<Nav tabs>
-				<Dropdown nav isOpen={infoOpen} toggle={toggleInfo}>
-					<DropdownToggle nav caret className={tabs.INFO.includes(active) ? "active" : null} >
-						{tabs.INFO.includes(active) ? active : "Info"}
-					</DropdownToggle>
-					<DropdownMenu>
-						<DropdownItem href="#" active={active == tabs.MAIN} onClick={handleClick}>{tabs.MAIN}</DropdownItem>
-						<DropdownItem href="#" active={active == tabs.NET} onClick={handleClick}>{tabs.NET}</DropdownItem>
-						<DropdownItem href="#" active={active == tabs.HBA} onClick={handleClick}>{tabs.HBA}</DropdownItem>
-						<DropdownItem href="#" active={active == tabs.HW} onClick={handleClick}>{tabs.HW}</DropdownItem>
-					</DropdownMenu>
-				</Dropdown>
-				<NavItem>
-					<NavLink href="#" active={active == tabs.LOG} onClick={handleClick} disabled={!("root" in user.grant)}>{tabs.LOG}</NavLink>
-				</NavItem>
-			</Nav>
-			<div>
-				<Main active={active} nodeData={nodeData} />
-				<Network active={active} nodeData={nodeData} />
-				<Initiators active={active} nodeData={nodeData} />
-				<Hardware active={active} nodeData={nodeData} />
-				<NodeLog active={active} node={props.node} />
-			</div>
-		</div>
-	)
-}
-
-function Props(props) {
-	return (
-		<div className="row">
-			{props.children}
-		</div>
+		<Paper className={classes.root}>
+			<Title node={props.node} />
+			<Tabs
+				value={active}
+				onChange={handleChange}
+				indicatorColor="primary"
+				textColor="primary"
+				variant="scrollable"
+				scrollButtons="auto"
+			>
+				{tabs.map((tab, i) => (
+					<Tab key={i} href="#" label={tab.name} disabled={tab.disabled} />
+				))}
+			</Tabs>
+			<Box className={classes.tabContent}>
+				{active === 0 && <Main nodeData={nodeData} />}
+				{active === 1 && <Network nodeData={nodeData} />}
+				{active === 2 && <Initiators nodeData={nodeData} />}
+				{active === 3 && <Hardware nodeData={nodeData} />}
+				{active === 4 && <NodeLog node={props.node} />}
+			</Box>
+		</Paper>
 	)
 }
 
 function PropGroup(props) {
 	return (
-		<div className="col-xs-12 col-sm-6 col-lg-4 py-3">
-			<h4>{props.title}</h4>
-			{props.children}
-		</div>
+		<Grid item xs={12} sm={6} md={4}>
+			<Typography variant="h5" component="h3">
+				{props.title}
+			</Typography>
+			<Table>
+				<TableBody>
+					{props.children}
+				</TableBody>
+			</Table>
+		</Grid>
 	)
 }
 
 function Prop(props) {
 	return (
-		<div className="row">
-			<small className="text-muted col-6">{props.title}</small>
-			<div className="col-6">{props.value}</div>
-		</div>
+		<TableRow>
+			<TableCell style={{width: "40%"}}>
+				<Typography variant="caption" component="h3">
+					{props.title}
+				</Typography>
+			</TableCell>
+			<TableCell style={{width: "60%"}}>
+				{props.value}
+			</TableCell>
+		</TableRow>
 	)
 }
 
 function Main(props) {
-	if (props.active != tabs.MAIN) {
-		return null
-	}
 	if (!props.nodeData) {
-		return ( <Spinner type="grow" color="primary" size="sm" /> )
+		return <CircularProgress />
 	}
 	return (
-		<Props>
+		<Grid container container spacing={2}>
 			<PropGroup title="Main">
 				<Prop title="Manufacturer" value={props.nodeData.manufacturer.value} />
 				<Prop title="Model" value={props.nodeData.model.value} />
@@ -144,7 +179,7 @@ function Main(props) {
 				<Prop title="Version" value={props.nodeData.version.value} />
 				<Prop title="Env" value={props.nodeData.node_env.value} />
 			</PropGroup>
-		</Props>
+		</Grid>
 	)
 }
 
@@ -156,123 +191,118 @@ function NetworkInterface(props) {
 
 function NetworkLine(props) {
 	return (
-		<tr>
-			<td data-title="Interface" style={{"flexBasis": "11rem"}}>{props.data.intf}</td>
-			<td data-title="L2 Address" style={{"flexBasis": "11rem"}}>{props.mac}</td>
-			<td data-title="L3 Address" style={{"flexBasis": "11rem"}}>{props.data.addr}</td>
-			<td data-title="L3 Mask" style={{"flexBasis": "11rem"}}>{props.data.mask}</td>
-		</tr>
+		<TableRow>
+			<TableCell data-title="Interface" style={{"flexBasis": "11rem"}}>{props.data.intf}</TableCell>
+			<TableCell data-title="L2 Address" style={{"flexBasis": "11rem"}}>{props.mac}</TableCell>
+			<TableCell data-title="L3 Address" style={{"flexBasis": "11rem"}}>{props.data.addr}</TableCell>
+			<TableCell data-title="L3 Mask" style={{"flexBasis": "11rem"}}>{props.data.mask}</TableCell>
+		</TableRow>
 	)
 }
 
 function Network(props) {
-	if (props.active != tabs.NET) {
-		return null
-	}
+	const classes = useStyles()
 	if (props.nodeData.lan === undefined) {
-		return ( <Spinner type="grow" color="primary" size="sm" /> )
+		return <CircularProgress />
 	}
 	return (
-		<table className="table table-adaptative">
-			<thead>
-				<tr className="text-secondary">
-					<td>Interface</td>
-					<td>L2 Address</td>
-					<td>L3 Address</td>
-					<td>L3 Mask</td>
-				</tr>
-			</thead>
-			<tbody>
-				{Object.keys(props.nodeData.lan).map((mac) => (
-					<NetworkInterface key={mac} mac={mac} data={props.nodeData.lan[mac]} />
-				))}
-			</tbody>
-		</table>
+		<Box className={classes.tableWrapper}>
+			<Table>
+				<TableHead>
+					<TableRow className="text-secondary">
+						<TableCell>Interface</TableCell>
+						<TableCell>L2 Address</TableCell>
+						<TableCell>L3 Address</TableCell>
+						<TableCell>L3 Mask</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{Object.keys(props.nodeData.lan).map((mac) => (
+						<NetworkInterface key={mac} mac={mac} data={props.nodeData.lan[mac]} />
+					))}
+				</TableBody>
+			</Table>
+		</Box>
 	)
 }
 
 function InitiatorsLine(props) {
 	return (
-		<tr>
-			<td data-title="Id">{props.data.hba_id}</td>
-			<td data-title="Type">{props.data.hba_type}</td>
-			<td data-title="Host">{props.data.host}</td>
-		</tr>
+		<TableRow>
+			<TableCell data-title="Id">{props.data.hba_id}</TableCell>
+			<TableCell data-title="Type">{props.data.hba_type}</TableCell>
+			<TableCell data-title="Host">{props.data.host}</TableCell>
+		</TableRow>
 	)
 }
 
 function Initiators(props) {
-	if (props.active != tabs.HBA) {
-		return null
-	}
+	const classes = useStyles()
 	if (props.nodeData.hba === undefined) {
-		return ( <Spinner type="grow" color="primary" size="sm" /> )
+		return <CircularProgress />
 	}
 	return (
-		<table className="table table-adaptative">
-			<thead>
-				<tr className="text-secondary">
-					<td>Id</td>
-					<td>Type</td>
-					<td>Host</td>
-				</tr>
-			</thead>
-			<tbody>
-				{props.nodeData.hba.map((e, i) => (
-					<InitiatorsLine key={i} data={e} />
-				))}
-			</tbody>
-		</table>
+		<Box className={classes.tableWrapper}>
+			<Table>
+				<TableHead>
+					<TableRow className="text-secondary">
+						<TableCell>Id</TableCell>
+						<TableCell>Type</TableCell>
+						<TableCell>Host</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{props.nodeData.hba.map((e, i) => (
+						<InitiatorsLine key={i} data={e} />
+					))}
+				</TableBody>
+			</Table>
+		</Box>
 	)
 }
 
 function HardwareLine(props) {
 	return (
-		<tr>
-			<td data-title="Type">{props.data.type}</td>
-			<td data-title="Path">{props.data.path}</td>
-			<td data-title="Class">{props.data.class}</td>
-			<td data-title="Driver">{props.data.driver}</td>
-			<td data-title="Description"  style={{"flexBasis": "100%"}} >{props.data.description}</td>
-		</tr>
+		<TableRow>
+			<TableCell data-title="Type">{props.data.type}</TableCell>
+			<TableCell data-title="Path">{props.data.path}</TableCell>
+			<TableCell data-title="Class">{props.data.class}</TableCell>
+			<TableCell data-title="Driver">{props.data.driver}</TableCell>
+			<TableCell data-title="Description"  style={{"flexBasis": "100%"}} >{props.data.description}</TableCell>
+		</TableRow>
 	)
 }
 
 function Hardware(props) {
-	if (props.active != tabs.HW) {
-		return null
-	}
+	const classes = useStyles()
 	if (props.nodeData.hardware === undefined) {
-		return ( <Spinner type="grow" color="primary" size="sm" /> )
+		return <CircularProgress />
 	}
 	return (
-		<table className="table table-adaptative">
-			<thead>
-				<tr className="text-secondary">
-					<td>Type</td>
-					<td>Path</td>
-					<td>Class</td>
-					<td>Driver</td>
-					<td>Description</td>
-				</tr>
-			</thead>
-			<tbody>
-				{props.nodeData.hardware.map((e, i) => (
-					<HardwareLine key={i} data={e} />
-				))}
-			</tbody>
-		</table>
+		<Box className={classes.tableWrapper}>
+			<Table>
+				<TableHead>
+					<TableRow className="text-secondary">
+						<TableCell>Type</TableCell>
+						<TableCell>Path</TableCell>
+						<TableCell>Class</TableCell>
+						<TableCell>Driver</TableCell>
+						<TableCell>Description</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{props.nodeData.hardware.map((e, i) => (
+						<HardwareLine key={i} data={e} />
+					))}
+				</TableBody>
+			</Table>
+		</Box>
 	)
 }
 
 function NodeLog(props) {
-	if (props.active != tabs.LOG) {
-		return null
-	}
 	return (
-		<div className="pt-3">
-			<Log url={"/node/"+props.node} noTitle />
-		</div>
+		<Log url={"/node/"+props.node} />
 	)
 }
 

@@ -1,15 +1,21 @@
 import React from "react";
+import PlaceIcon from '@material-ui/icons/Place';
+import Typography from '@material-ui/core/Typography';
+import { useColorStyles } from "../styles.js"
 
 function ObjPlacement(props) {
+	const classes = useColorStyles()
 	if (props.placement == "optimal") {
-		return (<span />)
+		return null
 	} else if (props.placement == "n/a") {
-		return (<span />)
+		return null
 	} else if (!props.placement) {
-		return (<span />)
+		return null
 	}
 	return (
-		<span className="ml-1 mr-1 badge badge-warning" title={props.placement}>placement</span>
+		<Typography component="span" className={props.className}>
+			<PlaceIcon className={classes.warning} title={"Placement "+props.placement} />
+		</Typography>
 	)
 }
 

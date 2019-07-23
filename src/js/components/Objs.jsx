@@ -6,68 +6,205 @@ import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjState } from "./ObjState.jsx";
 import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
-import { Input, InputGroup, InputGroupButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-function ObjsKindFilterButton(props) {
-	const [{}, dispatch] = useStateValue();
-	if (props.value) {
-		var cl = "w-100 btn btn-secondary active"
-	} else {
-		var cl = "w-100 btn btn-light"
-	}
-	function handleClick(e) {
-		dispatch({"type": "toggleKindFilter", "kind": props.kind})
-		e.target.blur()
-	}
-	return (
-		<button type="button" className={cl} onClick={handleClick}>{props.kind}</button>
-	)
-}
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import { makeStyles, lighten } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import Hidden from '@material-ui/core/Hidden';
+import Toolbar from '@material-ui/core/Toolbar';
+
+import FilterListIcon from '@material-ui/icons/FilterList';
+
+
+const useStyles = makeStyles(theme => ({
+	root: {
+		padding: theme.spacing(3, 2),
+		marginTop: theme.spacing(3),
+		overflowX: 'auto',
+	},
+	tools: {
+		alignItems: "flex-end",
+	},
+}))
+
+const useToolbarStyles = makeStyles(theme => ({
+	root: {
+		paddingLeft: theme.spacing(2),
+		paddingRight: theme.spacing(1),
+	},
+	highlight:
+		theme.palette.type === 'light'
+		? {
+			color: theme.palette.secondary.main,
+			//backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+		}
+		: {
+			color: theme.palette.text.primary,
+			backgroundColor: theme.palette.secondary.dark,
+		},
+	spacer: {
+		flex: '1 1 100%',
+	},
+	actions: {
+		color: theme.palette.text.secondary,
+	},
+	title: {
+		flex: '0 0 auto',
+	},
+}));
+
 function ObjsKindFilter(props) {
 	const [{ kinds }, dispatch] = useStateValue();
+	function handleChange(e) {
+		dispatch({"type": "setKindFilter", "data": e.target.value})
+	}
 	return (
-		<div className="d-flex btn-group btn-group-toggle" data-toggle="buttons">
-			{Object.keys(kinds).map((kind) => (
-				<ObjsKindFilterButton key={kind} kind={kind} value={kinds[kind]} />
-			))}
-		</div>
+		<FormGroup row>
+			<FormControl>
+				<InputLabel htmlFor="select-multiple-checkbox">Kinds</InputLabel>
+				<Select
+					multiple
+					value={kinds}
+					onChange={handleChange}
+					input={<Input id="select-multiple-checkbox" />}
+					renderValue={selected => selected.join(', ')}
+				>
+				{["svc", "vol", "cfg", "sec", "usr", "ccfg"].map(kind => (
+					<MenuItem key={kind} value={kind}>
+						<Checkbox checked={kinds.indexOf(kind) > -1} />
+						<ListItemText primary={kind} />
+					</MenuItem>
+				))}
+				</Select>
+			</FormControl>
+		</FormGroup>
 	)
 }
 
 function ObjsFilter(props) {
 	const [{ filters }, dispatch] = useStateValue()
-	const [isOpen, setIsOpen] = useState()
 	function handleChange(e) {
-		var t = e.target.getAttribute("t")
+		var t = e.target.getAtTableRowibute("t")
 		dispatch({"type": "setFilter", "filter_type": t, "filter_value": e.target.value})
 	}
-	function handleClick(e) {
-		var t = e.target.getAttribute("value")
-		var input = e.target.parentNode.parentNode.parentNode.querySelector("input")
-		dispatch({"type": "setFilter", "filter_type": t, "filter_value": input.value})
+	function handleTypeChange(e) {
+		var t = e.target.value
+		var currentType = Object.keys(filters)[0]
+		var v = filters[currentType]
+		dispatch({"type": "setFilter", "filter_type": t, "filter_value": v})
+	}
+	function handleChange(e) {
+		var t = Object.keys(filters)[0]
+		var v = e.target.value
+		dispatch({"type": "setFilter", "filter_type": t, "filter_value": v})
 	}
 	var currentType = Object.keys(filters)[0]
 	return (
-		<InputGroup>
-			<InputGroupButtonDropdown addonType="prepend" isOpen={isOpen} toggle={() => {setIsOpen(isOpen ? false : true)}}>
-				<DropdownToggle caret className="text-capitalize" color="outline-secondary">
-					{currentType}
-				</DropdownToggle>
-				<DropdownMenu>
-					<DropdownItem value="name" onClick={handleClick}>Name</DropdownItem>
-					<DropdownItem value="namespace" onClick={handleClick}>Namespace</DropdownItem>
-					<DropdownItem value="path" onClick={handleClick}>Path</DropdownItem>
-				</DropdownMenu>
-			</InputGroupButtonDropdown>
-			<Input placeholder="regexp" t={currentType} onChange={handleChange} value={filters[currentType]} />
-		</InputGroup>
+		<FormGroup row>
+			<FormControl>
+				<InputLabel htmlFor="obj-search-type">Search In</InputLabel>
+				<Select
+					value={currentType}
+					onChange={handleTypeChange}
+					inputProps={{
+						name: 'obj-search-type',
+						id: 'obj-search-type',
+					}}
+				>
+					<MenuItem value="name">Name</MenuItem>
+					<MenuItem value="namespace">Namespace</MenuItem>
+					<MenuItem value="path">Path</MenuItem>
+				</Select>
+			</FormControl>
+			<FormControl>
+				<TextField
+					id="obj-search"
+					label="Regular Expression"
+					value={filters[currentType]}
+					onChange={handleChange}
+					margin="none"
+				/>
+			</FormControl>
+		</FormGroup>
 	)
 }
 
+const EnhancedTableToolbar = props => {
+	const classes = useToolbarStyles();
+	const { selected } = props;
+
+	return (
+		<Toolbar
+			className={clsx(classes.root, {
+				[classes.highlight]: selected.length > 0,
+			})}
+		>
+			<div className={classes.title}>
+				{selected.length > 0 ? (
+					<Typography color="inherit" variant="subtitle1">
+						{selected.length} selected
+					</Typography>
+				) : (
+					<Typography variant="h6" id="tableTitle">
+					</Typography>
+				)}
+			</div>
+			<div className={classes.spacer} />
+			<div className={classes.actions}>
+				{selected.length > 0 ? (
+					<ObjActions selected={selected} title="" />
+				) : (
+					<Tooltip title="Filter list">
+						<IconButton aria-label="Filter list">
+							<FilterListIcon />
+						</IconButton>
+					</Tooltip>
+				)}
+			</div>
+		</Toolbar>
+	);
+};
+
 function Objs(props) {
+	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
+	const [selected, setSelected] = React.useState([]);
+
 	if (cstat.monitor === undefined) {
 		return null
+	}
+
+	function handleSelectAllClick(event) {
+		if (event.target.checked) {
+			const newSelecteds = Object.keys(cstat.monitor.services)
+			setSelected(newSelecteds);
+			return;
+		}
+		setSelected([]);
 	}
 
 	function handleTitleClick(e) {
@@ -77,54 +214,77 @@ function Objs(props) {
 			links: ["Objects"],
 		})
 	}
-	var title
-	if ((props.noTitle === undefined) || !props.noTitle) {
-		title = (
-			<h2><a className="text-dark" href="#" onClick={handleTitleClick}>Objects</a></h2>
-		)
-	}
+
+	var rowCount = Object.keys(cstat.monitor.services).length
 
 	return (
-		<div id="objects">
-			{title}
-			<div className="d-flex btn-toolbar justify-content-between pb-3">
-				<div className="mr-2 mb-2 flex-grow-1"><ObjsKindFilter /></div>
-				<div className="mr-2 mb-2 flex-grow-1"><ObjsFilter /></div>
-				<div className="mr-2 mb-2"><DeployButton /></div>
-			</div>
-			<div className="table-adaptative">
-				<table className="table table-hover">
-					<thead>
-						<tr className="text-secondary">
-							<td>Namespace</td>
-							<td>Kind</td>
-							<td>Name</td>
-							<td>Availability</td>
-							<td>State</td>
-							<td>Instances</td>
-							<td className="text-right">Actions</td>
-						</tr>
-					</thead>
-					<tbody>
-						{Object.keys(cstat.monitor.services).sort().map((path) => (
-							<ObjLine key={path} path={path} />
-						))}
-					</tbody>
-				</table>
-			</div>
-		</div>
+		<Paper id="objects" className={classes.root}>
+			<Typography variant="h4" component="h3">
+				<Link href="#" onClick={handleTitleClick}>Objects</Link>
+			</Typography>
+			<Grid container className={classes.tools} spacing={1}>
+				<Grid item>
+					<ObjsKindFilter />
+				</Grid>
+				<Grid item>
+					<ObjsFilter />
+				</Grid>
+				<Grid item>
+					<FormGroup>
+						<DeployButton />
+					</FormGroup>
+				</Grid>
+			</Grid>
+			<EnhancedTableToolbar selected={selected} />
+			<Table>
+				<TableHead>
+					<TableRow>
+						<TableCell padding="checkbox">
+							<Checkbox
+								indeterminate={selected.length > 0 && selected.length < rowCount}
+								checked={selected.length === rowCount}
+								onChange={handleSelectAllClick}
+								inputProps={{ 'aria-label': 'Select all' }}
+							/>
+						</TableCell>
+						<Hidden mdUp>
+							<TableCell>Path</TableCell>
+						</Hidden>
+						<Hidden smDown>
+							<TableCell>Namespace</TableCell>
+							<TableCell>Kind</TableCell>
+							<TableCell>Name</TableCell>
+						</Hidden>
+						<Hidden smUp>
+							<TableCell>State</TableCell>
+						</Hidden>
+						<Hidden xsDown>
+							<TableCell>Availability</TableCell>
+							<TableCell>State</TableCell>
+						</Hidden>
+						<TableCell>Instances</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{Object.keys(cstat.monitor.services).sort().map((path, i) => (
+						<ObjLine key={path} index={i} path={path} selected={selected} setSelected={setSelected} />
+					))}
+				</TableBody>
+			</Table>
+		</Paper>
 	)
 }
 
 function ObjLine(props) {
+	const {index, path, selected, setSelected, withScalerSlaves } = props
 	const [{ cstat, kinds, filters }, dispatch] = useStateValue();
 	if (cstat.monitor === undefined) {
 		return null
 	}
-	const sp = splitPath(props.path)
+	const sp = splitPath(path)
 
 	// Apply filters
-	if (!kinds[sp.kind]) {
+	if (kinds.indexOf(sp.kind) < 0) {
 		return null
 	}
 	try {
@@ -138,36 +298,82 @@ function ObjLine(props) {
 		}
 	} catch (e) {}
 	try {
-		if (filters.path && !RegExp(filters.path, "i").test(props.path)) {
+		if (filters.path && !RegExp(filters.path, "i").test(path)) {
 			return null
 		}
 	} catch (e) {}
 
-	if (!props.withScalerSlaves && sp.name.match(/[0-9]+\./)) {
+	if (!withScalerSlaves && sp.name.match(/[0-9]+\./)) {
 		// discard scaler slaves
 		return null
 	}
 
-	function handleClick(e) {
+	function handleClick(event) {
+		event.stopPropagation()
+		const selectedIndex = selected.indexOf(path)
+		let newSelected = []
+
+		if (selectedIndex === -1) {
+			newSelected = newSelected.concat(selected, path);
+		} else if (selectedIndex === 0) {
+			newSelected = newSelected.concat(selected.slice(1));
+		} else if (selectedIndex === selected.length - 1) {
+			newSelected = newSelected.concat(selected.slice(0, -1));
+		} else if (selectedIndex > 0) {
+			newSelected = newSelected.concat(
+				selected.slice(0, selectedIndex),
+				selected.slice(selectedIndex + 1),
+			);
+		}
+		setSelected(newSelected);
+	}
+
+	function handleLineClick(e) {
 		dispatch({
 			type: "setNav",
 			page: "Object",
-			links: ["Objects", props.path]
+			links: ["Objects", path]
 		})
 	}
+	const isItemSelected = selected.indexOf(path) !== -1
+	const labelId = `objs-checkbox-${index}`
+
 	return (
-		<tr onClick={handleClick}>
-			<td data-title="Namespace">{sp.namespace}</td>
-			<td data-title="Kind">{sp.kind}</td>
-			<td data-title="Name">{sp.name}</td>
-			<td data-title="Availability"><ObjAvail avail={cstat.monitor.services[props.path].avail} /></td>
-			<td data-title="State"><ObjState path={props.path} /></td>
-			<td data-title="Instances"><ObjInstanceCounts path={props.path} /></td>
-			<td data-title="Actions" className="text-right"><ObjActions path={props.path} splitpath={sp} title="" /></td>
-			<td className="flex-trailer"/>
-			<td className="flex-trailer" />
-			<td className="flex-trailer" />
-		</tr>
+		<TableRow
+			onClick={handleLineClick}
+			hover
+			role="checkbox"
+			aria-checked={isItemSelected}
+			tabIndex={-1}
+			key={path}
+			selected={isItemSelected}
+		>
+			<TableCell padding="checkbox" onClick={handleClick}>
+				<Checkbox
+					checked={isItemSelected}
+					inputProps={{ 'aria-labelledby': labelId }}
+				/>
+			</TableCell>
+
+			<Hidden mdUp>
+				<TableCell>{path}</TableCell>
+			</Hidden>
+			<Hidden smDown>
+				<TableCell>{sp.namespace}</TableCell>
+				<TableCell>{sp.kind}</TableCell>
+				<TableCell>{sp.name}</TableCell>
+			</Hidden>
+			<Hidden smUp>
+				<TableCell>
+					<ObjState path={path} />
+				</TableCell>
+			</Hidden>
+			<Hidden xsDown>
+				<TableCell><ObjAvail avail={cstat.monitor.services[path].avail} /></TableCell>
+				<TableCell><ObjState path={path} /></TableCell>
+			</Hidden>
+			<TableCell><ObjInstanceCounts path={path} /></TableCell>
+		</TableRow>
 	)
 }
 

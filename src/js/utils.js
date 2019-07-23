@@ -6,19 +6,19 @@
 const state = {
 	OPTIMAL: {
 		name: "optimal",
-		color: "success"
+		color: "inherit"
 	},
 	WARNING: {
 		name: "warning",
-		color: "warning"
+		color: "orange"
 	},
 	DANGER: {
 		name: "danger",
-		color: "danger"
+		color: "red"
 	},
 	NOTAPPLICABLE: {
 		name: "n/a",
-		color: "secondary"
+		color: "lightgray"
 	}
 }
 

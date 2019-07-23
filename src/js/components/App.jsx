@@ -4,13 +4,79 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { useStateValue, StateProvider, StateContext } from '../state.js';
 import { apiPostAny, parseApiResponse, apiWhoAmI } from "../api.js";
-import { Alerts } from "./Alerts.jsx";
 import { NavBar } from "./NavBar.jsx";
 import { Main } from "./Main.jsx";
-import { Button } from "reactstrap"
 import "../json_delta.js"
 
+import { makeStyles } from '@material-ui/core/styles';
+import Link from '@material-ui/core/Link';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import useScrollTrigger from '@material-ui/core/useScrollTrigger';
+import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
+import Slide from '@material-ui/core/Slide';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+
+import amber from '@material-ui/core/colors/amber';
+import red from '@material-ui/core/colors/red';
+import green from '@material-ui/core/colors/green';
+import grey from '@material-ui/core/colors/grey';
+
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import { SnackbarProvider } from 'notistack';
+import { useSnackbar } from 'notistack';
+
+const theme = createMuiTheme({
+	palette: {
+		primary: { main: "#0c6d9c" },
+		secondary: { main: "#ff392b" },
+	},
+	status: {
+		up: green[500],
+		danger:  red[500],
+		error:  red[500],
+		warning: amber[700],
+		notapplicable: grey[500],
+	},
+})
+
+function HideOnScroll(props) {
+	const trigger = useScrollTrigger({ target: window });
+	return (
+		<Slide appear={false} direction="down" in={!trigger}>
+			{props.children}
+		</Slide>
+	);
+}
+
+HideOnScroll.propTypes = {
+	children: PropTypes.node.isRequired,
+};
+
+const useStyles = makeStyles(theme => ({
+	root: {
+		padding: theme.spacing(3, 2),
+		marginTop: theme.spacing(3),
+	}
+}))
+
 const App = () => {
+	return (
+		<SnackbarProvider maxSnack={3}>
+			<ThemeProvider theme={theme}>
+				<StatefulApp />
+			</ThemeProvider>
+		</SnackbarProvider>
+	)
+}
+
+const StatefulApp = () => {
 	const initialState = {
 		cstat: {},
 		refreshQueued: false,
@@ -19,14 +85,7 @@ const App = () => {
 			namespace: "",
 			path: ""
 		},
-		kinds:{
-			svc: true,
-			vol: false,
-			sec: false,
-			cfg: false,
-			usr: false,
-			ccfg: false
-		},
+		kinds: ["svc"],
 		user: {},
 		nav: {
 			page: "Cluster",
@@ -49,6 +108,7 @@ const App = () => {
 		logEventSources: {},
 		logs: {},
 	}
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	const reducer = (state, action) => {
 		switch (action.type) {
@@ -66,12 +126,10 @@ const App = () => {
 					filters: new_filters
 				};
 
-			case 'toggleKindFilter':
-				var new_kinds = state.kinds
-				new_kinds[action.kind] = new_kinds[action.kind] ? false : true
+			case 'setKindFilter':
 				return {
 					...state,
-					kinds: new_kinds
+					kinds: action.data
 				};
 
 			case 'loadUser':
@@ -90,7 +148,12 @@ const App = () => {
 				};
 
 			case 'parseApiResponse':
-				var new_alerts = state.alerts.concat(parseApiResponse(action.data, action.ok))
+				//var alerts = parseApiResponse(action.data, action.ok)
+				var alerts = parseApiResponse(action.data, true)
+				for (var a of alerts) {
+					enqueueSnackbar(a.body, {variant: a.level})
+				}
+				var new_alerts = state.alerts.concat(alerts)
 				return {
 					...state,
 					alerts: new_alerts
@@ -200,7 +263,7 @@ const App = () => {
 		<StateProvider initialState={initialState} reducer={reducer}>
 			<WrappedApp />
 		</StateProvider>
-	);
+	)
 }
 
 class WrappedApp extends Component {
@@ -344,16 +407,22 @@ class WrappedApp extends Component {
 	componentDidUpdate(prevProps, prevState) {
 	}
 	render() {
+
 		return (
-			<div>
-				<div className="sticky-top mb-3 bg-white border-top-0 border-left-0 border-right-0 border-secondary border">
-					<NavBar />
-					<Alerts />
-				</div>
-				<ErrorBoundary>
-					<Main />
-				</ErrorBoundary>
-			</div>
+			<React.Fragment>
+				<CssBaseline />
+				<HideOnScroll>
+					<AppBar>
+						<NavBar />
+					</AppBar>
+				</HideOnScroll>
+				<Toolbar />
+				<Container>
+					<ErrorBoundary>
+						<Main />
+					</ErrorBoundary>
+				</Container>
+			</React.Fragment>
 		)
 	}
 }
@@ -394,19 +463,30 @@ class ErrorBoundary extends React.Component {
 		if (!this.state.error) {
 			return this.props.children;
 		}
-		return (
-			<div>
-				<h3>Something went wrong.</h3>
-				<Button onClick={this.handleResetButtonClick} color="outline-secondary" size="sm">Clear</Button>
-				<details className="pt-2" style={{ whiteSpace: 'pre-wrap' }}>
-					{this.state.error && this.state.error.toString()}
-					<br />
-					{this.state.errorInfo.componentStack}
-				</details>
-			</div>
-		)
+		return <AppError error={this.state.error} info={this.state.errorInfo} clear={this.handleResetButtonClick} />
 	}
 }
+
+function AppError(props) {
+	const classes = useStyles()
+	return (
+		<Paper className={classes.root}>
+			<Typography variant="h5" component="h3">
+				Something went wrong.
+			</Typography>
+			<Button color="secondary" onClick={props.clear}>
+				Clear
+			</Button>
+			<br />
+			<details style={{ whiteSpace: 'pre-wrap' }}>
+				{props.error && props.error.toString()}
+				<br />
+				{props.info.componentStack}
+			</details>
+		</Paper>
+	)
+}
+
 
 const domContainer = document.querySelector('#app');
 ReactDOM.render(<App />, domContainer);

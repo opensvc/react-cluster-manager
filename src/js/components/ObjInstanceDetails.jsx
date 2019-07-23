@@ -15,51 +15,56 @@ import { ObjInstanceResourceActions } from "./ObjInstanceResourceActions.jsx";
 import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
 import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
 
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+
+const useStyles = makeStyles(theme => ({
+        root: {
+                padding: theme.spacing(3, 2),
+                marginTop: theme.spacing(3),
+		overflowX: "scroll",
+        },
+}))
+
 function ObjInstanceDetails(props) {
 	//
 	// props.path
 	// props.node
 	//
+	const classes = useStyles()
 	const sp = splitPath(props.path)
-	var title
-	if ((props.noTitle === undefined) || !props.noTitle) {
-		title = (
-			<h2>{props.path} @ {props.node}</h2>
-		)
-	}
-
 	return (
-		<div>
-			{title}
-			<div className="clearfix">
-				<div className="float-left">
-					<h3>Object</h3>
-				</div>
-				<div className="float-right">
-					<ObjActions
-						path={props.path}
-						splitpath={sp}
-						title="Object Actions"
-					/>
-				</div>
-			</div>
+		<Paper className={classes.root}>
+			<Typography variant="h4" component="h2">
+				{props.path} @ {props.node}
+			</Typography>
+			<Typography variant="h5" component="h2">
+				Object
+			</Typography>
+			<ObjActions
+				path={props.path}
+				splitpath={sp}
+				title="Object Actions"
+			/>
 			<ObjDigest path={props.path} />
-			<div className="clearfix">
-				<div className="float-left">
-					<h3>Instance</h3>
-				</div>
-				<div className="float-right">
-					<ObjInstanceActions
-						path={props.path}
-						splitpath={sp}
-						node={props.node}
-						title="Instance Actions"
-					/>
-				</div>
-			</div>
+			<Typography variant="h5" component="h2">
+				Instance
+			</Typography>
+			<ObjInstanceActions
+				path={props.path}
+				splitpath={sp}
+				node={props.node}
+				title="Instance Actions"
+			/>
 			<ObjInstanceDigest path={props.path} node={props.node} />
 			<ObjInstancesResources path={props.path} node={props.node} />
-		</div>
+		</Paper>
 	)
 }
 
@@ -74,27 +79,27 @@ function ObjInstancesResources(props) {
 	}
 	const rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources
 	return (
-		<div>
-			<h3>Resources</h3>
-			<div className="table-adaptative">
-				<table className="table table-hover">
-					<thead>
-						<tr className="text-secondary">
-							<td>Id</td>
-							<td>Availability</td>
-							<td>State</td>
-							<td>Desc</td>
-							<td className="text-right">Actions</td>
-						</tr>
-					</thead>
-					<tbody>
-						{Object.keys(rdata).sort().map((rid, i) => (
-							<ObjInstanceResourceLine key={i} rid={rid} node={props.node} path={props.path} />
-						))}
-					</tbody>
-				</table>
-			</div>
-		</div>
+		<React.Fragment>
+			<Typography variant="h5" component="h2">
+				Resources
+			</Typography>
+			<Table>
+				<TableHead>
+					<TableRow className="text-secondary">
+						<td>Id</td>
+						<td>Availability</td>
+						<td>State</td>
+						<td>Desc</td>
+						<td className="text-right">Actions</td>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{Object.keys(rdata).sort().map((rid, i) => (
+						<ObjInstanceResourceLine key={i} rid={rid} node={props.node} path={props.path} />
+					))}
+				</TableBody>
+			</Table>
+		</React.Fragment>
 	)
 }
 
@@ -113,16 +118,13 @@ function ObjInstanceResourceLine(props) {
 		return null
 	}
 	return (
-		<tr>
-			<td data-title="Id">{props.rid}</td>
-			<td data-title="Availability"><ObjAvail avail={rdata.status} /></td>
-			<td data-title="State"><ObjInstanceResourceState rid={props.rid} node={props.node} path={props.path} /></td>
-			<td data-title="Desc">{rdata.label}</td>
-			<td data-title="Actions" className="text-right"><ObjInstanceResourceActions rid={props.rid} node={props.node} path={props.path} /></td>
-			<td className="flex-trailer"/>
-			<td className="flex-trailer" />
-			<td className="flex-trailer" />
-		</tr>
+		<TableRow>
+			<TableCell>{props.rid}</TableCell>
+			<TableCell><ObjAvail avail={rdata.status} /></TableCell>
+			<TableCell><ObjInstanceResourceState rid={props.rid} node={props.node} path={props.path} /></TableCell>
+			<TableCell>{rdata.label}</TableCell>
+			<TableCell><ObjInstanceResourceActions rid={props.rid} node={props.node} path={props.path} /></TableCell>
+		</TableRow>
 	)
 }
 
@@ -140,9 +142,7 @@ function ObjInstanceResourceState(props) {
 	// disabled
 	// log warnings/errors/info
 	return (
-		<div>
-			<ObjProvisioned provisioned={rdata.provisioned && rdata.provisioned.state} />
-		</div>
+		<ObjProvisioned provisioned={rdata.provisioned && rdata.provisioned.state} />
 	)
 }
 

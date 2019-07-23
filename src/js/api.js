@@ -1,5 +1,4 @@
 import React from "react";
-import { useStateValue } from './state.js';
 
 function parseApiResponse(data, ok) {
 	var alerts = []
@@ -20,14 +19,16 @@ function parseApiResponse(data, ok) {
 				if (_data.status) {
 					alerts.push({
 						"date": date,
-						"level": "danger",
+						"level": "error",
+						"color": "secondary",
 						"body": (<div><strong>{node}</strong><br/><div>{fmt(_data.error)}</div></div>)
 					})
 				}
 				if (_data.info) {
 					alerts.push({
 						"date": date,
-						"level": "dark",
+						"level": "success",
+						"color": "primary",
 						"body": (<div><strong>{node}</strong><br/><div>{fmt(_data.info)}</div></div>)
 					})
 				}
@@ -35,7 +36,8 @@ function parseApiResponse(data, ok) {
 		} else {
 			alerts.push({
 				"date": date,
-				"level": "danger",
+				"level": "error",
+				"color": "secondary",
 				"body": (<div>{fmt(data.error)}</div>)
 			})
 		}
@@ -43,14 +45,16 @@ function parseApiResponse(data, ok) {
 	if (data.info) {
 		alerts.push({
 			"date": date,
-			"level": "dark",
+			"level": "success",
+			"color": "primary",
 			"body": (<div>{fmt(data.info)}</div>)
 		})
 	}
 	if (ok && (data.status == 0) && (alerts.length == 0)) {
 		alerts.push({
 			"date": date,
-			"level": "dark",
+			"level": "success",
+			"color": "primary",
 			"body": (<div>{ok}</div>)
 		})
 	}

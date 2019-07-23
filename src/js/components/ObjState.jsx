@@ -5,9 +5,32 @@ import { ObjOverall } from "./ObjOverall.jsx";
 import { ObjFrozen } from "./ObjFrozen.jsx";
 import { ObjPlacement } from "./ObjPlacement.jsx";
 import { ObjProvisioned } from "./ObjProvisioned.jsx";
-import { Spinner } from 'reactstrap'
+
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Hidden from '@material-ui/core/Hidden';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+
+const useStyles = makeStyles(theme => ({
+        child: {
+                marginRight: theme.spacing(1),
+        },
+	wrapper: {
+		position: 'relative',
+	},
+	progress: {
+		position: 'absolute',
+		left: "-0.15em",
+		zoom: 0.7,
+		top: "-0.15em",
+		zIndex: 1,
+	},
+}))
 
 function ObjActive(props) {
+	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
 	if (cstat.monitor === undefined) {
 		return null
@@ -21,25 +44,36 @@ function ObjActive(props) {
 			continue
 		}
 		if (idata.monitor.global_expect || (idata.monitor.status != "idle")) {
-			return ( <Spinner type="grow" color="primary" size="sm" /> )
+			return (
+				<Typography className={props.className} component="span">
+					<div className={classes.wrapper}>
+						<PlayArrowIcon color="primary" />
+						<CircularProgress className={classes.progress} />
+					</div>
+				</Typography>
+			)
 		}
 	}
 	return null
 }
 
 function ObjState(props) {
+	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
 	if (cstat.monitor === undefined) {
 		return null
 	}
 	return (
-		<div>
-			<ObjActive path={props.path} />
-			<ObjOverall overall={cstat.monitor.services[props.path].overall} />
-			<ObjPlacement placement={cstat.monitor.services[props.path].placement} />
-			<ObjFrozen frozen={cstat.monitor.services[props.path].frozen} />
-			<ObjProvisioned provisioned={cstat.monitor.services[props.path].provisioned} />
-		</div>
+		<Grid container spacing={1}>
+			<Hidden smUp>
+				<ObjAvail className={classes.child} avail={cstat.monitor.services[props.path].avail} />
+			</Hidden>
+			<ObjActive className={classes.child} path={props.path} />
+			<ObjOverall className={classes.child} overall={cstat.monitor.services[props.path].overall} />
+			<ObjPlacement className={classes.child} placement={cstat.monitor.services[props.path].placement} />
+			<ObjFrozen className={classes.child} frozen={cstat.monitor.services[props.path].frozen} />
+			<ObjProvisioned className={classes.child} provisioned={cstat.monitor.services[props.path].provisioned} />
+		</Grid>
 	)
 }
 

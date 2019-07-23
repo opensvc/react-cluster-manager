@@ -2,7 +2,35 @@ import React from "react";
 import { useStateValue } from '../state.js';
 import { apiNodeAction } from "../api.js";
 
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Link from '@material-ui/core/Link';
+import Chip from '@material-ui/core/Chip';
+import { useColorStyles } from "../styles.js";
+
+const useStyles = makeStyles(theme => ({
+        root: {
+                padding: theme.spacing(3, 2),
+                marginTop: theme.spacing(3),
+                overflowX: 'auto',
+        },
+        chip: {
+                margin: theme.spacing(1),
+        },
+}))
+
+
 function Threads(props) {
+	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
 	if (!("monitor" in cstat)) {
 		return null
@@ -20,48 +48,39 @@ function Threads(props) {
 			threads.push(section)
 		}
 	}
-	var title
-	if ((props.noTitle === undefined) || !props.noTitle) {
-		title = (
-			<h2><a className="text-dark" href="#" onClick={handleTitleClick}>Threads</a></h2>
-		)
-	}
 	return (
-		<div id="threads">
-			{title}
-			<div className="table-adaptative">
-				<table className="table table-hover">
-					<thead>
-						<tr className="text-secondary">
-							<td>Name</td>
-							<td>State</td>
-						</tr>
-					</thead>
-					<tbody>
-						{threads.map((name) => (
-							<Thread key={name} name={name} data={cstat[name]} />
-						))}
-					</tbody>
-				</table>
-			</div>
-		</div>
+		<Paper id="threads" className={classes.root}>
+			<Typography variant="h4" component="h3">
+				<Link className="text-dark" href="#" onClick={handleTitleClick}>Threads</Link>
+			</Typography>
+			<Table>
+				<TableHead>
+					<TableRow className="text-secondary">
+						<TableCell>Name</TableCell>
+						<TableCell>State</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{threads.map((name) => (
+						<Thread key={name} name={name} data={cstat[name]} />
+					))}
+				</TableBody>
+			</Table>
+		</Paper>
 	)
 }
 
 function Thread(props) {
-	if (props.data.state == "running") {
-		var cl = "text-success"
-	} else {
-		var cl = "text-danger"
-	}
+	const classes = useColorStyles()
 	return (
-		<tr>
-			<td data-title="Name">{props.name}</td>
-			<td data-title="State" className={cl}>{props.data.state}</td>
-			<td className="flex-trailer"/>
-			<td className="flex-trailer" />
-			<td className="flex-trailer" />
-		</tr>
+		<TableRow>
+			<TableCell>{props.name}</TableCell>
+			<TableCell>
+				<Typography className={classes[props.data.state]}>
+					{props.data.state}
+				</Typography>
+			</TableCell>
+		</TableRow>
 	)
 }
 

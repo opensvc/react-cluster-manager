@@ -2,19 +2,28 @@ import React from "react";
 import { useStateValue } from '../state.js';
 import { state } from "../utils.js";
 
-function ThreadStatus(props) {
-	if (props.status != "up") {
-		return (
-			<span className="text-danger">{props.status}</span>
-		)
-	} else {
-		return (
-			<span className="text-success">{props.status}</span>
-		)
-	}
-}
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Link from '@material-ui/core/Link';
+
+const useStyles = makeStyles(theme => ({
+        root: {
+                padding: theme.spacing(3, 2),
+                marginTop: theme.spacing(3),
+                overflowX: 'auto',
+        },
+}))
 
 function ArbitratorsDetails(props) {
+	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
 	var arbitrators = {}
 	var arbNames = []
@@ -50,34 +59,28 @@ function ArbitratorsDetails(props) {
 	if (!arbNames.length) {
 		return null
 	}
-	var title
-	if ((props.noTitle === undefined) || !props.noTitle) {
-		title = (
-			<h2><a className="text-dark" href="#" onClick={handleClick}>Arbitrators</a></h2>
-		)
-	}
 
 	return (
-		<div id="arbitrators">
-			{title}
-			<div className="table-adaptative">
-				<table className="table table-hover">
-					<thead>
-						<tr className="text-secondary">
-							<td>Nodes</td>
-							{arbNames.map((an, i) => (
-								<td key={i} title={an}>{arbAddr[an]}</td>
-							))}
-						</tr>
-					</thead>
-					<tbody>
-						{Object.keys(arbitrators).map((node) => (
-							<ArbitratorDetails key={node} node={node} arbitrators={arbitrators[node]} />
+		<Paper className={classes.root} id="arbitrators">
+			<Typography variant="h4" component="h3">
+				<Link href="#" onClick={handleClick}>Arbitrators</Link>
+			</Typography>
+			<Table>
+				<TableHead>
+					<TableRow className="text-secondary">
+						<TableCell>Nodes</TableCell>
+						{arbNames.map((an, i) => (
+							<TableCell key={i} title={an}>{arbAddr[an]}</TableCell>
 						))}
-					</tbody>
-				</table>
-			</div>
-		</div>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{Object.keys(arbitrators).map((node) => (
+						<ArbitratorDetails key={node} node={node} arbitrators={arbitrators[node]} />
+					))}
+				</TableBody>
+			</Table>
+		</Paper>
 	)
 }
 
@@ -91,15 +94,16 @@ function ArbitratorDetails(props) {
 	}
 
 	return (
-		<tr>
-			<td data-title="Node">{props.node}</td>
+		<TableRow>
+			<TableCell data-title="Node">{props.node}</TableCell>
 			{ans.map((adata, i) => (
-				<td key={i} data-title={adata.name} className={adata.status == "up" ? "text-"+state.OPTIMAL.color : "text-"+state.DANGER.color}>{adata.status}</td>
+				<TableCell key={i} data-title={adata.name}>
+					<Typography component="span" color={adata.status == "up" ? "primary" : "error"}>
+						{adata.status}
+					</Typography>
+				</TableCell>
 			))}
-			<td className="flex-trailer"/>
-			<td className="flex-trailer" />
-			<td className="flex-trailer" />
-		</tr>
+		</TableRow>
 	)
 }
 

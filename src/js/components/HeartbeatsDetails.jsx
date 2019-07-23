@@ -1,19 +1,29 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 
-function ThreadStatus(props) {
-	if (props.state != "running") {
-		return (
-			<span className="text-danger">{props.state}</span>
-		)
-	} else {
-		return (
-			<span className="text-success">{props.state}</span>
-		)
-	}
-}
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Link from '@material-ui/core/Link';
+import { useColorStyles } from "../styles.js"
+
+const useStyles = makeStyles(theme => ({
+        root: {
+                padding: theme.spacing(3, 2),
+                marginTop: theme.spacing(3),
+                overflowX: 'auto',
+        },
+}))
 
 function HeartbeatsDetails(props) {
+	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
 	if (cstat.monitor === undefined) {
 		return null
@@ -35,70 +45,63 @@ function HeartbeatsDetails(props) {
 		}
 	}
 	var nodes = Object.keys(cstat.monitor.nodes)
-	var title
-	if ((props.noTitle === undefined) || !props.noTitle) {
-		title = (
-			<h2><a className="text-dark" href="#" onClick={handleClick}>Heartbeats</a></h2>
-		)
-	}
 
 	return (
-		<div id="heartbeats">
-			{title}
-			<div className="table-adaptative">
-				<table className="table table-hover">
-					<thead>
-						<tr className="text-secondary">
-							<td>Nodes</td>
-							{hbNames.map((hbName, i) => (
-								<td key={i}>{hbName}</td>
-							))}
-						</tr>
-					</thead>
-					<tbody>
-						{cstat.cluster.nodes.map((node, i) => (
-							<NodeHeartbeats key={i} node={node} hbNames={hbNames} />
+		<Paper id="heartbeats" className={classes.root}>
+			<Typography variant="h4" component="h3">
+				<Link className="text-dark" href="#" onClick={handleClick}>Heartbeats</Link>
+			</Typography>
+			<Table>
+				<TableHead>
+					<TableRow className="text-secondary">
+						<TableCell>Nodes</TableCell>
+						{hbNames.map((hbName, i) => (
+							<TableCell key={i}>{hbName}</TableCell>
 						))}
-					</tbody>
-				</table>
-			</div>
-		</div>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{cstat.cluster.nodes.map((node, i) => (
+						<NodeHeartbeats key={i} node={node} hbNames={hbNames} />
+					))}
+				</TableBody>
+			</Table>
+		</Paper>
 	)
 }
 
 function NodeHeartbeats(props) {
 	return (
-		<tr>
-			<td data-title="Node">{props.node}</td>
+		<TableRow>
+			<TableCell data-title="Node">{props.node}</TableCell>
 			{props.hbNames.map((hbName, i) => (
 				<NodeHeartbeat key={i} node={props.node} hbName={hbName} />
 			))}
-		</tr>
+		</TableRow>
 	)
 }
 
 function NodeHeartbeat(props) {
+	const classes = useColorStyles()
 	const [{ cstat }, dispatch] = useStateValue();
 	if (cstat.monitor === undefined) {
 		return null
 	}
 	function badge(beating) {
-		var cl = ""
+		var cl = "undef"
 		if (beating == false) {
-			cl += "text-danger"
+			cl = "down"
 		} else if (beating == true) {
-			cl += "text-success"
-		} else {
-			cl += "text-secondary"
+			cl = "up"
 		}
 		return cl
 	}
 	return (
-		<td data-title={props.hbName}>
-			<span className={badge(cstat[props.hbName+".rx"].peers[props.node].beating)}>rx</span>
-			<span className="text-secondary">&nbsp;&#47;&nbsp;</span>
-			<span className={badge(cstat[props.hbName+".tx"].peers[props.node].beating)}>tx</span>
-		</td>
+		<TableCell>
+			<Typography component="span" className={classes[badge(cstat[props.hbName+".rx"].peers[props.node].beating)]}>rx</Typography>
+			&nbsp;/&nbsp;
+			<Typography component="span" className={classes[badge(cstat[props.hbName+".tx"].peers[props.node].beating)]}>tx</Typography>
+		</TableCell>
 	)
 }
 

@@ -2,11 +2,30 @@ import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { apiObjCreate } from "../api.js";
 import { nameValid } from "../utils.js";
-import { Form, Button, FormGroup, FormFeedback, Label, Input, } from 'reactstrap';
 import { ObjKindSelector } from './ObjKindSelector.jsx';
 import { NamespaceSelector } from './NamespaceSelector.jsx';
 
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import Divider from '@material-ui/core/Divider';
+
+const useStyles = makeStyles(theme => ({
+	desc: {
+		padding: theme.spacing(3, 0),
+	},
+        formcontrol: {
+                margin: theme.spacing(2, 0),
+        },
+}))
+
 function DeployEmpty(props) {
+	const classes = useStyles()
 	const [{}, dispatch] = useStateValue();
 	const [kind, setKind] = useState("svc");
 	const [namespace, setNamespace] = useState();
@@ -26,15 +45,15 @@ function DeployEmpty(props) {
 			data: data
 		}))
 	}
-	function handleObjKindClick(kind) {
+	function handleObjKindClick(e, kind) {
 		setKind(kind)
 	}
 	return (
-		<Form>
-			<p className="text-secondary">Deploy an empty service to a single node, to configure later.</p>
-			<div className="dropdown-divider"></div>
-			<FormGroup>
-				<Label for="namespace">Namespace</Label>
+		<div>
+			<Typography className={classes.desc} component="p" color="textSecondary">
+				Deploy an empty service to a single node, to configure later.
+			</Typography>
+			<FormControl className={classes.formcontrol} fullWidth>
 				<NamespaceSelector
 					id="namespace"
 					role="admin"
@@ -42,26 +61,23 @@ function DeployEmpty(props) {
 					onChange={($) => setNamespace($)}
 					selected={namespace}
 				/>
-				<FormFeedback>Must start with an aplha and continue with aplhanum, dot, underscore or hyphen.</FormFeedback>
-			</FormGroup>
-			<FormGroup>
-				<Label for="kind">Kind</Label>
-				<ObjKindSelector id="kind" value={kind} onClick={handleObjKindClick} />
-			</FormGroup>
-			<FormGroup>
-				<Label for="name">Name</Label>
-				<Input
+			</FormControl>
+			<FormControl className={classes.formcontrol} fullWidth>
+				<ObjKindSelector id="kind" value={kind} onChange={handleObjKindClick} />
+			</FormControl>
+			<FormControl className={classes.formcontrol} fullWidth>
+				<TextField
+					fullWidth
+					error={!nameValid(name)}
 					id="name"
-					placeholder="mysvc1"
+					label="Name"
 					onChange={(e) => setName(e.target.value)}
-					valid={nameValid(name)}
-					invalid={!nameValid(name)}
 					autoComplete="off"
+					helperText={!nameValid(name) && "Must start with an aplha and continue with aplhanum, dot, underscore or hyphen."}
 				/>
-				<FormFeedback>Must start with an aplha and continue with aplhanum, dot, underscore or hyphen.</FormFeedback>
-			</FormGroup>
-			<Button color="primary" onClick={createEmpty}>Submit</Button>
-		</Form>
+			</FormControl>
+			<Button color="secondary" onClick={createEmpty}>Submit</Button>
+		</div>
 	)
 }
 
