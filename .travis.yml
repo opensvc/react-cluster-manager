@@ -1,8 +1,5 @@
 env:
-  - DEPLOY_NODE="repo.opensvc.com"
-  - DEPLOY_USER="opensvc"
-  - PRIVATE_RSA="./deploy/id_rsa_travis"
-  - ENCRYPTED_PRIVATE_RSA="${PRIVATE_RSA}.enc"
+  - DEPLOY_NODE="repo.opensvc.com" DEPLOY_USER="opensvc" PRIVATE_RSA="./deploy/id_rsa_travis" ENCRYPTED_PRIVATE_RSA="${PRIVATE_RSA}.enc"
 
 before_install:
 - openssl aes-256-cbc -K $encrypted_e7f5b74d8bfb_key -iv $encrypted_e7f5b74d8bfb_iv
