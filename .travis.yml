@@ -1,0 +1,3 @@
+before_install:
+- openssl aes-256-cbc -K $encrypted_e7f5b74d8bfb_key -iv $encrypted_e7f5b74d8bfb_iv
+  -in ./deploy/id_rsa_travis.enc -out ./deploy/id_rsa_travis -d
