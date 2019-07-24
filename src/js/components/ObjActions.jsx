@@ -4,6 +4,17 @@ import { splitPath } from '../utils.js';
 import { apiObjSetMonitor } from "../api.js";
 import { ActionsDropdown, ActionsDropdownSection, ActionsDropdownItem, ActionsDropdownDivider } from './ActionsDropdown.jsx';
 
+import CancelIcon from "@material-ui/icons/Cancel"
+import PlayArrowIcon from "@material-ui/icons/PlayArrow"
+import StopIcon from "@material-ui/icons/Stop"
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
+import DeleteIcon from "@material-ui/icons/Delete"
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline"
+import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled"
+import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
+import ShuffleIcon from "@material-ui/icons/Shuffle"
+import LabelIcon from "@material-ui/icons/Label"
+
 function ObjActions(props) {
 	const [{cstat}, dispatch] = useStateValue();
 	if (props.path) {
@@ -157,23 +168,45 @@ function ObjActions(props) {
 		return (
 			<ActionsDropdown path={path} node={props.node} title={props.title} submit={submit}>
 				<ActionsDropdownSection name="safe" color="secondary" confirms={0}>
-					<ActionsDropdownItem value="started" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: namespaces}} />
-					<ActionsDropdownItem value="frozen" text="Freeze" disabled={disable_freeze()} requires={{role: "operator", namespace: namespaces}} />
-					<ActionsDropdownItem value="thawed" text="Thaw" disabled={disable_thaw()} requires={{role: "operator", namespace: namespaces}} />
-					<ActionsDropdownItem value="placed" text="Giveback" disabled={disable_giveback()} requires={{role: "operator", namespace: namespaces}} />
-					<ActionsDropdownItem value="placed@<peer>" text="Switch" disabled={disable_switch()} requires={{role: "operator", namespace: namespaces}} />
-					<ActionsDropdownItem value="aborted" text="Abort" disabled={disable_abort()} requires={{role: "operator", namespace: namespaces}} />
+					<ActionsDropdownItem value="started" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: namespaces}}
+						icon=<PlayArrowIcon />
+					/>
+					<ActionsDropdownItem value="frozen" text="Freeze" disabled={disable_freeze()} requires={{role: "operator", namespace: namespaces}}
+						icon=<PauseCircleFilledIcon />
+					/>
+					<ActionsDropdownItem value="thawed" text="Thaw" disabled={disable_thaw()} requires={{role: "operator", namespace: namespaces}}
+						icon=<PauseCircleOutlineIcon />
+					/>
+					<ActionsDropdownItem value="placed" text="Giveback" disabled={disable_giveback()} requires={{role: "operator", namespace: namespaces}}
+						icon=<ShuffleIcon />
+					/>
+					<ActionsDropdownItem value="placed@<peer>" text="Switch" disabled={disable_switch()} requires={{role: "operator", namespace: namespaces}}
+						icon=<ShuffleIcon />
+					/>
+					<ActionsDropdownItem value="aborted" text="Abort" disabled={disable_abort()} requires={{role: "operator", namespace: namespaces}}
+						icon=<CancelIcon />
+					/>
 				</ActionsDropdownSection>
 				<ActionsDropdownDivider />
 				<ActionsDropdownSection name="impacting" color="warning" confirms={3}>
-					<ActionsDropdownItem value="stopped" text="Stop" disabled={disable_stop()} requires={{role: "operator", namespace: namespaces}} />
-					<ActionsDropdownItem value="provisioned" text="Provision" disabled={disable_provision()} requires={{role: "admin", namespace: namespaces}} />
+					<ActionsDropdownItem value="stopped" text="Stop" disabled={disable_stop()} requires={{role: "operator", namespace: namespaces}}
+						icon=<StopIcon />
+					/>
+					<ActionsDropdownItem value="provisioned" text="Provision" disabled={disable_provision()} requires={{role: "admin", namespace: namespaces}}
+						icon=<LabelIcon />
+					/>
 				</ActionsDropdownSection>
 				<ActionsDropdownDivider />
 				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
-					<ActionsDropdownItem value="purged" text="Purge" requires={{role: "admin", namespace: namespaces}} />
-					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}} />
-					<ActionsDropdownItem value="unprovisioned" text="Unprovision" disabled={disable_unprovision()} requires={{role: "admin", namespace: namespaces}} />
+					<ActionsDropdownItem value="purged" text="Purge" requires={{role: "admin", namespace: namespaces}}
+						icon=<DeleteForeverIcon />
+					/>
+					<ActionsDropdownItem value="unprovisioned" text="Unprovision" disabled={disable_unprovision()} requires={{role: "admin", namespace: namespaces}}
+						icon=<DeleteIcon />
+					/>
+					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
+						icon=<DeleteOutlineIcon />
+					/>
 				</ActionsDropdownSection>
 			</ActionsDropdown>
 		)
@@ -183,15 +216,19 @@ function ObjActions(props) {
 		return (
 			<ActionsDropdown path={path} node={props.node} title={props.title} submit={submit}>
 				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
-					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}} />
+					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
+						icon=<DeleteOutlineIcon />
+					/>
 				</ActionsDropdownSection>
 			</ActionsDropdown>
 		)
-	} else if (kinds.indexOf("sex") > -1) {
+	} else if (kinds.indexOf("sec") > -1) {
 		return (
 			<ActionsDropdown path={path} node={props.node} title={props.title} submit={submit}>
 				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
-					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}} />
+					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
+						icon=<DeleteOutlineIcon />
+					/>
 				</ActionsDropdownSection>
 			</ActionsDropdown>
 		)
@@ -199,7 +236,9 @@ function ObjActions(props) {
 		return (
 			<ActionsDropdown path={path} node={props.node} title={props.title} submit={submit}>
 				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
-					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}} />
+					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
+						icon=<DeleteOutlineIcon />
+					/>
 				</ActionsDropdownSection>
 			</ActionsDropdown>
 		)

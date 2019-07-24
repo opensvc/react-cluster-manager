@@ -82,24 +82,25 @@ function ConfirmationDialog(props) {
 	}
 
 	const handleAck = m => (e) => {
-		console.log("handleAck", e.target, m)
 		if (e.target.checked && acks.indexOf(m) < 0) {
 			var newAcks = [m].concat(acks)
 			setAcks(newAcks)
 		} else if (!e.target.checked && acks.indexOf(m) > -1) {
 			var newAcks = [].concat(acks)
-			delete newAcks[m]
+			newAcks.splice(acks.indexOf(m), 1)
 			setAcks(newAcks)
 		}
 	}
 	function handleCancel(e, m) {
-		console.log("handleCancel", e)
 		props.handleClose()
+		setAcks([])
+		setAction(null)
 	}
 	function handleOk(e, m) {
-		console.log("handleOk", e)
 		props.submit({value: action})
 		props.handleClose()
+		setAcks([])
+		setAction(null)
 	}
 	function handleEntering(e) {
 		console.log(e)
@@ -114,19 +115,17 @@ function ConfirmationDialog(props) {
 			aria-labelledby="confirmation-dialog-title"
 			open={props.open}
 		>
-			<DialogTitle id="confirmation-dialog-title">Action {action}</DialogTitle>
+			<DialogTitle id="confirmation-dialog-title">Action</DialogTitle>
 			<DialogContent dividers>
-				{!action &&
-				<MenuContext.Provider value={{menu: props, setAction: setAction}}>
+				<MenuContext.Provider value={{menu: props, action: action, setAction: setAction}}>
 					<List>
 						{props.children}
 					</List>
 				</MenuContext.Provider>
-				}
-				{confirmations.length &&
+				{(confirmations.length > 0) &&
 				<FormControl component="fieldset" className={classes.formControl}>
-					{confirmations.map((m) => (
-						<FormGroup>
+					{confirmations.map((m, i) => (
+						<FormGroup key={i}>
 							<FormControlLabel
 								control={<Checkbox checked={acks.indexOf(m) > -1} onChange={handleAck(m)} value={m} />}
 								label={m}
@@ -202,8 +201,8 @@ function ActionsDropdown(props) {
 function ActionsDropdownSection(props) {
         return (
 		<MenuContext.Consumer>
-			{({ menu, setAction }) => (
-				<MenuContext.Provider value={{section: props, menu: menu, setAction: setAction}}>
+			{({ menu, action, setAction }) => (
+				<MenuContext.Provider value={{section: props, menu: menu, action: action, setAction: setAction}}>
 					<div>
 						{props.children}
 					</div>
@@ -215,6 +214,9 @@ function ActionsDropdownSection(props) {
 
 function ActionsDropdownItemWrapped(props) {
 	const [{user}, dispatch] = useStateValue()
+	if (props.action && (props.value != props.action)) {
+		return null
+	}
 	function handleClick(e) {
 		props.setAction(props.value)
 	}
@@ -247,20 +249,25 @@ function ActionsDropdownItemWrapped(props) {
 		return false
 	}
 	return (
-		<ListItem disabled={disabled()} onClick={handleClick}>{props.text}</ListItem>
+		<ListItem disabled={disabled()} onClick={handleClick}>
+			<ListItemIcon>{props.icon}</ListItemIcon>
+			<ListItemText primary={props.text} />
+		</ListItem>
 	)
 }
 
 function ActionsDropdownItem(props) {
 	return (
 		<MenuContext.Consumer>
-			{({ menu, section, setAction }) => (
+			{({ menu, section, action, setAction }) => (
 				<ActionsDropdownItemWrapped
 					value={props.value}
 					text={props.text}
+					icon={props.icon}
 					disabled={props.disabled}
 					requires={props.requires}
 					setAction={setAction}
+					action={action}
 					menu={menu}
 					section={section}
 				/>
