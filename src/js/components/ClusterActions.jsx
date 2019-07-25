@@ -3,6 +3,9 @@ import { useStateValue } from '../state.js';
 import { apiNodeSetMonitor } from "../api.js";
 import { Actions, ActionsSection, ActionsItem } from './Actions.jsx';
 
+import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled"
+import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
+
 function ClusterActions(props) {
 	const [{cstat}, dispatch] = useStateValue();
 	const cdata = cstat.monitor.nodes
@@ -32,8 +35,12 @@ function ClusterActions(props) {
 	return (
 		<Actions title={props.title} submit={submit}>
 			<ActionsSection name="safe" color="secondary" confirms={0}>
-				<ActionsItem value="frozen" text="Freeze Nodes" disabled={disable_freeze()} requires={{role: "root"}} />
-				<ActionsItem value="thawed" text="Thaw Nodes" disabled={disable_thaw()} requires={{role: "root"}} />
+				<ActionsItem value="frozen" text="Freeze Nodes" disabled={disable_freeze()} requires={{role: "root"}}
+					icon=<PauseCircleFilledIcon />
+				/>
+				<ActionsItem value="thawed" text="Thaw Nodes" disabled={disable_thaw()} requires={{role: "root"}}
+					icon=<PauseCircleOutlineIcon />
+				/>
 			</ActionsSection>
 		</Actions>
 	)

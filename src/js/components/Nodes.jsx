@@ -4,12 +4,10 @@ import { state, fancySizeMB } from "../utils.js";
 import { useColorStyles } from "../styles.js";
 import { apiNodeAction } from "../api.js";
 import { nodeMemOverloadIssue, nodeSwapOverloadIssue, compatIssue, versionIssue } from "../issues.js";
-import { ObjFrozen } from "./ObjFrozen.jsx";
-import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
-import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
 import { NodeActions } from "./NodeActions.jsx";
 import { ClusterActions } from "./ClusterActions.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
+import { NodeState } from "./NodeState.jsx";
 import { Sparklines, SparklinesLine, SparklinesReferenceLine, SparklinesNormalBand } from 'react-sparklines';
 
 import PropTypes from 'prop-types';
@@ -29,7 +27,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 
 
@@ -51,40 +48,6 @@ function NodeCpuSparkline(props) {
 			<SparklinesLine style={{ strokeWidth: 5, stroke: "#6c757d", fill: "none" }} />
 			<SparklinesReferenceLine type="mean" style={{ strokeWidth: 2, stroke: "#dc3545" }} />
 		</Sparklines>
-	)
-}
-
-function NodeState(props) {
-	var items = [
-		<ObjFrozen frozen={props.data.frozen} />,
-		<NodeSpeakerBadge speaker={props.data.speaker} />,
-		<MonitorStatusBadge state={props.data.monitor.status} />,
-		<MonitorTargetBadge target={props.data.monitor.global_expect} />
-	]
-	return (
-		<Grid container spacing={1}>
-			{items.map((item, i) => {
-				if (!item) {
-					return null
-				}
-				return (
-					<Grid item key={i}>
-						{item}
-					</Grid>
-				)
-			})}
-		</Grid>
-	)
-}
-
-function NodeSpeakerBadge(props) {
-	if (props.speaker != true) {
-		return null
-	}
-	return (
-		<Typography color="textSecondary" component="span">
-			Speaker
-		</Typography>
 	)
 }
 
