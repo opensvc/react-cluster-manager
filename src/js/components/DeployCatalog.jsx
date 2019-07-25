@@ -305,8 +305,8 @@ function DeployCatalog(props) {
 					id="namespace"
 					role="admin"
 					placeholder="test"
-					selected={deployCatalogNamespace}
 					onChange={($) => dispatch({"type": "setDeployCatalogNamespace", "value": $})}
+					selected={deployCatalogNamespace}
 				/>
 				<FormFeedback>Must start with an aplha and continue with aplhanum, dot, underscore or hyphen.</FormFeedback>
 			</FormGroup>

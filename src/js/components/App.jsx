@@ -96,7 +96,7 @@ const StatefulApp = () => {
                 deployTemplateText: "",
                 deployTemplateData: null,
                 deployTemplateName: "",
-                deployTemplateNamespace: [],
+                deployTemplateNamespace: "",
 		catalogs: [],
 		deployCatalogCatalog: [],
 		deployCatalogTemplates: [],
@@ -104,7 +104,7 @@ const StatefulApp = () => {
 		deployCatalogText: "",
 		deployCatalogData: null,
 		deployCatalogName: "",
-		deployCatalogNamespace: [],
+		deployCatalogNamespace: "",
 		logEventSources: {},
 		logs: {},
 	}

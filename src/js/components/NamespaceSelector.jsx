@@ -73,7 +73,7 @@ function renderInputComponent(props) {
 		error = true
 		helperText = "Must start with an aplha and continue with aplhanum, dot, underscore or hyphen."
 	} else if (other.namespaces.indexOf(other.value) < 0) {
-		if (other.allowNew) {
+		if (other.allownew) {
 			helperText = "New namespace"
 		} else {
 			error = true
@@ -192,7 +192,7 @@ function NamespaceSelector(props) {
 						shrink: true,
 					},
 					namespaces: namespaces,
-					allowNew: isSquatter(user),
+					allownew: isSquatter(user),
 				}}
 				theme={{
 					suggestionsList: classes.suggestionsList,
@@ -213,35 +213,6 @@ function NamespaceSelector(props) {
 		</div>
 	);
 }
-
-/*
-function NamespaceSelector(props) {
-	const [{ cstat, user }, dispatch] = useStateValue()
-	var namespaces = []
-	if (props.role) {
-		namespaces = getRoleNamespaces(user, props.role)
-	} else {
-		namespaces = getNamespaces(cstat)
-	}
-
-	return (
-		<Typeahead
-			id={props.id}
-			placeholder={props.placeholder}
-			selected={props.selected}
-			options={namespaces}
-			onChange={props.onChange}
-			className="flex-grow-1"
-			allowNew={isSquatter(user)}
-			newSelectionPrefix="Add a new namespace: "
-			invalid={!namespaceValid(props.selected)}
-			valid={namespaceValid(props.selected)}
-			highlightOnlyResult={true}
-			selectHintOnEnter={true}
-		/>
-	)
-}
-*/
 
 export {
 	NamespaceSelector
