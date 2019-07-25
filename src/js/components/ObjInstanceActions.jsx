@@ -2,7 +2,7 @@ import React from "react";
 import { useStateValue } from '../state.js';
 import { splitPath } from "../utils.js";
 import { apiInstanceAction } from "../api.js";
-import { ActionsDropdown, ActionsDropdownSection, ActionsDropdownItem, ActionsDropdownDivider } from './ActionsDropdown.jsx';
+import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
 
 
 function ObjInstanceActions(props) {
@@ -74,53 +74,53 @@ function ObjInstanceActions(props) {
 
 	if ((sp.kind == "svc") || (sp.kind == "vol")) {
 		return (
-			<ActionsDropdown path={props.path} node={props.node} title={props.title} submit={submit}>
-				<ActionsDropdownSection name="safe" color="secondary" confirms={0}>
-					<ActionsDropdownItem value="start" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: sp.namespace}} />
-					<ActionsDropdownItem value="freeze" text="Freeze" disabled={disable_freeze()} requires={{role: "operator", namespace: sp.namespace}} />
-					<ActionsDropdownItem value="thaw" text="Thaw" disabled={disable_thaw()} requires={{role: "operator", namespace: sp.namespace}} />
-					<ActionsDropdownItem value="enable" text="Enable" disabled={disable_enable()} requires={{role: "operator", namespace: sp.namespace}} />
-					<ActionsDropdownItem value="status" text="Refresh" requires={{role: "operator", namespace: sp.namespace}} />
-				</ActionsDropdownSection>
-				<ActionsDropdownDivider />
-				<ActionsDropdownSection name="impacting" color="warning" confirms={3}>
-					<ActionsDropdownItem value="stop" text="Stop" disabled={disable_stop()} requires={{role: "operator", namespace: sp.namespace}} />
-					<ActionsDropdownItem value="provision" text="Provision" disabled={disable_provision()} requires={{role: "admin", namespace: sp.namespace}} />
-					<ActionsDropdownItem value="disable" text="Disable" disabled={disable_provision()} requires={{role: "operator", namespace: sp.namespace}} />
-				</ActionsDropdownSection>
-				<ActionsDropdownDivider />
-				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
-					<ActionsDropdownItem value="purge" text="Purge" requires={{role: "admin", namespace: sp.namespace}} />
-					<ActionsDropdownItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
-					<ActionsDropdownItem value="unprovision" text="Unprovision" disabled={disable_unprovision()} requires={{role: "admin", namespace: sp.namespace}} />
-				</ActionsDropdownSection>
-			</ActionsDropdown>
+			<Actions path={props.path} node={props.node} title={props.title} submit={submit}>
+				<ActionsSection name="safe" color="secondary" confirms={0}>
+					<ActionsItem value="start" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsItem value="freeze" text="Freeze" disabled={disable_freeze()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsItem value="thaw" text="Thaw" disabled={disable_thaw()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsItem value="enable" text="Enable" disabled={disable_enable()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsItem value="status" text="Refresh" requires={{role: "operator", namespace: sp.namespace}} />
+				</ActionsSection>
+				<ActionsDivider />
+				<ActionsSection name="impacting" color="warning" confirms={3}>
+					<ActionsItem value="stop" text="Stop" disabled={disable_stop()} requires={{role: "operator", namespace: sp.namespace}} />
+					<ActionsItem value="provision" text="Provision" disabled={disable_provision()} requires={{role: "admin", namespace: sp.namespace}} />
+					<ActionsItem value="disable" text="Disable" disabled={disable_provision()} requires={{role: "operator", namespace: sp.namespace}} />
+				</ActionsSection>
+				<ActionsDivider />
+				<ActionsSection name="dangerous" color="danger" confirms={6}>
+					<ActionsItem value="purge" text="Purge" requires={{role: "admin", namespace: sp.namespace}} />
+					<ActionsItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
+					<ActionsItem value="unprovision" text="Unprovision" disabled={disable_unprovision()} requires={{role: "admin", namespace: sp.namespace}} />
+				</ActionsSection>
+			</Actions>
 		)
 	} else if (sp.kind == "ccfg") {
 		return null
 	} else if (sp.kind == "cfg") {
 		return (
-			<ActionsDropdown path={props.path} node={props.node} title={props.title} submit={submit}>
-				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
-					<ActionsDropdownItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
-				</ActionsDropdownSection>
-			</ActionsDropdown>
+			<Actions path={props.path} node={props.node} title={props.title} submit={submit}>
+				<ActionsSection name="dangerous" color="danger" confirms={6}>
+					<ActionsItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
+				</ActionsSection>
+			</Actions>
 		)
 	} else if (sp.kind == "sec") {
 		return (
-			<ActionsDropdown path={props.path} node={props.node} title={props.title} submit={submit}>
-				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
-					<ActionsDropdownItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
-				</ActionsDropdownSection>
-			</ActionsDropdown>
+			<Actions path={props.path} node={props.node} title={props.title} submit={submit}>
+				<ActionsSection name="dangerous" color="danger" confirms={6}>
+					<ActionsItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
+				</ActionsSection>
+			</Actions>
 		)
 	} else if (sp.kind == "usr") {
 		return (
-			<ActionsDropdown path={props.path} node={props.node} title={props.title} submit={submit}>
-				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
-					<ActionsDropdownItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
-				</ActionsDropdownSection>
-			</ActionsDropdown>
+			<Actions path={props.path} node={props.node} title={props.title} submit={submit}>
+				<ActionsSection name="dangerous" color="danger" confirms={6}>
+					<ActionsItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}} />
+				</ActionsSection>
+			</Actions>
 		)
 	}
 }

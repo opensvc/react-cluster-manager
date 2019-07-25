@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { apiNodeAction } from "../api.js";
-import { ActionsDropdown, ActionsDropdownSection, ActionsDropdownItem, ActionsDropdownDivider } from './ActionsDropdown.jsx';
+import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
 
 function NodeActions(props) {
 	const [{cstat}, dispatch] = useStateValue();
@@ -23,31 +23,31 @@ function NodeActions(props) {
 	}
 
 	return (
-		<ActionsDropdown node={props.node} title={props.title} submit={submit}>
-			<ActionsDropdownSection name="safe" color="secondary" confirms={0}>
-				<ActionsDropdownItem value="freeze" text="Freeze" disabled={disable_freeze()} requires={{role: "root"}} />
-				<ActionsDropdownItem value="thaw" text="Thaw" disabled={disable_thaw()} requires={{role: "root"}} />
-			</ActionsDropdownSection>
-			<ActionsDropdownDivider />
-			<ActionsDropdownSection name="push" color="secondary" confirms={0}>
-				<ActionsDropdownItem value="pushasset" text="Asset" requires={{role: "root"}} />
-				<ActionsDropdownItem value="checks" text="Checks" requires={{role: "root"}} />
-				<ActionsDropdownItem value="pushdisks" text="Disks" requires={{role: "root"}} />
-				<ActionsDropdownItem value="pushpatch" text="Patches" requires={{role: "root"}} />
-				<ActionsDropdownItem value="pushpkg" text="Packages" requires={{role: "root"}} />
-				<ActionsDropdownItem value="pushstats" text="Stats" requires={{role: "root"}} />
-				<ActionsDropdownItem value="sysreport" text="Sysreport" requires={{role: "root"}} />
-			</ActionsDropdownSection>
-			<ActionsDropdownDivider />
-			<ActionsDropdownSection name="impacting" color="warning" confirms={3}>
-				<ActionsDropdownItem value="daemon_restart" text="Daemon Restart" requires={{role: "root"}} />
-			</ActionsDropdownSection>
-			<ActionsDropdownDivider />
-			<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
-				<ActionsDropdownItem value="reboot" text="Reboot" requires={{role: "root"}} />
-				<ActionsDropdownItem value="shutdown" text="Shutdown" requires={{role: "root"}} />
-			</ActionsDropdownSection>
-		</ActionsDropdown>
+		<Actions node={props.node} title={props.title} submit={submit}>
+			<ActionsSection name="safe" color="secondary" confirms={0}>
+				<ActionsItem value="freeze" text="Freeze" disabled={disable_freeze()} requires={{role: "root"}} />
+				<ActionsItem value="thaw" text="Thaw" disabled={disable_thaw()} requires={{role: "root"}} />
+			</ActionsSection>
+			<ActionsDivider />
+			<ActionsSection name="push" color="secondary" confirms={0}>
+				<ActionsItem value="pushasset" text="Asset" requires={{role: "root"}} />
+				<ActionsItem value="checks" text="Checks" requires={{role: "root"}} />
+				<ActionsItem value="pushdisks" text="Disks" requires={{role: "root"}} />
+				<ActionsItem value="pushpatch" text="Patches" requires={{role: "root"}} />
+				<ActionsItem value="pushpkg" text="Packages" requires={{role: "root"}} />
+				<ActionsItem value="pushstats" text="Stats" requires={{role: "root"}} />
+				<ActionsItem value="sysreport" text="Sysreport" requires={{role: "root"}} />
+			</ActionsSection>
+			<ActionsDivider />
+			<ActionsSection name="impacting" color="warning" confirms={3}>
+				<ActionsItem value="daemon_restart" text="Daemon Restart" requires={{role: "root"}} />
+			</ActionsSection>
+			<ActionsDivider />
+			<ActionsSection name="dangerous" color="danger" confirms={6}>
+				<ActionsItem value="reboot" text="Reboot" requires={{role: "root"}} />
+				<ActionsItem value="shutdown" text="Shutdown" requires={{role: "root"}} />
+			</ActionsSection>
+		</Actions>
 	)
 }
 

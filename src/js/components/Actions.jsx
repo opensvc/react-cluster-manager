@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }))
 
-function ActionsDropdownDivider(props) {
+function ActionsDivider(props) {
 	return (
 		<Divider />
 	)
@@ -147,7 +147,7 @@ function ConfirmationDialog(props) {
 	)
 }
 
-function ActionsDropdown(props) {
+function Actions(props) {
 	if (!props.selected && !props.path && !props.node) {
 		return null
 	}
@@ -198,7 +198,7 @@ function ActionsDropdown(props) {
 	)
 }
 
-function ActionsDropdownSection(props) {
+function ActionsSection(props) {
         return (
 		<MenuContext.Consumer>
 			{({ menu, action, setAction }) => (
@@ -212,7 +212,7 @@ function ActionsDropdownSection(props) {
         )
 }
 
-function ActionsDropdownItemWrapped(props) {
+function ActionsItemWrapped(props) {
 	const [{user}, dispatch] = useStateValue()
 	if (props.action && (props.value != props.action)) {
 		return null
@@ -256,11 +256,11 @@ function ActionsDropdownItemWrapped(props) {
 	)
 }
 
-function ActionsDropdownItem(props) {
+function ActionsItem(props) {
 	return (
 		<MenuContext.Consumer>
 			{({ menu, section, action, setAction }) => (
-				<ActionsDropdownItemWrapped
+				<ActionsItemWrapped
 					value={props.value}
 					text={props.text}
 					icon={props.icon}
@@ -277,8 +277,8 @@ function ActionsDropdownItem(props) {
 }
 
 export {
-	ActionsDropdown,
-	ActionsDropdownSection,
-	ActionsDropdownItem,
-	ActionsDropdownDivider
+	Actions,
+	ActionsSection,
+	ActionsItem,
+	ActionsDivider
 }

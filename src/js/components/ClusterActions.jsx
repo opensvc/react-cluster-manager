@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { apiNodeSetMonitor } from "../api.js";
-import { ActionsDropdown, ActionsDropdownSection, ActionsDropdownItem } from './ActionsDropdown.jsx';
+import { Actions, ActionsSection, ActionsItem } from './Actions.jsx';
 
 function ClusterActions(props) {
 	const [{cstat}, dispatch] = useStateValue();
@@ -30,12 +30,12 @@ function ClusterActions(props) {
 		return true
 	}
 	return (
-		<ActionsDropdown title={props.title} submit={submit}>
-			<ActionsDropdownSection name="safe" color="secondary" confirms={0}>
-				<ActionsDropdownItem value="frozen" text="Freeze Nodes" disabled={disable_freeze()} requires={{role: "root"}} />
-				<ActionsDropdownItem value="thawed" text="Thaw Nodes" disabled={disable_thaw()} requires={{role: "root"}} />
-			</ActionsDropdownSection>
-		</ActionsDropdown>
+		<Actions title={props.title} submit={submit}>
+			<ActionsSection name="safe" color="secondary" confirms={0}>
+				<ActionsItem value="frozen" text="Freeze Nodes" disabled={disable_freeze()} requires={{role: "root"}} />
+				<ActionsItem value="thawed" text="Thaw Nodes" disabled={disable_thaw()} requires={{role: "root"}} />
+			</ActionsSection>
+		</Actions>
 	)
 }
 

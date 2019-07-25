@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { splitPath } from '../utils.js';
 import { apiObjSetMonitor } from "../api.js";
-import { ActionsDropdown, ActionsDropdownSection, ActionsDropdownItem, ActionsDropdownDivider } from './ActionsDropdown.jsx';
+import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
 
 import CancelIcon from "@material-ui/icons/Cancel"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
@@ -166,81 +166,81 @@ function ObjActions(props) {
 
 	if ((kinds.indexOf("svc") > -1) || (kinds.indexOf("vol") > -1)) {
 		return (
-			<ActionsDropdown path={path} node={props.node} title={props.title} submit={submit}>
-				<ActionsDropdownSection name="safe" color="secondary" confirms={0}>
-					<ActionsDropdownItem value="started" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: namespaces}}
+			<Actions path={path} node={props.node} title={props.title} submit={submit}>
+				<ActionsSection name="safe" color="secondary" confirms={0}>
+					<ActionsItem value="started" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: namespaces}}
 						icon=<PlayArrowIcon />
 					/>
-					<ActionsDropdownItem value="frozen" text="Freeze" disabled={disable_freeze()} requires={{role: "operator", namespace: namespaces}}
+					<ActionsItem value="frozen" text="Freeze" disabled={disable_freeze()} requires={{role: "operator", namespace: namespaces}}
 						icon=<PauseCircleFilledIcon />
 					/>
-					<ActionsDropdownItem value="thawed" text="Thaw" disabled={disable_thaw()} requires={{role: "operator", namespace: namespaces}}
+					<ActionsItem value="thawed" text="Thaw" disabled={disable_thaw()} requires={{role: "operator", namespace: namespaces}}
 						icon=<PauseCircleOutlineIcon />
 					/>
-					<ActionsDropdownItem value="placed" text="Giveback" disabled={disable_giveback()} requires={{role: "operator", namespace: namespaces}}
+					<ActionsItem value="placed" text="Giveback" disabled={disable_giveback()} requires={{role: "operator", namespace: namespaces}}
 						icon=<ShuffleIcon />
 					/>
-					<ActionsDropdownItem value="placed@<peer>" text="Switch" disabled={disable_switch()} requires={{role: "operator", namespace: namespaces}}
+					<ActionsItem value="placed@<peer>" text="Switch" disabled={disable_switch()} requires={{role: "operator", namespace: namespaces}}
 						icon=<ShuffleIcon />
 					/>
-					<ActionsDropdownItem value="aborted" text="Abort" disabled={disable_abort()} requires={{role: "operator", namespace: namespaces}}
+					<ActionsItem value="aborted" text="Abort" disabled={disable_abort()} requires={{role: "operator", namespace: namespaces}}
 						icon=<CancelIcon />
 					/>
-				</ActionsDropdownSection>
-				<ActionsDropdownDivider />
-				<ActionsDropdownSection name="impacting" color="warning" confirms={3}>
-					<ActionsDropdownItem value="stopped" text="Stop" disabled={disable_stop()} requires={{role: "operator", namespace: namespaces}}
+				</ActionsSection>
+				<ActionsDivider />
+				<ActionsSection name="impacting" color="warning" confirms={3}>
+					<ActionsItem value="stopped" text="Stop" disabled={disable_stop()} requires={{role: "operator", namespace: namespaces}}
 						icon=<StopIcon />
 					/>
-					<ActionsDropdownItem value="provisioned" text="Provision" disabled={disable_provision()} requires={{role: "admin", namespace: namespaces}}
+					<ActionsItem value="provisioned" text="Provision" disabled={disable_provision()} requires={{role: "admin", namespace: namespaces}}
 						icon=<LabelIcon />
 					/>
-				</ActionsDropdownSection>
-				<ActionsDropdownDivider />
-				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
-					<ActionsDropdownItem value="purged" text="Purge" requires={{role: "admin", namespace: namespaces}}
+				</ActionsSection>
+				<ActionsDivider />
+				<ActionsSection name="dangerous" color="danger" confirms={6}>
+					<ActionsItem value="purged" text="Purge" requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteForeverIcon />
 					/>
-					<ActionsDropdownItem value="unprovisioned" text="Unprovision" disabled={disable_unprovision()} requires={{role: "admin", namespace: namespaces}}
+					<ActionsItem value="unprovisioned" text="Unprovision" disabled={disable_unprovision()} requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteIcon />
 					/>
-					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
+					<ActionsItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteOutlineIcon />
 					/>
-				</ActionsDropdownSection>
-			</ActionsDropdown>
+				</ActionsSection>
+			</Actions>
 		)
 	} else if (kinds.indexOf("ccfg") > -1) {
 		return null
 	} else if (kinds.indexOf("cfg") > -1) {
 		return (
-			<ActionsDropdown path={path} node={props.node} title={props.title} submit={submit}>
-				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
-					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
+			<Actions path={path} node={props.node} title={props.title} submit={submit}>
+				<ActionsSection name="dangerous" color="danger" confirms={6}>
+					<ActionsItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteOutlineIcon />
 					/>
-				</ActionsDropdownSection>
-			</ActionsDropdown>
+				</ActionsSection>
+			</Actions>
 		)
 	} else if (kinds.indexOf("sec") > -1) {
 		return (
-			<ActionsDropdown path={path} node={props.node} title={props.title} submit={submit}>
-				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
-					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
+			<Actions path={path} node={props.node} title={props.title} submit={submit}>
+				<ActionsSection name="dangerous" color="danger" confirms={6}>
+					<ActionsItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteOutlineIcon />
 					/>
-				</ActionsDropdownSection>
-			</ActionsDropdown>
+				</ActionsSection>
+			</Actions>
 		)
 	} else if (kinds.indexOf("usr") > -1) {
 		return (
-			<ActionsDropdown path={path} node={props.node} title={props.title} submit={submit}>
-				<ActionsDropdownSection name="dangerous" color="danger" confirms={6}>
-					<ActionsDropdownItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
+			<Actions path={path} node={props.node} title={props.title} submit={submit}>
+				<ActionsSection name="dangerous" color="danger" confirms={6}>
+					<ActionsItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteOutlineIcon />
 					/>
-				</ActionsDropdownSection>
-			</ActionsDropdown>
+				</ActionsSection>
+			</Actions>
 		)
 	}
 
