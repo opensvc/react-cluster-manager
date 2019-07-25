@@ -216,9 +216,6 @@ function ActionsItemWrapped(props) {
 		return null
 	}
 	function handleClick(e) {
-		if (disabled()) {
-			return
-		}
 		props.setAction(props.value)
 	}
 	function intersectionLength(a1, a2) {
@@ -250,7 +247,7 @@ function ActionsItemWrapped(props) {
 		return false
 	}
 	return (
-		<ListItem disabled={disabled()} onClick={handleClick}>
+		<ListItem button disabled={disabled()} onClick={handleClick}>
 			<ListItemIcon>{props.icon}</ListItemIcon>
 			<ListItemText primary={props.text} />
 		</ListItem>
