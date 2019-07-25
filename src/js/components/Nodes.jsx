@@ -9,9 +9,9 @@ import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
 import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
 import { NodeActions } from "./NodeActions.jsx";
 import { ClusterActions } from "./ClusterActions.jsx";
+import { TableToolbar } from "./TableToolbar.jsx";
 import { Sparklines, SparklinesLine, SparklinesReferenceLine, SparklinesNormalBand } from 'react-sparklines';
 
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -21,7 +21,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -163,6 +162,7 @@ function NodeSwap(props) {
 }
 
 function Node(props) {
+	const {index, node, selected, setSelected, withScalerSlaves } = props
 	const [{ cstat }, dispatch] = useStateValue();
 	if (cstat.monitor === undefined) {
 		return null
@@ -171,15 +171,51 @@ function Node(props) {
 	if (data == undefined) {
 		return null
 	}
-	function handleClick(e) {
+        function handleClick(event) {
+                event.stopPropagation()
+                const selectedIndex = selected.indexOf(node)
+                let newSelected = []
+
+                if (selectedIndex === -1) {
+                        newSelected = newSelected.concat(selected, node);
+                } else if (selectedIndex === 0) {
+                        newSelected = newSelected.concat(selected.slice(1));
+                } else if (selectedIndex === selected.length - 1) {
+                        newSelected = newSelected.concat(selected.slice(0, -1));
+                } else if (selectedIndex > 0) {
+                        newSelected = newSelected.concat(
+                                selected.slice(0, selectedIndex),
+                                selected.slice(selectedIndex + 1),
+                        );
+                }
+                setSelected(newSelected);
+        }
+	function handleLineClick(e) {
 		dispatch({
 			"type": "setNav",
 			"page": props.node,
 			"links": ["Nodes", props.node]
 		})
 	}
+        const isItemSelected = selected.indexOf(node) !== -1
+        const labelId = `nodes-checkbox-${index}`
+
 	return (
-		<TableRow onClick={handleClick}>
+		<TableRow
+			onClick={handleLineClick}
+                        hover
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={node}
+                        selected={isItemSelected}
+		>
+                        <TableCell padding="checkbox" onClick={handleClick}>
+                                <Checkbox
+                                        checked={isItemSelected}
+                                        inputProps={{ 'aria-labelledby': labelId }}
+                                />
+                        </TableCell>
 			<TableCell>{props.node}</TableCell>
 			<TableCell><NodeState data={data} /></TableCell>
 			<Hidden smDown>
@@ -189,7 +225,6 @@ function Node(props) {
 				<TableCell><NodeSwap node={props.node} /></TableCell>
 			</Hidden>
 			<TableCell><NodeVersion data={data} compatIssue={props.compatIssue} versionIssue={props.versionIssue} /></TableCell>
-			<TableCell><NodeActions node={props.node} /></TableCell>
 		</TableRow>
 	)
 }
@@ -210,13 +245,18 @@ function NodeVersion(props) {
 }
 
 function Nodes(props) {
-	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
 	if (cstat.monitor === undefined) {
 		return null
 	}
+
+	const classes = useStyles()
+	const [selected, setSelected] = React.useState([]);
+
 	var vissue = versionIssue(cstat)
 	var cissue = compatIssue(cstat)
+	var rowCount = Object.keys(cstat.monitor.nodes).length
+
 	function handleTitleClick(e) {
 		dispatch({
 			"type": "setNav",
@@ -224,15 +264,43 @@ function Nodes(props) {
 			"links": ["Nodes"],
 		})
 	}
+        function handleSelectAllClick(event) {
+                if (event.target.checked) {
+                        const newSelecteds = Object.keys(cstat.monitor.nodes)
+                        setSelected(newSelecteds);
+                        return;
+                }
+                setSelected([]);
+        }
+	
 	return (
 		<Paper id="nodes" className={classes.root}>
 			<Typography variant="h4" component="h3">
 				<Link href="#" onClick={handleTitleClick}>Nodes</Link>
 			</Typography>
 			<ClusterActions title="Cluster Actions" />
+                        <TableToolbar selected={selected}>
+                                {selected.length > 0 ? (
+                                        <NodeActions selected={selected} title="" />
+                                ) : (
+                                        <Tooltip title="Filter list">
+                                                <IconButton aria-label="Filter list">
+                                                        <FilterListIcon />
+                                                </IconButton>
+                                        </Tooltip>
+                                )}
+			</TableToolbar>
 			<Table>
 				<TableHead>
 					<TableRow>
+                                                <TableCell padding="checkbox">
+                                                        <Checkbox
+                                                                indeterminate={selected.length > 0 && selected.length < rowCount}
+                                                                checked={selected.length === rowCount}
+                                                                onChange={handleSelectAllClick}
+                                                                inputProps={{ 'aria-label': 'Select all' }}
+                                                        />
+                                                </TableCell>
 						<TableCell>Name</TableCell>
 						<TableCell>State</TableCell>
 						<Hidden smDown>
@@ -242,12 +310,19 @@ function Nodes(props) {
 							<TableCell>Swap Avail</TableCell>
 						</Hidden>
 						<TableCell>Version</TableCell>
-						<TableCell></TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{cstat.cluster.nodes.map((node) => (
-						<Node key={node} node={node} compatIssue={cissue} versionIssue={vissue} />
+					{cstat.cluster.nodes.map((node, i) => (
+						<Node
+							key={node}
+							index={i}
+							node={node}
+							selected={selected}
+							setSelected={setSelected}
+							compatIssue={cissue}
+							versionIssue={vissue}
+						/>
 					))}
 				</TableBody>
 			</Table>

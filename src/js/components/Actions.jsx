@@ -153,10 +153,11 @@ function Actions(props) {
 	}
 	const [open, setOpen] = React.useState(false)
 
-	function handleClickOpen() {
+	function handleClickOpen(e) {
+		e.stopPropagation()
 		setOpen(true)
 	}
-	function handleClose() {
+	function handleClose(e) {
 		setOpen(false)
 	}
 	if (props.title) {
@@ -218,6 +219,9 @@ function ActionsItemWrapped(props) {
 		return null
 	}
 	function handleClick(e) {
+		if (disabled()) {
+			return
+		}
 		props.setAction(props.value)
 	}
 	function intersectionLength(a1, a2) {
