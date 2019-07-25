@@ -148,9 +148,6 @@ function ConfirmationDialog(props) {
 }
 
 function Actions(props) {
-	if (!props.selected && !props.path && !props.node) {
-		return null
-	}
 	const [open, setOpen] = React.useState(false)
 
 	function handleClickOpen(e) {
