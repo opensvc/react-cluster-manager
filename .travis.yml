@@ -1,3 +1,5 @@
+language: minimal
+
 env:
   - DEPLOY_NODE="repo.opensvc.com" DEPLOY_USER="opensvc" PRIVATE_RSA="./deploy/id_rsa_travis" ENCRYPTED_PRIVATE_RSA="${PRIVATE_RSA}.enc"
 
@@ -8,7 +10,16 @@ before_install:
 - chmod 600 ${PRIVATE_RSA}
 - echo -e "Host ${DEPLOY_NODE}\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - ssh-add ${PRIVATE_RSA}
-- ssh -i ${PRIVATE_RSA} ${DEPLOY_USER}@${DEPLOY_NODE} "hostname ; pwd"
+- ssh -qi ${PRIVATE_RSA} ${DEPLOY_USER}@${DEPLOY_NODE} "hostname ; pwd"
+
+install:
+- npm install
+- npm list -g --depth=0
+
+script:
+- npm run build
 
 after_success:
-  - echo "Success"
+- ssh -i ${PRIVATE_RSA} ${DEPLOY_USER}@${DEPLOY_NODE} "test -d /usr/share/opensvc/html || sudo /bin/mkdir -p /usr/share/opensvc/html"
+- ssh -i ${PRIVATE_RSA} ${DEPLOY_USER}@${DEPLOY_NODE} "sudo /bin/chown opensvc:opensvc /usr/share/opensvc/html"
+- scp -i ${PRIVATE_RSA} ./dist/index* ${DEPLOY_USER}@${DEPLOY_NODE}:/usr/share/opensvc/html/
