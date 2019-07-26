@@ -2,10 +2,31 @@ import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { apiPostAny, apiObjGetConfig, apiObjCreate } from "../api.js";
 import { nameValid, namespaceValid, parseIni } from "../utils.js";
-import { Form, Button, FormGroup, FormFeedback, Label, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import { NamespaceSelector } from './NamespaceSelector.jsx'
 
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import TextField from '@material-ui/core/TextField';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+
+const useStyles = makeStyles(theme => ({
+        desc: {
+                padding: theme.spacing(3, 0),
+        },
+        textarea: {
+                fontFamily: "monospace",
+                width: "100%",
+        },
+        formcontrol: {
+                margin: theme.spacing(2, 0),
+        },
+}))
+
 function DeployTemplate(props) {
+	const classes = useStyles()
 	const [{
 		deployTemplateUri,
 		deployTemplateText,
@@ -37,7 +58,7 @@ function DeployTemplate(props) {
 		if (hasPathKey()) {
 			var data = {
 				"provision": true,
-				"namespace": deployTemplateNamespace[0],
+				"namespace": deployTemplateNamespace,
 				"data": deployTemplateData
 			}
 			var nObj = Object.keys(data).length
@@ -47,10 +68,10 @@ function DeployTemplate(props) {
 				var ok = "Object " + Object.keys(data) + " deployed."
 			}
 		} else {
-			var path = deployTemplateNamespace[0]+"/svc/"+deployTemplateName
+			var path = deployTemplateNamespace+"/svc/"+deployTemplateName
 			var data = {
 				"provision": true,
-				"namespace": deployTemplateNamespace[0],
+				"namespace": deployTemplateNamespace,
 				"data": {
 					[path]: deployTemplateData
 				}
@@ -94,60 +115,42 @@ function DeployTemplate(props) {
 		return false
 	}
 
-	if (hasPathKey()) {
-		var name
-	} else {
-		var name = (
-			<FormGroup>
-				<Label for="name">Name</Label>
-				<Input
-					id="name"
-					placeholder="mysvc1"
-					invalid={!nameValid(deployTemplateName)}
-					valid={nameValid(deployTemplateName)}
-					onChange={handleNameChange}
-					value={deployTemplateName}
-					autoComplete="off"
-				/>
-				<FormFeedback>Must start with an aplha and continue with aplhanum, dot, underscore or hyphen.</FormFeedback>
-			</FormGroup>
-		)
-	}
 	return (
-		<Form>
-			<p className="text-secondary">Deploy a service from a configuration, pasted or loaded from an <code>uri</code>.</p>
-			<div className="dropdown-divider"></div>
-			<FormGroup>
-				<Label for="uri">Deployment Data URI</Label>
-				<InputGroup>
-					<Input
-						type="text"
+		<div>
+			<Typography className={classes.desc} component="p" color="textSecondary">
+				Deploy a service from a configuration, pasted or loaded from an <code>uri</code>.
+			</Typography>
+			<FormControl className={classes.formcontrol} fullWidth>
+				<div style={{display: "inline-flex", alignItems: "flex-end"}}>
+					<TextField
+						type=""
 						id="uri"
-						placeholder="https://git/project/app/deploy.json"
+						label="Deployment Data URI"
 						onChange={handleUriChange}
 						value={deployTemplateUri}
+						style={{flexGrow: "1"}}
 					/>
-					<InputGroupAddon addonType="append">
-						<Button color="outline-secondary" type="button" onClick={handleLoad}>Load</Button>
-					</InputGroupAddon>
-				</InputGroup>
-			</FormGroup>
-			<FormGroup>
-				<Label for="data">Deployment Data</Label>
-				<Input
-					type="textarea"
-					className="text-monospace"
-					rows="20"
-					id="data"
-					invalid={!deployTemplateData == null}
-					valid={deployTemplateData != null}
+					<Button
+						onClick={handleLoad}
+						color="primary"
+						style={{maxWidth: "6em", alignSelf: "bottom"}}
+					>
+						Load
+					</Button>
+				</div>
+			</FormControl>
+			<FormControl className={classes.formcontrol} fullWidth>
+                                <Typography variant="caption" color="textSecondary">Definition</Typography>
+                                <TextareaAutosize
+                                        className={classes.textarea}
+                                        rowsMax={20}
+                                        id="data"
 					onChange={handleTextChange}
-					value={deployTemplateText}
-				/>
-				<FormFeedback>This deployment data is not recognized as valid ini nor json dataset.</FormFeedback>
-			</FormGroup>
-			<FormGroup>
-				<Label for="namespace">Namespace</Label>
+                                        value={deployTemplateText}
+                                />
+                                {(deployTemplateData == null) && <FormHelperText color="error">This deployment data is not recognized as valid ini nor json dataset.</FormHelperText>}
+			</FormControl>
+			<FormControl className={classes.formcontrol} fullWidth>
 				<NamespaceSelector
 					id="namespace"
 					role="admin"
@@ -155,11 +158,22 @@ function DeployTemplate(props) {
 					selected={deployTemplateNamespace}
 					onChange={($) => dispatch({"type": "setDeployTemplateNamespace", "value": $})}
 				/>
-				<FormFeedback>Must start with an aplha and continue with aplhanum, dot, underscore or hyphen.</FormFeedback>
-			</FormGroup>
-			{name}
+			</FormControl>
+			{!hasPathKey() &&
+			<FormControl className={classes.formcontrol} fullWidth>
+				<TextField
+					id="name"
+					label="Name"
+					error={!nameValid(deployTemplateName)}
+					onChange={handleNameChange}
+					value={deployTemplateName}
+					autoComplete="off"
+					helperText="Must start with an aplha and continue with aplhanum, dot, underscore or hyphen."
+				/>
+			</FormControl>
+			}
 			<Button color="primary" disabled={submitDisabled()} onClick={handleSubmit}>Submit</Button>
-		</Form>
+		</div>
 	)
 }
 
