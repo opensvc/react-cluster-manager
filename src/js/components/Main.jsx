@@ -57,8 +57,10 @@ function Main(props) {
 				/>
 				<Fabs>
 					<ObjInstanceActions
-						path={nav.links[n-2]}
-						node={nav.links[n-1]}
+						selected={[{
+							path: nav.links[n-2],
+							node: nav.links[n-1],
+						}]}
 						fab={true}
 					/>
 				</Fabs>

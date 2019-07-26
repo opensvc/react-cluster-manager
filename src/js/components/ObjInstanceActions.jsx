@@ -18,65 +18,97 @@ import LabelIcon from "@material-ui/icons/Label"
 
 function ObjInstanceActions(props) {
 	const [{cstat}, dispatch] = useStateValue();
-	const sp = splitPath(props.path)
-	const idata = cstat.monitor.nodes[props.node].services.status[props.path]
+	const {selected} = props
+	if (selected === undefined) {
+		return null
+	}
+	if (!selected.length) {
+		return null
+	}
+	const sp = splitPath(selected[0].path)
 
 	function submit(props) {
-		apiInstanceAction(
-			props.menu.node,
-			props.menu.path,
-			props.value,
-			{},
-			(data) => dispatch({type: "parseApiResponse", data: data})
-		)
+		for (var instance of selected) {
+			apiInstanceAction(
+				instance.node,
+				instance.path,
+				props.value,
+				{},
+				(data) => dispatch({type: "parseApiResponse", data: data})
+			)
+		}
 	}
 	function disable_enable() {
-		if (idata.disable) {
-			return false
+		for (var instance of selected) {
+			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (idata.disable) {
+				return false
+			}
 		}
 		return true
 	}
 	function disable_disable() {
-		if (idata.disable) {
-			return true
+		for (var instance of selected) {
+			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (!idata.disable) {
+				return false
+			}
 		}
-		return false
+		return true
 	}
 	function disable_freeze() {
-		if (idata.frozen) {
-			return true
+		for (var instance of selected) {
+			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (!idata.frozen) {
+				return false
+			}
 		}
-		return false
+		return true
 	}
 	function disable_thaw() {
-		if (idata.frozen) {
-			return false
+		for (var instance of selected) {
+			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (idata.frozen) {
+				return false
+			}
 		}
 		return true
 	}
 	function disable_start() {
-		if (idata.avail == "up") {
-			return true
+		for (var instance of selected) {
+			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (idata.avail != "up") {
+				return false
+			}
 		}
-		return false
+		return true
 	}
 	function disable_stop() {
-		if (idata.avail == "down") {
-			return true
+		for (var instance of selected) {
+			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (idata.avail != "down") {
+				return false
+			}
 		}
-		return false
+		return true
 	}
 	function disable_provision() {
-		if (idata.provisioned) {
-			return true
+		for (var instance of selected) {
+			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (!idata.provisioned) {
+				return false
+			}
 		}
-		return false
+		return true
 	}
 	function disable_unprovision() {
-		if (!idata.provisioned) {
-			return true
+		for (var instance of selected) {
+			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (idata.provisioned) {
+				return false
+			}
 		}
-		return false
+		return true
 	}
 
 	function handleClick(e) {

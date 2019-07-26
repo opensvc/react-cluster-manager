@@ -15,7 +15,6 @@ function NodeActions(props) {
 		return null
 	}
 	const {selected} = props
-	console.log(selected)
 	function disable_freeze() {
 		for (var node of selected) {
 			var ndata = cstat.monitor.nodes[node]
