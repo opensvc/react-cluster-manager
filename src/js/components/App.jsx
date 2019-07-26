@@ -98,9 +98,9 @@ const StatefulApp = () => {
                 deployTemplateName: "",
                 deployTemplateNamespace: "",
 		catalogs: [],
-		deployCatalogCatalog: [],
+		deployCatalogCatalog: null,
 		deployCatalogTemplates: [],
-		deployCatalogTemplate: [],
+		deployCatalogTemplate: null,
 		deployCatalogText: "",
 		deployCatalogData: null,
 		deployCatalogName: "",
@@ -383,7 +383,7 @@ class WrappedApp extends Component {
 			if (data.length > 0) {
 				dispatch({
 					"type": "setDeployCatalogCatalog",
-					"value": [data[0]]
+					"value": data[0]
 				})
 				apiPostAny("/get_templates", {"catalog": data[0].name}, (data) => {
 					dispatch({
