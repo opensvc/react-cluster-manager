@@ -1,5 +1,5 @@
 {
-  "name": "production",
+  "name": "opensvc-cluster-manager",
   "version": "1.0.0",
   "description": "OpenSVC Cluster Management Frontend.",
   "main": "index.js",
