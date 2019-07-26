@@ -17,6 +17,9 @@ import LabelIcon from "@material-ui/icons/Label"
 
 function ObjActions(props) {
 	const [{cstat}, dispatch] = useStateValue();
+	if (cstat.monitor === undefined) {
+		return null
+	}
 	if (props.path) {
 		var selected = [props.path]
 	} else {
@@ -166,7 +169,7 @@ function ObjActions(props) {
 
 	if ((kinds.indexOf("svc") > -1) || (kinds.indexOf("vol") > -1)) {
 		return (
-			<Actions path={path} node={props.node} title={props.title} submit={submit}>
+			<Actions path={path} node={props.node} title={props.title} submit={submit} fab={props.fab}>
 				<ActionsSection name="safe" color="secondary" confirms={0}>
 					<ActionsItem value="started" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: namespaces}}
 						icon=<PlayArrowIcon />
@@ -214,7 +217,7 @@ function ObjActions(props) {
 		return null
 	} else if (kinds.indexOf("cfg") > -1) {
 		return (
-			<Actions path={path} node={props.node} title={props.title} submit={submit}>
+			<Actions path={path} node={props.node} title={props.title} submit={submit} fab={props.fab}>
 				<ActionsSection name="dangerous" color="danger" confirms={6}>
 					<ActionsItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteOutlineIcon />
@@ -224,7 +227,7 @@ function ObjActions(props) {
 		)
 	} else if (kinds.indexOf("sec") > -1) {
 		return (
-			<Actions path={path} node={props.node} title={props.title} submit={submit}>
+			<Actions path={path} node={props.node} title={props.title} submit={submit} fab={props.fab}>
 				<ActionsSection name="dangerous" color="danger" confirms={6}>
 					<ActionsItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteOutlineIcon />
@@ -234,7 +237,7 @@ function ObjActions(props) {
 		)
 	} else if (kinds.indexOf("usr") > -1) {
 		return (
-			<Actions path={path} node={props.node} title={props.title} submit={submit}>
+			<Actions path={path} node={props.node} title={props.title} submit={submit} fab={props.fab}>
 				<ActionsSection name="dangerous" color="danger" confirms={6}>
 					<ActionsItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteOutlineIcon />

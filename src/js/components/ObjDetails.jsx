@@ -4,7 +4,6 @@ import { useStateValue } from '../state.js';
 import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { parseIni, fmtPath, splitPath } from "../utils.js";
 import { ObjAvail } from "./ObjAvail.jsx";
-import { ObjActions } from "./ObjActions.jsx";
 import { ObjDigest } from "./ObjDigest.jsx";
 import { ObjInstanceState } from "./ObjInstanceState.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
@@ -122,11 +121,6 @@ function CfgMain(props) {
 	const sp = splitPath(props.path)
 	return (
 		<React.Fragment>
-			<ObjActions
-				path={props.path}
-				splitpath={sp}
-				title="Object Actions"
-			/>
 			<Typography variant="h5" component="h3">
 				Keys
 			</Typography>
@@ -296,11 +290,6 @@ function SvcMain(props) {
 			<Typography variant="h5" component="h3">
 				{title}
 			</Typography>
-			<ObjActions
-				path={props.path}
-				splitpath={sp}
-				title="Object Actions"
-			/>
 			<ObjDigest path={props.path} />
 			<ObjScale path={props.path} />
 			<ObjInstances path={props.path} />

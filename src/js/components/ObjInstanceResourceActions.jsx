@@ -71,7 +71,7 @@ function ObjInstanceResourceActions(props) {
 	}
 
 	return (
-		<Actions rid={props.rid} path={props.path} node={props.node} title={props.title} submit={submit}>
+		<Actions rid={props.rid} path={props.path} node={props.node} title={props.title} submit={submit} fab={props.fab}>
 			<ActionsSection name="safe" color="secondary" confirms={0}>
 				<ActionsItem value="start" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: sp.namespace}} />
 				<ActionsItem value="enable" text="Enable" disabled={disable_enable()} requires={{role: "operator", namespace: sp.namespace}} />

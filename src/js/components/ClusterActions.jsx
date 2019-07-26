@@ -8,6 +8,9 @@ import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
 
 function ClusterActions(props) {
 	const [{cstat}, dispatch] = useStateValue();
+	if (cstat.monitor === undefined) {
+		return null
+	}
 	const cdata = cstat.monitor.nodes
 	function submit(props) {
 		apiNodeSetMonitor(
@@ -33,7 +36,7 @@ function ClusterActions(props) {
 		return true
 	}
 	return (
-		<Actions title={props.title} submit={submit}>
+		<Actions title={props.title} submit={submit} position={props.position} fab={props.fab}>
 			<ActionsSection name="safe" color="secondary" confirms={0}>
 				<ActionsItem value="frozen" text="Freeze Nodes" disabled={disable_freeze()} requires={{role: "root"}}
 					icon=<PauseCircleFilledIcon />

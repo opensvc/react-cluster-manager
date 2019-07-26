@@ -46,7 +46,7 @@ function NodeActions(props) {
 	}
 
 	return (
-		<Actions selected={selected} title={props.title} submit={submit}>
+		<Actions selected={selected} title={props.title} submit={submit} fab={props.fab}>
 			<ActionsSection name="safe" color="secondary" confirms={0}>
 				<ActionsItem value="freeze" text="Freeze" disabled={disable_freeze()} requires={{role: "root"}}
 					icon=<PauseCircleFilledIcon />

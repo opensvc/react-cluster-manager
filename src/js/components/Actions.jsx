@@ -20,6 +20,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
+import Fab from '@material-ui/core/Fab';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 const MenuContext = React.createContext({section: {}})
 
@@ -167,6 +169,15 @@ function Actions(props) {
 			>
 				{props.title}
 			</Button>
+		)
+	} else if (props.fab) {
+		var button = (
+			<Fab
+				color="primary"
+				onClick={handleClickOpen}
+			>
+				<PlayArrowIcon />
+			</Fab>
 		)
 	} else {
 		var button = (

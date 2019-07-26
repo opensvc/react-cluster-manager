@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { splitPath } from "../utils.js";
-import { DeployButton } from "./Deploy.jsx";
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjState } from "./ObjState.jsx";
@@ -168,11 +167,6 @@ function Objs(props) {
 				<Grid item>
 					<ObjsFilter />
 				</Grid>
-				<Grid item>
-					<FormGroup>
-						<DeployButton />
-					</FormGroup>
-				</Grid>
 			</Grid>
 			<TableToolbar selected={selected}>
 				{selected.length > 0 ? (
@@ -280,7 +274,7 @@ function ObjLine(props) {
 	function handleLineClick(e) {
 		dispatch({
 			type: "setNav",
-			page: "Object",
+			page: "Objects",
 			links: ["Objects", path]
 		})
 	}

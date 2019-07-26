@@ -12,6 +12,9 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+
 
 const useStyles = makeStyles(theme => ({
         root: {
@@ -25,6 +28,7 @@ const useStyles = makeStyles(theme => ({
 
 function DeployButton(props) {
 	const [ {}, dispatch ] = useStateValue()
+	const classes = useStyles()
 	function handleClick(e) {
 		dispatch({
 			type: "setNav",
@@ -33,7 +37,12 @@ function DeployButton(props) {
 		})
 	}
 	return (
-		<Button color="primary" variant="contained" onClick={handleClick}>Deploy</Button>
+		<Fab
+			color="primary"
+			onClick={handleClick}
+		>
+			<AddIcon />
+		</Fab>
 	)
 }
 

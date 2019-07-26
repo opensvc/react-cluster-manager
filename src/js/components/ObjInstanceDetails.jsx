@@ -5,11 +5,9 @@ import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjOverall } from "./ObjOverall.jsx";
 import { ObjFrozen } from "./ObjFrozen.jsx";
 import { ObjProvisioned } from "./ObjProvisioned.jsx";
-import { ObjActions } from "./ObjActions.jsx";
 import { ObjState } from "./ObjState.jsx";
 import { ObjDigest } from "./ObjDigest.jsx";
 import { ObjInstanceDigest } from "./ObjInstanceDigest.jsx";
-import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
 import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
 import { ObjInstanceResourceActions } from "./ObjInstanceResourceActions.jsx";
 import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
@@ -47,21 +45,10 @@ function ObjInstanceDetails(props) {
 			<Typography variant="h5" component="h2">
 				Object
 			</Typography>
-			<ObjActions
-				path={props.path}
-				splitpath={sp}
-				title="Object Actions"
-			/>
 			<ObjDigest path={props.path} />
 			<Typography variant="h5" component="h2">
 				Instance
 			</Typography>
-			<ObjInstanceActions
-				path={props.path}
-				splitpath={sp}
-				node={props.node}
-				title="Instance Actions"
-			/>
 			<ObjInstanceDigest path={props.path} node={props.node} />
 			<ObjInstancesResources path={props.path} node={props.node} />
 		</Paper>

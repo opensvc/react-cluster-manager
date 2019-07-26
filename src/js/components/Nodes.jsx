@@ -5,7 +5,6 @@ import { useColorStyles } from "../styles.js";
 import { apiNodeAction } from "../api.js";
 import { nodeMemOverloadIssue, nodeSwapOverloadIssue, compatIssue, versionIssue } from "../issues.js";
 import { NodeActions } from "./NodeActions.jsx";
-import { ClusterActions } from "./ClusterActions.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
 import { NodeState } from "./NodeState.jsx";
 import { Sparklines, SparklinesLine, SparklinesReferenceLine, SparklinesNormalBand } from 'react-sparklines';
@@ -241,7 +240,6 @@ function Nodes(props) {
 			<Typography variant="h4" component="h3">
 				<Link href="#" onClick={handleTitleClick}>Nodes</Link>
 			</Typography>
-			<ClusterActions title="Cluster Actions" />
                         <TableToolbar selected={selected}>
                                 {selected.length > 0 ? (
                                         <NodeActions selected={selected} title="" />
