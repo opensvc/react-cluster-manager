@@ -2,19 +2,35 @@ import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { apiPostAny, apiObjGetConfig, apiObjCreate } from "../api.js";
 import { nameValid } from "../utils.js";
-import { Form, Button, FormGroup, FormFeedback, Label, Input } from 'reactstrap';
 import { NamespaceSelector } from "./NamespaceSelector.jsx"
+
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import TextField from '@material-ui/core/TextField';
+
+const useStyles = makeStyles(theme => ({
+        desc: {
+                padding: theme.spacing(3, 0),
+        },
+        formcontrol: {
+                margin: theme.spacing(2, 0),
+        },
+}))
 
 function DeployClone(props) {
 	const [{}, dispatch] = useStateValue()
 	const [srcPath, setSrcPath] = useState()
 	const [namespace, setNamespace] = useState()
 	const [name, setName] = useState()
+	const classes = useStyles()
 
 	function createClone(e) {
 		var path = [namespace, "svc", name].join("/")
 		var data = {
-			namespace: namespace[0],
+			namespace: namespace,
 			provision: true,
 			restore: false,
 			data: {}
@@ -32,43 +48,39 @@ function DeployClone(props) {
 		})
 	}
 	return (
-		<Form>
-			<p className="text-secondary">Deploy a service as a clone of another existing service. Beware if you have root privileges, cloning a service with fs or disk resources that were not designed for cloning might cause conflicts, source data corruption, end-user service disruption.</p>
-			<div className="dropdown-divider"></div>
-			<FormGroup>
-				<Label for="srcpath">Path of the object to clone</Label>
-				<Input
+		<div>
+			<Typography className={classes.desc} component="p" color="textSecondary">
+				Deploy a service as a clone of another existing service. Beware if you have root privileges, cloning a service with fs or disk resources that were not designed for cloning might cause conflicts, source data corruption, end-user service disruption.
+			</Typography>
+			<FormControl className={classes.formcontrol} fullWidth>
+				<TextField
 					id="srcpath"
-					placeholder="test"
+					label="Source Objects Selector"
 					onChange={(e) => setSrcPath(e.target.value)}
 					autoComplete="off"
 				/>
-			</FormGroup>
-			<FormGroup>
-				<Label for="namespace">Namespace</Label>
+			</FormControl>
+			<FormControl className={classes.formcontrol} fullWidth>
 				<NamespaceSelector
 					id="namespace"
 					role="admin"
-					placeholder="test"
+					placeholder="Namespace"
 					onChange={($) => setNamespace($)}
 					selected={namespace}
 				/>
-				<FormFeedback>Must start with an aplha and continue with aplhanum, dot, underscore or hyphen.</FormFeedback>
-			</FormGroup>
-			<FormGroup>
-				<Label for="name">Name</Label>
-				<Input
+			</FormControl>
+			<FormControl className={classes.formcontrol} fullWidth>
+				<TextField
 					id="name"
-					placeholder="mysvc1"
+					label="Name"
 					onChange={(e) => setName(e.target.value)}
-					valid={nameValid(name)}
-					invalid={!nameValid(name)}
+					error={!nameValid(name)}
 					autoComplete="off"
+					helperText="Must start with an aplha and continue with aplhanum, dot, underscore or hyphen."
 				/>
-				<FormFeedback>Must start with an aplha and continue with aplhanum, dot, underscore or hyphen.</FormFeedback>
-			</FormGroup>
+			</FormControl>
 			<Button color="primary" onClick={createClone}>Submit</Button>
-		</Form>
+		</div>
 	)
 }
 
