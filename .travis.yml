@@ -1,4 +1,5 @@
 language: minimal
+dist: bionic
 
 env:
   - DEPLOY_NODE="repo.opensvc.com" DEPLOY_USER="opensvc" PRIVATE_RSA="./deploy/id_rsa_travis" ENCRYPTED_PRIVATE_RSA="${PRIVATE_RSA}.enc"
@@ -11,6 +12,7 @@ before_install:
 - echo -e "Host ${DEPLOY_NODE}\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - ssh-add ${PRIVATE_RSA}
 - ssh -qi ${PRIVATE_RSA} ${DEPLOY_USER}@${DEPLOY_NODE} "hostname ; pwd"
+- sudo apt update
 - sudo apt -y install npm
 
 install:
