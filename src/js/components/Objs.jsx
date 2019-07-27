@@ -127,19 +127,73 @@ function ObjsFilter(props) {
 	)
 }
 
+function getLines(withScalerSlaves) {
+	const [{ cstat, kinds, filters }, dispatch] = useStateValue();
+	var lines = []
+	if (cstat.monitor === undefined) {
+		return lines
+	}
+	if (filters.name) {
+		var reFilters = RegExp(filters.name, "i")
+	} else {
+		var reFilters = null
+	}
+	if (filters.namespace) {
+		var reNamespace = RegExp(filters.namespace, "i")
+	} else {
+		var reNamespace = null
+	}
+	if (filters.path) {
+		var rePath = RegExp(filters.path, "i")
+	} else {
+		var rePath = null
+	}
+	for (var path in cstat.monitor.services) {
+		var sp = splitPath(path)
+
+		// Apply filters
+		if (kinds.indexOf(sp.kind) < 0) {
+			continue
+		}
+		try {
+			if (reName && !rename.test(sp.name)) {
+				continue
+			}
+		} catch (e) {}
+		try {
+			if (reNamespace && !reNamespace.test(sp.namespace)) {
+				continue
+			}
+		} catch (e) {}
+		try {
+			if (rePath && !rePath.test(path)) {
+				continue
+			}
+		} catch (e) {}
+
+		if (!withScalerSlaves && sp.name.match(/[0-9]+\./)) {
+			// discard scaler slaves
+			continue
+		}
+		lines.push(path)
+	}
+	return lines
+}
+
 function Objs(props) {
 	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
 	const [selected, setSelected] = React.useState([]);
+	const lines = getLines()
 
 	if (cstat.monitor === undefined) {
-		return null
+		return lines
 	}
 
 	function handleSelectAllClick(event) {
 		if (event.target.checked) {
-			const newSelecteds = Object.keys(cstat.monitor.services)
-			setSelected(newSelecteds);
+			const newSelecteds = lines
+			setSelected(newSelecteds)
 			return;
 		}
 		setSelected([]);
@@ -153,7 +207,7 @@ function Objs(props) {
 		})
 	}
 
-	var rowCount = Object.keys(cstat.monitor.services).length
+	var rowCount = lines.length
 
 	return (
 		<Paper id="objects" className={classes.root}>
@@ -209,7 +263,7 @@ function Objs(props) {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{Object.keys(cstat.monitor.services).sort().map((path, i) => (
+					{lines.sort().map((path, i) => (
 						<ObjLine key={path} index={i} path={path} selected={selected} setSelected={setSelected} />
 					))}
 				</TableBody>
@@ -221,36 +275,7 @@ function Objs(props) {
 function ObjLine(props) {
 	const {index, path, selected, setSelected, withScalerSlaves } = props
 	const [{ cstat, kinds, filters }, dispatch] = useStateValue();
-	if (cstat.monitor === undefined) {
-		return null
-	}
 	const sp = splitPath(path)
-
-	// Apply filters
-	if (kinds.indexOf(sp.kind) < 0) {
-		return null
-	}
-	try {
-		if (filters.name && !RegExp(filters.name, "i").test(sp.name)) {
-			return null
-		}
-	} catch (e) {}
-	try {
-		if (filters.namespace && !RegExp(filters.namespace, "i").test(sp.namespace)) {
-			return null
-		}
-	} catch (e) {}
-	try {
-		if (filters.path && !RegExp(filters.path, "i").test(path)) {
-			return null
-		}
-	} catch (e) {}
-
-	if (!withScalerSlaves && sp.name.match(/[0-9]+\./)) {
-		// discard scaler slaves
-		return null
-	}
-
 	function handleClick(event) {
 		event.stopPropagation()
 		const selectedIndex = selected.indexOf(path)
