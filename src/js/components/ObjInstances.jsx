@@ -163,7 +163,14 @@ function InstanceLine(props) {
 			node: instance.node,
 			path: instance.path
 		}
-                const selectedIndex = selected.indexOf(key)
+		var selectedIndex = -1
+		for (var i=0; i<selected.length; i++) {
+			var item = selected[i]
+			if ((item.path==instance.path) && (item.node==instance.node)) {
+				selectedIndex = i
+				break
+			}
+		}
                 let newSelected = []
 
                 if (selectedIndex === -1) {
