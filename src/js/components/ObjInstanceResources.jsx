@@ -12,6 +12,17 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import Checkbox from '@material-ui/core/Checkbox';
+
+import FilterListIcon from '@material-ui/icons/FilterList';
+
+const useStyles = makeStyles(theme => ({
+        tableWrapper: {
+                overflowX: 'auto',
+        },
+}))
 
 function ObjInstanceResources(props) {
 	//
@@ -22,25 +33,64 @@ function ObjInstanceResources(props) {
 	if (cstat.monitor === undefined) {
 		return null
 	}
+	const classes = useStyles()
 	const rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources
+	const [selected, setSelected] = React.useState([])
+	const rowCount = Object.keys(rdata).length
+
+        function handleSelectAllClick(event) {
+                if (event.target.checked) {
+                        const newSelecteds = Object.keys(rdata)
+                        setSelected(newSelecteds);
+                        return;
+                }
+                setSelected([]);
+        }
+
 	return (
 		<React.Fragment>
 			<Typography variant="h5" component="h2">
 				Resources
 			</Typography>
+                        <TableToolbar selected={selected}>
+                                {selected.length > 0 ? (
+                                        <ObjInstanceResourceActions path={props.path} node={props.node} rids={selected} title="" />
+                                ) : (
+                                        <Tooltip title="Filter list">
+                                                <IconButton aria-label="Filter list">
+                                                        <FilterListIcon />
+                                                </IconButton>
+                                        </Tooltip>
+                                )}
+                        </TableToolbar>
 			<Table>
 				<TableHead>
 					<TableRow className="text-secondary">
-						<td>Id</td>
-						<td>Availability</td>
-						<td>State</td>
-						<td>Desc</td>
-						<td className="text-right">Actions</td>
+						<TableCell padding="checkbox">
+							<Checkbox
+								indeterminate={selected.length > 0 && selected.length < rowCount}
+								checked={selected.length === rowCount}
+								onChange={handleSelectAllClick}
+								inputProps={{ 'aria-label': 'Select all' }}
+							/>
+						</TableCell>
+						<TableCell>Id</TableCell>
+						<TableCell>Availability</TableCell>
+						<TableCell>State</TableCell>
+						<TableCell>Desc</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
 					{Object.keys(rdata).sort().map((rid, i) => (
-						<ObjInstanceResourceLine key={i} rid={rid} node={props.node} path={props.path} />
+						<ObjInstanceResourceLine
+							key={i}
+							index={i}
+							rid={rid}
+							node={props.node}
+							path={props.path}
+							selected={selected}
+							setSelected={setSelected}
+						/>
 					))}
 				</TableBody>
 			</Table>
@@ -49,26 +99,48 @@ function ObjInstanceResources(props) {
 }
 
 function ObjInstanceResourceLine(props) {
-	//
-	// props.path
-	// props.node
-	// props.rid
-	//
 	const [{ cstat }, dispatch] = useStateValue();
+	const {index, node, path, rid, selected, setSelected} = props
 	if (cstat.monitor === undefined) {
 		return null
 	}
-	const rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources[props.rid]
+	const rdata = cstat.monitor.nodes[node].services.status[path].resources[rid]
 	if (!rdata.status) {
 		return null
 	}
+        function handleClick(event) {
+                event.stopPropagation()
+                var selectedIndex = selected.indexOf(rid)
+                let newSelected = []
+
+                if (selectedIndex === -1) {
+                        newSelected = newSelected.concat(selected, rid);
+                } else if (selectedIndex === 0) {
+                        newSelected = newSelected.concat(selected.slice(1));
+                } else if (selectedIndex === selected.length - 1) {
+                        newSelected = newSelected.concat(selected.slice(0, -1));
+                } else if (selectedIndex > 0) {
+                        newSelected = newSelected.concat(
+                                selected.slice(0, selectedIndex),
+                                selected.slice(selectedIndex + 1),
+                        );
+                }
+                setSelected(newSelected);
+        }
+        const isItemSelected = selected.indexOf(rid) > -1
+        const labelId = `rid-checkbox-${index}`
 	return (
 		<TableRow>
-			<TableCell>{props.rid}</TableCell>
+                        <TableCell padding="checkbox" onClick={handleClick}>
+                                <Checkbox
+                                        checked={isItemSelected}
+                                        inputProps={{ 'aria-labelledby': labelId }}
+                                />
+                        </TableCell>
+			<TableCell>{rid}</TableCell>
 			<TableCell><ObjAvail avail={rdata.status} /></TableCell>
-			<TableCell><ObjInstanceResourceState rid={props.rid} node={props.node} path={props.path} /></TableCell>
+			<TableCell><ObjInstanceResourceState rid={rid} node={node} path={path} /></TableCell>
 			<TableCell>{rdata.label}</TableCell>
-			<TableCell><ObjInstanceResourceActions rid={props.rid} node={props.node} path={props.path} /></TableCell>
 		</TableRow>
 	)
 }
