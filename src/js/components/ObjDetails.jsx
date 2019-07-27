@@ -5,11 +5,9 @@ import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { parseIni, splitPath } from "../utils.js";
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjDigest } from "./ObjDigest.jsx";
-import { ObjInstanceState } from "./ObjInstanceState.jsx";
-import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
 import { Log } from "./Log.jsx"
 import { ObjInstances } from "./ObjInstances.jsx"
-import { apiPostAny, apiInstanceAction } from "../api.js"
+import { apiInstanceAction } from "../api.js"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -25,9 +23,7 @@ import TableCell from '@material-ui/core/TableCell';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import FormGroup from '@material-ui/core/FormGroup';
-import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
 
 const useStyles = makeStyles(theme => ({
         root: {
@@ -120,106 +116,8 @@ function CfgMain(props) {
 			<Typography variant="h5" component="h3">
 				Keys
 			</Typography>
-			<ObjKeyAdd path={props.path} />
 			<ObjKeys path={props.path} />
 		</React.Fragment>
-	)
-}
-
-function ObjKeyAdd(props) {
-	const [isOpen, setIsOpen] = useState(false)
-	const source = {
-		"INPUT": "User Input",
-		"LOCAL": "Local File",
-		"REMOTE": "Remote Location",
-	}
-	const [active, setActive] = useState(source.INPUT)
-	const [inputValue, setInputValue] = useState("")
-	const [urlValue, setUrlValue] = useState("")
-	const [fileValue, setFileValue] = useState("")
-	const [keyName, setKeyName] = useState("")
-	function handleToggle(e) {
-		setIsOpen(isOpen ? false : true)
-	}
-	function handleSourceChange(e) {
-		setActive(e.target.value)
-	}
-	function handleSubmit(e) {
-		if (active == source.INPUT) {
-			apiPostAny("/set_key", {path: props.path, key: keyName, data: inputValue}, (data) => {
-				// reload config custom hook
-				console.log(data)
-			})
-		}
-	}
-	return (
-		<div>
-			<Button
-				variant="contained"
-				color="primary"
-				onClick={handleToggle}
-			>
-				Add Key
-			</Button>
-			<div hidden={!isOpen}>
-				<FormGroup>
-					<TextField
-						label="Key Name"
-						id="name"
-						value={keyName}
-						onChange={(e) => setKeyName(e.target.value)}
-					/>
-				</FormGroup>
-				<FormGroup>
-					<Select
-						label="Value Source"
-						value={active}
-						onChange={handleSourceChange}
-						inputProps={{
-							name: 'source',
-							id: 'source',
-						}}
-					>
-						<MenuItem value={source.INPUT}>{source.INPUT}</MenuItem>
-						<MenuItem value={source.LOCAL}>{source.LOCAL}</MenuItem>
-						<MenuItem value={source.REMOTE}>{source.REMOTE}</MenuItem>
-					</Select>
-				</FormGroup>
-				<FormGroup hidden={active!=source.INPUT}>
-					<TextField
-						label="Key Value"
-						id="name"
-						value={inputValue}
-						onChange={(e) => setInputValue(e.target.value)}
-					/>
-				</FormGroup>
-				<FormGroup hidden={active!=source.REMOTE}>
-					<TextField
-						label="Remote Location"
-						id="url"
-						type="url"
-						value={urlValue}
-						onChange={(e) => setUrlValue(e.target.value)}
-					/>
-				</FormGroup>
-				<FormGroup hidden={active!=source.LOCAL}>
-					<TextField
-						label="File"
-						id="file"
-						type="file"
-						label={fileValue}
-						onChange={(e) => setFileValue(e.target.uploadFile)}
-					/>
-				</FormGroup>
-				<Button
-					variant="contained"
-					color="secondary"
-					onClick={handleSubmit}
-				>
-					Submit
-				</Button>
-			</div>
-		</div>
 	)
 }
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { splitPath } from "../utils.js"
 import { useStateValue } from '../state.js';
 import { Cluster } from "./Cluster.jsx";
 import { Threads } from "./Threads.jsx";
@@ -13,6 +14,7 @@ import { ArbitratorsDetails } from "./ArbitratorsDetails.jsx";
 import { ClusterActions } from "./ClusterActions.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
+import { ObjKeyAdd } from "./ObjKeyAdd.jsx";
 import { NodeActions } from "./NodeActions.jsx";
 import { User } from "./User.jsx";
 import { DeployButton } from "./Deploy.jsx";
@@ -102,7 +104,8 @@ function Main(props) {
 		)
 	}
 	if (nav.links[n-2] == "Objects") {
-		var path = nav.links[n-1]
+		const path = nav.links[n-1]
+		const sp = splitPath(path)
 		return (
 			<React.Fragment>
 				<ObjDetails
@@ -110,6 +113,7 @@ function Main(props) {
 				/>
 				<Fabs>
 					<ObjActions path={path} fab={true} />
+					{(["cfg", "sec"].indexOf(sp.kind) > -1) && <ObjKeyAdd path={path} />}
 				</Fabs>
 			</React.Fragment>
 		)
