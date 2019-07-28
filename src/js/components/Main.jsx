@@ -22,6 +22,14 @@ import { Fabs } from "./Fabs.jsx";
 
 function Main(props) {
 	const [{ nav }, dispatch] = useStateValue();
+	const objects = {
+		"Objects": null,
+		"Services": "svc",
+		"Volumes": "vol",
+		"Configs": "cfg",
+		"Secrets": "sec",
+		"Users": "usr",
+	}
 
 	if (nav.page == "Cluster") {
 		return ( 
@@ -92,18 +100,17 @@ function Main(props) {
 			</React.Fragment>
 		)
 	}
-	if (nav.links[n-1] == "Objects") {
+	if (nav.links[n-1] in objects) {
 		return (
 			<React.Fragment>
-				<Objs />
+				<Objs kind={objects[nav.links[n-1]]} />
 				<Fabs>
-					<ClusterActions fab={true} />
 					<DeployButton />
 				</Fabs>
 			</React.Fragment>
 		)
 	}
-	if (nav.links[n-2] == "Objects") {
+	if (nav.links[n-2] in objects) {
 		const path = nav.links[n-1]
 		const sp = splitPath(path)
 		return (

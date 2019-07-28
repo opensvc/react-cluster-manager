@@ -4,7 +4,7 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 import { state } from "../utils.js";
-import { clusterIssue } from "../issues.js";
+import { allIssue } from "../issues.js";
 import { Alerts } from "./Alerts.jsx";
 import { Subsystems } from "./Subsystems.jsx";
 
@@ -61,8 +61,8 @@ function NavBarMenu(props) {
                 setState(open)
         }
 	const classes = useStyles()
-	var clIssue = clusterIssue(cstat)
-	if (clIssue == state.OPTIMAL) {
+	var issue = allIssue(cstat)
+	if (issue == state.OPTIMAL) {
 		var count = 0
 	} else {
 		var count = 1
@@ -75,7 +75,9 @@ function NavBarMenu(props) {
 				</Badge>
 			</IconButton>
 			<Drawer anchor="left" open={state} onClose={toggleDrawer(false)}>
-                                <Subsystems />
+                                <Subsystems
+					closeDrawer={toggleDrawer(false)}
+				/>
 			</Drawer>
 		</React.Fragment>
 	)

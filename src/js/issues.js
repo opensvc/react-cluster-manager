@@ -1,4 +1,4 @@
-import { state, mergeStates } from "./utils.js";
+import { splitPath, state, mergeStates } from "./utils.js";
 
 //
 // Issue finders
@@ -197,12 +197,18 @@ function objectIssue(cstat, path) {
 	return state.OPTIMAL
 }
 
-function objectsIssue(cstat) {
+function objectsIssue(cstat, kind) {
 	if (cstat.monitor === undefined) {
 		return state.NOTAPPLICABLE
 	}
 	var s = state.OPTIMAL
 	for (var path in cstat.monitor.services) {
+		if (kind) {
+			var sp = splitPath(path)
+			if (sp.kind != kind) {
+				continue
+			}
+		}
 		s = mergeStates(s, objectIssue(cstat, path))
 		s = mergeStates(s, objectInstancesIssue(cstat, path))
 		if (s == state.DANGER) {
@@ -228,6 +234,18 @@ function clusterIssue(cstat) {
 	s = mergeStates(s, versionIssue(cstat))
 	s = mergeStates(s, arbitratorsIssue(cstat))
 	s = mergeStates(s, heartbeatsIssue(cstat))
+	return s
+}
+
+function allIssue(cstat) {
+	if (!cstat) {
+		return state.NOTAPPLICABLE
+	}
+	var s = nodesIssue(cstat)
+	s = mergeStates(s, threadsIssue(cstat))
+	s = mergeStates(s, versionIssue(cstat))
+	s = mergeStates(s, arbitratorsIssue(cstat))
+	s = mergeStates(s, heartbeatsIssue(cstat))
 	s = mergeStates(s, objectsIssue(cstat))
 	return s
 }
@@ -241,6 +259,7 @@ export {
 	nodesIssue,
 	objectsIssue,
 	clusterIssue,
+	allIssue,
 	nodesOverloadIssue,
 	nodeSwapOverloadIssue,
 	nodeMemOverloadIssue

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useStateValue } from '../state.js';
-import { splitPath } from "../utils.js";
+import { splitPath, kindName } from "../utils.js";
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjState } from "./ObjState.jsx";
@@ -127,8 +127,9 @@ function ObjsFilter(props) {
 	)
 }
 
-function getLines(withScalerSlaves) {
+function getLines(props) {
 	const [{ cstat, kinds, filters }, dispatch] = useStateValue();
+	const { kind, withScalerSlaves } = props
 	var lines = []
 	if (cstat.monitor === undefined) {
 		return lines
@@ -152,8 +153,14 @@ function getLines(withScalerSlaves) {
 		var sp = splitPath(path)
 
 		// Apply filters
-		if (kinds.indexOf(sp.kind) < 0) {
-			continue
+		if (kind) {
+			if (sp.kind != kind) {
+				continue
+			}
+		} else {
+			if (kinds.indexOf(sp.kind) < 0) {
+				continue
+			}
 		}
 		try {
 			if (reName && !rename.test(sp.name)) {
@@ -184,7 +191,7 @@ function Objs(props) {
 	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
 	const [selected, setSelected] = React.useState([]);
-	const lines = getLines()
+	const lines = getLines({kind: props.kind})
 
 	if (cstat.monitor === undefined) {
 		return lines
@@ -208,16 +215,30 @@ function Objs(props) {
 	}
 
 	var rowCount = lines.length
+	var title = "Objects"
+	if (props.kind == "svc") {
+		title = "Services"
+	} else if (props.kind == "vol") {
+		title = "Volumes"
+	} else if (props.kind == "cfg") {
+		title = "Configs"
+	} else if (props.kind == "sec") {
+		title = "Secrets"
+	} else if (props.kind == "usr") {
+		title = "Users"
+	}
 
 	return (
 		<Paper id="objects" className={classes.root}>
 			<Typography variant="h4" component="h3">
-				<Link href="#" onClick={handleTitleClick}>Objects</Link>
+				<Link href="#" onClick={handleTitleClick}>{title}</Link>
 			</Typography>
 			<Grid container className={classes.tools} spacing={1}>
+				{!props.kind &&
 				<Grid item>
 					<ObjsKindFilter />
 				</Grid>
+				}
 				<Grid item>
 					<ObjsFilter />
 				</Grid>
@@ -264,7 +285,7 @@ function Objs(props) {
 				</TableHead>
 				<TableBody>
 					{lines.sort().map((path, i) => (
-						<ObjLine key={path} index={i} path={path} selected={selected} setSelected={setSelected} />
+						<ObjLine key={path} index={i} path={path} selected={selected} setSelected={setSelected} title={title} />
 					))}
 				</TableBody>
 			</Table>
@@ -273,7 +294,7 @@ function Objs(props) {
 }
 
 function ObjLine(props) {
-	const {index, path, selected, setSelected, withScalerSlaves } = props
+	const {index, path, selected, setSelected, withScalerSlaves, title } = props
 	const [{ cstat, kinds, filters }, dispatch] = useStateValue();
 	const sp = splitPath(path)
 	function handleClick(event) {
@@ -299,8 +320,8 @@ function ObjLine(props) {
 	function handleLineClick(e) {
 		dispatch({
 			type: "setNav",
-			page: "Objects",
-			links: ["Objects", path]
+			page: title,
+			links: [title, path]
 		})
 	}
 	const isItemSelected = selected.indexOf(path) !== -1

@@ -1,7 +1,7 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 import { state } from '../utils.js';
-import { threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue, objectsIssue } from "../issues.js";
+import { threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue } from "../issues.js";
 import { Threads } from "./Threads.jsx";
 import { HeartbeatsDetails } from "./HeartbeatsDetails.jsx";
 import { ArbitratorsDetails } from "./ArbitratorsDetails.jsx";

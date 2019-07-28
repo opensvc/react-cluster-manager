@@ -188,5 +188,5 @@ export {
 	fmtPath,
 	fancySizeMB,
 	nameValid,
-	namespaceValid
+	namespaceValid,
 }
