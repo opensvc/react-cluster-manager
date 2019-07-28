@@ -20,14 +20,18 @@ function ObjActions(props) {
 	if (cstat.monitor === undefined) {
 		return null
 	}
-	if (props.path) {
+	var path = props.path
+	if (path) {
 		var selected = [props.path]
 	} else {
 		var selected = props.selected
+		if (selected.length == 1) {
+			path = selected[0]
+		}
 	}
-	if (!selected) {
-		const odata = cstat.monitor.services[props.path]
-		const sp = splitPath(props.path)
+	if (path) {
+		const odata = cstat.monitor.services[path]
+		const sp = splitPath(path)
 		var namespaces = [sp.namespace]
 
 		if (odata === undefined) {
@@ -44,7 +48,7 @@ function ObjActions(props) {
 		var nInstancesGet = () => {
 			var count = 0
 			for (var node in cstat.monitor.nodes) {
-				if (props.path in cstat.monitor.nodes[node].services.status) {
+				if (path in cstat.monitor.nodes[node].services.status) {
 					count++
 				}
 			}
@@ -117,8 +121,7 @@ function ObjActions(props) {
 			}
 			return false
 		}
-		var path = props.path
-		var kinds = [props.splitpath.kind]
+		var kinds = [sp.kind]
 	} else {
 		var path = selected.join(",")
 		var kinds = ["svc"]

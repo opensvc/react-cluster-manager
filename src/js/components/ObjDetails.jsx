@@ -2,11 +2,12 @@ import React, { useState } from "react";
 
 import { useStateValue } from '../state.js';
 import { useObjConfig } from "../hooks/ObjConfig.jsx";
-import { parseIni, splitPath } from "../utils.js";
+import { splitPath } from "../utils.js";
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjDigest } from "./ObjDigest.jsx";
 import { Log } from "./Log.jsx"
 import { ObjInstances } from "./ObjInstances.jsx"
+import { ObjKeys } from "./ObjKeys.jsx"
 import { apiInstanceAction } from "../api.js"
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -15,11 +16,6 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -118,50 +114,6 @@ function CfgMain(props) {
 			</Typography>
 			<ObjKeys path={props.path} />
 		</React.Fragment>
-	)
-}
-
-function ObjKeys(props) {
-	const conf = useObjConfig(props.path)
-	if (!conf || !conf.data) {
-		return null
-	}
-	var confData = parseIni(conf.data)
-	if (confData.data === undefined) {
-		return (<div>"This configuration hosts no key yet."</div>)
-	}
-	return (
-		<Table>
-			<TableHead>
-				<TableRow className="text-secondary">
-					<TableCell>Key</TableCell>
-					<TableCell>Type</TableCell>
-					<TableCell>Value</TableCell>
-				</TableRow>
-			</TableHead>
-			<TableBody>
-				{Object.keys(confData.data).sort().map((keyName) => (
-					<ObjKey key={keyName} keyValue={confData.data[keyName]} keyName={keyName} />
-				))}
-			</TableBody>
-		</Table>
-	)
-}
-
-function ObjKey(props) {
-	var i = props.keyValue.indexOf(":")
-	var valueType = props.keyValue.slice(0, i)
-	var value = props.keyValue.slice(i+1)
-	console.log(valueType, value)
-	if (valueType != "literal") {
-		var value = ( <Button>Decode</Button> )
-	}
-	return (
-		<TableRow>
-			<TableCell>{props.keyName}</TableCell>
-			<TableCell><span className="badge badge-secondary mr-2">{valueType}</span></TableCell>
-			<TableCell>{value}</TableCell>
-		</TableRow>
 	)
 }
 
