@@ -12,8 +12,10 @@ before_install:
 - echo -e "Host ${DEPLOY_NODE}\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - ssh-add ${PRIVATE_RSA}
 - ssh -qi ${PRIVATE_RSA} ${DEPLOY_USER}@${DEPLOY_NODE} "hostname ; pwd"
-- sudo apt update
 - sudo apt -y install npm
+addons:
+  apt:
+    update: true
 
 install:
 - npm install
