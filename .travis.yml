@@ -20,6 +20,7 @@ install:
 - npm list -g --depth=0
 
 script:
+- npm config set opensvc-cluster-manager:mode production
 - npm run build
 
 after_success:

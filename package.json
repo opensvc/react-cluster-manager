@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "OpenSVC Cluster Management Frontend.",
   "main": "index.js",
+  "config" : { "mode" : "development" },
   "scripts": {
-    "build": "webpack --mode development"
+    "build": "webpack --mode $npm_package_config_mode"
   },
   "keywords": [],
   "author": "OpenSVC SAS",
