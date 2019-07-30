@@ -2,6 +2,7 @@ import React from "react";
 import { useStateValue } from '../state.js';
 
 import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
@@ -11,10 +12,14 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Badge from '@material-ui/core/Badge';
+import DeleteIcon from '@material-ui/icons/Delete';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 const useStyles = makeStyles({
+	closeButton: {
+		alignSelf: "end",
+	},
 	list: {
 		width: 250,
 	},
@@ -54,6 +59,9 @@ function Alerts(props) {
 				</Badge>
 			</IconButton>
 			<Drawer anchor="right" open={state} onClose={toggleDrawer(false)}>
+				<IconButton className={classes.closeButton} edge="end" aria-label="Close" onClick={toggleDrawer(false)}>
+					<ArrowRightIcon />
+				</IconButton>
 				<AlertsList />
 			</Drawer>
 		</React.Fragment>
@@ -88,12 +96,8 @@ function Alert(props) {
 				<NotificationsIcon color={props.data.color} />
 			</ListItemIcon>
 			<ListItemText
-				primary={
-					<small>{props.data.date.toLocaleString()}</small>
-				}
-				secondary={
-					props.data.body
-				}
+				primary=<Typography component="span" variant="caption">{props.data.date.toLocaleString()}</Typography>
+				secondary={props.data.body}
 			/>
 			<ListItemSecondaryAction>
 				<IconButton edge="end" aria-label="Delete" i={props.i} onClick={handleClick}>
