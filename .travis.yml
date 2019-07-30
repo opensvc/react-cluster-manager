@@ -12,17 +12,27 @@ before_install:
 - echo -e "Host ${DEPLOY_NODE}\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - ssh-add ${PRIVATE_RSA}
 - ssh -qi ${PRIVATE_RSA} ${DEPLOY_USER}@${DEPLOY_NODE} "hostname ; pwd"
-- sudo apt update
 - sudo apt -y install npm
+addons:
+  apt:
+    update: true
 
 install:
 - npm install
 - npm list -g --depth=0
 
 script:
+- npm config set opensvc-cluster-manager:mode production
 - npm run build
 
 after_success:
 - ssh -i ${PRIVATE_RSA} ${DEPLOY_USER}@${DEPLOY_NODE} "test -d /usr/share/opensvc/html || sudo /bin/mkdir -p /usr/share/opensvc/html"
 - ssh -i ${PRIVATE_RSA} ${DEPLOY_USER}@${DEPLOY_NODE} "sudo /bin/chown opensvc:opensvc /usr/share/opensvc/html"
 - scp -i ${PRIVATE_RSA} ./dist/index* ${DEPLOY_USER}@${DEPLOY_NODE}:/usr/share/opensvc/html/
+
+deploy:
+  - provider: script
+    script: bash deploy/deploy.sh $(jq -r '.version' package.json)
+    skip_cleanup: true
+    on:
+      all_branches: true 
