@@ -23,6 +23,7 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import LockIcon from '@material-ui/icons/Lock';
 import SaveIcon from '@material-ui/icons/Save';
 import GroupWorkIcon from '@material-ui/icons/GroupWork';
+import LinkIcon from '@material-ui/icons/Link';
 
 const useStyles = makeStyles(theme => ({
 	nested: {
@@ -33,7 +34,6 @@ const useStyles = makeStyles(theme => ({
 function SubsystemsLink(props) {
 	const classes = useColorStyles()
 	function handleClick(e) {
-		console.log("xx")
 		props.onClick()
 		props.closeDrawer(e)
 	}
@@ -94,6 +94,25 @@ function Subsystems(props) {
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
+			<SubsystemsLink
+				issue={state.OPTIMAL}
+				href="#pools"
+				title="Pools"
+				icon={ <StorageIcon /> }
+				onClick={() => dispatch({type: "setNav", page: "Pools", links: ["Pools"]})}
+				closeDrawer={props.closeDrawer}
+				className={classes.nested}
+			/>
+			<SubsystemsLink
+				issue={state.OPTIMAL}
+				href="#networks"
+				title="Networks"
+				icon={ <LinkIcon /> }
+				onClick={() => dispatch({type: "setNav", page: "Networks", links: ["Networks"]})}
+				closeDrawer={props.closeDrawer}
+				className={classes.nested}
+			/>
+
 			<SubsystemsLink
 				issue={objectsIssue(cstat)}
 				href="#objects"

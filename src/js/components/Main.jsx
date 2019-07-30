@@ -19,6 +19,10 @@ import { NodeActions } from "./NodeActions.jsx";
 import { User } from "./User.jsx";
 import { DeployButton } from "./Deploy.jsx";
 import { Fabs } from "./Fabs.jsx";
+import { Pools } from "./Pools.jsx";
+import { PoolAdd } from "./PoolAdd.jsx";
+import { Networks } from "./Networks.jsx";
+import { NetworkAdd } from "./NetworkAdd.jsx";
 
 function Main(props) {
 	const [{ nav }, dispatch] = useStateValue();
@@ -32,7 +36,7 @@ function Main(props) {
 	}
 
 	if (nav.page == "Cluster") {
-		return ( 
+		return (
 			<React.Fragment>
 				<Cluster />
 				<Fabs>
@@ -77,8 +81,28 @@ function Main(props) {
 			</React.Fragment>
 		)
 	}
+	if (nav.links[n-1] == "Networks") {
+		return (
+			<React.Fragment>
+				<Networks />
+				<Fabs>
+					<NetworkAdd />
+				</Fabs>
+			</React.Fragment>
+		)
+	}
+	if (nav.links[n-1] == "Pools") {
+		return (
+			<React.Fragment>
+				<Pools />
+				<Fabs>
+					<PoolAdd />
+				</Fabs>
+			</React.Fragment>
+		)
+	}
 	if (nav.links[n-1] == "Nodes") {
-		return ( 
+		return (
 			<React.Fragment>
 				<Nodes />
 				<Fabs>
