@@ -14,6 +14,7 @@ import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled"
 import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
 import ShuffleIcon from "@material-ui/icons/Shuffle"
 import LabelIcon from "@material-ui/icons/Label"
+import BackspaceIcon from "@material-ui/icons/Backspace"
 
 
 function ObjInstanceActions(props) {
@@ -37,6 +38,15 @@ function ObjInstanceActions(props) {
 				(data) => dispatch({type: "parseApiResponse", data: data})
 			)
 		}
+	}
+	function disable_clear() {
+		for (var instance of selected) {
+			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (idata.monitor.status && idata.monitor.status.match(/failed/)) {
+				return false
+			}
+		}
+		return true
 	}
 	function disable_enable() {
 		for (var instance of selected) {
@@ -130,6 +140,9 @@ function ObjInstanceActions(props) {
 					/>
 					<ActionsItem value="enable" text="Enable" disabled={disable_enable()} requires={{role: "operator", namespace: sp.namespace}}
 						icon=<PauseCircleOutlineIcon />
+					/>
+					<ActionsItem value="clear" text="Clear" disabled={disable_clear()} requires={{role: "operator", namespace: sp.namespace}}
+						icon=<BackspaceIcon />
 					/>
 					<ActionsItem value="status" text="Refresh" requires={{role: "operator", namespace: sp.namespace}}
 						icon=<RefreshIcon />
