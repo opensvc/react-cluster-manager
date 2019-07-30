@@ -69,7 +69,9 @@ function ObjKeyAdd(props) {
 				<DialogTitle id="form-dialog-title">Add Key</DialogTitle>
 				<DialogContent>
 					<DialogContentText>
-						Blah blah
+						The key name can be a path expression. When using the key in 
+						a volume projection, the key name is the path of the file
+						relative to the volume root, and the content is the key value.
 					</DialogContentText>
 					<FormControl className={classes.formcontrol} fullWidth>
 						<TextField
