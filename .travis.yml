@@ -29,3 +29,10 @@ after_success:
 - ssh -i ${PRIVATE_RSA} ${DEPLOY_USER}@${DEPLOY_NODE} "test -d /usr/share/opensvc/html || sudo /bin/mkdir -p /usr/share/opensvc/html"
 - ssh -i ${PRIVATE_RSA} ${DEPLOY_USER}@${DEPLOY_NODE} "sudo /bin/chown opensvc:opensvc /usr/share/opensvc/html"
 - scp -i ${PRIVATE_RSA} ./dist/index* ${DEPLOY_USER}@${DEPLOY_NODE}:/usr/share/opensvc/html/
+
+deploy:
+  - provider: script
+    script: bash deploy/deploy.sh $(jq -r '.version' package.json)
+    skip_cleanup: true
+    on:
+      all_branches: true 
