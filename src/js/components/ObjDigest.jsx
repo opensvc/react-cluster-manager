@@ -1,37 +1,40 @@
 import React from "react";
 import { useStateValue } from '../state.js';
-import { splitPath } from "../utils.js";
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjState } from "./ObjState.jsx";
 import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
 
+import Typography from '@material-ui/core/Typography';
+import Table from '@material-ui/core/Table';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+
 function ObjDigest(props) {
 	const [{ cstat }, dispatch] = useStateValue();
-	const sp = splitPath(props.path)
 	if (cstat.monitor.services[props.path] === undefined) {
 		return null
 	}
 	return (
-		<div className="table-responsive">
-			<table className="table table-hover">
-				<thead>
-				</thead>
-				<tbody>
-					<tr>
-						<td className="text-secondary">Availability</td>
-						<td><ObjAvail avail={cstat.monitor.services[props.path].avail} /></td>
-					</tr>
-					<tr>
-						<td className="text-secondary">State</td>
-						<td><ObjState path={props.path} /></td>
-					</tr>
-					<tr>
-						<td className="text-secondary">Instances</td>
-						<td><ObjInstanceCounts path={props.path} /></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+		<Table>
+			<TableHead>
+			</TableHead>
+			<TableBody>
+				<TableRow>
+					<TableCell><Typography color="textSecondary">Availability</Typography></TableCell>
+					<TableCell><ObjAvail avail={cstat.monitor.services[props.path].avail} /></TableCell>
+				</TableRow>
+				<TableRow>
+					<TableCell><Typography color="textSecondary">State</Typography></TableCell>
+					<TableCell><ObjState path={props.path} /></TableCell>
+				</TableRow>
+				<TableRow>
+					<TableCell><Typography color="textSecondary">Instances</Typography></TableCell>
+					<TableCell><ObjInstanceCounts path={props.path} /></TableCell>
+				</TableRow>
+			</TableBody>
+		</Table>
 	)
 }
 
