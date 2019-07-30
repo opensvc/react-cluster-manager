@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 
-import { apiPostAny } from "../api.js"
+import { apiInstanceAction } from "../api.js"
+import { useKeywords } from "../hooks/Keywords.jsx"
+import { SectionForm } from "./SectionForm.jsx"
+import { useStateValue } from '../state.js';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
 import Fab from '@material-ui/core/Fab';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -27,17 +26,12 @@ const useStyles = makeStyles(theme => ({
 function NetworkAdd(props) {
 	const {path} = props
 	const [open, setOpen] = React.useState(false)
-	const source = {
-		"INPUT": "User Input",
-		"LOCAL": "Local File",
-		"REMOTE": "Remote Location",
+	const [data, setData] = useState({})
+	const kws = useKeywords("ccfg")
+	const [{}, dispatch] = useStateValue();
+	if (!kws) {
+		return null
 	}
-	const [active, setActive] = useState(source.INPUT)
-	const [inputValue, setInputValue] = useState("")
-	const [urlValue, setUrlValue] = useState("")
-	const [fileValue, setFileValue] = useState("")
-	const [keyName, setKeyName] = useState("")
-	const classes = useStyles()
         function handleClickOpen(e) {
                 e.stopPropagation()
                 setOpen(true)
@@ -45,16 +39,20 @@ function NetworkAdd(props) {
         function handleClose(e) {
                 setOpen(false)
         }
-	function handleSourceChange(e) {
-		setActive(e.target.value)
-	}
 	function handleSubmit(e) {
-		if (active == source.INPUT) {
-			apiPostAny("/set_key", {path: path, key: keyName, data: inputValue}, (data) => {
-				// reload config custom hook
-				console.log(data)
-			})
+		var kw = []
+		for (var k in data) {
+			if (k == "sectionName") {
+				continue
+			}
+			if (!data[k]) {
+				continue
+			}
+			var _kw = "network#"+data.sectionName+"."+k+"="+data[k]
+			kw.push(_kw)
 		}
+		console.log("SUBMIT", data.sectionName, data.type, data, "=>", kw)
+		apiInstanceAction("ANY", "cluster", "set", {kw: kw}, (data) => dispatch({type: "parseApiResponse", data: data}))
 		handleClose(e)
 	}
 	return (
@@ -66,66 +64,14 @@ function NetworkAdd(props) {
 				<AddIcon />
 			</Fab>
 			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-				<DialogTitle id="form-dialog-title">Add Key</DialogTitle>
+				<DialogTitle id="form-dialog-title">Create New Network</DialogTitle>
 				<DialogContent>
 					<DialogContentText>
-						Blah blah
+						A network hosts dynamically allocated ip addresses for ip.cni resources.
+						The <code>bridge</code> types is node-local, the <code>routed_bridge</code>
+						and <code>weave</code> types are cluster-wide.
 					</DialogContentText>
-					<FormControl className={classes.formcontrol} fullWidth>
-						<TextField
-							label="Key Name"
-							id="name"
-							value={keyName}
-							onChange={(e) => setKeyName(e.target.value)}
-						/>
-					</FormControl>
-					<FormControl className={classes.formcontrol} fullWidth>
-						<Typography variant="caption" color="textSecondary">Value Source</Typography>
-						<Select
-							value={active}
-							onChange={handleSourceChange}
-							inputProps={{
-								name: 'source',
-								id: 'source',
-							}}
-						>
-							<MenuItem value={source.INPUT}>{source.INPUT}</MenuItem>
-							<MenuItem value={source.LOCAL}>{source.LOCAL}</MenuItem>
-							<MenuItem value={source.REMOTE}>{source.REMOTE}</MenuItem>
-						</Select>
-					</FormControl>
-					{(active==source.INPUT) &&
-					<FormControl className={classes.formcontrol} fullWidth>
-						<TextField
-							label="Key Value"
-							id="name"
-							value={inputValue}
-							onChange={(e) => setInputValue(e.target.value)}
-						/>
-					</FormControl>
-					}
-					{(active==source.REMOTE) &&
-					<FormControl className={classes.formcontrol} fullWidth>
-						<TextField
-							label="Remote Location"
-							id="url"
-							type="url"
-							value={urlValue}
-							onChange={(e) => setUrlValue(e.target.value)}
-						/>
-					</FormControl>
-					}
-					{(active==source.LOCAL) &&
-					<FormControl className={classes.formcontrol} fullWidth>
-						<TextField
-							label="File"
-							id="file"
-							type="file"
-							label={fileValue}
-							onChange={(e) => setFileValue(e.target.uploadFile)}
-						/>
-					</FormControl>
-					}
+					<SectionForm kind="Network" kws={kws.network} data={data} setData={setData} />
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose} color="primary">
