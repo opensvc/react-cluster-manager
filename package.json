@@ -1,9 +1,11 @@
 {
   "name": "opensvc-cluster-manager",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "OpenSVC Cluster Management Frontend.",
   "main": "index.js",
-  "config" : { "mode" : "development" },
+  "config": {
+    "mode": "development"
+  },
   "scripts": {
     "build": "webpack --mode $npm_package_config_mode"
   },
