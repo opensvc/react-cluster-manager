@@ -40,7 +40,7 @@ function ObjActions(props) {
 
 		var submit = (props) => {
 			apiObjSetMonitor(
-				props.menu.path,
+				path,
 				props.value,
 				(data) => dispatch({type: "parseApiResponse", data: data})
 			)
