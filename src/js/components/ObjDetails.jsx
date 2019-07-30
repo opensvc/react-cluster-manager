@@ -12,6 +12,7 @@ import { apiInstanceAction } from "../api.js"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -48,8 +49,10 @@ const tabs = [
 
 function Title(props) {
 	return (
-		<Typography variant="h5" component="h3">
-			{props.path}
+		<Typography variant="h4" component="p">
+			<Link href="#">
+				{props.path}
+			</Link>
 		</Typography>
 	)
 }
