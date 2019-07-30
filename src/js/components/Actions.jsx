@@ -6,7 +6,6 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -113,6 +112,7 @@ function ConfirmationDialog(props) {
 			disableBackdropClick
 			maxWidth="xs"
 			onEntering={handleEntering}
+			onClose={handleCancel}
 			aria-labelledby="confirmation-dialog-title"
 			open={props.open}
 		>
@@ -185,7 +185,7 @@ function Actions(props) {
 				aria-haspopup="true"
 				onClick={handleClickOpen}
 			>
-				<MoreVertIcon />
+				<PlayArrowIcon />
 			</IconButton>
 		)
 	}
