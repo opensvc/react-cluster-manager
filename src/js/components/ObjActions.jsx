@@ -157,7 +157,7 @@ function ObjActions(props) {
 			return false
 		}
 		var disable_abort = () => {
-			return true
+			return false
 		}
 		var disable_stop = () => {
 			return false

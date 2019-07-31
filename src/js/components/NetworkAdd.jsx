@@ -18,9 +18,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles(theme => ({
-	formcontrol: {
-		margin: theme.spacing(2, 0),
-	},
+        fab: {
+                marginTop: theme.spacing(2),
+        },
 }))
 
 function NetworkAdd(props) {
@@ -29,6 +29,7 @@ function NetworkAdd(props) {
 	const [data, setData] = useState({})
 	const kws = useKeywords("ccfg")
 	const [{}, dispatch] = useStateValue();
+	const classes = useStyles()
 	if (!kws) {
 		return null
 	}
@@ -60,6 +61,7 @@ function NetworkAdd(props) {
 			<Fab
 				color="primary"
 				onClick={handleClickOpen}
+				className={classes.fab}
 			>
 				<AddIcon />
 			</Fab>

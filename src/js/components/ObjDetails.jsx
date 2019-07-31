@@ -19,8 +19,6 @@ import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
-import FormGroup from '@material-ui/core/FormGroup';
-import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles(theme => ({
         root: {
@@ -140,52 +138,8 @@ function SvcMain(props) {
 				{title}
 			</Typography>
 			<ObjDigest path={props.path} />
-			<ObjScale path={props.path} />
 			<ObjInstances path={props.path} />
 		</div>
-	)
-}
-
-function ObjScale(props) {
-	const [{ cstat }, dispatch] = useStateValue();
-
-	if (cstat.monitor === undefined) {
-		return null
-	}
-	if (!("scale" in cstat.monitor.services[props.path])) {
-		return null
-	}
-	const [ scale, setScale] = useState(cstat.monitor.services[props.path].scale)
-	function handleChange(e) {
-		setScale(e.target.value)
-	}
-	function handleSubmit() {
-		apiInstanceAction(
-			"ANY",
-			props.path,
-			"scale",
-			{"to": scale},
-			(data) => dispatch({type: "parseApiResponse", data: data})
-		)
-	}
-	return (
-		<FormGroup row>
-			<TextField
-				label="Key Name"
-				id="name"
-				value={scale}
-				onChange={handleChange}
-				type="number"
-			>
-				Scale Target
-			</TextField>
-			<Button
-				variant="contained"
-				color="secondary"
-				onClick={handleSubmit}>
-				Submit
-			</Button>
-		</FormGroup>
 	)
 }
 

@@ -24,6 +24,9 @@ const useStyles = makeStyles(theme => ({
         tabContent: {
                 paddingTop: theme.spacing(2),
         },
+        fab: {
+                marginTop: theme.spacing(2),
+        },
 }))
 
 function DeployButton(props) {
@@ -40,6 +43,7 @@ function DeployButton(props) {
 		<Fab
 			color="primary"
 			onClick={handleClick}
+			className={classes.fab}
 		>
 			<AddIcon />
 		</Fab>

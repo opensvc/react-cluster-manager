@@ -17,12 +17,19 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import AddIcon from '@material-ui/icons/Add';
 
+const useStyles = makeStyles(theme => ({
+        fab: {
+                marginTop: theme.spacing(2),
+        },
+}))
+
 function PoolAdd(props) {
 	const {path} = props
 	const [open, setOpen] = React.useState(false)
 	const [data, setData] = useState({})
 	const kws = useKeywords("ccfg")
 	const [{}, dispatch] = useStateValue();
+	const classes = useStyles()
 	if (!kws) {
 		return null
 	}
@@ -54,6 +61,7 @@ function PoolAdd(props) {
 			<Fab
 				color="primary"
 				onClick={handleClickOpen}
+				className={classes.fab}
 			>
 				<AddIcon />
 			</Fab>

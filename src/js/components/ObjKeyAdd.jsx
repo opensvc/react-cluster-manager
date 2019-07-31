@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { apiPostAny } from "../api.js"
+import { splitPath } from "../utils.js"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -22,10 +23,17 @@ const useStyles = makeStyles(theme => ({
 	formcontrol: {
 		margin: theme.spacing(2, 0),
 	},
+        fab: {
+                marginTop: theme.spacing(2),
+        },
 }))
 
 function ObjKeyAdd(props) {
 	const {path} = props
+	const sp = splitPath(path)
+	if (["cfg", "sec"].indexOf(sp.kind) < 0) {
+		return null
+	}
 	const [open, setOpen] = React.useState(false)
 	const source = {
 		"INPUT": "User Input",
@@ -62,6 +70,7 @@ function ObjKeyAdd(props) {
 			<Fab
 				color="primary"
 				onClick={handleClickOpen}
+				className={classes.fab}
 			>
 				<AddIcon />
 			</Fab>

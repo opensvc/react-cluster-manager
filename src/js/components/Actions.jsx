@@ -34,6 +34,9 @@ const useStyles = makeStyles(theme => ({
 		width: '80%',
 		maxHeight: 435,
 	},
+        fab: {
+                marginTop: theme.spacing(2),
+        },
 }))
 
 function ActionsDivider(props) {
@@ -150,6 +153,7 @@ function ConfirmationDialog(props) {
 
 function Actions(props) {
 	const [open, setOpen] = React.useState(false)
+	const classes = useStyles()
 
 	function handleClickOpen(e) {
 		e.stopPropagation()
@@ -174,6 +178,7 @@ function Actions(props) {
 			<Fab
 				color="primary"
 				onClick={handleClickOpen}
+				className={classes.fab}
 			>
 				<PlayArrowIcon />
 			</Fab>
