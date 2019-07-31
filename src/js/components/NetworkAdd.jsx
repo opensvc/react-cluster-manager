@@ -28,8 +28,11 @@ function NetworkAdd(props) {
 	const [open, setOpen] = React.useState(false)
 	const [data, setData] = useState({})
 	const kws = useKeywords("ccfg")
-	const [{}, dispatch] = useStateValue();
+	const [{user}, dispatch] = useStateValue();
 	const classes = useStyles()
+	if (!("root" in user.grant)) {
+		return null
+	}
 	if (!kws) {
 		return null
 	}
