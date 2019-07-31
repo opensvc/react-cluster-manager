@@ -42,7 +42,7 @@ function Networks(props) {
                         "links": ["Networks"],
                 })
         }
-        const lines = getLines(data)
+        var lines = getLines(data)
 
 	return (
 		<Paper id="nodes" className={classes.root}>

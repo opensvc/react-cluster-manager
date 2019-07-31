@@ -41,7 +41,7 @@ function Pools(props) {
                         "links": ["Pools"],
                 })
         }
-	const lines = getLines(data)
+	var lines = getLines(data)
 
 	return (
 		<Paper id="nodes" className={classes.root}>
