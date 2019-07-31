@@ -191,7 +191,7 @@ function Objs(props) {
 	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
 	const [selected, setSelected] = React.useState([]);
-	const lines = getLines({kind: props.kind})
+	var lines = getLines({kind: props.kind})
 
 	if (cstat.monitor === undefined) {
 		return lines

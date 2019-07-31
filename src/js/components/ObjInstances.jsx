@@ -80,7 +80,7 @@ function ObjInstances(props) {
 		return null
 	}
 	const instances = getInstances(props.path, cstat)
-	const rowCount = instances.length
+	var rowCount = instances.length
 
         function handleSelectAllClick(event) {
                 if (event.target.checked) {

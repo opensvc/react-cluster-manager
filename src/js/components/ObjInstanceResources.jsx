@@ -36,7 +36,7 @@ function ObjInstanceResources(props) {
 	const classes = useStyles()
 	const rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources
 	const [selected, setSelected] = React.useState([])
-	const rowCount = Object.keys(rdata).length
+	var rowCount = Object.keys(rdata).length
 
         function handleSelectAllClick(event) {
                 if (event.target.checked) {
