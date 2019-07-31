@@ -5,6 +5,7 @@ import { parseIni } from "../utils.js";
 import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { TableToolbar } from "./TableToolbar.jsx"
 import { ObjKeyActions } from "./ObjKeyActions.jsx"
+import { KeyDecode } from "./KeyDecode.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -13,7 +14,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -80,6 +80,7 @@ function ObjKeys(props) {
 						<ObjKey
 							key={keyName}
 							index={i}
+							path={props.path}
 							keyValue={confData.data[keyName]}
 							keyName={keyName}
 							selected={selected}
@@ -93,13 +94,13 @@ function ObjKeys(props) {
 }
 
 function ObjKey(props) {
-	const {index, keyName, keyValue, selected, setSelected} = props
+	const {index, path, keyName, keyValue, selected, setSelected} = props
 	var i = keyValue.indexOf(":")
 	var valueType = keyValue.slice(0, i)
 	var value = keyValue.slice(i+1)
 	console.log(valueType, value)
 	if (valueType != "literal") {
-		var value = ( <Button>Decode</Button> )
+		var value = ( <KeyDecode path={path} keyName={keyName} /> )
 	}
         function handleClick(event) {
                 event.stopPropagation()
