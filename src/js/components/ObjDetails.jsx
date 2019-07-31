@@ -28,6 +28,9 @@ const useStyles = makeStyles(theme => ({
         tabContent: {
                 paddingTop: theme.spacing(2),
         },
+	tabSection: {
+                marginBottom: theme.spacing(3),
+	}
 }))
 
 const tabs = [
@@ -121,6 +124,7 @@ function CfgMain(props) {
 function SvcMain(props) {
 	const sp = splitPath(props.path)
 	const [{ cstat }, dispatch] = useStateValue();
+	const classes = useStyles()
 
 	if (cstat.monitor === undefined) {
 		return null
@@ -137,8 +141,12 @@ function SvcMain(props) {
 			<Typography variant="h5" component="h3">
 				{title}
 			</Typography>
-			<ObjDigest path={props.path} />
-			<ObjInstances path={props.path} />
+			<div className={classes.tabSection}>
+				<ObjDigest path={props.path} />
+			</div>
+			<div className={classes.tabSection}>
+				<ObjInstances path={props.path} />
+			</div>
 		</div>
 	)
 }

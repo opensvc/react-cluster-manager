@@ -16,6 +16,9 @@ const useStyles = makeStyles(theme => ({
                 marginTop: theme.spacing(3),
 		overflowX: "scroll",
         },
+        section: {
+                marginBottom: theme.spacing(3),
+        }
 }))
 
 function ObjInstanceDetails(props) {
@@ -32,15 +35,21 @@ function ObjInstanceDetails(props) {
 					{props.path} @ {props.node}
 				</Link>
 			</Typography>
-			<Typography variant="h5" component="h2">
-				Object
-			</Typography>
-			<ObjDigest path={props.path} />
-			<Typography variant="h5" component="h2">
-				Instance
-			</Typography>
-			<ObjInstanceDigest path={props.path} node={props.node} />
-			<ObjInstanceResources path={props.path} node={props.node} />
+			<div className={classes.section}>
+				<Typography variant="h5" component="h2">
+					Object
+				</Typography>
+				<ObjDigest path={props.path} />
+			</div>
+			<div className={classes.section}>
+				<Typography variant="h5" component="h2">
+					Instance
+				</Typography>
+				<ObjInstanceDigest path={props.path} node={props.node} />
+			</div>
+			<div className={classes.section}>
+				<ObjInstanceResources path={props.path} node={props.node} />
+			</div>
 		</Paper>
 	)
 }
