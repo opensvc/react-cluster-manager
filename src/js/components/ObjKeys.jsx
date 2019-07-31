@@ -28,8 +28,8 @@ const useStyles = makeStyles(theme => ({
 
 function ObjKeys(props) {
 	const classes = useStyles()
-	const conf = useObjConfig(props.path)
 	const [selected, setSelected] = React.useState([])
+	var conf = useObjConfig(props.path)
 	if (!conf || !conf.data) {
 		return null
 	}
@@ -37,7 +37,7 @@ function ObjKeys(props) {
 	if (confData.data === undefined) {
 		return (<div>"This configuration hosts no key yet."</div>)
 	}
-	const rowCount = Object.keys(confData.data).length
+	var rowCount = Object.keys(confData.data).length
 	function handleSelectAllClick(event) {
                 if (event.target.checked) {
                         const newSelecteds = Object.keys(confData.data)
@@ -98,20 +98,12 @@ function ObjKey(props) {
 	var i = keyValue.indexOf(":")
 	var valueType = keyValue.slice(0, i)
 	var value = keyValue.slice(i+1)
-	console.log(valueType, value)
 	if (valueType != "literal") {
 		var value = ( <KeyDecode path={path} keyName={keyName} /> )
 	}
         function handleClick(event) {
                 event.stopPropagation()
-                var selectedIndex = -1
-                for (var i=0; i<selected.length; i++) {
-                        var item = selected[i]
-                        if ((item.path==instance.path) && (item.node==instance.node)) {
-                                selectedIndex = i
-                                break
-                        }
-                }
+                var selectedIndex = selected.indexOf(keyName)
                 let newSelected = []
 
                 if (selectedIndex === -1) {
