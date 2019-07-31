@@ -163,8 +163,8 @@ function ObjConfig(props) {
 
 	return (
 		<div>
-			<p className="text-secondary">Last Modified {date.toLocaleString()}</p>
-			<pre>{data.data}</pre>
+			<Typography variant="caption" color="textSecondary">Last Modified {date.toLocaleString()}</Typography>
+			<pre style={{overflowX: "scroll"}}>{data.data}</pre>
 		</div>
 	)
 }
