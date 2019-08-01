@@ -29,6 +29,20 @@ function ObjActions(props) {
 			path = selected[0]
 		}
 	}
+	var disable_abort = () => {
+		for (var p of selected) {
+			for (var node in cstat.monitor.nodes) {
+				var idata = cstat.monitor.nodes[node].services.status[p]
+				if (!idata) {
+					continue
+				}
+				if (idata.monitor.status && (idata.monitor.status.indexOf("failed") < 0)) {
+					return false
+				}
+			}
+		}
+		return false
+	}
 	if (path) {
 		const odata = cstat.monitor.services[path]
 		const sp = splitPath(path)
@@ -91,12 +105,6 @@ function ObjActions(props) {
 			}
 			return false
 		}
-		var disable_abort = () => {
-			if (nInstances == 1) {
-				return false
-			}
-			return true
-		}
 		var disable_stop = () => {
 			if (odata.avail in {"down": null, "stdby down": null, "n/a": null}) {
 				return true
@@ -154,9 +162,6 @@ function ObjActions(props) {
 			return false
 		}
 		var disable_switch = () => {
-			return false
-		}
-		var disable_abort = () => {
 			return false
 		}
 		var disable_stop = () => {
