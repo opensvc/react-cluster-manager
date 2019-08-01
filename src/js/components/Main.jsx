@@ -18,6 +18,7 @@ import { NodeActions } from "./NodeActions.jsx";
 import { ObjScale } from "./ObjScale.jsx";
 import { User } from "./User.jsx";
 import { DeployButton } from "./DeployButton.jsx";
+import { ResourceAddButton } from "./ResourceAddButton.jsx";
 import { Fabs } from "./Fabs.jsx";
 import { Pools } from "./Pools.jsx";
 import { PoolAdd } from "./PoolAdd.jsx";
@@ -145,6 +146,7 @@ function Main(props) {
 					<ObjActions path={path} fab={true} />
 					<ObjKeyAdd path={path} />
 					<ObjScale path={path} />
+					<ResourceAddButton path={path} />
 				</Fabs>
 			</React.Fragment>
 		)

@@ -7,6 +7,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+import Switch from '@material-ui/core/Switch';
 
 const useStyles = makeStyles(theme => ({
 	formcontrol: {
@@ -17,11 +18,6 @@ const useStyles = makeStyles(theme => ({
 function SectionForm(props) {
 	const {kind, kws, data, setData} = props
 	const classes = useStyles()
-	const handleChange = kw => (e) => {
-		var newData = {...data}
-		newData[kw] = e.target.value
-		setData(newData)
-	}
 	var typeKw
 	for (var kw of kws) {
 		if (kw.keyword == "type") {
@@ -35,7 +31,7 @@ function SectionForm(props) {
 					label={kind + " Name"}
 					id="sectionName"
 					value={data.sectionName ? data.sectionName : ""}
-					onChange={handleChange("sectionName")}
+					onChange={e => setData({...data, "sectionName": e.target.value})}
 				/>
 			</FormControl>
 			{typeKw &&
@@ -43,7 +39,7 @@ function SectionForm(props) {
 				<Typography variant="caption" color="textSecondary">Type</Typography>
 				<Select
 					value={data.type ? data.type : ""}
-					onChange={handleChange("type")}
+					onChange={e => setData({...data, "type": e.target.value})}
 					inputProps={{
 						id: 'source',
 					}}
@@ -108,22 +104,25 @@ function Keyword(props) {
 		return null
 	}
 	const requiredError = (kwData.required && !data)
-	function handleChange(e) {
-		var newData = {...data}
-		newData[kwData.keyword] = e.target.value
-		console.log("CHANGE", data, "=>", newData)
-		setData(newData)
-	}
 	return (
 		<FormControl className={classes.formcontrol} fullWidth>
 			<Typography variant="caption" color="textSecondary">{kwData.keyword}</Typography>
-			{kwData.candidates &&
+			{kwData.convert == "boolean" &&
+			<Switch
+				checked={data[kwData.keyword] ? data[kwData.keyword] : kwData.default ? kwData.default : false}
+				onChange={e => setData({...data, [kwData.keyword]: e.target.checked})}
+				value={kwData.keyword}
+				color="primary"
+				inputProps={{ 'aria-label': 'primary checkbox' }}
+			/>
+			}
+			{(kwData.convert != "boolean") && kwData.candidates &&
 			<Select
 				inputProps={{
 					id: kwData.keyword,
 				}}
 				value={data[kwData.keyword] ? data[kwData.keyword] : kwData.default ? kwData.default : ""}
-				onChange={handleChange}
+				onChange={e => setData({...data, [kwData.keyword]: e.target.value})}
 				error={requiredError}
 			>
 				{kwData.candidates.map((v, i) => (
@@ -131,13 +130,13 @@ function Keyword(props) {
 				))}
 			</Select>
 			}
-			{!kwData.candidates &&
+			{(kwData.convert != "boolean") && !kwData.candidates &&
 			<TextField
 				autoComplete="off"
 				placeholder={kwData.default ? kwData.default.toString() : ""}
 				id={kwData.keyword}
 				value={data[kwData.keyword] ? data[kwData.keyword] : kwData.default ? kwData.default : ""}
-				onChange={handleChange}
+				onChange={e => setData({...data, [kwData.keyword]: e.target.value})}
 				error={requiredError}
 			/>
 			}
