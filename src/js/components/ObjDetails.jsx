@@ -101,7 +101,7 @@ function ObjMain(props) {
 		return <SvcMain path={props.path} />
 	} else if ((sp.kind == "cfg") || (sp.kind == "sec") || (sp.kind == "ccfg")) {
 		return <CfgMain path={props.path} />
-	} else if ((sp.kind == "usr") || (sp.kind == "sec") || (sp.kind == "ccfg")) {
+	} else if ((sp.kind == "usr") || (sp.kind == "ccfg")) {
 		return <UsrMain path={props.path} />
 	} else {
 		return null
@@ -109,6 +109,19 @@ function ObjMain(props) {
 }
 
 function CfgMain(props) {
+	const classes = useStyles()
+	const sp = splitPath(props.path)
+	return (
+		<React.Fragment>
+			<Typography variant="h5" component="h3">
+				Keys
+			</Typography>
+			<ObjKeys path={props.path} />
+		</React.Fragment>
+	)
+}
+
+function UsrMain(props) {
 	const classes = useStyles()
 	const sp = splitPath(props.path)
 	return (
