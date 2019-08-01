@@ -1,6 +1,7 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 import { splitPath } from '../utils.js';
+import { confirmations } from '../confirmations.js';
 import { apiInstanceAction } from "../api.js";
 import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
 
@@ -104,21 +105,25 @@ function ObjInstanceResourceActions(props) {
 			<ActionsSection name="impacting" color="warning" confirms={3}>
 				<ActionsItem value="stop" text="Stop" disabled={disable_stop()} requires={{role: "operator", namespace: sp.namespace}}
 					icon=<StopIcon />
+					confirmations={[confirmations.InstanceUnavail]}
 				/>
 				<ActionsItem value="provision" text="Provision" disabled={disable_provision()} requires={{role: "admin", namespace: sp.namespace}}
 					icon=<LabelIcon />
 				/>
 				<ActionsItem value="disable" text="Disable" disabled={disable_provision()} requires={{role: "operator", namespace: sp.namespace}}
 					icon=<PauseCircleFilledIcon />
+					confirmations={[confirmations.ResourceNoStatus]}
 				/>
 			</ActionsSection>
 			<ActionsDivider />
-			<ActionsSection name="dangerous" color="danger" confirms={6}>
+			<ActionsSection name="dangerous" color="danger">
 				<ActionsItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}}
 					icon=<DeleteIcon />
+					confirmations={[confirmations.ConfigLoss]}
 				/>
 				<ActionsItem value="unprovision" text="Unprovision" disabled={disable_unprovision()} requires={{role: "admin", namespace: sp.namespace}}
 					icon=<DeleteOutlineIcon />
+					confirmations={[confirmations.DataLoss]}
 				/>
 			</ActionsSection>
 		</Actions>

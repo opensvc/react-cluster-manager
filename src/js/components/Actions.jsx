@@ -22,8 +22,6 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Fab from '@material-ui/core/Fab';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
-const MenuContext = React.createContext({section: {}})
-
 const useStyles = makeStyles(theme => ({
 	root: {
 		width: '100%',
@@ -45,66 +43,44 @@ function ActionsDivider(props) {
 	)
 }
 
-const msg = {
-	SVCINT: "I understand the service will be interrupted.",
-	CFGDEL: "I understand the configuration will be lost.",
-	PURGE: "I understand the service data will be lost.",
-	FREEZE: "I understand the service orchestration will be paused.",
-	MOVE: "I understand the service will be unavailable during move.",
-	ORCHESTRATED: "I understand this action will be orchestrated clusterwide.",
-}
-
-const actionConfirmations = {
-	"stop": [msg.SVCINT, msg.FREEZE],
-	"stopped": [msg.SVCINT, msg.FREEZE, msg.ORCHESTRATED],
-	"delete": [msg.SVCINT, msg.CFGDEL],
-	"deleted": [msg.SVCINT, msg.CFGDEL, msg.ORCHESTRATED],
-	"purge": [msg.SVCINT, msg.CFGDEL, msg.PURGE],
-	"purged": [msg.SVCINT, msg.CFGDEL, msg.PURGE, msg.ORCHESTRATED],
-	"freeze": [msg.FREEZE],
-	"frozen": [msg.FREEZE, msg.ORCHESTRATED],
-	"giveback": [msg.MOVE],
-	"placed": [msg.MOVE, msg.ORCHESTRATED],
-	"switch": [msg.MOVE],
-	"placed@<peer>": [msg.MOVE, msg.ORCHESTRATED],
-}
-
 function ConfirmationDialog(props) {
 	const classes = useStyles()
-	const [action, setAction] = useState()
-	const [acks, setAcks] = useState([])
-	var confirmations = actionConfirmations[action]
-	if (confirmations === undefined) {
-		confirmations = []
-	}
-	if (!confirmations.length) {
-		var submitDisabled = false
-	} else if (confirmations.length == acks.length) {
-		var submitDisabled = false
-	} else {
-		var submitDisabled = true
+	const [data, setData] = useState({
+		action: null,
+		acks: [],
+		confirmations: [],
+	})
+
+	function submitDisabled() {
+		if (!data.confirmations) {
+			return false
+		} else if (!data.confirmations.length) {
+			return false
+		} else if (data.confirmations.length == data.acks.length) {
+			return false
+		} else {
+			return true
+		}
 	}
 
 	const handleAck = m => (e) => {
-		if (e.target.checked && acks.indexOf(m) < 0) {
-			var newAcks = [m].concat(acks)
-			setAcks(newAcks)
-		} else if (!e.target.checked && acks.indexOf(m) > -1) {
-			var newAcks = [].concat(acks)
-			newAcks.splice(acks.indexOf(m), 1)
-			setAcks(newAcks)
+		if (e.target.checked && data.acks.indexOf(m) < 0) {
+			var newAcks = [m].concat(data.acks)
+			setData({...data, acks: newAcks})
+		} else if (!e.target.checked && data.acks.indexOf(m) > -1) {
+			var newAcks = [].concat(data.acks)
+			newAcks.splice(data.acks.indexOf(m), 1)
+			setData({...data, acks: newAcks})
 		}
 	}
 	function handleCancel(e, m) {
 		props.handleClose()
-		setAcks([])
-		setAction(null)
+		setData({...data, acks: [], action: null})
 	}
 	function handleOk(e, m) {
-		props.submit({value: action})
+		props.submit({value: data.action})
 		props.handleClose()
-		setAcks([])
-		setAction(null)
+		setData({...data, acks: [], confirmations: [], action: null})
 	}
 	function handleEntering(e) {
 		console.log(e)
@@ -121,17 +97,17 @@ function ConfirmationDialog(props) {
 		>
 			<DialogTitle id="confirmation-dialog-title">Action</DialogTitle>
 			<DialogContent dividers>
-				<MenuContext.Provider value={{menu: props, action: action, setAction: setAction}}>
-					<List>
-						{props.children}
-					</List>
-				</MenuContext.Provider>
-				{(confirmations.length > 0) &&
+				<List>
+					{React.Children.toArray(props.children).map(child => (
+						React.cloneElement(child, {data: data, setData: setData})
+					))}
+				</List>
+				{(data.confirmations && data.confirmations.length > 0) &&
 				<FormControl component="fieldset" className={classes.formControl}>
-					{confirmations.map((m, i) => (
+					{data.confirmations.map((m, i) => (
 						<FormGroup key={i}>
 							<FormControlLabel
-								control={<Checkbox checked={acks.indexOf(m) > -1} onChange={handleAck(m)} value={m} />}
+								control={<Checkbox checked={data.acks.indexOf(m) > -1} onChange={handleAck(m)} value={m} />}
 								label={m}
 							/>
 						</FormGroup>
@@ -143,7 +119,7 @@ function ConfirmationDialog(props) {
 				<Button onClick={handleCancel} color="primary">
 					Cancel
 				</Button>
-				<Button onClick={handleOk} disabled={submitDisabled} color="secondary">
+				<Button onClick={handleOk} disabled={submitDisabled()} color="secondary">
 					Ok
 				</Button>
 			</DialogActions>
@@ -213,25 +189,21 @@ function Actions(props) {
 
 function ActionsSection(props) {
         return (
-		<MenuContext.Consumer>
-			{({ menu, action, setAction }) => (
-				<MenuContext.Provider value={{section: props, menu: menu, action: action, setAction: setAction}}>
-					<div>
-						{props.children}
-					</div>
-				</MenuContext.Provider>
-			)}
-		</MenuContext.Consumer>
+		<div>
+			{React.Children.toArray(props.children).map(child => (
+				React.cloneElement(child, {data: props.data, setData: props.setData})
+			))}
+		</div>
         )
 }
 
-function ActionsItemWrapped(props) {
+function ActionsItem(props) {
 	const [{user}, dispatch] = useStateValue()
-	if (props.action && (props.value != props.action)) {
+	if (props.data.action && (props.value != props.data.action)) {
 		return null
 	}
 	function handleClick(e) {
-		props.setAction(props.value)
+		props.setData({...props.data, action: props.value, confirmations: props.confirmations})
 	}
 	function intersectionLength(a1, a2) {
 		a1.filter(value => a2.includes(value))
@@ -266,26 +238,6 @@ function ActionsItemWrapped(props) {
 			<ListItemIcon>{props.icon}</ListItemIcon>
 			<ListItemText primary={props.text} />
 		</ListItem>
-	)
-}
-
-function ActionsItem(props) {
-	return (
-		<MenuContext.Consumer>
-			{({ menu, section, action, setAction }) => (
-				<ActionsItemWrapped
-					value={props.value}
-					text={props.text}
-					icon={props.icon}
-					disabled={props.disabled}
-					requires={props.requires}
-					setAction={setAction}
-					action={action}
-					menu={menu}
-					section={section}
-				/>
-			)}
-		</MenuContext.Consumer>
 	)
 }
 

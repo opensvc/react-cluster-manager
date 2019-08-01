@@ -3,6 +3,7 @@ import { useStateValue } from '../state.js';
 import { splitPath } from '../utils.js';
 import { apiObjSetMonitor } from "../api.js";
 import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
+import { confirmations } from "../confirmations.js"
 
 import CancelIcon from "@material-ui/icons/Cancel"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
@@ -179,44 +180,84 @@ function ObjActions(props) {
 		return (
 			<Actions path={path} node={props.node} title={props.title} submit={submit} fab={props.fab}>
 				<ActionsSection name="safe" color="secondary" confirms={0}>
-					<ActionsItem value="started" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: namespaces}}
+					<ActionsItem
+						value="started"
+						text="Start"
+						disabled={disable_start()}
+						requires={{role: "operator", namespace: namespaces}}
 						icon=<PlayArrowIcon />
 					/>
-					<ActionsItem value="frozen" text="Freeze" disabled={disable_freeze()} requires={{role: "operator", namespace: namespaces}}
-						icon=<PauseCircleFilledIcon />
-					/>
-					<ActionsItem value="thawed" text="Thaw" disabled={disable_thaw()} requires={{role: "operator", namespace: namespaces}}
+					<ActionsItem
+						value="thawed"
+						text="Thaw"
+						disabled={disable_thaw()}
+						requires={{role: "operator", namespace: namespaces}}
 						icon=<PauseCircleOutlineIcon />
 					/>
-					<ActionsItem value="placed" text="Giveback" disabled={disable_giveback()} requires={{role: "operator", namespace: namespaces}}
+					<ActionsItem
+						value="placed"
+						text="Giveback"
+						disabled={disable_giveback()}
+						requires={{role: "operator", namespace: namespaces}}
 						icon=<ShuffleIcon />
+						confirmations={[confirmations.UnavailDuringMove]}
 					/>
 					<ActionsItem value="placed@<peer>" text="Switch" disabled={disable_switch()} requires={{role: "operator", namespace: namespaces}}
 						icon=<ShuffleIcon />
+						confirmations={[confirmations.UnavailDuringMove]}
 					/>
 					<ActionsItem value="aborted" text="Abort" disabled={disable_abort()} requires={{role: "operator", namespace: namespaces}}
 						icon=<CancelIcon />
 					/>
 				</ActionsSection>
 				<ActionsDivider />
-				<ActionsSection name="impacting" color="warning" confirms={3}>
-					<ActionsItem value="stopped" text="Stop" disabled={disable_stop()} requires={{role: "operator", namespace: namespaces}}
+				<ActionsSection name="impacting" color="warning">
+					<ActionsItem
+						value="stopped"
+						text="Stop" disabled={disable_stop()}
+						requires={{role: "operator", namespace: namespaces}}
 						icon=<StopIcon />
+						confirmations={[confirmations.ObjUnavail, confirmations.ClusterWideEffect]}
 					/>
-					<ActionsItem value="provisioned" text="Provision" disabled={disable_provision()} requires={{role: "admin", namespace: namespaces}}
+					<ActionsItem
+						value="frozen"
+						text="Freeze"
+						disabled={disable_freeze()}
+						requires={{role: "operator", namespace: namespaces}}
+						icon=<PauseCircleFilledIcon />
+						confirmations={[confirmations.ObjOrchestrationDisabled]}
+					/>
+					<ActionsItem
+						value="provisioned"
+						text="Provision"
+						disabled={disable_provision()}
+						requires={{role: "admin", namespace: namespaces}}
 						icon=<LabelIcon />
 					/>
 				</ActionsSection>
 				<ActionsDivider />
 				<ActionsSection name="dangerous" color="danger" confirms={6}>
-					<ActionsItem value="purged" text="Purge" requires={{role: "admin", namespace: namespaces}}
+					<ActionsItem
+						value="purged"
+						text="Purge"
+						requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteForeverIcon />
+						confirmations={[confirmations.DataLoss, confirmations.ConfigLoss, confirmations.ClusterWideEffect, confirmations.ObjUnvail]}
 					/>
-					<ActionsItem value="unprovisioned" text="Unprovision" disabled={disable_unprovision()} requires={{role: "admin", namespace: namespaces}}
+					<ActionsItem
+						value="unprovisioned"
+						text="Unprovision"
+						disabled={disable_unprovision()}
+						requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteIcon />
+						confirmations={[confirmations.DataLoss, confirmations.ClusterWideEffect, confirmations.ObjUnvail]}
 					/>
-					<ActionsItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
+					<ActionsItem
+						value="deleted"
+						text="Delete"
+						requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteOutlineIcon />
+						confirmations={[confirmations.ConfigLoss, confirmations.ClusterWideEffect]}
 					/>
 				</ActionsSection>
 			</Actions>
@@ -227,8 +268,12 @@ function ObjActions(props) {
 		return (
 			<Actions path={path} node={props.node} title={props.title} submit={submit} fab={props.fab}>
 				<ActionsSection name="dangerous" color="danger" confirms={6}>
-					<ActionsItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
+					<ActionsItem
+						value="deleted"
+						text="Delete"
+						requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteOutlineIcon />
+						confirmations={[confirmations.ConfigLoss, confirmations.ClusterWideEffect]}
 					/>
 				</ActionsSection>
 			</Actions>
@@ -237,8 +282,12 @@ function ObjActions(props) {
 		return (
 			<Actions path={path} node={props.node} title={props.title} submit={submit} fab={props.fab}>
 				<ActionsSection name="dangerous" color="danger" confirms={6}>
-					<ActionsItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
+					<ActionsItem
+						value="deleted"
+						text="Delete"
+						requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteOutlineIcon />
+						confirmations={[confirmations.ConfigLoss, confirmations.ClusterWideEffect]}
 					/>
 				</ActionsSection>
 			</Actions>
@@ -247,8 +296,12 @@ function ObjActions(props) {
 		return (
 			<Actions path={path} node={props.node} title={props.title} submit={submit} fab={props.fab}>
 				<ActionsSection name="dangerous" color="danger" confirms={6}>
-					<ActionsItem value="deleted" text="Delete" requires={{role: "admin", namespace: namespaces}}
+					<ActionsItem
+						value="deleted"
+						text="Delete"
+						requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteOutlineIcon />
+						confirmations={[confirmations.ConfigLoss, confirmations.ClusterWideEffect]}
 					/>
 				</ActionsSection>
 			</Actions>

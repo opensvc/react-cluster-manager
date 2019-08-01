@@ -1,6 +1,7 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 import { splitPath } from "../utils.js";
+import { confirmations } from "../confirmations.js";
 import { apiInstanceAction } from "../api.js";
 import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
 
@@ -132,9 +133,6 @@ function ObjInstanceActions(props) {
 					<ActionsItem value="start" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: sp.namespace}}
 						icon=<PlayArrowIcon />
 					/>
-					<ActionsItem value="freeze" text="Freeze" disabled={disable_freeze()} requires={{role: "operator", namespace: sp.namespace}}
-						icon=<PauseCircleFilledIcon />
-					/>
 					<ActionsItem value="thaw" text="Thaw" disabled={disable_thaw()} requires={{role: "operator", namespace: sp.namespace}}
 						icon=<PauseCircleOutlineIcon />
 					/>
@@ -152,24 +150,33 @@ function ObjInstanceActions(props) {
 				<ActionsSection name="impacting" color="warning" confirms={3}>
 					<ActionsItem value="stop" text="Stop" disabled={disable_stop()} requires={{role: "operator", namespace: sp.namespace}}
 						icon=<StopIcon />
+						confirmations={[confirmations.InstanceUnavail]}
+					/>
+					<ActionsItem value="freeze" text="Freeze" disabled={disable_freeze()} requires={{role: "operator", namespace: sp.namespace}}
+						icon=<PauseCircleFilledIcon />
+						confirmations={[confirmations.InstanceFailoverDisabled, confirmations.InstanceResourceMonDisabled]}
 					/>
 					<ActionsItem value="provision" text="Provision" disabled={disable_provision()} requires={{role: "admin", namespace: sp.namespace}}
 						icon=<LabelIcon />
 					/>
 					<ActionsItem value="disable" text="Disable" disabled={disable_provision()} requires={{role: "operator", namespace: sp.namespace}}
 						icon=<PauseCircleFilledIcon />
+						confirmations={[confirmations.InstanceNoStatus]}
 					/>
 				</ActionsSection>
 				<ActionsDivider />
 				<ActionsSection name="dangerous" color="danger" confirms={6}>
 					<ActionsItem value="purge" text="Purge" requires={{role: "admin", namespace: sp.namespace}}
 						icon=<DeleteForeverIcon />
+						confirmations={[confirmations.DataLoss, confirmations.ConfigLoss, confirmations.InstanceUnavail]}
 					/>
 					<ActionsItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}}
 						icon=<DeleteIcon />
+						confirmations={[confirmations.ConfigLoss]}
 					/>
 					<ActionsItem value="unprovision" text="Unprovision" disabled={disable_unprovision()} requires={{role: "admin", namespace: sp.namespace}}
 						icon=<DeleteOutlineIcon />
+						confirmations={[confirmations.DataLoss, confirmations.InstanceUnavail]}
 					/>
 				</ActionsSection>
 			</Actions>
@@ -181,6 +188,8 @@ function ObjInstanceActions(props) {
 			<Actions path={props.path} node={props.node} title={props.title} submit={submit} fab={props.fab}>
 				<ActionsSection name="dangerous" color="danger" confirms={6}>
 					<ActionsItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}}
+						icon=<DeleteIcon />
+						confirmations={[confirmations.ConfigLoss]}
 					/>
 				</ActionsSection>
 			</Actions>
@@ -190,6 +199,8 @@ function ObjInstanceActions(props) {
 			<Actions path={props.path} node={props.node} title={props.title} submit={submit} fab={props.fab}>
 				<ActionsSection name="dangerous" color="danger" confirms={6}>
 					<ActionsItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}}
+						icon=<DeleteIcon />
+						confirmations={[confirmations.ConfigLoss]}
 					/>
 				</ActionsSection>
 			</Actions>
@@ -199,6 +210,8 @@ function ObjInstanceActions(props) {
 			<Actions path={props.path} node={props.node} title={props.title} submit={submit} fab={props.fab}>
 				<ActionsSection name="dangerous" color="danger" confirms={6}>
 					<ActionsItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}}
+						icon=<DeleteIcon />
+						confirmations={[confirmations.ConfigLoss]}
 					/>
 				</ActionsSection>
 			</Actions>

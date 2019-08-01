@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { apiNodeSetMonitor } from "../api.js";
+import { confirmations } from "../confirmations.js";
 import { Actions, ActionsSection, ActionsItem } from './Actions.jsx';
 
 import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled"
@@ -37,9 +38,10 @@ function ClusterActions(props) {
 	}
 	return (
 		<Actions title={props.title} submit={submit} position={props.position} fab={props.fab}>
-			<ActionsSection name="safe" color="secondary" confirms={0}>
+			<ActionsSection name="safe" color="secondary">
 				<ActionsItem value="frozen" text="Freeze Nodes" disabled={disable_freeze()} requires={{role: "root"}}
 					icon=<PauseCircleFilledIcon />
+					confirmations={[confirmations.OrchestrationDisabled]}
 				/>
 				<ActionsItem value="thawed" text="Thaw Nodes" disabled={disable_thaw()} requires={{role: "root"}}
 					icon=<PauseCircleOutlineIcon />
