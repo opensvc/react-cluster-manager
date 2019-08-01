@@ -21,12 +21,12 @@ const kinds = [
 		icon: <SaveIcon />,
 	},
 	{
-		name: "sec",
-		icon: <LockIcon />,
-	},
-	{
 		name: "cfg",
 		icon: <LockOpenIcon />,
+	},
+	{
+		name: "sec",
+		icon: <LockIcon />,
 	},
 	{
 		name: "usr",
