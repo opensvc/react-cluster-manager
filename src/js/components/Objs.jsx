@@ -135,9 +135,9 @@ function getLines(props) {
 		return lines
 	}
 	if (filters.name) {
-		var reFilters = RegExp(filters.name, "i")
+		var reName = RegExp(filters.name, "i")
 	} else {
-		var reFilters = null
+		var reName = null
 	}
 	if (filters.namespace) {
 		var reNamespace = RegExp(filters.namespace, "i")
@@ -163,7 +163,7 @@ function getLines(props) {
 			}
 		}
 		try {
-			if (reName && !rename.test(sp.name)) {
+			if (reName && !reName.test(sp.name)) {
 				continue
 			}
 		} catch (e) {}
