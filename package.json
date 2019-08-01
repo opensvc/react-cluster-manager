@@ -7,7 +7,11 @@
     "mode": "development"
   },
   "scripts": {
-    "build": "webpack --mode $npm_package_config_mode"
+    "cleanup": "rm -f src/version.js",
+    "pkgversion": "echo \"export const version = \\\"$npm_package_version\\\"\" >> src/version.js",
+    "commit": "echo \"export const commit = \\\"$(git log --max-count=1 --pretty=format:%H)\\\"\" >> src/version.js",
+    "dumpversion": "npm run cleanup && npm run pkgversion && npm run commit",
+    "build": "npm run dumpversion && webpack --mode $npm_package_config_mode"
   },
   "keywords": [],
   "author": "OpenSVC SAS",
