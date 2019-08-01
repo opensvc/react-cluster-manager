@@ -60,12 +60,12 @@ _echo "=> creating tar.gz bundle in <$BUNDLE_DIR>"
 _echo "=> displaying bundle content in <${DEPLOY_NODE}:$BUNDLE_DIR>"
 _ssh "tar tzvf $BUNDLE_DIR/bundle"
 
-API_LATEST=$($SSH "cd $BUNDLE_DIR/.. && ls -1 | grep -v latest | tail -1")
+API_LATEST=$($SSH "cd $BUNDLE_DIR/.. && ls -1 | grep -v current | tail -1")
 _echo "=> latest entry in $REPO_ROOT/$API_VERSION is $API_LATEST"
 
-_echo "=> creating latest symlink in $REPO_ROOT/$API_VERSION"
-_ssh "cd $REPO_ROOT/$API_VERSION && ln -sf $API_LATEST/bundle latest && ls -l $REPO_ROOT/$API_VERSION/latest"
+_echo "=> creating current symlink in $REPO_ROOT/$API_VERSION"
+_ssh "cd $REPO_ROOT/$API_VERSION && ln -sf $API_LATEST/bundle current && ls -l $REPO_ROOT/$API_VERSION/current"
 
-ROOT_LATEST=$($SSH "cd $REPO_ROOT && ls -1 | grep -v latest | sort -n | tail -1")
-_echo "=> creating latest symlink in $REPO_ROOT"
-_ssh "cd $REPO_ROOT && ln -sf $ROOT_LATEST/latest latest && ls -l $REPO_ROOT/latest"
+ROOT_LATEST=$($SSH "cd $REPO_ROOT && ls -1 | grep -v current | sort -n | tail -1")
+_echo "=> creating current symlink in $REPO_ROOT"
+_ssh "cd $REPO_ROOT && ln -sf $ROOT_LATEST/current current && ls -l $REPO_ROOT/current"
