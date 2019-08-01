@@ -172,7 +172,7 @@ function Keyword(props) {
 				error={requiredError}
 			>
 				{kwData.candidates.map((v, i) => (
-					<MenuItem key={i} value={v}>{v}</MenuItem>
+					<MenuItem key={i} value={v}>{v ? v : "None"}</MenuItem>
 				))}
 			</Select>
 		)
