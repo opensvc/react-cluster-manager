@@ -17,7 +17,7 @@ import { ObjKeyAdd } from "./ObjKeyAdd.jsx";
 import { NodeActions } from "./NodeActions.jsx";
 import { ObjScale } from "./ObjScale.jsx";
 import { User } from "./User.jsx";
-import { DeployButton } from "./Deploy.jsx";
+import { DeployButton } from "./DeployButton.jsx";
 import { Fabs } from "./Fabs.jsx";
 import { Pools } from "./Pools.jsx";
 import { PoolAdd } from "./PoolAdd.jsx";
@@ -129,7 +129,7 @@ function Main(props) {
 			<React.Fragment>
 				<Objs kind={objects[nav.links[n-1]]} />
 				<Fabs>
-					<DeployButton />
+					<DeployButton kind={objects[nav.links[n-1]]} />
 				</Fabs>
 			</React.Fragment>
 		)

@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 
 function TemplateSelectorDialog(props) {
 	const classes = useStyles()
-	const [search, setSearch] = useState()
+	const [search, setSearch] = useState("")
 	function handleCancel(e, m) {
 		props.handleClose()
 	}
@@ -44,7 +44,7 @@ function TemplateSelectorDialog(props) {
 		console.log(e)
 	}
 
-	if (search) {
+	if (search.length > 0) {
 		var re = RegExp(search, "i")
 		var options = props.options.filter(item => item.name.match(re))
 	} else {
@@ -57,6 +57,7 @@ function TemplateSelectorDialog(props) {
 			onEntering={handleEntering}
 			aria-labelledby="confirmation-dialog-title"
 			open={props.open}
+			onClose={handleCancel}
 		>
 			<DialogTitle id="confirmation-dialog-title">Template</DialogTitle>
 			<DialogContent dividers>
@@ -91,6 +92,7 @@ function TemplateSelectorDialog(props) {
 }
 
 function TemplateSelector(props) {
+	console.log("TemplateSelector, props", props)
 	if (props.options === undefined) {
 		return null
 	}

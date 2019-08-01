@@ -72,7 +72,7 @@ function renderInputComponent(props) {
 		error = true
 		helperText = "Must start with an aplha and continue with aplhanum, dot, underscore or hyphen."
 	} else if (other.namespaces.indexOf(other.value) < 0) {
-		if (other.allownew) {
+		if (other.allownew == "true") {
 			helperText = "New namespace"
 		} else {
 			error = true
@@ -148,9 +148,12 @@ function NamespaceSelector(props) {
 		namespaces = getNamespaces(cstat)
 	}
 	const classes = useStyles()
-	const [anchorEl, setAnchorEl] = useState(null)
+	const [anchorEl, _setAnchorEl] = useState(null)
 	const [stateSuggestions, setSuggestions] = useState([])
 
+	const setAnchorEl = node => {
+		_setAnchorEl(node)
+	}
 	const handleSuggestionsFetchRequested = ({ value }) => {
 		setSuggestions(getSuggestions(value, namespaces))
 	}
@@ -173,7 +176,6 @@ function NamespaceSelector(props) {
 		renderSuggestion,
 	};
 
-	console.log(props.selected)
 	return (
 		<div className={classes.root}>
 			<Autosuggest
@@ -191,7 +193,7 @@ function NamespaceSelector(props) {
 						shrink: true,
 					},
 					namespaces: namespaces,
-					allownew: isSquatter(user),
+					allownew: isSquatter(user).toString(),
 				}}
 				theme={{
 					suggestionsList: classes.suggestionsList,

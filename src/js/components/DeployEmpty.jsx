@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { useStateValue } from '../state.js';
 import { apiObjCreate } from "../api.js";
 import { nameValid } from "../utils.js";
 import { ObjKindSelector } from './ObjKindSelector.jsx';
 import { NamespaceSelector } from './NamespaceSelector.jsx';
 
-import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
@@ -22,58 +20,40 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function DeployEmpty(props) {
+	const {data, set} = props
 	const classes = useStyles()
-	const [{}, dispatch] = useStateValue();
-	const [kind, setKind] = useState("svc");
-	const [namespace, setNamespace] = useState();
-	const [name, setName] = useState();
-	function createEmpty(e) {
-		var path = [namespace, kind, name].join("/")
-		var data = {
-			namespace: namespace[0],
-			provision: false,
-			restore: true,
-			data: {}
-		}
-		data.data[path] = {}
-		apiObjCreate(data, (data) => dispatch({
-			type: "parseApiResponse",
-			ok: "Object " + path + " created",
-			data: data
-		}))
-	}
+
 	function handleObjKindClick(e, kind) {
-		setKind(kind)
+		set({...data, kind: kind})
 	}
 	return (
 		<div>
 			<Typography className={classes.desc} component="p" color="textSecondary">
-				Deploy an empty service to a single node, to configure later.
+				Deploy an empty object to a single node, to configure later.
 			</Typography>
 			<FormControl className={classes.formcontrol} fullWidth>
 				<NamespaceSelector
 					id="namespace"
 					role="admin"
 					placeholder="test"
-					onChange={($) => setNamespace($)}
-					selected={namespace}
+					onChange={($) => set({...data, namespace: $})}
+					selected={data.namespace}
 				/>
 			</FormControl>
 			<FormControl className={classes.formcontrol} fullWidth>
-				<ObjKindSelector id="kind" value={kind} onChange={handleObjKindClick} />
+				<ObjKindSelector id="kind" value={data.kind} onChange={handleObjKindClick} />
 			</FormControl>
 			<FormControl className={classes.formcontrol} fullWidth>
 				<TextField
 					fullWidth
-					error={!nameValid(name)}
+					error={!nameValid(data.name)}
 					id="name"
 					label="Name"
-					onChange={(e) => setName(e.target.value)}
+					onChange={(e) => set({...data, name: e.target.value})}
 					autoComplete="off"
-					helperText={!nameValid(name) && "Must start with an aplha and continue with aplhanum, dot, underscore or hyphen."}
+					helperText={!nameValid(data.name) && "Must start with an aplha and continue with aplhanum, dot, underscore or hyphen."}
 				/>
 			</FormControl>
-			<Button color="secondary" onClick={createEmpty}>Submit</Button>
 		</div>
 	)
 }

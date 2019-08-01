@@ -43,6 +43,11 @@ function ObjActive(props) {
 		if (idata.monitor === undefined) {
 			continue
 		}
+		if (idata.monitor.status && (idata.monitor.status.indexOf("failed") > -1)) {
+			return (
+				<PlayArrowIcon color="error" />
+			)
+		}
 		if (idata.monitor.global_expect || (idata.monitor.status != "idle")) {
 			return (
 				<Typography className={props.className} component="span">

@@ -30,6 +30,9 @@ const useStyles = makeStyles(theme => ({
 
 function CatalogSelectorDialog(props) {
 	const classes = useStyles()
+	if (!props.options) {
+		return null
+	}
 	function handleCancel(e, m) {
 		props.handleClose()
 	}
@@ -48,6 +51,7 @@ function CatalogSelectorDialog(props) {
 			onEntering={handleEntering}
 			aria-labelledby="confirmation-dialog-title"
 			open={props.open}
+			onClose={handleCancel}
 		>
 			<DialogTitle id="confirmation-dialog-title">Catalog</DialogTitle>
 			<DialogContent dividers>

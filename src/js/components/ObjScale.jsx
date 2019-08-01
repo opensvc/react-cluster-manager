@@ -32,6 +32,9 @@ function ObjScale(props) {
 	if (cstat.monitor === undefined) {
 		return null
 	}
+	if (cstat.monitor.services[path] === undefined) {
+		return null
+	}
 	if (!("scale" in cstat.monitor.services[path])) {
 		return null
 	}

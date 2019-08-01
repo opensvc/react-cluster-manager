@@ -129,6 +129,9 @@ function SvcMain(props) {
 	if (cstat.monitor === undefined) {
 		return null
 	}
+	if (cstat.monitor.services[props.path] === undefined) {
+		return null
+	}
 	if ("scale" in cstat.monitor.services[props.path]) {
 		var title = "Scaler"
 	} else if (cstat.monitor.services[props.path].scaler_slave) {

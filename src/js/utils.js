@@ -180,6 +180,14 @@ function nameValid(name) {
 	return true
 }
 
+function createDataHasPathKey() {
+	try {
+		return Object.keys(data.data)[0].match(/^[a-z]+[a-z0-9_\-\.]*\/[a-z]+\/[a-z]+[a-z0-9_\-\.]*$/i)
+	} catch(e) {
+		return false
+	}
+}
+
 export {
 	state,
 	mergeStates,
@@ -189,4 +197,5 @@ export {
 	fancySizeMB,
 	nameValid,
 	namespaceValid,
+	createDataHasPathKey,
 }

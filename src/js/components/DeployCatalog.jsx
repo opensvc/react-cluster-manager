@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useStateValue } from '../state.js';
+import { useCatalogs } from '../hooks/Catalogs.jsx';
+import { useCatalogTemplates } from '../hooks/CatalogTemplates.jsx';
 import { apiPostAny, apiObjGetConfig, apiObjCreate } from "../api.js";
-import { nameValid, namespaceValid, parseIni } from "../utils.js";
+import { nameValid, namespaceValid, parseIni, createDataHasPathKey } from "../utils.js";
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { NamespaceSelector } from './NamespaceSelector.jsx';
 import { TemplateSelector } from './TemplateSelector.jsx';
@@ -13,7 +15,6 @@ import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
         desc: {
@@ -29,98 +30,39 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function DeployCatalog(props) {
-	const [{
-		catalogs,
-		deployCatalogCatalog,
-		deployCatalogTemplates,
-		deployCatalogTemplate,
-		deployCatalogText,
-		deployCatalogData,
-		deployCatalogName,
-		deployCatalogNamespace
-	}, dispatch] = useStateValue()
-	const [envs, setEnvs] = useState({})
+	const {data, set} = props
 	const classes = useStyles()
+	const catalogs = useCatalogs()
+	if ((catalogs.length > 0) && !data.catalog) {
+		set({...data, catalog: catalogs[0]})
+	}
+	const templates = useCatalogTemplates(data.catalog ? data.catalog.name : null)
 
-	function loadCatalog(catalog) {
-		apiPostAny("/get_templates", {catalog: deployCatalogCatalog.name}, (data) => {
-			dispatch({"type": "setDeployCatalogTemplates", "value": data})
-		})
-	}
 	function loadTemplate(template) {
-		apiPostAny("/get_template", {catalog: deployCatalogCatalog.name, template: template.id}, (buff) => {
-			dispatch({"type": "setDeployCatalogText", "value": buff})
-			dispatch({"type": "setDeployCatalogData", "value": toData(buff)})
+		apiPostAny("/get_template", {catalog: data.catalog.name, template: template.id}, (buff) => {
+			console.log(buff)
+			set({...data, template: template, text: buff, data: toData(buff)})
 		})
-	}
-	function templateValid(template) {
-		if (template.id === undefined) {
-			return false
-		}
-		return true
-	}
-	function catalogValid(catalog) {
-		console.log("validation catalog", catalog)
-		if (catalog === undefined) {
-			return false
-		}
-		return true
 	}
 	function handleCatalogChange(selected) {
-		dispatch({"type": "setDeployCatalogCatalog", "value": selected})
-		if (catalogValid(selected)) {
-			loadCatalog(selected)
-		}
+		console.log("selected catalog:", selected)
+		set({...data, catalog: selected})
 	}
 	function handleCatalogTemplateChange(selected) {
-		dispatch({"type": "setDeployCatalogTemplate", "value": selected})
-		if (templateValid(selected)) {
+		console.log("selected template:", selected)
+		if (selected.id !== undefined) {
 			loadTemplate(selected)
 		}
 	}
 	function handleNameChange(e) {
-		var oldpath = deployCatalogNamespace+"/svc/"+deployCatalogName
-		var newpath = deployCatalogNamespace+"/svc/"+e.target.value
-		if (path in envs) {
-			var newEnvs = {...envs}
-			newEnvs[newpath] = envs[oldpath]
+		var oldpath = data.namespace+"/svc/"+data.name
+		var newpath = data.namespace+"/svc/"+e.target.value
+		var newEnvs = {...data["envs"]}
+		if (path in data.envs) {
+			newEnvs[newpath] = data.envs[oldpath]
 			delete newEnvs[oldpath]
-			setEnvs(newEnvs)
 		}
-		dispatch({"type": "setDeployCatalogName", "value": e.target.value})
-	}
-	function handleSubmit(e) {
-		event.preventDefault()
-		if (hasPathKey()) {
-			var data = {
-				"provision": true,
-				"namespace": deployCatalogNamespace,
-				"template": deployCatalogTemplate.id,
-				"data": envs
-			}
-			var nObj = Object.keys(data).length
-			if (nObj > 1) {
-				var ok = "Objects " + Object.keys(data) + " deployed."
-			} else {
-				var ok = "Object " + Object.keys(data) + " deployed."
-			}
-		} else {
-			var path = deployCatalogNamespace+"/svc/"+deployCatalogName
-			var data = {
-				"path": path,
-				"provision": true,
-				"namespace": deployCatalogNamespace,
-				"template": deployCatalogTemplate.id,
-				"data": envs
-			}
-			var ok = "Object " + path + " deployed."
-		}
-		console.log("submit", data)
-		apiObjCreate(data, (data) => dispatch({
-			type: "parseApiResponse",
-			ok: ok,
-			data: data
-		}))
+		set({...data, name: e.target.value, envs: newEnvs})
 	}
 	function toData(buff) {
 		try {
@@ -130,57 +72,50 @@ function DeployCatalog(props) {
 			return parseIni(buff)
 		} catch(e) {}
 	}
-	function hasPathKey() {
-		try {
-			return Object.keys(deployCatalogData)[0].match(/^[a-z]+[a-z0-9_\-\.]*\/[a-z]+\/[a-z]+[a-z0-9_\-\.]*$/i)
-		} catch(e) {
-			return false
-		}
-	}
 	function submitDisabled() {
-		if (!deployCatalogData) {
+		if (!data.data) {
 			return true
 		}
-		if (!namespaceValid(deployCatalogNamespace)) {
+		if (!namespaceValid(data.namespace)) {
 			return true
 		}
-		if (!hasPathKey()) {
-			if (!nameValid(deployCatalogName)) {
+		if (!createDataHasPathKey()) {
+			if (!nameValid(data.name)) {
 				return true
 			}
 		}
 		return false
 	}
 
-	function objEnv(path, data) {
+	function objEnv(path, envSection) {
 		var c = []
-		if (data === undefined) {
+		if (envSection === undefined) {
 			return []
 		}
-		for (var key in data) {
+		for (var key in envSection) {
 			if (key.match(/\./)) {
 				continue
 			}
 			var commentKey = key + ".comment"
 			var requiredKey = key + ".required"
-			var defaultValue = data[key] ? data[key] : ""
+			var defaultValue = envSection[key] ? envSection[key] : ""
 			try {
-				var value = envs[path][key]
+				var value = data.envs[path][key]
 			} catch(e) {}
 			if (value === undefined) {
 				value = defaultValue
-				var newEnvs = {...envs}
+				var newEnvs = {...data.envs}
 				if (!(path in newEnvs)) {
 					newEnvs[path] = {}
 				}
 				newEnvs[path][key] = value
-				setEnvs(newEnvs)
+				set({...data, envs: newEnvs})
 			}
 			var label = key
 			var id = path + "-" + key
 
-			if (commentKey in data) {
-				label = data[commentKey]
+			if (commentKey in envSection) {
+				label = envSection[commentKey]
 			}
 			c.push(
 				<FormControl key={id} className={classes.formcontrol} fullWidth>
@@ -193,14 +128,14 @@ function DeployCatalog(props) {
 						}}
 						value={value}
 						onChange={(e) => {
-							var newEnvs = {...envs}
+							var newEnvs = {...data.envs}
 							var key = e.target.getAttribute("kw")
 							var path = e.target.getAttribute("path")
 							if (!(path in newEnvs)) {
 								newEnvs[path] = {}
 							}
 							newEnvs[path][key] = e.target.value
-							setEnvs(newEnvs)
+							set({...data, envs: newEnvs})
 						}}
 					/>
 				</FormControl>
@@ -218,14 +153,14 @@ function DeployCatalog(props) {
 	}
 
 	var env = []
-	if (deployCatalogData) {
-		if (hasPathKey()) {
-			for (var path in deployCatalogData) {
-				env = env.concat(objEnv(path, deployCatalogData[path].env))
+	if (data.data) {
+		if (createDataHasPathKey()) {
+			for (var path in data.data) {
+				env = env.concat(objEnv(path, data.data[path].env))
 			}
-		} else if (deployCatalogNamespace && deployCatalogName) {
-			var path = deployCatalogNamespace+"/svc/"+deployCatalogName
-			env = env.concat(objEnv(path, deployCatalogData.env))
+		} else if (data.namespace && data.name) {
+			var path = data.namespace+"/svc/"+data.name
+			env = env.concat(objEnv(path, data.data.env))
 		}
 	}
 
@@ -239,19 +174,19 @@ function DeployCatalog(props) {
 				<CatalogSelector
 					options={catalogs}
 					onChange={handleCatalogChange}
-					selected={deployCatalogCatalog}
+					selected={data.catalog}
 				/>
 			</FormControl>
-			{(deployCatalogTemplates.length > 0) &&
+			{(templates.length > 0) &&
 			<FormControl className={classes.formcontrol} fullWidth>
 				<TemplateSelector
-					options={deployCatalogTemplates}
+					options={templates}
 					onChange={handleCatalogTemplateChange}
-					selected={deployCatalogTemplate}
+					selected={data.template}
 				/>
 			</FormControl>
 			}
-			{deployCatalogText &&
+			{data.text &&
 			<FormControl className={classes.formcontrol} fullWidth>
                                 <Typography variant="caption" color="textSecondary">Definition</Typography>
 				<TextareaAutosize
@@ -260,10 +195,10 @@ function DeployCatalog(props) {
 					className={classes.textarea}
 					rowsMax={20}
 					id="data"
-					value={deployCatalogText}
+					value={data.text}
 					onChange={(e) => {}}
 				/>
-				{(deployCatalogData == null) && <FormHelperText color="error">This deployment data is not recognized as valid ini nor json dataset.</FormHelperText>}
+				{(data.data == null) && <FormHelperText color="error">This deployment data is not recognized as valid ini nor json dataset.</FormHelperText>}
 			</FormControl>
 			}
 			<FormControl className={classes.formcontrol} fullWidth>
@@ -271,25 +206,25 @@ function DeployCatalog(props) {
 					id="namespace"
 					role="admin"
 					placeholder="test"
-					onChange={($) => dispatch({"type": "setDeployCatalogNamespace", "value": $})}
-					selected={deployCatalogNamespace}
+					onChange={($) => set({...data, namespace: $})}
+					selected={data.namespace}
 				/>
 			</FormControl>
-			{!hasPathKey() &&
+			{!createDataHasPathKey() &&
                         <FormControl className={classes.formcontrol} fullWidth>
                                 <TextField
                                         fullWidth
-                                        error={!nameValid(deployCatalogName)}
+                                        error={!nameValid(data.name)}
                                         id="name"
                                         label="Name"
                                         onChange={handleNameChange}
                                         autoComplete="off"
+				        value={data.name}
                                         helperText={!nameValid(name) && "Must start with an aplha and continue with aplhanum, dot, underscore or hyphen."}
                                 />
                         </FormControl>
 			}
 			{env}
-			<Button color="secondary" disabled={submitDisabled()} onClick={handleSubmit}>Submit</Button>
 		</div>
 	)
 }

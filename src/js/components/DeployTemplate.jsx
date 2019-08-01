@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { useStateValue } from '../state.js';
 import { apiPostAny, apiObjGetConfig, apiObjCreate } from "../api.js";
-import { nameValid, namespaceValid, parseIni } from "../utils.js";
+import { nameValid, namespaceValid, createDataHasPathKey, parseIni } from "../utils.js";
 import { NamespaceSelector } from './NamespaceSelector.jsx'
 
 import Button from '@material-ui/core/Button';
@@ -26,64 +25,24 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function DeployTemplate(props) {
+	const {data, set} = props
 	const classes = useStyles()
-	const [{
-		deployTemplateUri,
-		deployTemplateText,
-		deployTemplateData,
-		deployTemplateName,
-		deployTemplateNamespace
-	}, dispatch] = useStateValue()
 
 	function handleUriChange(e) {
-		dispatch({"type": "setDeployTemplateUri", "value": e.target.value})
+		set({...data, uri: e.target.value})
 	}
 	function handleTextChange(e) {
-		dispatch({"type": "setDeployTemplateText", "value": e.target.value})
-		dispatch({"type": "setDeployTemplateData", "value": toData(e.target.value)})
+		set({...data, text: e.target.value, data: toData(e.target.value)})
 	}
 	function handleNameChange(e) {
-		dispatch({"type": "setDeployTemplateName", "value": e.target.value})
+		set({...data, name: e.target.value})
 	}
 	function handleLoad(e) {
-		fetch(deployTemplateUri)
+		fetch(data.uri)
 			.then(res => res.text())
 			.then(buff => {
-				dispatch({"type": "setDeployTemplateText", "value": buff})
-				dispatch({"type": "setDeployTemplateData", "value": toData(buff)})
+				set({...data, text: buff, data: toData(buff)})
 			})
-	}
-	function handleSubmit(e) {
-		event.preventDefault()
-		if (hasPathKey()) {
-			var data = {
-				"provision": true,
-				"namespace": deployTemplateNamespace,
-				"data": deployTemplateData
-			}
-			var nObj = Object.keys(data).length
-			if (nObj > 1) {
-				var ok = "Objects " + Object.keys(data) + " deployed."
-			} else {
-				var ok = "Object " + Object.keys(data) + " deployed."
-			}
-		} else {
-			var path = deployTemplateNamespace+"/svc/"+deployTemplateName
-			var data = {
-				"provision": true,
-				"namespace": deployTemplateNamespace,
-				"data": {
-					[path]: deployTemplateData
-				}
-			}
-			var ok = "Object " + path + " deployed."
-		}
-		console.log("submit", data)
-		apiObjCreate(data, (data) => dispatch({
-			type: "parseApiResponse",
-			ok: ok,
-			data: data
-		}))
 	}
 	function toData(buff) {
 		try {
@@ -93,22 +52,15 @@ function DeployTemplate(props) {
 			return parseIni(buff)
 		} catch(e) {}
 	}
-	function hasPathKey() {
-		try {
-			return Object.keys(deployTemplateData)[0].match(/^[a-z]+[a-z0-9_\-\.]*\/[a-z]+\/[a-z]+[a-z0-9_\-\.]*$/i)
-		} catch(e) {
-			return false
-		}
-	}
 	function submitDisabled() {
-		if (!deployTemplateData) {
+		if (!data.data) {
 			return true
 		}
-		if (!namespaceValid(deployTemplateNamespace)) {
+		if (!namespaceValid(data.namespace)) {
 			return true
 		}
-		if (!hasPathKey()) {
-			if (!nameValid(deployTemplateName)) {
+		if (!createDataHasPathKey(data.data)) {
+			if (!nameValid(data.name)) {
 				return true
 			}
 		}
@@ -127,7 +79,7 @@ function DeployTemplate(props) {
 						id="uri"
 						label="Deployment Data URI"
 						onChange={handleUriChange}
-						value={deployTemplateUri}
+						value={data.uri}
 						style={{flexGrow: "1"}}
 					/>
 					<Button
@@ -146,33 +98,32 @@ function DeployTemplate(props) {
                                         rowsMax={20}
                                         id="data"
 					onChange={handleTextChange}
-                                        value={deployTemplateText}
+                                        value={data.text}
                                 />
-                                {(deployTemplateData == null) && <FormHelperText color="error">This deployment data is not recognized as valid ini nor json dataset.</FormHelperText>}
+                                {(data.data == null) && <FormHelperText color="error">This deployment data is not recognized as valid ini nor json dataset.</FormHelperText>}
 			</FormControl>
 			<FormControl className={classes.formcontrol} fullWidth>
 				<NamespaceSelector
 					id="namespace"
 					role="admin"
 					placeholder="test"
-					selected={deployTemplateNamespace}
-					onChange={($) => dispatch({"type": "setDeployTemplateNamespace", "value": $})}
+					selected={data.namespace}
+					onChange={($) => set({...data, namespace: $})}
 				/>
 			</FormControl>
-			{!hasPathKey() &&
+			{!createDataHasPathKey() &&
 			<FormControl className={classes.formcontrol} fullWidth>
 				<TextField
 					id="name"
 					label="Name"
-					error={!nameValid(deployTemplateName)}
+					error={!nameValid(data.name)}
 					onChange={handleNameChange}
-					value={deployTemplateName}
+					value={data.name}
 					autoComplete="off"
 					helperText="Must start with an aplha and continue with aplhanum, dot, underscore or hyphen."
 				/>
 			</FormControl>
 			}
-			<Button color="primary" disabled={submitDisabled()} onClick={handleSubmit}>Submit</Button>
 		</div>
 	)
 }

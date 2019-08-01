@@ -8,12 +8,9 @@ import { DeployTemplate } from "./DeployTemplate.jsx";
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 
 
 const useStyles = makeStyles(theme => ({
@@ -28,27 +25,6 @@ const useStyles = makeStyles(theme => ({
                 marginTop: theme.spacing(2),
         },
 }))
-
-function DeployButton(props) {
-	const [ {}, dispatch ] = useStateValue()
-	const classes = useStyles()
-	function handleClick(e) {
-		dispatch({
-			type: "setNav",
-			page: "Deploy",
-			links: ["Objects", "Deploy"]
-		})
-	}
-	return (
-		<Fab
-			color="primary"
-			onClick={handleClick}
-			className={classes.fab}
-		>
-			<AddIcon />
-		</Fab>
-	)
-}
 
 const tabs = [
         {
@@ -70,20 +46,20 @@ const tabs = [
 ]
 
 function Deploy(props) {
+	const {data, setData} = props
 	const classes = useStyles()
-        const [active, setActive] = useState(0)
 
+	const set = key => val => {
+		setData({...data, [key]: val})
+	}
         const handleChange = (event, newValue) => {
-                setActive(newValue)
+                set("active")(newValue)
         }
 
 	return (
-		<Paper className={classes.root}>
-			<Typography variant="h4" component="h2">
-				Deploy
-			</Typography>
+		<React.Fragment>
                         <Tabs
-                                value={active}
+                                value={data.active}
                                 onChange={handleChange}
                                 indicatorColor="primary"
                                 textColor="primary"
@@ -95,16 +71,15 @@ function Deploy(props) {
                                 ))}
                         </Tabs>
                         <Box className={classes.tabContent}>
-                                {active === 0 && <DeployEmpty />}
-                                {active === 1 && <DeployClone />}
-                                {active === 2 && <DeployCatalog />}
-                                {active === 3 && <DeployTemplate />}
+                                {data.active === 0 && <DeployEmpty data={data.empty} set={set("empty")} />}
+                                {data.active === 1 && <DeployClone data={data.clone} set={set("clone")} />}
+                                {data.active === 2 && <DeployCatalog data={data.catalog} set={set("catalog")} />}
+                                {data.active === 3 && <DeployTemplate data={data.template} set={set("template")} />}
                         </Box>
-		</Paper>
+		</React.Fragment>
 	)
 }
 
 export {
 	Deploy,
-	DeployButton
 }

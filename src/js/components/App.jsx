@@ -92,19 +92,6 @@ const StatefulApp = () => {
 			links: [],
 		},
 		alerts: [],      // ex: [{level: "warning", body: (<div>foo</div>)}],
-		deployTemplateUri: "",
-                deployTemplateText: "",
-                deployTemplateData: null,
-                deployTemplateName: "",
-                deployTemplateNamespace: "",
-		catalogs: [],
-		deployCatalogCatalog: null,
-		deployCatalogTemplates: [],
-		deployCatalogTemplate: null,
-		deployCatalogText: "",
-		deployCatalogData: null,
-		deployCatalogName: "",
-		deployCatalogNamespace: "",
 		logEventSources: {},
 		logs: {},
 	}
@@ -174,84 +161,6 @@ const StatefulApp = () => {
 				return {
 					...state,
 					alerts: new_alerts
-				}
-
-			case 'setDeployTemplateUri':
-				return {
-					...state,
-					deployTemplateUri: action.value
-				}
-
-			case 'setDeployTemplateText':
-				return {
-					...state,
-					deployTemplateText: action.value
-				}
-
-			case 'setDeployTemplateData':
-				return {
-					...state,
-					deployTemplateData: action.value
-				}
-
-			case 'setDeployTemplateName':
-				return {
-					...state,
-					deployTemplateName: action.value
-				}
-
-			case 'setDeployTemplateNamespace':
-				return {
-					...state,
-					deployTemplateNamespace: action.value
-				}
-
-			case 'setDeployCatalogNamespace':
-				return {
-					...state,
-					deployCatalogNamespace: action.value
-				}
-
-			case 'setDeployCatalogName':
-				return {
-					...state,
-					deployCatalogName: action.value
-				}
-
-			case 'setDeployCatalogText':
-				return {
-					...state,
-					deployCatalogText: action.value
-				}
-
-			case 'setDeployCatalogData':
-				return {
-					...state,
-					deployCatalogData: action.value
-				}
-
-			case 'setDeployCatalogCatalog':
-				return {
-					...state,
-					deployCatalogCatalog: action.value
-				}
-
-			case 'setDeployCatalogTemplates':
-				return {
-					...state,
-					deployCatalogTemplates: action.value
-				}
-
-			case 'setDeployCatalogTemplate':
-				return {
-					...state,
-					deployCatalogTemplate: action.value
-				}
-
-			case 'setCatalogs':
-				return {
-					...state,
-					catalogs: action.value
 				}
 
 			default:
@@ -372,33 +281,10 @@ class WrappedApp extends Component {
 			})
 		})
 	}
-	loadCatalogs() {
-		const [{}, dispatch] = this.context
-		apiPostAny("/get_catalogs", {}, (data) => {
-			console.log("catalogs", data)
-                        dispatch({
-				"type": "setCatalogs",
-				"value": data
-			})
-			if (data.length > 0) {
-				dispatch({
-					"type": "setDeployCatalogCatalog",
-					"value": data[0]
-				})
-				apiPostAny("/get_templates", {"catalog": data[0].name}, (data) => {
-					dispatch({
-						"type": "setDeployCatalogTemplates",
-						"value": data
-					})
-				})
-			}
-                })
-	}
 
 	componentDidMount() {
 		this.loadCstat()
 		this.loadUser()
-		this.loadCatalogs()
 		this.initEventSource()
 	}
 	componentWillUnmount() {
