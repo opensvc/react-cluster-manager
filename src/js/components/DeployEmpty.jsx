@@ -40,9 +40,11 @@ function DeployEmpty(props) {
 					selected={data.namespace}
 				/>
 			</FormControl>
+			{!data.kindForced &&
 			<FormControl className={classes.formcontrol} fullWidth>
 				<ObjKindSelector id="kind" value={data.kind} onChange={handleObjKindClick} />
 			</FormControl>
+			}
 			<FormControl className={classes.formcontrol} fullWidth>
 				<TextField
 					fullWidth

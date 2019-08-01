@@ -30,7 +30,7 @@ function DeployButton(props) {
                 empty: {
                         name: "",
                         namespace: "",
-                        kind: props.kind ? props.kind : "svc",
+                        kind: "svc",
                 },      
                 clone: {
 			src: null,
@@ -54,6 +54,9 @@ function DeployButton(props) {
                         namespace: "",
                 },
         })
+	if (props.kind && props.kind != data.empty.kind) {
+		setData({...data, empty: {...data.empty, kind: props.kind, kindForced: true}})
+	}
         function handleClick(e) {
                 e.stopPropagation()
                 setOpen(true)
