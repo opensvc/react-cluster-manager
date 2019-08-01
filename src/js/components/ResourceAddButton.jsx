@@ -49,6 +49,9 @@ function ResourceAddButton(props) {
 			if (k == "sectionName") {
 				continue
 			}
+			if (!data.keywords[k]) {
+				continue
+			}
 			kws.push(section+"."+k+"="+data.keywords[k])
 		}
 		var _data = {
@@ -60,6 +63,10 @@ function ResourceAddButton(props) {
                         ok: ok,
                         data: $
                 }))
+		setData({
+			kind: "",
+			keywords: {}
+		})
 		handleClose()
 	}
 

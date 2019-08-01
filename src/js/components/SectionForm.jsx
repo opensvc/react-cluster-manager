@@ -8,6 +8,7 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Switch from '@material-ui/core/Switch';
+import Slider from '@material-ui/core/Slider';
 
 const useStyles = makeStyles(theme => ({
 	formcontrol: {
@@ -104,10 +105,9 @@ function Keyword(props) {
 		return null
 	}
 	const requiredError = (kwData.required && !data)
-	return (
-		<FormControl className={classes.formcontrol} fullWidth>
-			<Typography variant="caption" color="textSecondary">{kwData.keyword}</Typography>
-			{kwData.convert == "boolean" &&
+
+	if (kwData.convert == "boolean") {
+		var el = (
 			<Switch
 				checked={data[kwData.keyword] ? data[kwData.keyword] : kwData.default ? kwData.default : false}
 				onChange={e => setData({...data, [kwData.keyword]: e.target.checked})}
@@ -115,8 +115,54 @@ function Keyword(props) {
 				color="primary"
 				inputProps={{ 'aria-label': 'primary checkbox' }}
 			/>
+		)
+	} else if (kwData.convert == "tristate") {
+		const marks = [
+			{
+				value: 0,
+				label: 'False',
+				realValue: false,
+			},
+			{
+				value: 1,
+				label: 'Ignore',
+				realValue: null,
+			},
+			{
+				value: 2,
+				label: 'True',
+				realValue: true,
+			},
+		]
+		function getMarkByRealValue(value) {
+			var idx = marks.findIndex(mark => mark.realValue === value)
+			if (idx < 0) {
+				return marks[1]
 			}
-			{(kwData.convert != "boolean") && kwData.candidates &&
+			return marks[idx];
+		}
+		function getMark(value) {
+			var idx = marks.findIndex(mark => mark.value === value)
+			if (idx < 0) {
+				return marks[1]
+			}
+			return marks[idx];
+		}
+		var el = (
+			<Slider
+				defaultValue={getMarkByRealValue(kwData.default).value}
+				valueLabelFormat={v => getMark(v).label}
+				aria-labelledby="discrete-slider-restrict"
+				step={1}
+				min={0}
+				max={2}
+				valueLabelDisplay="off"
+				marks={marks}
+				onChange={(e, v) => setData({...data, [kwData.keyword]: getMark(v).realValue})}
+			/>
+		)
+	} else if (kwData.candidates) {
+		var el = (
 			<Select
 				inputProps={{
 					id: kwData.keyword,
@@ -129,8 +175,9 @@ function Keyword(props) {
 					<MenuItem key={i} value={v}>{v}</MenuItem>
 				))}
 			</Select>
-			}
-			{(kwData.convert != "boolean") && !kwData.candidates &&
+		)
+	} else {
+		var el = (
 			<TextField
 				autoComplete="off"
 				placeholder={kwData.default ? kwData.default.toString() : ""}
@@ -139,7 +186,14 @@ function Keyword(props) {
 				onChange={e => setData({...data, [kwData.keyword]: e.target.value})}
 				error={requiredError}
 			/>
-			}
+		)
+	}
+
+
+	return (
+		<FormControl className={classes.formcontrol} fullWidth>
+			<Typography variant="caption" color="textSecondary">{kwData.keyword}</Typography>
+			{el}
 			<FormHelperText>{kwData.text}</FormHelperText>
 			{requiredError && <FormHelperText>This keyword is required.</FormHelperText>}
 		</FormControl>
