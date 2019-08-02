@@ -35,7 +35,6 @@ function formatKeywordText(text) {
 		return text
 	}
 	var parts = text.split(re)
-	console.log(parts)
 	for (var i = 1; i < parts.length; i += 4) {
 		if (parts[i]) {
 			parts[i] = <span className={classes.cmd} key={i}>{parts[i]}</span>

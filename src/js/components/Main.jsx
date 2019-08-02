@@ -64,20 +64,20 @@ function Main(props) {
 	}
 	var n = nav.links.length
 	if (nav.page == "ObjectInstance") {
+		var path = nav.links[n-2]
+		var node = nav.links[n-1]
 		return (
 			<React.Fragment>
-				<ObjInstanceDetails
-					path={nav.links[n-2]}
-					node={nav.links[n-1]}
-				/>
+				<ObjInstanceDetails path={path} node={node} />
 				<Fabs>
 					<ObjInstanceActions
 						selected={[{
-							path: nav.links[n-2],
-							node: nav.links[n-1],
+							path: path,
+							node: node,
 						}]}
 						fab={true}
 					/>
+					<ResourceAddButton path={path} />
 				</Fabs>
 			</React.Fragment>
 		)
