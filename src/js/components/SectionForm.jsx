@@ -14,7 +14,39 @@ const useStyles = makeStyles(theme => ({
 	formcontrol: {
 		margin: theme.spacing(2, 0),
 	},
+	kw: {
+		fontFamily: "monospace",
+		color: theme.palette.primary.main,
+	},
+	cmd: {
+		fontFamily: "monospace",
+		color: theme.palette.primary.main,
+	},
+	code: {
+		fontFamily: "monospace",
+		fontWeight: "bold",
+	},
 }))
+
+function formatKeywordText(text) {
+	const classes = useStyles()
+	const re = RegExp(":cmd:`(.*?)`|:kw:`(.*?)`|``(.*?)``")
+	if (text === undefined) {
+		return text
+	}
+	var parts = text.split(re)
+	console.log(parts)
+	for (var i = 1; i < parts.length; i += 4) {
+		if (parts[i]) {
+			parts[i] = <span className={classes.cmd} key={i}>{parts[i]}</span>
+		} else if (parts[i+1]) {
+			parts[i+1] = <span className={classes.kw} key={i+1}>{parts[i+1]}</span>
+		} else if (parts[i+2]) {
+			parts[i+2] = <span className={classes.code} key={i+2}>{parts[i+2]}</span>
+		}
+	}
+	return <div>{parts}</div>
+}
 
 function SectionForm(props) {
 	const {kind, kws, data, setData} = props
@@ -185,6 +217,7 @@ function Keyword(props) {
 				value={data[kwData.keyword] ? data[kwData.keyword] : kwData.default ? kwData.default : ""}
 				onChange={e => setData({...data, [kwData.keyword]: e.target.value})}
 				error={requiredError}
+				type={kwData.convert == "integer" ? "number" : "text"}
 			/>
 		)
 	}
@@ -194,7 +227,7 @@ function Keyword(props) {
 		<FormControl className={classes.formcontrol} fullWidth>
 			<Typography variant="caption" color="textSecondary">{kwData.keyword}</Typography>
 			{el}
-			<FormHelperText>{kwData.text}</FormHelperText>
+			<FormHelperText>{formatKeywordText(kwData.text)}</FormHelperText>
 			{requiredError && <FormHelperText>This keyword is required.</FormHelperText>}
 		</FormControl>
 	)
