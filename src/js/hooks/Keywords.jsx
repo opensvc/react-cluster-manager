@@ -5,6 +5,7 @@ function useKeywords(kind) {
 	const [data, setData] = useState(null)
 
 	function getKeywords() {
+		console.log(kind, "keywords:", data)
 		if (data !== null) {
 			return
 		}

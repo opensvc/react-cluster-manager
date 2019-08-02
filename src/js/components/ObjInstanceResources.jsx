@@ -1,9 +1,12 @@
 import React from "react";
 import { useStateValue } from '../state.js';
+import { parseIni, splitPath } from '../utils.js';
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjProvisioned } from "./ObjProvisioned.jsx";
 import { ObjInstanceResourceActions } from "./ObjInstanceResourceActions.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
+import { SectionEdit } from "./SectionEdit.jsx";
+import { useObjConfig } from "../hooks/ObjConfig.jsx";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -20,8 +23,11 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 
 const useStyles = makeStyles(theme => ({
         tableWrapper: {
-                overflowX: 'auto',
+                overflowX: "auto",
         },
+	iconText: {
+		display: "flex",
+	},
 }))
 
 function ObjInstanceResources(props) {
@@ -33,10 +39,17 @@ function ObjInstanceResources(props) {
 	if (cstat.monitor === undefined) {
 		return null
 	}
+	const conf = useObjConfig(props.path)
 	const classes = useStyles()
 	const rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources
 	const [selected, setSelected] = React.useState([])
+	const sp = splitPath(props.path)
 	var rowCount = Object.keys(rdata).length
+        if (!conf || !conf.data) {
+		var configData = {}
+        } else {
+		var configData = parseIni(conf.data)
+	}
 
         function handleSelectAllClick(event) {
                 if (event.target.checked) {
@@ -90,6 +103,8 @@ function ObjInstanceResources(props) {
 							path={props.path}
 							selected={selected}
 							setSelected={setSelected}
+							conf={configData}
+							sp={sp}
 						/>
 					))}
 				</TableBody>
@@ -99,8 +114,9 @@ function ObjInstanceResources(props) {
 }
 
 function ObjInstanceResourceLine(props) {
-	const [{ cstat }, dispatch] = useStateValue();
-	const {index, node, path, rid, selected, setSelected} = props
+	const [{ cstat, user }, dispatch] = useStateValue();
+	const {index, node, path, rid, selected, setSelected, conf, sp} = props
+	const classes = useStyles()
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -137,7 +153,14 @@ function ObjInstanceResourceLine(props) {
                                         inputProps={{ 'aria-labelledby': labelId }}
                                 />
                         </TableCell>
-			<TableCell>{rid}</TableCell>
+			<TableCell>
+				<Typography component="div" noWrap className={classes.iconText}>
+					{(user.grant.admin.indexOf(sp.namespace) > -1) &&
+					<SectionEdit path={path} rid={rid} conf={conf} />
+					}
+					{rid}
+				</Typography>
+			</TableCell>
 			<TableCell><ObjAvail avail={rdata.status} /></TableCell>
 			<TableCell><ObjInstanceResourceState rid={rid} node={node} path={path} /></TableCell>
 			<TableCell>{rdata.label}</TableCell>

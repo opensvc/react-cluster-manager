@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
         root: {
                 padding: theme.spacing(3, 2),
                 marginTop: theme.spacing(3),
-		overflowX: "scroll",
+		overflowX: "auto",
         },
         section: {
                 marginBottom: theme.spacing(3),

@@ -12,6 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(theme => ({
         root: {
@@ -34,11 +35,10 @@ function ResourceAdd(props) {
 	const classes = useStyles()
 	const sp = splitPath(path)
 	const kws = useKeywords(sp.kind)
-	if (kws) {
-		var kinds = Object.keys(kws)
-	} else {
-		var kinds = []
+	if (!kws) {
+		return <CircularProgress />
 	}
+	var kinds = Object.keys(kws)
 
 	function set(v) {
 		setData({...data, keywords: v})
