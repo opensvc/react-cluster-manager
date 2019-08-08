@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 
 function formatKeywordText(text) {
 	const classes = useStyles()
-	const re = RegExp(":cmd:`(.*?)`|:kw:`(.*?)`|``(.*?)``")
+        const re = RegExp(":cmd:`(.*?)`|:kw:`(.*?)`|:opt:`(.*?)`|:c-.*:`(.*?)`|``(.*?)``")
 	if (text === undefined) {
 		return text
 	}
