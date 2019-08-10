@@ -24,6 +24,7 @@ import { Pools } from "./Pools.jsx";
 import { PoolAdd } from "./PoolAdd.jsx";
 import { Networks } from "./Networks.jsx";
 import { NetworkAdd } from "./NetworkAdd.jsx";
+import { NetworkDetails } from "./NetworkDetails.jsx"
 
 function Main(props) {
 	const [{ nav }, dispatch] = useStateValue();
@@ -89,6 +90,15 @@ function Main(props) {
 				<Fabs>
 					<NetworkAdd />
 				</Fabs>
+			</React.Fragment>
+		)
+	}
+	if (nav.links[n-2] == "Networks") {
+		return (
+			<React.Fragment>
+				<NetworkDetails
+					name={nav.links[n-1]}
+				/>
 			</React.Fragment>
 		)
 	}

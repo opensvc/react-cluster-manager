@@ -20,45 +20,47 @@ const useStyles = makeStyles(theme => ({
         },
 }))
 
-function getLines(data) {
-        if (!data) {
-                return []
-        }
-        var lines = []
-        for (var name in data) {
-                var _data = data[name]
-		_data.name = name
-                lines.push(_data)
-        }
-        return lines
-}
-
-function Networks(props) {
+function NetworkDetails(props) {
+	const {name} = props
 	const classes = useStyles()
-        const data = useNetworksStatus()
-	const [{}, dispatch] = useStateValue()
         function handleTitleClick(e) {
                 dispatch({
                         "type": "setNav",
-                        "page": "Networks",
-                        "links": ["Networks"],
+                        "page": name,
+                        "links": ["Network", name],
                 })
         }
-        var lines = getLines(data)
-
 	return (
 		<Paper id="nodes" className={classes.root}>
 			<Typography variant="h4" component="h3">
-                                <Link href="#" onClick={handleTitleClick}>Networks</Link>
+                                <Link href="#" onClick={handleTitleClick}>{name}</Link>
+                        </Typography>
+			<NetworkAddrs name={name} />
+		</Paper>
+	)
+}
+
+function NetworkAddrs(props) {
+	const {name} = props
+        const data = useNetworksStatus()
+	const [{}, dispatch] = useStateValue()
+	if (!data) {
+		return null
+	}
+        var lines = data[name].ips
+
+	return (
+		<React.Fragment>
+			<Typography variant="h5" component="h3">
+                                Addresses
                         </Typography>
                         <Table>
                                 <TableHead>
                                         <TableRow>
-                                                <TableCell>Name</TableCell>
-                                                <TableCell>Type</TableCell>
-						<TableCell>Network</TableCell>
-                                                <TableCell>Addresses</TableCell>
-                                                <TableCell>Usage</TableCell>
+                                                <TableCell>Address</TableCell>
+                                                <TableCell>Node</TableCell>
+						<TableCell>Service</TableCell>
+                                                <TableCell>Resource</TableCell>
                                         </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -67,7 +69,7 @@ function Networks(props) {
                                         ))}
                                 </TableBody>
                         </Table>
-		</Paper>
+		</React.Fragment>
 	)
 }
 
@@ -78,21 +80,20 @@ function NetworksLine(props) {
 		event.stopPropagation()
                 dispatch({
                         "type": "setNav",
-                        "page": data.name,
-                        "links": ["Networks", data.name]
+                        "page": props.name,
+                        "links": ["Networks", props.name]
                 })
         }
         return (
-                <TableRow onClick={handleLineClick}>
-                        <TableCell>{data.name}</TableCell>
-                        <TableCell>{data.type}</TableCell>
-                        <TableCell>{data.network}</TableCell>
-                        <TableCell>{data.used}</TableCell>
-                        <TableCell>{data.pct.toFixed(2)}%</TableCell>
+                <TableRow>
+                        <TableCell>{data.ip}</TableCell>
+                        <TableCell>{data.node}</TableCell>
+                        <TableCell>{data.path}</TableCell>
+                        <TableCell>{data.rid}</TableCell>
                 </TableRow>
         )
 }
 
 export {
-	Networks,
+	NetworkDetails,
 }
