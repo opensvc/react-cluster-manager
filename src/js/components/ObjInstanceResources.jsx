@@ -7,7 +7,9 @@ import { ObjInstanceResourceActions } from "./ObjInstanceResourceActions.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
 import { SectionEdit } from "./SectionEdit.jsx";
 import { useObjConfig } from "../hooks/ObjConfig.jsx";
+import { useColorStyles } from '../styles.js'
 
+import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
@@ -163,8 +165,37 @@ function ObjInstanceResourceLine(props) {
 			</TableCell>
 			<TableCell><ObjAvail avail={rdata.status} /></TableCell>
 			<TableCell><ObjInstanceResourceState rid={rid} node={node} path={path} /></TableCell>
-			<TableCell>{rdata.label}</TableCell>
+			<TableCell><ObjInstanceResourceDesc data={rdata} /></TableCell>
 		</TableRow>
+	)
+}
+
+function ObjInstanceResourceDesc(props) {
+	const {data} = props
+	const classes = useColorStyles()
+	var log = []
+	if (data.log) {
+		for (var i=0; i<data.log.length; i++) {
+			var line = data.log[i]
+			if (line.match(/^warn:/)) {
+				var color = "warn"
+			} else if (line.match(/^error:/)) {
+				var color = "error"
+			} else {
+				var color = "n/a"
+			}
+			log.push((
+				<Typography key={i} component="div" variant="caption" className={clsx(props.className, classes[color])}>
+					{line}
+				</Typography>
+			))
+		}
+	}
+	return (
+		<React.Fragment>
+			{data.label}
+			{log}
+		</React.Fragment>
 	)
 }
 
@@ -180,7 +211,6 @@ function ObjInstanceResourceState(props) {
 	}
 	const rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources[props.rid]
 	// disabled
-	// log warnings/errors/info
 	return (
 		<ObjProvisioned provisioned={rdata.provisioned && rdata.provisioned.state} />
 	)
