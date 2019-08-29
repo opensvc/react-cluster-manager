@@ -186,13 +186,17 @@ function ObjInstanceResourceFlags(props) {
 			remaining_restart = 0
 		}
 	}
+	var provisioned = null
+	if (data.provisioned) {
+		provisioned = data.provisioned.state
+	}
 	var flags = ""
 	flags += data.running ? "R" : "."
 	flags += data.monitor ? "M" : "."
 	flags += data.disable ? "D" : "."
 	flags += data.optional ? "O" : "."
 	flags += data.encap ? "E" : "."
-	flags += data.provisioned && data.provisioned.state ? "." : (data.provisioned == false) ? "P" : "/"
+	flags += provisioned ? "." : (provisioned == null) ? "/" : "P"
 	flags += data.standby ? "S" : "."
 	flags += !data.restart ? "." : remaining_restart < 10 ? remaining_restart : "+"
 	return (
