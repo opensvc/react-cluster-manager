@@ -1,13 +1,13 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 import { state } from '../utils.js';
-import { threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue } from "../issues.js";
+import { objectsIssue, threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue } from "../issues.js";
 import { Threads } from "./Threads.jsx";
 import { HeartbeatsDetails } from "./HeartbeatsDetails.jsx";
 import { ArbitratorsDetails } from "./ArbitratorsDetails.jsx";
 import { Nodes } from "./Nodes.jsx";
 import { Objs } from "./Objs.jsx";
-
+import { ClusterDigest } from "./ClusterDigest.jsx";
 
 function Cluster(props) {
 	const [{ cstat }, dispatch] = useStateValue();
@@ -35,13 +35,19 @@ function Cluster(props) {
 			<Nodes />
 		)
 	}
+	if (objectsIssue(cstat) != state.OPTIMAL) {
+		var objs = (
+			<Objs />
+		)
+	}
 	return (
 		<div>
+			<ClusterDigest />
 			{threads}
 			{heartbeats}
 			{arbitrators}
 			{nodes}
-			<Objs />
+			{objs}
 		</div>
 	)
 }
