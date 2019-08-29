@@ -78,39 +78,41 @@ function ObjInstanceResources(props) {
                                         </Tooltip>
                                 )}
                         </TableToolbar>
-			<Table>
-				<TableHead>
-					<TableRow className="text-secondary">
-						<TableCell padding="checkbox">
-							<Checkbox
-								indeterminate={selected.length > 0 && selected.length < rowCount}
-								checked={selected.length === rowCount}
-								onChange={handleSelectAllClick}
-								inputProps={{ 'aria-label': 'Select all' }}
+			<div style={{overflowX: "auto"}}>
+				<Table>
+					<TableHead>
+						<TableRow className="text-secondary">
+							<TableCell padding="checkbox">
+								<Checkbox
+									indeterminate={selected.length > 0 && selected.length < rowCount}
+									checked={selected.length === rowCount}
+									onChange={handleSelectAllClick}
+									inputProps={{ 'aria-label': 'Select all' }}
+								/>
+							</TableCell>
+							<TableCell>Id</TableCell>
+							<TableCell>Availability</TableCell>
+							<TableCell>Flags</TableCell>
+							<TableCell>Desc</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{Object.keys(rdata).sort().map((rid, i) => (
+							<ObjInstanceResourceLine
+								key={i}
+								index={i}
+								rid={rid}
+								node={props.node}
+								path={props.path}
+								selected={selected}
+								setSelected={setSelected}
+								conf={configData}
+								sp={sp}
 							/>
-						</TableCell>
-						<TableCell>Id</TableCell>
-						<TableCell>Availability</TableCell>
-						<TableCell>State</TableCell>
-						<TableCell>Desc</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{Object.keys(rdata).sort().map((rid, i) => (
-						<ObjInstanceResourceLine
-							key={i}
-							index={i}
-							rid={rid}
-							node={props.node}
-							path={props.path}
-							selected={selected}
-							setSelected={setSelected}
-							conf={configData}
-							sp={sp}
-						/>
-					))}
-				</TableBody>
-			</Table>
+						))}
+					</TableBody>
+				</Table>
+			</div>
 		</React.Fragment>
 	)
 }
@@ -122,7 +124,8 @@ function ObjInstanceResourceLine(props) {
 	if (cstat.monitor === undefined) {
 		return null
 	}
-	const rdata = cstat.monitor.nodes[node].services.status[path].resources[rid]
+	const idata = cstat.monitor.nodes[node].services.status[path]
+	const rdata = idata.resources[rid]
 	if (!rdata.status) {
 		return null
 	}
@@ -164,9 +167,38 @@ function ObjInstanceResourceLine(props) {
 				</Typography>
 			</TableCell>
 			<TableCell><ObjAvail avail={rdata.status} /></TableCell>
-			<TableCell><ObjInstanceResourceState rid={rid} node={node} path={path} /></TableCell>
+			<TableCell><ObjInstanceResourceFlags rid={rid} data={rdata} idata={idata} /></TableCell>
 			<TableCell><ObjInstanceResourceDesc data={rdata} /></TableCell>
 		</TableRow>
+	)
+}
+
+function ObjInstanceResourceFlags(props) {
+	const {rid, data, idata} = props
+	try {
+		var retries = idata.monitor.restart[rid]
+	} catch(e) {
+		var retries = 0
+	}
+	if (data.restart) {
+		var remaining_restart = data.restart - retries
+		if (remaining_restart < 0) {
+			remaining_restart = 0
+		}
+	}
+	var flags = ""
+	flags += data.running ? "R" : "."
+	flags += data.monitor ? "M" : "."
+	flags += data.disable ? "D" : "."
+	flags += data.optional ? "O" : "."
+	flags += data.encap ? "E" : "."
+	flags += data.provisioned && data.provisioned.state ? "." : (data.provisioned == false) ? "P" : "/"
+	flags += data.standby ? "S" : "."
+	flags += !data.restart ? "." : remaining_restart < 10 ? remaining_restart : "+"
+	return (
+		<pre>
+			{flags}
+		</pre>
 	)
 }
 
@@ -196,23 +228,6 @@ function ObjInstanceResourceDesc(props) {
 			{data.label}
 			{log}
 		</React.Fragment>
-	)
-}
-
-function ObjInstanceResourceState(props) {
-	//
-	// props.path
-	// props.node
-	// props.rid
-	//
-	const [{ cstat }, dispatch] = useStateValue();
-	if (cstat.monitor === undefined) {
-		return null
-	}
-	const rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources[props.rid]
-	// disabled
-	return (
-		<ObjProvisioned provisioned={rdata.provisioned && rdata.provisioned.state} />
 	)
 }
 
