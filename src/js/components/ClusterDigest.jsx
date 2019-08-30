@@ -38,14 +38,14 @@ function ClusterDigest(props) {
 	}
 	var namespaces = {}
 	var stats = {
-		memAvailMin: null,
-		memAvailMax: null,
 		memAvail: 0,
 		memTotal: 0,
-		swapAvailMin: null,
-		swapTotalMax: null,
+		memAvailMin: null,
+		memAvailMax: null,
 		swapAvail: 0,
 		swapTotal: 0,
+		swapAvailMin: null,
+		swapAvailMax: null,
 		loadAvg: 0,
 		loadAvgMin: null,
 		loadAvgMax: null,
@@ -55,17 +55,19 @@ function ClusterDigest(props) {
         }
 	for (var node in cstat.monitor.nodes) {
 		var n = cstat.monitor.nodes[node]
+		var memAvail = n.stats.mem_avail * n.stats.mem_total / 100
+		var swapAvail = n.stats.swap_avail * n.stats.swap_total / 100
 		stats.memTotal += n.stats.mem_total
-		stats.memAvail += n.stats.mem_avail
-		stats.swapAvail += n.stats.swap_avail
+		stats.memAvail += memAvail
 		stats.swapTotal += n.stats.swap_total
+		stats.swapAvail += swapAvail
 		stats.loadAvg += n.stats.load_15m
-		stats.loadAvgMin = stats.loadAvgMin === null ? n.stats.load_15m : Math.min(n.stats.load_15m, stats.loadAvg)
-		stats.memAvailMin = stats.memAvailMin === null ? n.stats.mem_avail : Math.min(n.stats.mem_avail, stats.memAvail)
-		stats.swapAvailMin = stats.swapAvailMin === null ? n.stats.swap_avail : Math.min(n.stats.swap_avail, stats.swapAvail)
-		stats.loadAvgMax = stats.loadAvgMax === null ? n.stats.load_15m : Math.max(n.stats.load_15m, stats.loadAvg)
-		stats.memAvailMax = stats.memAvailMax === null ? n.stats.mem_avail : Math.max(n.stats.mem_avail, stats.memAvail)
-		stats.swapAvailMax = stats.swapAvailMax === null ? n.stats.swap_avail : Math.max(n.stats.swap_avail, stats.swapAvail)
+		stats.memAvailMin = stats.memAvailMin === null ? memAvail : Math.min(memAvail, stats.memAvailMin)
+		stats.memAvailMax = stats.memAvailMax === null ? memAvail : Math.max(memAvail, stats.memAvailMax)
+		stats.swapAvailMin = stats.swapAvailMin === null ? swapAvail : Math.min(swapAvail, stats.swapAvailMin)
+		stats.swapAvailMax = stats.swapAvailMax === null ? swapAvail : Math.max(swapAvail, stats.swapAvailMax)
+		stats.loadAvgMin = stats.loadAvgMin === null ? n.stats.load_15m : Math.min(n.stats.load_15m, stats.loadAvgMin)
+		stats.loadAvgMax = stats.loadAvgMax === null ? n.stats.load_15m : Math.max(n.stats.load_15m, stats.loadAvgMax)
 	}
 	for (var path in cstat.monitor.services) {
 		var sp = splitPath(path)
