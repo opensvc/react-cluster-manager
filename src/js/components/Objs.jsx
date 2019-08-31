@@ -178,7 +178,7 @@ function getLines(props) {
 			}
 		} catch (e) {}
 
-		if (!withScalerSlaves && sp.name.match(/[^0-9]+\./)) {
+		if (!withScalerSlaves && sp.name.match(/^[0-9]+\./)) {
 			// discard scaler slaves
 			continue
 		}
