@@ -3,6 +3,8 @@ import { useStateValue } from '../state.js';
 import { state, fancySizeMB } from '../utils.js';
 import { threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue } from "../issues.js";
 import { splitPath } from "../utils.js";
+import { usePoolsStatus } from "../hooks/PoolsStatus.jsx"
+import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -21,13 +23,19 @@ const useStyles = makeStyles(theme => ({
                 overflowX: 'auto',
         },
         grid: {
-                marginTop: theme.spacing(2),
+                marginTop: theme.spacing(1),
+	},
+	item: {
+		minWidth: "10em",
 	},
 }))
 
 function ClusterDigest(props) {
         const [{ cstat }, dispatch] = useStateValue();
         const classes = useStyles()
+	const pools = usePoolsStatus()
+	const networks = useNetworksStatus()
+
 	var counts = {
 		svc: 0,
 		vol: 0,
@@ -76,16 +84,18 @@ function ClusterDigest(props) {
 	}
 	counts.nodes = cstat.cluster.nodes.length
 	counts.namespaces = Object.keys(namespaces).length
+	counts.pools = pools ? Object.keys(pools).length : "-"
+	counts.networks = networks ? Object.keys(networks).length : "-"
 	stats.memUse = 100*(stats.memTotal-stats.memAvail)/stats.memTotal
 	stats.swapUse = 100*(stats.swapTotal-stats.swapAvail)/stats.swapTotal
 
 	return (
                 <Paper id="nodes" className={classes.root}>
                         <Typography variant="h4" component="h3">
-                                <Link href="#">Digest</Link>
+                                <Link href="#">Cluster</Link>
                         </Typography>
 			<Grid container spacing={3} className={classes.grid}>
-				<Grid item xs>
+				<Grid item xs className={classes.item}>
 					<Typography variant="subtitle1" component="h3">
 						Memory
 					</Typography>
@@ -99,7 +109,7 @@ function ClusterDigest(props) {
 						<div>MaxAvail: {fancySizeMB(stats.memAvailMax)}</div>
 					</Typography>
 				</Grid>
-				<Grid item xs>
+				<Grid item xs className={classes.item}>
 					<Typography variant="subtitle1" component="h3">
 						Swap
 					</Typography>
@@ -113,7 +123,7 @@ function ClusterDigest(props) {
 						<div>MaxAvail: {fancySizeMB(stats.swapAvailMax)}</div>
 					</Typography>
 				</Grid>
-				<Grid item xs>
+				<Grid item xs className={classes.item}>
 					<Typography variant="subtitle1" component="h3">
 						Load
 					</Typography>
@@ -126,39 +136,52 @@ function ClusterDigest(props) {
 						<div>Max: {stats.loadAvgMax.toFixed(1)}</div>
 					</Typography>
 				</Grid>
-				<Grid item xs>
-					<Table>
-						<TableBody>
-							<TableRow>
-								<TableCell>Nodes</TableCell>
-								<TableCell>{counts.nodes}</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell>Namespaces</TableCell>
-								<TableCell>{counts.namespaces}</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell>Services</TableCell>
-								<TableCell>{counts.svc}</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell>Volumes</TableCell>
-								<TableCell>{counts.vol}</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell>Configs</TableCell>
-								<TableCell>{counts.cfg}</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell>Secrets</TableCell>
-								<TableCell>{counts.sec}</TableCell>
-							</TableRow>
-							<TableRow>
-								<TableCell>Users</TableCell>
-								<TableCell>{counts.usr}</TableCell>
-							</TableRow>
-						</TableBody>
-					</Table>
+				<Grid item xs className={classes.item}>
+					<Typography variant="subtitle1" component="h3">
+						Nodes
+					</Typography>
+					<Typography variant="h4" color="primary" component="h3">
+						{counts.nodes}
+					</Typography>
+				</Grid>
+				<Grid item xs className={classes.item}>
+					<Typography variant="subtitle1" component="h3">
+						Pools
+					</Typography>
+					<Typography variant="h4" color="primary" component="h3">
+						{counts.pools}
+					</Typography>
+				</Grid>
+				<Grid item xs className={classes.item}>
+					<Typography variant="subtitle1" component="h3">
+						Networks
+					</Typography>
+					<Typography variant="h4" color="primary" component="h3">
+						{counts.networks}
+					</Typography>
+				</Grid>
+				<Grid item xs className={classes.item}>
+					<Typography variant="subtitle1" component="h3">
+						Namespaces
+					</Typography>
+					<Typography variant="h4" color="primary" component="h3">
+						{counts.namespaces}
+					</Typography>
+				</Grid>
+				<Grid item xs className={classes.item}>
+					<Typography variant="subtitle1" component="h3">
+						Objects
+					</Typography>
+					<Typography variant="h4" color="primary" component="h3">
+						{counts.svc+counts.vol+counts.cfg+counts.sec+counts.usr}
+					</Typography>
+					<Typography variant="caption" color="textSecondary" component="h3">
+						<div>svc: {counts.svc}</div>
+						<div>vol: {counts.vol}</div>
+						<div>cfg: {counts.cfg}</div>
+						<div>sec: {counts.sec}</div>
+						<div>usr: {counts.usr}</div>
+					</Typography>
 				</Grid>
 			</Grid>
 		</Paper>
