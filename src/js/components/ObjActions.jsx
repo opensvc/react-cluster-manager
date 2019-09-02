@@ -242,7 +242,7 @@ function ObjActions(props) {
 						text="Purge"
 						requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteForeverIcon />
-						confirmations={[confirmations.DataLoss, confirmations.ConfigLoss, confirmations.ClusterWideEffect, confirmations.ObjUnvail]}
+						confirmations={[confirmations.DataLoss, confirmations.ConfigLoss, confirmations.ClusterWideEffect, confirmations.ObjUnavail]}
 					/>
 					<ActionsItem
 						value="unprovisioned"
@@ -250,7 +250,7 @@ function ObjActions(props) {
 						disabled={disable_unprovision()}
 						requires={{role: "admin", namespace: namespaces}}
 						icon=<DeleteIcon />
-						confirmations={[confirmations.DataLoss, confirmations.ClusterWideEffect, confirmations.ObjUnvail]}
+						confirmations={[confirmations.DataLoss, confirmations.ClusterWideEffect, confirmations.ObjUnavail]}
 					/>
 					<ActionsItem
 						value="deleted"
