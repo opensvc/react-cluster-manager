@@ -126,6 +126,55 @@ function OptionalKeywords(props) {
 	)
 }
 
+function SizeInput(props) {
+	const {setVal, val, requiredError} = props
+
+	function error(val) {
+		var u
+		const units = [
+			'', 'k', 'm', 'g', 't', 'p', 'e',
+			'b', 'kb', 'mb', 'gb', 'tb', 'pb', 'eb',
+			'ki', 'mi', 'gi', 'ti', 'pi', 'ei',
+			'kib', 'mib', 'gib', 'tib', 'pib', 'eib'
+		]
+
+		if ((val === undefined) || (val == "") || (val == null)) {
+			return requiredError
+		}
+
+		var c = val.split(/([0-9\.]+)/)
+
+		if (c.length != 3)  {
+			return true
+		}
+
+		if (c[0].trim() != "") {
+			return true
+		}
+
+		if (c[2] == "") {
+			u = units[0]
+		}
+		else {
+			u = c[2].trim()
+		}
+
+		if (units.indexOf(u) > -1) {
+			return false
+		}
+		return true
+	}
+
+	return (
+		<TextField
+			value={val}
+			error={error(val)}
+			requiredError={requiredError}
+			onChange={(e) => {setVal(e.target.value)}}
+		/>
+	)
+}
+
 function Keyword(props) {
 	const {kwData, data, setData} = props
 	const classes = useStyles()
@@ -146,6 +195,10 @@ function Keyword(props) {
 				color="primary"
 				inputProps={{ 'aria-label': 'primary checkbox' }}
 			/>
+		)
+	} else if (kwData.convert == "size") {
+		var el = (
+			<SizeInput setVal={(v)=>setData({...data, [kwData.keyword]: v})} val={data[kwData.keyword]} />
 		)
 	} else if (kwData.convert == "tristate") {
 		const marks = [
