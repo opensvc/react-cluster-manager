@@ -38,6 +38,9 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function ActionsDivider(props) {
+	if (props.data.action) {
+		return null
+	}
 	return (
 		<Divider />
 	)
