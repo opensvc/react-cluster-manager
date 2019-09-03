@@ -86,6 +86,7 @@ function ClusterDigest(props) {
 	counts.namespaces = Object.keys(namespaces).length
 	counts.pools = pools ? Object.keys(pools).length : "-"
 	counts.networks = networks ? Object.keys(networks).length : "-"
+	counts.heartbeats = Object.keys(cstat).filter(k=>k.match(/^hb#/)).length / 2
 	stats.memUse = 100*(stats.memTotal-stats.memAvail)/stats.memTotal
 	stats.swapUse = 100*(stats.swapTotal-stats.swapAvail)/stats.swapTotal
 
@@ -142,6 +143,14 @@ function ClusterDigest(props) {
 					</Typography>
 					<Typography variant="h4" color="primary" component="h3">
 						{counts.nodes}
+					</Typography>
+				</Grid>
+				<Grid item xs className={classes.item}>
+					<Typography variant="subtitle1" component="h3">
+						Heartbeats
+					</Typography>
+					<Typography variant="h4" color="primary" component="h3">
+						{counts.heartbeats}
 					</Typography>
 				</Grid>
 				<Grid item xs className={classes.item}>
