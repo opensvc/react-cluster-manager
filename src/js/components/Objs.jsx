@@ -254,41 +254,43 @@ function Objs(props) {
 					</Tooltip>
 				)}
 			</TableToolbar>
-			<Table>
-				<TableHead>
-					<TableRow>
-						<TableCell padding="checkbox">
-							<Checkbox
-								indeterminate={selected.length > 0 && selected.length < rowCount}
-								checked={selected.length === rowCount}
-								onChange={handleSelectAllClick}
-								inputProps={{ 'aria-label': 'Select all' }}
-							/>
-						</TableCell>
-						<Hidden mdUp>
-							<TableCell>Path</TableCell>
-						</Hidden>
-						<Hidden smDown>
-							<TableCell>Namespace</TableCell>
-							<TableCell>Kind</TableCell>
-							<TableCell>Name</TableCell>
-						</Hidden>
-						<Hidden smUp>
-							<TableCell>State</TableCell>
-						</Hidden>
-						<Hidden xsDown>
-							<TableCell>Availability</TableCell>
-							<TableCell>State</TableCell>
-						</Hidden>
-						<TableCell>Instances</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{lines.sort().map((path, i) => (
-						<ObjLine key={path} index={i} path={path} selected={selected} setSelected={setSelected} title={title} />
-					))}
-				</TableBody>
-			</Table>
+			<div style={{overflowX: "auto"}}>
+				<Table>
+					<TableHead>
+						<TableRow>
+							<TableCell padding="checkbox">
+								<Checkbox
+									indeterminate={selected.length > 0 && selected.length < rowCount}
+									checked={selected.length === rowCount}
+									onChange={handleSelectAllClick}
+									inputProps={{ 'aria-label': 'Select all' }}
+								/>
+							</TableCell>
+							<Hidden mdUp>
+								<TableCell>Path</TableCell>
+							</Hidden>
+							<Hidden smDown>
+								<TableCell>Namespace</TableCell>
+								<TableCell>Kind</TableCell>
+								<TableCell>Name</TableCell>
+							</Hidden>
+							<Hidden smUp>
+								<TableCell>State</TableCell>
+							</Hidden>
+							<Hidden xsDown>
+								<TableCell>Availability</TableCell>
+								<TableCell>State</TableCell>
+							</Hidden>
+							<TableCell>Instances</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{lines.sort().map((path, i) => (
+							<ObjLine key={path} index={i} path={path} selected={selected} setSelected={setSelected} title={title} />
+						))}
+					</TableBody>
+				</Table>
+			</div>
 		</Paper>
 	)
 }

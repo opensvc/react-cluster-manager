@@ -37,19 +37,21 @@ function User(props) {
 			<Typography variant="h5" component="h3">
 				Granted
 			</Typography>
-			<Table>
-				<TableHead>
-					<TableRow className="text-secondary">
-						<TableCell>Role</TableCell>
-						<TableCell>Namespaces</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{Object.keys(user.grant).map((g) => (
-						<GrantLine key={g} namespaces={user.grant[g]} role={g} />
-					))}
-				</TableBody>
-			</Table>
+			<div style={{overflowX: "auto"}}>
+				<Table>
+					<TableHead>
+						<TableRow className="text-secondary">
+							<TableCell>Role</TableCell>
+							<TableCell>Namespaces</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{Object.keys(user.grant).map((g) => (
+							<GrantLine key={g} namespaces={user.grant[g]} role={g} />
+						))}
+					</TableBody>
+				</Table>
+			</div>
 		</Paper>
 	)
 }
