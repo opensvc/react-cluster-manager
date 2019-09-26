@@ -72,6 +72,9 @@ function Threads(props) {
 
 function Thread(props) {
 	const classes = useColorStyles()
+	if (!props.data) {
+		return null
+	}
 	return (
 		<TableRow>
 			<TableCell>{props.name}</TableCell>
