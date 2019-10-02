@@ -15,6 +15,8 @@ import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled"
 import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
 import ShuffleIcon from "@material-ui/icons/Shuffle"
 import LabelIcon from "@material-ui/icons/Label"
+import ReplayIcon from "@material-ui/icons/Replay"
+import SkipNextIcon from "@material-ui/icons/SkipNext"
 
 function ObjInstanceResourceActions(props) {
 	const [{cstat}, dispatch] = useStateValue();
@@ -59,6 +61,14 @@ function ObjInstanceResourceActions(props) {
 		}
 		return true
 	}
+	function disable_run() {
+		for (var rid of rids) {
+			if (rid.match(/^task#/)) {
+				return false
+			}
+		}
+		return true
+	}
 	function disable_stop() {
 		for (var rid of rids) {
 			var rdata = cstat.monitor.nodes[node].services.status[path].resources[rid]
@@ -96,6 +106,12 @@ function ObjInstanceResourceActions(props) {
 			<ActionsSection name="safe" color="secondary" confirms={0}>
 				<ActionsItem value="start" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: sp.namespace}}
 					icon=<PlayArrowIcon />
+				/>
+				<ActionsItem value="restart" text="Restart" disabled={false} requires={{role: "operator", namespace: sp.namespace}}
+					icon=<ReplayIcon />
+				/>
+				<ActionsItem value="run" text="Run" disabled={disable_run()} requires={{role: "operator", namespace: sp.namespace}}
+					icon=<SkipNextIcon />
 				/>
 				<ActionsItem value="enable" text="Enable" disabled={disable_enable()} requires={{role: "operator", namespace: sp.namespace}}
 					icon=<PauseCircleOutlineIcon />
