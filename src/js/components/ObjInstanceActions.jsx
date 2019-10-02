@@ -16,6 +16,7 @@ import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
 import ShuffleIcon from "@material-ui/icons/Shuffle"
 import LabelIcon from "@material-ui/icons/Label"
 import BackspaceIcon from "@material-ui/icons/Backspace"
+import ReplayIcon from "@material-ui/icons/Replay"
 
 
 function ObjInstanceActions(props) {
@@ -132,6 +133,9 @@ function ObjInstanceActions(props) {
 				<ActionsSection name="safe" color="secondary" confirms={0}>
 					<ActionsItem value="start" text="Start" disabled={disable_start()} requires={{role: "operator", namespace: sp.namespace}}
 						icon=<PlayArrowIcon />
+					/>
+					<ActionsItem value="restart" text="Restart" disabled={false} requires={{role: "operator", namespace: sp.namespace}}
+						icon=<ReplayIcon />
 					/>
 					<ActionsItem value="thaw" text="Thaw" disabled={disable_thaw()} requires={{role: "operator", namespace: sp.namespace}}
 						icon=<PauseCircleOutlineIcon />
