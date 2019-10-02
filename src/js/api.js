@@ -232,6 +232,30 @@ function apiPostAny(path, options, callback) {
 	.catch(console.log)
 }
 
+function apiFetchLogs(path, options, callback) {
+        fetch(path, {
+                headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'o-node': '*'
+                },
+                method: "POST",
+                body: JSON.stringify(options)
+        })
+        .then(res => res.json())
+        .then(data => {
+                // {nodes: {n1: {...}} => {...}
+                // because the user ask for only one cf data
+                var _data = []
+                for (var node in data.nodes) {
+                        _data = _data.concat(data.nodes[node])
+                }
+		_data.sort()
+                if (callback) { callback(_data) }
+        })
+        .catch(console.log)
+}
+
 function apiObjCreate(data, callback) {
 	fetch('/create', {
 		headers: {
@@ -262,4 +286,5 @@ export {
 	apiObjCreate,
 	apiPostAny,
 	apiPostNode,
+	apiFetchLogs,
 }

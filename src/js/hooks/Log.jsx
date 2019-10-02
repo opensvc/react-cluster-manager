@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { apiPostAny } from "../api.js"
+import { apiFetchLogs } from "../api.js"
 
 function useLog(url) {
 	const [log, _setLog] = useState(null)
@@ -16,7 +16,7 @@ function useLog(url) {
 			return
 		}
 		let _url = url + "/backlogs"
-		apiPostAny(_url, {"backlog": "10k"}, (lines) => {
+		apiFetchLogs(_url, {"backlog": "10k"}, (lines) => {
 			setLog(lines)
 		})
 	}
