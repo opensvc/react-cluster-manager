@@ -137,7 +137,10 @@ function ClusterDigest(props) {
 						<div>Max: {stats.loadAvgMax.toFixed(1)}</div>
 					</Typography>
 				</Grid>
-				<Grid item xs className={classes.item}>
+				<Grid item xs
+					className={classes.item}
+					onClick={() => dispatch({type: "setNav", page: "Nodes", links: ["Nodes"]})}
+				>
 					<Typography variant="subtitle1" component="h3">
 						Nodes
 					</Typography>
@@ -145,7 +148,10 @@ function ClusterDigest(props) {
 						{counts.nodes}
 					</Typography>
 				</Grid>
-				<Grid item xs className={classes.item}>
+				<Grid item xs
+					className={classes.item}
+					onClick={() => dispatch({type: "setNav", page: "Heartbeats", links: ["Heartbeats"]})}
+				>
 					<Typography variant="subtitle1" component="h3">
 						Heartbeats
 					</Typography>
@@ -153,7 +159,10 @@ function ClusterDigest(props) {
 						{counts.heartbeats}
 					</Typography>
 				</Grid>
-				<Grid item xs className={classes.item}>
+				<Grid item xs
+					className={classes.item}
+					onClick={() => dispatch({type: "setNav", page: "Pools", links: ["Pools"]})}
+				>
 					<Typography variant="subtitle1" component="h3">
 						Pools
 					</Typography>
@@ -161,7 +170,10 @@ function ClusterDigest(props) {
 						{counts.pools}
 					</Typography>
 				</Grid>
-				<Grid item xs className={classes.item}>
+				<Grid item xs
+					className={classes.item}
+					onClick={() => dispatch({type: "setNav", page: "Networks", links: ["Networks"]})}
+				>
 					<Typography variant="subtitle1" component="h3">
 						Networks
 					</Typography>
@@ -177,7 +189,10 @@ function ClusterDigest(props) {
 						{counts.namespaces}
 					</Typography>
 				</Grid>
-				<Grid item xs className={classes.item}>
+				<Grid item xs
+					className={classes.item}
+					onClick={() => dispatch({type: "setNav", page: "Objects", links: ["Objects"]})}
+				>
 					<Typography variant="subtitle1" component="h3">
 						Objects
 					</Typography>
