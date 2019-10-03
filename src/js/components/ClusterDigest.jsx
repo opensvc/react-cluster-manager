@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import { useStateValue } from '../state.js';
 import { state, fancySizeMB } from '../utils.js';
 import { threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue } from "../issues.js";
@@ -31,7 +32,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function ClusterDigest(props) {
-        const [{ cstat }, dispatch] = useStateValue();
+	const { t, i18n } = useTranslation()
+        const [{ cstat }, dispatch] = useStateValue()
         const classes = useStyles()
 	const pools = usePoolsStatus()
 	const networks = useNetworksStatus()
@@ -93,48 +95,48 @@ function ClusterDigest(props) {
 	return (
                 <Paper id="nodes" className={classes.root}>
                         <Typography variant="h4" component="h3">
-                                <Link href="#">Cluster</Link>
+                                <Link href="#">{t("Cluster")}</Link>
                         </Typography>
 			<Grid container spacing={3} className={classes.grid}>
 				<Grid item xs className={classes.item}>
 					<Typography variant="subtitle1" component="h3">
-						Memory
+						{t("Memory")}
 					</Typography>
 					<Typography variant="h4" color="primary" component="h3">
 						{stats.memUse.toFixed(0)}%
 					</Typography>
 					<Typography variant="caption" color="textSecondary" component="h3">
-						<div>Used: {fancySizeMB(stats.memTotal-stats.memAvail)}</div>
-						<div>Total: {fancySizeMB(stats.memTotal)}</div>
-						<div>MinAvail: {fancySizeMB(stats.memAvailMin)}</div>
-						<div>MaxAvail: {fancySizeMB(stats.memAvailMax)}</div>
+						<div>{t("Used")}: {fancySizeMB(stats.memTotal-stats.memAvail)}</div>
+						<div>{t("Total")}: {fancySizeMB(stats.memTotal)}</div>
+						<div>{t("MinAvail")}: {fancySizeMB(stats.memAvailMin)}</div>
+						<div>{t("MaxAvail")}: {fancySizeMB(stats.memAvailMax)}</div>
 					</Typography>
 				</Grid>
 				<Grid item xs className={classes.item}>
 					<Typography variant="subtitle1" component="h3">
-						Swap
+						{t("Swap")}
 					</Typography>
 					<Typography variant="h4" color="primary" component="h3">
 						{stats.swapUse.toFixed(0)}%
 					</Typography>
 					<Typography variant="caption" color="textSecondary" component="h3">
-						<div>Used: {fancySizeMB(stats.swapTotal-stats.swapAvail)}</div>
-						<div>Total: {fancySizeMB(stats.swapTotal)}</div>
-						<div>MinAvail: {fancySizeMB(stats.swapAvailMin)}</div>
-						<div>MaxAvail: {fancySizeMB(stats.swapAvailMax)}</div>
+						<div>{t("Used")}: {fancySizeMB(stats.swapTotal-stats.swapAvail)}</div>
+						<div>{t("Total")}: {fancySizeMB(stats.swapTotal)}</div>
+						<div>{t("MinAvail")}: {fancySizeMB(stats.swapAvailMin)}</div>
+						<div>{t("MaxAvail")}: {fancySizeMB(stats.swapAvailMax)}</div>
 					</Typography>
 				</Grid>
 				<Grid item xs className={classes.item}>
 					<Typography variant="subtitle1" component="h3">
-						Load
+						{t("Load")}
 					</Typography>
 					<Typography variant="h4" color="primary" component="h3">
 						{stats.loadAvg.toFixed(1)}
 					</Typography>
 					<Typography variant="caption" color="textSecondary" component="h3">
-						<div>15min average</div>
-						<div>Min: {stats.loadAvgMin.toFixed(1)}</div>
-						<div>Max: {stats.loadAvgMax.toFixed(1)}</div>
+						<div>{t("15min average")}</div>
+						<div>{t("Min")}: {stats.loadAvgMin.toFixed(1)}</div>
+						<div>{t("Max")}: {stats.loadAvgMax.toFixed(1)}</div>
 					</Typography>
 				</Grid>
 				<Grid item xs
@@ -142,7 +144,7 @@ function ClusterDigest(props) {
 					onClick={() => dispatch({type: "setNav", page: "Nodes", links: ["Nodes"]})}
 				>
 					<Typography variant="subtitle1" component="h3">
-						Nodes
+						{t("Nodes")}
 					</Typography>
 					<Typography variant="h4" color="primary" component="h3">
 						{counts.nodes}
@@ -153,7 +155,7 @@ function ClusterDigest(props) {
 					onClick={() => dispatch({type: "setNav", page: "Heartbeats", links: ["Heartbeats"]})}
 				>
 					<Typography variant="subtitle1" component="h3">
-						Heartbeats
+						{t("Heartbeats")}
 					</Typography>
 					<Typography variant="h4" color="primary" component="h3">
 						{counts.heartbeats}
@@ -164,7 +166,7 @@ function ClusterDigest(props) {
 					onClick={() => dispatch({type: "setNav", page: "Pools", links: ["Pools"]})}
 				>
 					<Typography variant="subtitle1" component="h3">
-						Pools
+						{t("Pools")}
 					</Typography>
 					<Typography variant="h4" color="primary" component="h3">
 						{counts.pools}
@@ -175,7 +177,7 @@ function ClusterDigest(props) {
 					onClick={() => dispatch({type: "setNav", page: "Networks", links: ["Networks"]})}
 				>
 					<Typography variant="subtitle1" component="h3">
-						Networks
+						{t("Networks")}
 					</Typography>
 					<Typography variant="h4" color="primary" component="h3">
 						{counts.networks}
@@ -183,7 +185,7 @@ function ClusterDigest(props) {
 				</Grid>
 				<Grid item xs className={classes.item}>
 					<Typography variant="subtitle1" component="h3">
-						Namespaces
+						{t("Namespaces")}
 					</Typography>
 					<Typography variant="h4" color="primary" component="h3">
 						{counts.namespaces}
@@ -194,7 +196,7 @@ function ClusterDigest(props) {
 					onClick={() => dispatch({type: "setNav", page: "Objects", links: ["Objects"]})}
 				>
 					<Typography variant="subtitle1" component="h3">
-						Objects
+						{t("Objects")}
 					</Typography>
 					<Typography variant="h4" color="primary" component="h3">
 						{counts.svc+counts.vol+counts.cfg+counts.sec+counts.usr}

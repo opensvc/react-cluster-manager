@@ -69,7 +69,7 @@ function ObjState(props) {
 		return null
 	}
 	return (
-		<Grid container spacing={1}>
+		<Grid container spacing={0}>
 			<Hidden smUp>
 				<ObjAvail className={classes.child} avail={cstat.monitor.services[props.path].avail} />
 			</Hidden>

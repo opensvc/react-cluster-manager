@@ -1,5 +1,6 @@
 import React from "react";
 import { useStateValue } from '../state.js';
+import { useTranslation } from 'react-i18next';
 
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -25,6 +26,7 @@ const useStyles = makeStyles(theme => ({
 function HeartbeatsDetails(props) {
 	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
+	const { t, i18n } = useTranslation()
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -49,7 +51,7 @@ function HeartbeatsDetails(props) {
 	return (
 		<Paper id="heartbeats" className={classes.root}>
 			<Typography variant="h4" component="h3">
-				<Link className="text-dark" href="#" onClick={handleClick}>Heartbeats</Link>
+				<Link className="text-dark" href="#" onClick={handleClick}>{t("Heartbeats")}</Link>
 			</Typography>
 			<Table>
 				<TableHead>

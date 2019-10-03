@@ -1,5 +1,6 @@
 import React from "react";
 import { useStateValue } from '../state.js';
+import { useTranslation } from 'react-i18next';
 import { clusterIssue, threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue, objectsIssue } from "../issues.js";
 import { makeStyles } from '@material-ui/core/styles';
 import { state } from "../utils.js"
@@ -33,6 +34,7 @@ const useStyles = makeStyles(theme => ({
 
 function SubsystemsLink(props) {
 	const classes = useColorStyles()
+	const { t, i18n } = useTranslation()
 	function handleClick(e) {
 		props.onClick()
 		props.closeDrawer(e)
@@ -40,7 +42,7 @@ function SubsystemsLink(props) {
 	return (
 		<ListItem button onClick={handleClick} className={props.className}>
 			<ListItemIcon className={classes[props.issue.name]}>{props.icon}</ListItemIcon>
-			<ListItemText primary={props.title} />
+			<ListItemText primary={t(props.title)} />
 		</ListItem>
 	)
 }

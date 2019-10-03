@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useStateValue } from '../state.js';
+import { useTranslation } from 'react-i18next';
 import { splitPath, kindName } from "../utils.js";
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjActions } from "./ObjActions.jsx";
@@ -53,13 +54,14 @@ const useStyles = makeStyles(theme => ({
 
 function ObjsKindFilter(props) {
 	const [{ kinds }, dispatch] = useStateValue();
+	const { t, i18n } = useTranslation()
 	function handleChange(e) {
 		dispatch({"type": "setKindFilter", "data": e.target.value})
 	}
 	return (
 		<FormGroup row>
 			<FormControl>
-				<InputLabel htmlFor="select-multiple-checkbox">Kinds</InputLabel>
+				<InputLabel htmlFor="select-multiple-checkbox">{t("Kinds")}</InputLabel>
 				<Select
 					multiple
 					value={kinds}
@@ -81,6 +83,7 @@ function ObjsKindFilter(props) {
 
 function ObjsFilter(props) {
 	const [{ filters }, dispatch] = useStateValue()
+	const { t, i18n } = useTranslation()
 	function handleChange(e) {
 		var t = e.target.getAtTableRowibute("t")
 		dispatch({"type": "setFilter", "filter_type": t, "filter_value": e.target.value})
@@ -100,7 +103,7 @@ function ObjsFilter(props) {
 	return (
 		<FormGroup row>
 			<FormControl>
-				<InputLabel htmlFor="obj-search-type">Search In</InputLabel>
+				<InputLabel htmlFor="obj-search-type">{t("Search In")}</InputLabel>
 				<Select
 					value={currentType}
 					onChange={handleTypeChange}
@@ -109,15 +112,15 @@ function ObjsFilter(props) {
 						id: 'obj-search-type',
 					}}
 				>
-					<MenuItem value="name">Name</MenuItem>
-					<MenuItem value="namespace">Namespace</MenuItem>
-					<MenuItem value="path">Path</MenuItem>
+					<MenuItem value="name">{t("Name")}</MenuItem>
+					<MenuItem value="namespace">{t("Namespace")}</MenuItem>
+					<MenuItem value="path">{t("Path")}</MenuItem>
 				</Select>
 			</FormControl>
 			<FormControl>
 				<TextField
 					id="obj-search"
-					label="Regular Expression"
+					label={t("Regular Expression")}
 					value={filters[currentType]}
 					onChange={handleChange}
 					margin="none"
@@ -191,6 +194,8 @@ function Objs(props) {
 	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
 	const [selected, setSelected] = React.useState([]);
+	const { kind, withScalerSlaves } = props
+	const { t, i18n } = useTranslation()
 	var lines = getLines({kind: props.kind})
 
 	if (cstat.monitor === undefined) {
@@ -231,7 +236,7 @@ function Objs(props) {
 	return (
 		<Paper id="objects" className={classes.root}>
 			<Typography variant="h4" component="h3">
-				<Link href="#" onClick={handleTitleClick}>{title}</Link>
+				<Link href="#" onClick={handleTitleClick}>{t(title)}</Link>
 			</Typography>
 			<Grid container className={classes.tools} spacing={1}>
 				{!props.kind &&
@@ -247,8 +252,8 @@ function Objs(props) {
 				{selected.length > 0 ? (
 					<ObjActions selected={selected} title="" />
 				) : (
-					<Tooltip title="Filter list">
-						<IconButton aria-label="Filter list">
+					<Tooltip title={t("Filters")}>
+						<IconButton aria-label="Filters">
 							<FilterListIcon />
 						</IconButton>
 					</Tooltip>
@@ -263,23 +268,23 @@ function Objs(props) {
 									indeterminate={selected.length > 0 && selected.length < rowCount}
 									checked={selected.length === rowCount}
 									onChange={handleSelectAllClick}
-									inputProps={{ 'aria-label': 'Select all' }}
+									inputProps={{ 'aria-label': t("Select all") }}
 								/>
 							</TableCell>
 							<Hidden mdUp>
-								<TableCell>Path</TableCell>
+								<TableCell>{t("Path")}</TableCell>
 							</Hidden>
 							<Hidden smDown>
-								<TableCell>Namespace</TableCell>
-								<TableCell>Kind</TableCell>
-								<TableCell>Name</TableCell>
+								<TableCell>{t("Namespace")}</TableCell>
+								<TableCell>{t("Kind")}</TableCell>
+								<TableCell>{t("Name")}</TableCell>
 							</Hidden>
 							<Hidden smUp>
-								<TableCell>State</TableCell>
+								<TableCell>{t("State")}</TableCell>
 							</Hidden>
 							<Hidden xsDown>
-								<TableCell>Availability</TableCell>
-								<TableCell>State</TableCell>
+								<TableCell>{t("Availability")}</TableCell>
+								<TableCell>{t("State")}</TableCell>
 							</Hidden>
 							<TableCell>Instances</TableCell>
 						</TableRow>

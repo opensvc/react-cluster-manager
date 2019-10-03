@@ -1,0 +1,31 @@
+{
+	"fr": {
+		"translation": {
+			"15min average": "Moyenne sur 15min",
+			"Arbitrators": "Arbitres",
+			"Availability": "Disponibilité",
+			"Cluster": "Grappe",
+			"Filters": "Filtres",
+			"Heartbeats": "Pulseurs",
+			"Kind": "Genre",
+			"Kinds": "Genres",
+			"Load": "Charge",
+			"Objects": "Objets",
+			"Path": "Chemin",
+			"Pools": "Réservoirs",
+			"Memory": "Mémoire",
+			"MaxAvail": "MaxDispo",
+			"MinAvail": "MinDispo",
+			"Name": "Nom",
+			"Networks": "Réseaux",
+			"Nodes": "Noeuds",
+			"Namespaces": "Espaces de noms",
+			"Regular Expression": "Expression Régulière",
+			"Select all": "Tout sélectionner",
+			"State": "Etat",
+			"Swap": "Echange",
+			"Users": "Utilisateurs",
+			"Used": "Utilisé"
+		}
+	}
+}

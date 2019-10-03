@@ -3,10 +3,12 @@
 //import PropTypes from "prop-types";
 import React from "react";
 import { useStateValue } from '../state.js';
+import { useTranslation } from 'react-i18next';
 import { state } from "../utils.js";
 import { allIssue } from "../issues.js";
 import { Alerts } from "./Alerts.jsx";
 import { Subsystems } from "./Subsystems.jsx";
+import { LangSelector } from "./LangSelector.jsx";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -45,6 +47,7 @@ function NavBar(props) {
 					<NavLink key={l} link={nav.links[l]} links={nav.links} />
 				))}
 			</Breadcrumbs>
+			<LangSelector />
 			<UserLink />
 			<Alerts />
 		</Toolbar>
@@ -85,6 +88,7 @@ function NavBarMenu(props) {
 
 function NavLink(props) {
 	const [{}, dispatch] = useStateValue();
+	const { t, i18n } = useTranslation()
 	function handleClick(e) {
 		var i = props.links.indexOf(props.link)
 		dispatch({
@@ -94,7 +98,7 @@ function NavLink(props) {
 		})
 	}
 	return (
-		<Link color="inherit" href="#" onClick={handleClick}>{props.link}</Link>
+		<Link color="inherit" href="#" onClick={handleClick}>{t(props.link)}</Link>
 	)
 }
 
