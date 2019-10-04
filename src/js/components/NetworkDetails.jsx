@@ -1,9 +1,11 @@
 import React from "react";
 import { useStateValue } from '../state.js'
+import { useTranslation } from 'react-i18next';
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,14 +16,18 @@ import Hidden from '@material-ui/core/Hidden';
 
 const useStyles = makeStyles(theme => ({
         root: {
-                padding: theme.spacing(3, 2),
                 marginTop: theme.spacing(3),
+        },
+        wrapper: {
                 overflowX: 'auto',
+                marginLeft: -theme.spacing(2),
+                marginRight: -theme.spacing(2),
         },
 }))
 
 function NetworkDetails(props) {
 	const {name} = props
+	const { t, i18n } = useTranslation()
 	const classes = useStyles()
         function handleTitleClick(e) {
                 dispatch({
@@ -31,12 +37,18 @@ function NetworkDetails(props) {
                 })
         }
 	return (
-		<Paper id="nodes" className={classes.root}>
-			<Typography variant="h4" component="h3">
-                                <Link href="#" onClick={handleTitleClick}>{name}</Link>
-                        </Typography>
-			<NetworkAddrs name={name} />
-		</Paper>
+                <Card className={classes.root}>
+                        <CardHeader
+                                title={t("Network Addresses")}
+				subheader={name}
+                                onClick={handleTitleClick}
+                        />
+                        <CardContent>
+                                <div className={classes.wrapper}>
+					<NetworkAddrs name={name} />
+				</div>
+                        </CardContent>
+		</Card>
 	)
 }
 
@@ -50,26 +62,21 @@ function NetworkAddrs(props) {
         var lines = data[name].ips
 
 	return (
-		<React.Fragment>
-			<Typography variant="h5" component="h3">
-                                Addresses
-                        </Typography>
-                        <Table>
-                                <TableHead>
-                                        <TableRow>
-                                                <TableCell>Address</TableCell>
-                                                <TableCell>Node</TableCell>
-						<TableCell>Service</TableCell>
-                                                <TableCell>Resource</TableCell>
-                                        </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                        {lines.map((line, i) => (
-                                                <NetworksLine key={i} index={i} data={line} />
-                                        ))}
-                                </TableBody>
-                        </Table>
-		</React.Fragment>
+		<Table>
+			<TableHead>
+				<TableRow>
+					<TableCell>Address</TableCell>
+					<TableCell>Node</TableCell>
+					<TableCell>Service</TableCell>
+					<TableCell>Resource</TableCell>
+				</TableRow>
+			</TableHead>
+			<TableBody>
+				{lines.map((line, i) => (
+					<NetworksLine key={i} index={i} data={line} />
+				))}
+			</TableBody>
+		</Table>
 	)
 }
 

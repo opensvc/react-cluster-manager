@@ -2,6 +2,8 @@ import React from "react";
 import { useStateValue } from '../state.js';
 import { ObjOverall } from "./ObjOverall.jsx";
 import { ObjFrozen } from "./ObjFrozen.jsx";
+import { ObjAvail } from "./ObjAvail.jsx";
+import { ObjLeader } from "./ObjLeader.jsx";
 import { ObjProvisioned } from "./ObjProvisioned.jsx";
 import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
 import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
@@ -27,9 +29,11 @@ function ObjInstanceState(props) {
 	}
 	return (
 		<Grid container spacing={1}>
+			<ObjAvail className={classes.child} avail={cstat.monitor.nodes[props.node].services.status[props.path].avail} />
 			<ObjOverall className={classes.child} overall={cstat.monitor.nodes[props.node].services.status[props.path].overall} />
 			<ObjFrozen className={classes.child} frozen={cstat.monitor.nodes[props.node].services.status[props.path].frozen} />
 			<ObjProvisioned className={classes.child} provisioned={cstat.monitor.nodes[props.node].services.status[props.path].provisioned} />
+			<ObjLeader className={classes.child} placement={cstat.monitor.nodes[props.node].services.status[props.path].monitor.placement} />
 			<MonitorStatusBadge className={classes.child} state={cstat.monitor.nodes[props.node].services.status[props.path].monitor.status} />
 			<MonitorTargetBadge className={classes.child} target={cstat.monitor.nodes[props.node].services.status[props.path].monitor.global_expect} />
 		</Grid>

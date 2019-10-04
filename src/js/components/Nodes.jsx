@@ -1,5 +1,6 @@
 import React from "react";
 import { useStateValue } from '../state.js';
+import { useTranslation } from 'react-i18next';
 import { state, fancySizeMB } from "../utils.js";
 import { useColorStyles } from "../styles.js";
 import { apiNodeAction } from "../api.js";
@@ -9,7 +10,11 @@ import { TableToolbar } from "./TableToolbar.jsx";
 import { NodeState } from "./NodeState.jsx";
 import { Sparklines, SparklinesLine, SparklinesReferenceLine, SparklinesNormalBand } from 'react-sparklines';
 
+import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -30,10 +35,15 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 
 const useStyles = makeStyles(theme => ({
         root: {
-                padding: theme.spacing(3, 2),
                 marginTop: theme.spacing(3),
-		overflowX: 'auto',
         },
+	wrapper: {
+		overflowX: 'auto',
+	},
+	table: {
+		marginLeft: -theme.spacing(2),
+		marginRight: -theme.spacing(2),
+	},
 }))
 
 function NodeCpuSparkline(props) {
@@ -204,6 +214,7 @@ function NodeVersion(props) {
 
 function Nodes(props) {
 	const [{ cstat }, dispatch] = useStateValue();
+	const { t, i18n } = useTranslation()
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -232,58 +243,64 @@ function Nodes(props) {
         }
 	
 	return (
-		<Paper id="nodes" className={classes.root}>
-			<Typography variant="h4" component="h3">
-				<Link href="#" onClick={handleTitleClick}>Nodes</Link>
-			</Typography>
-                        <TableToolbar selected={selected}>
-                                {selected.length > 0 ? (
-                                        <NodeActions selected={selected} title="" />
-                                ) : (
-                                        <Tooltip title="Filter list">
-                                                <IconButton aria-label="Filter list">
-                                                        <FilterListIcon />
-                                                </IconButton>
-                                        </Tooltip>
-                                )}
-			</TableToolbar>
-			<Table>
-				<TableHead>
-					<TableRow>
-                                                <TableCell padding="checkbox">
-                                                        <Checkbox
-                                                                indeterminate={selected.length > 0 && selected.length < rowCount}
-                                                                checked={selected.length === rowCount}
-                                                                onChange={handleSelectAllClick}
-                                                                inputProps={{ 'aria-label': 'Select all' }}
-                                                        />
-                                                </TableCell>
-						<TableCell>Name</TableCell>
-						<TableCell>State</TableCell>
-						<Hidden smDown>
-							<TableCell>Score</TableCell>
-							<TableCell>Load15m</TableCell>
-							<TableCell>Mem Avail</TableCell>
-							<TableCell>Swap Avail</TableCell>
-						</Hidden>
-						<TableCell>Version</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{cstat.cluster.nodes.map((node, i) => (
-						<Node
-							key={node}
-							index={i}
-							node={node}
-							selected={selected}
-							setSelected={setSelected}
-							compatIssue={cissue}
-							versionIssue={vissue}
-						/>
-					))}
-				</TableBody>
-			</Table>
-		</Paper>
+		<Card className={classes.root}>
+			<CardHeader
+				title={t("Nodes")}
+				subheader={cstat.cluster.name}
+				onClick={handleTitleClick}
+			/>
+			<CardContent>
+				<TableToolbar selected={selected} className={classes.table}>
+					{selected.length > 0 ? (
+						<NodeActions selected={selected} title="" />
+					) : (
+						<Tooltip title="Filter list">
+							<IconButton aria-label="Filter list">
+								<FilterListIcon />
+							</IconButton>
+						</Tooltip>
+					)}
+				</TableToolbar>
+				<div className={clsx([classes.wrapper, classes.table])}>
+					<Table>
+						<TableHead>
+							<TableRow>
+								<TableCell padding="checkbox">
+									<Checkbox
+										indeterminate={selected.length > 0 && selected.length < rowCount}
+										checked={selected.length === rowCount}
+										onChange={handleSelectAllClick}
+										inputProps={{ 'aria-label': 'Select all' }}
+									/>
+								</TableCell>
+								<TableCell>Name</TableCell>
+								<TableCell>State</TableCell>
+								<Hidden smDown>
+									<TableCell>Score</TableCell>
+									<TableCell>Load15m</TableCell>
+									<TableCell>Mem Avail</TableCell>
+									<TableCell>Swap Avail</TableCell>
+								</Hidden>
+								<TableCell>Version</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{cstat.cluster.nodes.map((node, i) => (
+								<Node
+									key={node}
+									index={i}
+									node={node}
+									selected={selected}
+									setSelected={setSelected}
+									compatIssue={cissue}
+									versionIssue={vissue}
+								/>
+							))}
+						</TableBody>
+					</Table>
+				</div>
+			</CardContent>
+		</Card>
 	)
 }
 

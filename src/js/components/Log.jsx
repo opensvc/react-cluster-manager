@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { useLog } from "../hooks/Log.jsx"
+import { useTranslation } from 'react-i18next'
 
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -38,6 +39,7 @@ function Log(props) {
 	const [search, setSearch] = useState("")
 	const [skip, setSkip] = useState()
 	const classes = useStyles()
+	const {t, i18n} = useTranslation()
 
 	function handleChange(e) {
 		setSearch(e.target.value)
@@ -51,13 +53,10 @@ function Log(props) {
 	})
 	return (
 		<div>
-			<Typography variant="h4" component="h2">
-				Logs
-			</Typography>
 			<TextField
 				className={classes.textField}
 				id="search"
-				label="Search Regular Expression"
+				label={t("Search Regular Expression")}
 				type="search"
 				margin="normal"
 				variant="outlined"

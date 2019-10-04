@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { splitPath, kindName } from "../utils.js";
-import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjState } from "./ObjState.jsx";
 import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
@@ -11,6 +10,9 @@ import { TableToolbar } from "./TableToolbar.jsx";
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles, lighten } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -19,7 +21,6 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -43,12 +44,14 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 
 const useStyles = makeStyles(theme => ({
 	root: {
-		padding: theme.spacing(3, 2),
 		marginTop: theme.spacing(3),
-		overflowX: 'auto',
 	},
 	tools: {
 		alignItems: "flex-end",
+	},
+	table: {
+		marginLeft: -theme.spacing(2),
+		marginRight: -theme.spacing(2),
 	},
 }))
 
@@ -234,69 +237,67 @@ function Objs(props) {
 	}
 
 	return (
-		<Paper id="objects" className={classes.root}>
-			<Typography variant="h4" component="h3">
-				<Link href="#" onClick={handleTitleClick}>{t(title)}</Link>
-			</Typography>
-			<Grid container className={classes.tools} spacing={1}>
-				{!props.kind &&
-				<Grid item>
-					<ObjsKindFilter />
+		<Card className={classes.root}>
+			<CardHeader
+				title={t(title)}
+				subheader={cstat.cluster.name}
+				onClick={handleTitleClick}
+			/>
+			<CardContent>
+				<Grid container className={classes.tools} spacing={1}>
+					{!props.kind &&
+					<Grid item>
+						<ObjsKindFilter />
+					</Grid>
+					}
+					<Grid item>
+						<ObjsFilter />
+					</Grid>
 				</Grid>
-				}
-				<Grid item>
-					<ObjsFilter />
-				</Grid>
-			</Grid>
-			<TableToolbar selected={selected}>
-				{selected.length > 0 ? (
-					<ObjActions selected={selected} title="" />
-				) : (
-					<Tooltip title={t("Filters")}>
-						<IconButton aria-label="Filters">
-							<FilterListIcon />
-						</IconButton>
-					</Tooltip>
-				)}
-			</TableToolbar>
-			<div style={{overflowX: "auto"}}>
-				<Table>
-					<TableHead>
-						<TableRow>
-							<TableCell padding="checkbox">
-								<Checkbox
-									indeterminate={selected.length > 0 && selected.length < rowCount}
-									checked={selected.length === rowCount}
-									onChange={handleSelectAllClick}
-									inputProps={{ 'aria-label': t("Select all") }}
-								/>
-							</TableCell>
-							<Hidden mdUp>
-								<TableCell>{t("Path")}</TableCell>
-							</Hidden>
-							<Hidden smDown>
-								<TableCell>{t("Namespace")}</TableCell>
-								<TableCell>{t("Kind")}</TableCell>
-								<TableCell>{t("Name")}</TableCell>
-							</Hidden>
-							<Hidden smUp>
+				<TableToolbar selected={selected} className={classes.table}>
+					{selected.length > 0 ? (
+						<ObjActions selected={selected} title="" />
+					) : (
+						<Tooltip title={t("Filters")}>
+							<IconButton aria-label="Filters">
+								<FilterListIcon />
+							</IconButton>
+						</Tooltip>
+					)}
+				</TableToolbar>
+				<div style={{overflowX: "auto"}} className={classes.table}>
+					<Table>
+						<TableHead>
+							<TableRow>
+								<TableCell padding="checkbox">
+									<Checkbox
+										indeterminate={selected.length > 0 && selected.length < rowCount}
+										checked={selected.length === rowCount}
+										onChange={handleSelectAllClick}
+										inputProps={{ 'aria-label': t("Select all") }}
+									/>
+								</TableCell>
+								<Hidden mdUp>
+									<TableCell>{t("Path")}</TableCell>
+								</Hidden>
+								<Hidden smDown>
+									<TableCell>{t("Namespace")}</TableCell>
+									<TableCell>{t("Kind")}</TableCell>
+									<TableCell>{t("Name")}</TableCell>
+								</Hidden>
 								<TableCell>{t("State")}</TableCell>
-							</Hidden>
-							<Hidden xsDown>
-								<TableCell>{t("Availability")}</TableCell>
-								<TableCell>{t("State")}</TableCell>
-							</Hidden>
-							<TableCell>Instances</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{lines.sort().map((path, i) => (
-							<ObjLine key={path} index={i} path={path} selected={selected} setSelected={setSelected} title={title} />
-						))}
-					</TableBody>
-				</Table>
-			</div>
-		</Paper>
+								<TableCell>Instances</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{lines.sort().map((path, i) => (
+								<ObjLine key={path} index={i} path={path} selected={selected} setSelected={setSelected} title={title} />
+							))}
+						</TableBody>
+					</Table>
+				</div>
+			</CardContent>
+		</Card>
 	)
 }
 
@@ -359,15 +360,7 @@ function ObjLine(props) {
 				<TableCell>{sp.kind}</TableCell>
 				<TableCell>{sp.name}</TableCell>
 			</Hidden>
-			<Hidden smUp>
-				<TableCell>
-					<ObjState path={path} />
-				</TableCell>
-			</Hidden>
-			<Hidden xsDown>
-				<TableCell><ObjAvail avail={cstat.monitor.services[path].avail} /></TableCell>
-				<TableCell><ObjState path={path} /></TableCell>
-			</Hidden>
+			<TableCell><ObjState path={path} /></TableCell>
 			<TableCell><ObjInstanceCounts path={path} /></TableCell>
 		</TableRow>
 	)

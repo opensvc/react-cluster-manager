@@ -8,24 +8,16 @@ import { usePoolsStatus } from "../hooks/PoolsStatus.jsx"
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
-import Table from '@material-ui/core/Table';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
 import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => ({
         root: {
-                padding: theme.spacing(3, 2),
                 marginTop: theme.spacing(3),
-                overflowX: 'auto',
         },
-        grid: {
-                marginTop: theme.spacing(1),
-	},
 	item: {
 		minWidth: "10em",
 	},
@@ -93,124 +85,127 @@ function ClusterDigest(props) {
 	stats.swapUse = 100*(stats.swapTotal-stats.swapAvail)/stats.swapTotal
 
 	return (
-                <Paper id="nodes" className={classes.root}>
-                        <Typography variant="h4" component="h3">
-                                <Link href="#">{t("Cluster")}</Link>
-                        </Typography>
-			<Grid container spacing={3} className={classes.grid}>
-				<Grid item xs className={classes.item}>
-					<Typography variant="subtitle1" component="h3">
-						{t("Memory")}
-					</Typography>
-					<Typography variant="h4" color="primary" component="h3">
-						{stats.memUse.toFixed(0)}%
-					</Typography>
-					<Typography variant="caption" color="textSecondary" component="h3">
-						<div>{t("Used")}: {fancySizeMB(stats.memTotal-stats.memAvail)}</div>
-						<div>{t("Total")}: {fancySizeMB(stats.memTotal)}</div>
-						<div>{t("MinAvail")}: {fancySizeMB(stats.memAvailMin)}</div>
-						<div>{t("MaxAvail")}: {fancySizeMB(stats.memAvailMax)}</div>
-					</Typography>
+                <Card className={classes.root}>
+			<CardHeader
+				title={t("Cluster")}
+				subheader={cstat.cluster.name}
+			/>
+			<CardContent>
+				<Grid container spacing={3}>
+					<Grid item xs className={classes.item}>
+						<Typography variant="subtitle1" component="h3">
+							{t("Memory")}
+						</Typography>
+						<Typography variant="h4" color="primary" component="h3">
+							{stats.memUse.toFixed(0)}%
+						</Typography>
+						<Typography variant="caption" color="textSecondary" component="h3">
+							<div>{t("Used")}: {fancySizeMB(stats.memTotal-stats.memAvail)}</div>
+							<div>{t("Total")}: {fancySizeMB(stats.memTotal)}</div>
+							<div>{t("MinAvail")}: {fancySizeMB(stats.memAvailMin)}</div>
+							<div>{t("MaxAvail")}: {fancySizeMB(stats.memAvailMax)}</div>
+						</Typography>
+					</Grid>
+					<Grid item xs className={classes.item}>
+						<Typography variant="subtitle1" component="h3">
+							{t("Swap")}
+						</Typography>
+						<Typography variant="h4" color="primary" component="h3">
+							{stats.swapUse.toFixed(0)}%
+						</Typography>
+						<Typography variant="caption" color="textSecondary" component="h3">
+							<div>{t("Used")}: {fancySizeMB(stats.swapTotal-stats.swapAvail)}</div>
+							<div>{t("Total")}: {fancySizeMB(stats.swapTotal)}</div>
+							<div>{t("MinAvail")}: {fancySizeMB(stats.swapAvailMin)}</div>
+							<div>{t("MaxAvail")}: {fancySizeMB(stats.swapAvailMax)}</div>
+						</Typography>
+					</Grid>
+					<Grid item xs className={classes.item}>
+						<Typography variant="subtitle1" component="h3">
+							{t("Load")}
+						</Typography>
+						<Typography variant="h4" color="primary" component="h3">
+							{stats.loadAvg.toFixed(1)}
+						</Typography>
+						<Typography variant="caption" color="textSecondary" component="h3">
+							<div>{t("15min average")}</div>
+							<div>{t("Min")}: {stats.loadAvgMin.toFixed(1)}</div>
+							<div>{t("Max")}: {stats.loadAvgMax.toFixed(1)}</div>
+						</Typography>
+					</Grid>
+					<Grid item xs
+						className={classes.item}
+						onClick={() => dispatch({type: "setNav", page: "Nodes", links: ["Nodes"]})}
+					>
+						<Typography variant="subtitle1" component="h3">
+							{t("Nodes")}
+						</Typography>
+						<Typography variant="h4" color="primary" component="h3">
+							{counts.nodes}
+						</Typography>
+					</Grid>
+					<Grid item xs
+						className={classes.item}
+						onClick={() => dispatch({type: "setNav", page: "Heartbeats", links: ["Heartbeats"]})}
+					>
+						<Typography variant="subtitle1" component="h3">
+							{t("Heartbeats")}
+						</Typography>
+						<Typography variant="h4" color="primary" component="h3">
+							{counts.heartbeats}
+						</Typography>
+					</Grid>
+					<Grid item xs
+						className={classes.item}
+						onClick={() => dispatch({type: "setNav", page: "Pools", links: ["Pools"]})}
+					>
+						<Typography variant="subtitle1" component="h3">
+							{t("Pools")}
+						</Typography>
+						<Typography variant="h4" color="primary" component="h3">
+							{counts.pools}
+						</Typography>
+					</Grid>
+					<Grid item xs
+						className={classes.item}
+						onClick={() => dispatch({type: "setNav", page: "Networks", links: ["Networks"]})}
+					>
+						<Typography variant="subtitle1" component="h3">
+							{t("Networks")}
+						</Typography>
+						<Typography variant="h4" color="primary" component="h3">
+							{counts.networks}
+						</Typography>
+					</Grid>
+					<Grid item xs className={classes.item}>
+						<Typography variant="subtitle1" component="h3">
+							{t("Namespaces")}
+						</Typography>
+						<Typography variant="h4" color="primary" component="h3">
+							{counts.namespaces}
+						</Typography>
+					</Grid>
+					<Grid item xs
+						className={classes.item}
+						onClick={() => dispatch({type: "setNav", page: "Objects", links: ["Objects"]})}
+					>
+						<Typography variant="subtitle1" component="h3">
+							{t("Objects")}
+						</Typography>
+						<Typography variant="h4" color="primary" component="h3">
+							{counts.svc+counts.vol+counts.cfg+counts.sec+counts.usr}
+						</Typography>
+						<Typography variant="caption" color="textSecondary" component="h3">
+							<div>svc: {counts.svc}</div>
+							<div>vol: {counts.vol}</div>
+							<div>cfg: {counts.cfg}</div>
+							<div>sec: {counts.sec}</div>
+							<div>usr: {counts.usr}</div>
+						</Typography>
+					</Grid>
 				</Grid>
-				<Grid item xs className={classes.item}>
-					<Typography variant="subtitle1" component="h3">
-						{t("Swap")}
-					</Typography>
-					<Typography variant="h4" color="primary" component="h3">
-						{stats.swapUse.toFixed(0)}%
-					</Typography>
-					<Typography variant="caption" color="textSecondary" component="h3">
-						<div>{t("Used")}: {fancySizeMB(stats.swapTotal-stats.swapAvail)}</div>
-						<div>{t("Total")}: {fancySizeMB(stats.swapTotal)}</div>
-						<div>{t("MinAvail")}: {fancySizeMB(stats.swapAvailMin)}</div>
-						<div>{t("MaxAvail")}: {fancySizeMB(stats.swapAvailMax)}</div>
-					</Typography>
-				</Grid>
-				<Grid item xs className={classes.item}>
-					<Typography variant="subtitle1" component="h3">
-						{t("Load")}
-					</Typography>
-					<Typography variant="h4" color="primary" component="h3">
-						{stats.loadAvg.toFixed(1)}
-					</Typography>
-					<Typography variant="caption" color="textSecondary" component="h3">
-						<div>{t("15min average")}</div>
-						<div>{t("Min")}: {stats.loadAvgMin.toFixed(1)}</div>
-						<div>{t("Max")}: {stats.loadAvgMax.toFixed(1)}</div>
-					</Typography>
-				</Grid>
-				<Grid item xs
-					className={classes.item}
-					onClick={() => dispatch({type: "setNav", page: "Nodes", links: ["Nodes"]})}
-				>
-					<Typography variant="subtitle1" component="h3">
-						{t("Nodes")}
-					</Typography>
-					<Typography variant="h4" color="primary" component="h3">
-						{counts.nodes}
-					</Typography>
-				</Grid>
-				<Grid item xs
-					className={classes.item}
-					onClick={() => dispatch({type: "setNav", page: "Heartbeats", links: ["Heartbeats"]})}
-				>
-					<Typography variant="subtitle1" component="h3">
-						{t("Heartbeats")}
-					</Typography>
-					<Typography variant="h4" color="primary" component="h3">
-						{counts.heartbeats}
-					</Typography>
-				</Grid>
-				<Grid item xs
-					className={classes.item}
-					onClick={() => dispatch({type: "setNav", page: "Pools", links: ["Pools"]})}
-				>
-					<Typography variant="subtitle1" component="h3">
-						{t("Pools")}
-					</Typography>
-					<Typography variant="h4" color="primary" component="h3">
-						{counts.pools}
-					</Typography>
-				</Grid>
-				<Grid item xs
-					className={classes.item}
-					onClick={() => dispatch({type: "setNav", page: "Networks", links: ["Networks"]})}
-				>
-					<Typography variant="subtitle1" component="h3">
-						{t("Networks")}
-					</Typography>
-					<Typography variant="h4" color="primary" component="h3">
-						{counts.networks}
-					</Typography>
-				</Grid>
-				<Grid item xs className={classes.item}>
-					<Typography variant="subtitle1" component="h3">
-						{t("Namespaces")}
-					</Typography>
-					<Typography variant="h4" color="primary" component="h3">
-						{counts.namespaces}
-					</Typography>
-				</Grid>
-				<Grid item xs
-					className={classes.item}
-					onClick={() => dispatch({type: "setNav", page: "Objects", links: ["Objects"]})}
-				>
-					<Typography variant="subtitle1" component="h3">
-						{t("Objects")}
-					</Typography>
-					<Typography variant="h4" color="primary" component="h3">
-						{counts.svc+counts.vol+counts.cfg+counts.sec+counts.usr}
-					</Typography>
-					<Typography variant="caption" color="textSecondary" component="h3">
-						<div>svc: {counts.svc}</div>
-						<div>vol: {counts.vol}</div>
-						<div>cfg: {counts.cfg}</div>
-						<div>sec: {counts.sec}</div>
-						<div>usr: {counts.usr}</div>
-					</Typography>
-				</Grid>
-			</Grid>
-		</Paper>
+			</CardContent>
+		</Card>
 	)
 }
 

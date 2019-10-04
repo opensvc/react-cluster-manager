@@ -1,5 +1,6 @@
 import React from "react";
 import { useStateValue } from '../state.js';
+import { useTranslation } from 'react-i18next';
 import { parseIni, splitPath } from '../utils.js';
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjProvisioned } from "./ObjProvisioned.jsx";
@@ -11,6 +12,9 @@ import { useColorStyles } from '../styles.js'
 
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -30,6 +34,12 @@ const useStyles = makeStyles(theme => ({
 	iconText: {
 		display: "flex",
 	},
+	card: {
+		height: "100%",
+	},
+	content: {
+		margin: -theme.spacing(2),
+	},
 }))
 
 function ObjInstanceResources(props) {
@@ -38,6 +48,7 @@ function ObjInstanceResources(props) {
 	// props.node
 	//
 	const [{ cstat }, dispatch] = useStateValue();
+	const { t, i18n } = useTranslation()
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -63,57 +74,60 @@ function ObjInstanceResources(props) {
         }
 
 	return (
-		<React.Fragment>
-			<Typography variant="h5" component="h2">
-				Resources
-			</Typography>
-                        <TableToolbar selected={selected}>
-                                {selected.length > 0 ? (
-                                        <ObjInstanceResourceActions path={props.path} node={props.node} rids={selected} title="" />
-                                ) : (
-                                        <Tooltip title="Filter list">
-                                                <IconButton aria-label="Filter list">
-                                                        <FilterListIcon />
-                                                </IconButton>
-                                        </Tooltip>
-                                )}
-                        </TableToolbar>
-			<div style={{overflowX: "auto"}}>
-				<Table>
-					<TableHead>
-						<TableRow className="text-secondary">
-							<TableCell padding="checkbox">
-								<Checkbox
-									indeterminate={selected.length > 0 && selected.length < rowCount}
-									checked={selected.length === rowCount}
-									onChange={handleSelectAllClick}
-									inputProps={{ 'aria-label': 'Select all' }}
+		<Card className={classes.card}>
+			<CardHeader
+				title={t("Resources")}
+				subheader={props.path+"@"+props.node}
+			/>
+			<CardContent className={classes.content}>
+				<TableToolbar selected={selected}>
+					{selected.length > 0 ? (
+						<ObjInstanceResourceActions path={props.path} node={props.node} rids={selected} title="" />
+					) : (
+						<Tooltip title="Filter list">
+							<IconButton aria-label="Filter list">
+								<FilterListIcon />
+							</IconButton>
+						</Tooltip>
+					)}
+				</TableToolbar>
+				<div style={{overflowX: "auto"}}>
+					<Table>
+						<TableHead>
+							<TableRow className="text-secondary">
+								<TableCell padding="checkbox">
+									<Checkbox
+										indeterminate={selected.length > 0 && selected.length < rowCount}
+										checked={selected.length === rowCount}
+										onChange={handleSelectAllClick}
+										inputProps={{ 'aria-label': 'Select all' }}
+									/>
+								</TableCell>
+								<TableCell>Id</TableCell>
+								<TableCell>Availability</TableCell>
+								<TableCell>Flags</TableCell>
+								<TableCell>Desc</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{Object.keys(rdata).sort().map((rid, i) => (
+								<ObjInstanceResourceLine
+									key={i}
+									index={i}
+									rid={rid}
+									node={props.node}
+									path={props.path}
+									selected={selected}
+									setSelected={setSelected}
+									conf={configData}
+									sp={sp}
 								/>
-							</TableCell>
-							<TableCell>Id</TableCell>
-							<TableCell>Availability</TableCell>
-							<TableCell>Flags</TableCell>
-							<TableCell>Desc</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{Object.keys(rdata).sort().map((rid, i) => (
-							<ObjInstanceResourceLine
-								key={i}
-								index={i}
-								rid={rid}
-								node={props.node}
-								path={props.path}
-								selected={selected}
-								setSelected={setSelected}
-								conf={configData}
-								sp={sp}
-							/>
-						))}
-					</TableBody>
-				</Table>
-			</div>
-		</React.Fragment>
+							))}
+						</TableBody>
+					</Table>
+				</div>
+			</CardContent>
+		</Card>
 	)
 }
 

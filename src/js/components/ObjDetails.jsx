@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { useStateValue } from '../state.js';
+import { useTranslation } from 'react-i18next';
 import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { splitPath } from "../utils.js";
 import { ObjAvail } from "./ObjAvail.jsx";
@@ -11,9 +12,12 @@ import { ObjKeys } from "./ObjKeys.jsx"
 import { apiInstanceAction } from "../api.js"
 
 import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
@@ -22,9 +26,11 @@ import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
         root: {
-                padding: theme.spacing(3, 2),
-                marginTop: theme.spacing(3),
+                flewGrow: 1,
         },
+	section: {
+		padding: theme.spacing(1),
+	},
         tabContent: {
                 paddingTop: theme.spacing(2),
         },
@@ -32,31 +38,6 @@ const useStyles = makeStyles(theme => ({
                 marginBottom: theme.spacing(3),
 	}
 }))
-
-const tabs = [
-	{
-		name: "Main",
-		disabled: false,
-	},
-	{
-		name: "Config",
-		disabled: false,
-	},
-	{
-		name: "Log",
-		disabled: false,
-	},
-]
-
-function Title(props) {
-	return (
-		<Typography variant="h4" component="p">
-			<Link href="#">
-				{props.path}
-			</Link>
-		</Typography>
-	)
-}
 
 function ObjDetails(props) {
 	//
@@ -72,26 +53,17 @@ function ObjDetails(props) {
         }
 
 	return (
-		<Paper className={classes.root}>
-			<Title path={props.path} />
-                        <Tabs
-                                value={active}
-                                onChange={handleChange}
-                                indicatorColor="primary"
-                                textColor="primary"
-                                variant="scrollable"
-                                scrollButtons="auto"
-                        >
-                                {tabs.map((tab, i) => (
-                                        <Tab key={i} href="#" label={tab.name} disabled={tab.disabled} />
-                                ))}
-                        </Tabs>
-                        <Box className={classes.tabContent}>
-                                {active === 0 && <ObjMain active={active} path={props.path} />}
-                                {active === 1 && <ObjConfig active={active} path={props.path} />}
-                                {active === 2 && <ObjLog active={active} path={props.path} />}
-                        </Box>
-		</Paper>
+		<Grid container className={classes.root}>
+                        <Grid item xs={12} lg={6} className={classes.section}>
+                                <ObjMain active={active} path={props.path} />
+			</Grid>
+                        <Grid item xs={12} lg={6} className={classes.section}>
+                                <ObjConfig active={active} path={props.path} />
+			</Grid>
+                        <Grid item xs={12} className={classes.section}>
+                                <ObjLog active={active} path={props.path} />
+			</Grid>
+		</Grid>
 	)
 }
 
@@ -154,9 +126,6 @@ function SvcMain(props) {
 	}
 	return (
 		<div>
-			<Typography variant="h5" component="h3">
-				{title}
-			</Typography>
 			<div className={classes.tabSection}>
 				<ObjDigest path={props.path} />
 			</div>
@@ -172,22 +141,38 @@ function ObjConfig(props) {
 	// props.path
 	//
 	const data = useObjConfig(props.path)
+	const { t, i18n } = useTranslation()
 	if (!data) {
 		return ( <CircularProgress /> )
 	}
 	const date = new Date(data.mtime * 1000)
 
 	return (
-		<div>
-			<Typography variant="caption" color="textSecondary">Last Modified {date.toLocaleString()}</Typography>
-			<pre style={{overflowX: "scroll"}}>{data.data}</pre>
-		</div>
+		<Card>
+			<CardHeader
+				title={t("Configuration")}
+				subheader={props.path}
+			/>
+			<CardContent>
+				<Typography variant="caption" color="textSecondary">Last Modified {date.toLocaleString()}</Typography>
+				<pre style={{overflowX: "scroll"}}>{data.data}</pre>
+			</CardContent>
+		</Card>
 	)
 }
 
 function ObjLog(props) {
+	const { t, i18n } = useTranslation()
 	return (
-		<Log url={"/object/"+props.path} />
+		<Card>
+			<CardHeader
+				title={t("Log")}
+				subheader={props.path}
+			/>
+			<CardContent>
+				<Log url={"/object/"+props.path} />
+			</CardContent>
+		</Card>
 	)
 }
 

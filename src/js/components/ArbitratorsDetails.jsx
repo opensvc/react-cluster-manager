@@ -1,5 +1,6 @@
 import React from "react";
 import { useStateValue } from '../state.js';
+import { useTranslation } from 'react-i18next';
 import { state } from "../utils.js";
 
 import clsx from 'clsx';
@@ -11,19 +12,24 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 
 const useStyles = makeStyles(theme => ({
         root: {
-                padding: theme.spacing(3, 2),
                 marginTop: theme.spacing(3),
+        },
+	wrapper: {
                 overflowX: 'auto',
+                marginLeft: -theme.spacing(2),
+                marginRight: -theme.spacing(2),
         },
 }))
 
 function ArbitratorsDetails(props) {
 	const classes = useStyles()
+	const { t, i18n } = useTranslation()
 	const [{ cstat }, dispatch] = useStateValue();
 	var arbitrators = {}
 	var arbNames = []
@@ -61,26 +67,32 @@ function ArbitratorsDetails(props) {
 	}
 
 	return (
-		<Paper className={classes.root} id="arbitrators">
-			<Typography variant="h4" component="h3">
-				<Link href="#" onClick={handleClick}>Arbitrators</Link>
-			</Typography>
-			<Table>
-				<TableHead>
-					<TableRow className="text-secondary">
-						<TableCell>Nodes</TableCell>
-						{arbNames.map((an, i) => (
-							<TableCell key={i} title={an}>{arbAddr[an]}</TableCell>
-						))}
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{Object.keys(arbitrators).map((node) => (
-						<ArbitratorDetails key={node} node={node} arbitrators={arbitrators[node]} />
-					))}
-				</TableBody>
-			</Table>
-		</Paper>
+		<Card className={classes.root}>
+                        <CardHeader
+                                title={t("Arbitrators")}
+                                subheader={cstat.cluster.name}
+				onClick={handleClick}
+                        />
+                        <CardContent>
+                                <div className={classes.wrapper}>
+					<Table>
+						<TableHead>
+							<TableRow className="text-secondary">
+								<TableCell>Nodes</TableCell>
+								{arbNames.map((an, i) => (
+									<TableCell key={i} title={an}>{arbAddr[an]}</TableCell>
+								))}
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{Object.keys(arbitrators).map((node) => (
+								<ArbitratorDetails key={node} node={node} arbitrators={arbitrators[node]} />
+							))}
+						</TableBody>
+					</Table>
+				</div>
+			</CardContent>
+		</Card>
 	)
 }
 

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useStateValue } from '../state.js';
+import { useTranslation } from 'react-i18next';
 import { apiPostNode } from "../api.js";
 import { Log } from "./Log.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
@@ -19,7 +22,6 @@ import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => ({
         root: {
-                padding: theme.spacing(3, 2),
                 marginTop: theme.spacing(3),
         },
 	tabContent: {
@@ -53,16 +55,9 @@ const tabs = [
 	},
 ]
 
-function Title(props) {
-	return (
-		<Typography variant="h5" component="h3">
-			{props.node}
-		</Typography>
-	)
-}
-
 function NodeDetails(props) {
 	const classes = useStyles()
+	const { t, i18n } = useTranslation()
 	const [nodeData, setNodeData] = useState()
 	const [active, setActive] = useState(0)
 	const [{user}, dispatch] = useStateValue()
@@ -85,28 +80,33 @@ function NodeDetails(props) {
 	}
 
 	return (
-		<Paper className={classes.root}>
-			<Title node={props.node} />
-			<Tabs
-				value={active}
-				onChange={handleChange}
-				indicatorColor="primary"
-				textColor="primary"
-				variant="scrollable"
-				scrollButtons="auto"
-			>
-				{tabs.map((tab, i) => (
-					<Tab key={i} href="#" label={tab.name} disabled={tab.disabled} />
-				))}
-			</Tabs>
-			<Box className={classes.tabContent}>
-				{active === 0 && <Main nodeData={nodeData} />}
-				{active === 1 && <Network nodeData={nodeData} />}
-				{active === 2 && <Initiators nodeData={nodeData} />}
-				{active === 3 && <Hardware nodeData={nodeData} />}
-				{active === 4 && <NodeLog node={props.node} />}
-			</Box>
-		</Paper>
+		<Card className={classes.root}>
+			<CardHeader
+				title={t("Node")}
+				subheader={props.node}
+			/>
+			<CardContent>
+				<Tabs
+					value={active}
+					onChange={handleChange}
+					indicatorColor="primary"
+					textColor="primary"
+					variant="scrollable"
+					scrollButtons="auto"
+				>
+					{tabs.map((tab, i) => (
+						<Tab key={i} href="#" label={tab.name} disabled={tab.disabled} />
+					))}
+				</Tabs>
+				<Box className={classes.tabContent}>
+					{active === 0 && <Main nodeData={nodeData} />}
+					{active === 1 && <Network nodeData={nodeData} />}
+					{active === 2 && <Initiators nodeData={nodeData} />}
+					{active === 3 && <Hardware nodeData={nodeData} />}
+					{active === 4 && <NodeLog node={props.node} />}
+				</Box>
+			</CardContent>
+		</Card>
 	)
 }
 

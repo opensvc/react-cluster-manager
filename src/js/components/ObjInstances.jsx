@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 
 import { useStateValue } from '../state.js';
+import { useTranslation } from 'react-i18next';
 import { fmtPath, splitPath } from "../utils.js";
-import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjInstanceState } from "./ObjInstanceState.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
@@ -23,6 +26,12 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 const useStyles = makeStyles(theme => ({
         tableWrapper: {
                 overflowX: 'auto',
+        },
+	        card: {
+                height: "100%",
+        },
+        content: {
+                margin: -theme.spacing(2),
         },
 }))
 
@@ -72,6 +81,7 @@ function ObjInstances(props) {
 	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
         const [selected, setSelected] = React.useState([]);
+	const { t, i18n } = useTranslation()
 
 	if (cstat.monitor === undefined) {
 		return null
@@ -97,54 +107,56 @@ function ObjInstances(props) {
 		var slice
 	}
 	return (
-		<div>
-			<Typography variant="h5" component="h3">
-				Instances
-			</Typography>
-                        <TableToolbar selected={selected}>
-                                {selected.length > 0 ? (
-                                        <ObjInstanceActions selected={selected} title="" />
-                                ) : (
-                                        <Tooltip title="Filter list">
-                                                <IconButton aria-label="Filter list">
-                                                        <FilterListIcon />
-                                                </IconButton>
-                                        </Tooltip>
-                                )}
-                        </TableToolbar>
-			<div className={classes.tableWrapper}>
-				<Table>
-					<TableHead>
-						<TableRow className="text-secondary">
-							<TableCell padding="checkbox">
-								<Checkbox
-									indeterminate={selected.length > 0 && selected.length < rowCount}
-									checked={selected.length === rowCount}
-									onChange={handleSelectAllClick}
-									inputProps={{ 'aria-label': 'Select all' }}
+                <Card className={classes.card}>
+                        <CardHeader
+                                title={t("Instances")}
+				subheader={props.path}
+                        />
+                        <CardContent className={classes.content}>
+				<TableToolbar selected={selected}>
+					{selected.length > 0 ? (
+						<ObjInstanceActions selected={selected} title="" />
+					) : (
+						<Tooltip title="Filter list">
+							<IconButton aria-label="Filter list">
+								<FilterListIcon />
+							</IconButton>
+						</Tooltip>
+					)}
+				</TableToolbar>
+				<div className={classes.tableWrapper}>
+					<Table>
+						<TableHead>
+							<TableRow className="text-secondary">
+								<TableCell padding="checkbox">
+									<Checkbox
+										indeterminate={selected.length > 0 && selected.length < rowCount}
+										checked={selected.length === rowCount}
+										onChange={handleSelectAllClick}
+										inputProps={{ 'aria-label': 'Select all' }}
+									/>
+								</TableCell>
+								{slice}
+								<TableCell>Node</TableCell>
+								<TableCell>State</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{instances.map((i, j) => (
+								<InstanceLine
+									key={j}
+									index={j}
+									path={props.path}
+									instance={i}
+									selected={selected}
+									setSelected={setSelected}
 								/>
-							</TableCell>
-							{slice}
-							<TableCell>Node</TableCell>
-							<TableCell>Availability</TableCell>
-							<TableCell>State</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{instances.map((i, j) => (
-							<InstanceLine
-								key={j}
-								index={j}
-								path={props.path}
-								instance={i}
-								selected={selected}
-								setSelected={setSelected}
-							/>
-						))}
-					</TableBody>
-				</Table>
-			</div>
-		</div>
+							))}
+						</TableBody>
+					</Table>
+				</div>
+			</CardContent>
+		</Card>
 	)
 }
 
@@ -207,7 +219,6 @@ function InstanceLine(props) {
                         </TableCell>
 			{instance.slice !== null && <TableCell>{instance.slice}</TableCell>}
 			<TableCell>{instance.node}</TableCell>
-			<TableCell><ObjAvail avail={instance.instance.avail} /></TableCell>
 			<TableCell><ObjInstanceState node={instance.node} path={path} /></TableCell>
 		</TableRow>
 	)
