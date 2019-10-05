@@ -6,7 +6,7 @@ import { ObjFrozenItem } from "./ObjFrozenItem.jsx";
 import { ObjProvisionedItem } from "./ObjProvisionedItem.jsx";
 import { ObjLeaderItem } from "./ObjLeaderItem.jsx";
 import { MonitorStatusBadgeItem } from "./MonitorStatusBadgeItem.jsx";
-import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
+import { MonitorTargetBadgeItem } from "./MonitorTargetBadgeItem.jsx";
 
 import List from '@material-ui/core/List';
 
@@ -20,12 +20,12 @@ function ObjInstanceStateList(props) {
 	return (
 		<List dense={true}>
 			<ObjAvailItem avail={data.avail} />
+			<MonitorStatusBadgeItem state={data.monitor.status} />
+			<MonitorTargetBadgeItem target={data.monitor.global_expect} />
 			<ObjOverallItem overall={data.overall} />
+			<ObjLeaderItem placement={data.monitor.placement} />
 			<ObjFrozenItem frozen={data.frozen} />
 			<ObjProvisionedItem provisioned={data.provisioned} />
-			<ObjLeaderItem placement={data.monitor.placement} />
-			<MonitorStatusBadgeItem state={data.monitor.status} />
-			<MonitorTargetBadge target={data.monitor.global_expect} />
 		</List>
 	)
 }

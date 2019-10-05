@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { useStateValue } from '../state.js';
+import { useTranslation } from 'react-i18next';
 import { parseIni } from "../utils.js";
 import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { TableToolbar } from "./TableToolbar.jsx"
@@ -8,6 +9,9 @@ import { ObjKeyActions } from "./ObjKeyActions.jsx"
 import { KeyDecode } from "./KeyDecode.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -24,10 +28,15 @@ const useStyles = makeStyles(theme => ({
         tableWrapper: {
                 overflowX: 'auto',
         },
+        wrapper: {
+		marginLeft: -theme.spacing(2),
+                marginRight: -theme.spacing(2),
+	},
 }))
 
 function ObjKeys(props) {
 	const classes = useStyles()
+	const { t, i18n } = useTranslation()
 	const [selected, setSelected] = React.useState([])
 	var conf = useObjConfig(props.path)
 	if (!conf || !conf.data) {
@@ -47,49 +56,59 @@ function ObjKeys(props) {
                 setSelected([]);
         }
 	return (
-		<React.Fragment>
-                        <TableToolbar selected={selected}>
-                                {selected.length > 0 ? (
-                                        <ObjKeyActions path={props.path} selected={selected} title="" />
-                                ) : (
-                                        <Tooltip title="Filter list">
-                                                <IconButton aria-label="Filter list">
-                                                        <FilterListIcon />
-                                                </IconButton>
-                                        </Tooltip>
-                                )}
-                        </TableToolbar>
-			<Table>
-				<TableHead>
-					<TableRow>
-						<TableCell padding="checkbox">
-							<Checkbox
-								indeterminate={selected.length > 0 && selected.length < rowCount}
-								checked={selected.length === rowCount}
-								onChange={handleSelectAllClick}
-								inputProps={{ 'aria-label': 'Select all' }}
-							/>
-						</TableCell>
-						<TableCell>Key</TableCell>
-						<TableCell>Type</TableCell>
-						<TableCell>Value</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{Object.keys(confData.data).sort().map((keyName, i) => (
-						<ObjKey
-							key={keyName}
-							index={i}
-							path={props.path}
-							keyValue={confData.data[keyName]}
-							keyName={keyName}
-							selected={selected}
-							setSelected={setSelected}
-						/>
-					))}
-				</TableBody>
-			</Table>
-		</React.Fragment>
+                <Card>
+                        <CardHeader
+                                title={t("Keys")}
+                                subheader={props.path}
+                        />
+                        <CardContent>
+				<div className={classes.wrapper}>
+					<TableToolbar selected={selected}>
+						{selected.length > 0 ? (
+							<ObjKeyActions path={props.path} selected={selected} title="" />
+						) : (
+							<Tooltip title="Filter list">
+								<IconButton aria-label="Filter list">
+									<FilterListIcon />
+								</IconButton>
+							</Tooltip>
+						)}
+					</TableToolbar>
+					<div className={classes.tableWrapper}>
+						<Table>
+							<TableHead>
+								<TableRow>
+									<TableCell padding="checkbox">
+										<Checkbox
+											indeterminate={selected.length > 0 && selected.length < rowCount}
+											checked={selected.length === rowCount}
+											onChange={handleSelectAllClick}
+											inputProps={{ 'aria-label': 'Select all' }}
+										/>
+									</TableCell>
+									<TableCell>Key</TableCell>
+									<TableCell>Type</TableCell>
+									<TableCell>Value</TableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{Object.keys(confData.data).sort().map((keyName, i) => (
+									<ObjKey
+										key={keyName}
+										index={i}
+										path={props.path}
+										keyValue={confData.data[keyName]}
+										keyName={keyName}
+										selected={selected}
+										setSelected={setSelected}
+									/>
+								))}
+							</TableBody>
+						</Table>
+					</div>
+				</div>
+			</CardContent>
+		</Card>
 	)
 }
 

@@ -6,6 +6,7 @@ import { threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue } from "../
 import { splitPath } from "../utils.js";
 import { usePoolsStatus } from "../hooks/PoolsStatus.jsx"
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
+import { ClusterActions } from "./ClusterActions.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -89,6 +90,9 @@ function ClusterDigest(props) {
 			<CardHeader
 				title={t("Cluster")}
 				subheader={cstat.cluster.name}
+				action={
+					<ClusterActions />
+				}
 			/>
 			<CardContent>
 				<Grid container spacing={3}>

@@ -36,7 +36,10 @@ const useStyles = makeStyles(theme => ({
         },
 	tabSection: {
                 marginBottom: theme.spacing(3),
-	}
+	},
+	card: {
+		height: "100%",
+	},
 }))
 
 function ObjDetails(props) {
@@ -85,9 +88,6 @@ function CfgMain(props) {
 	const sp = splitPath(props.path)
 	return (
 		<React.Fragment>
-			<Typography variant="h5" component="h3">
-				Keys
-			</Typography>
 			<ObjKeys path={props.path} />
 		</React.Fragment>
 	)
@@ -98,9 +98,6 @@ function UsrMain(props) {
 	const sp = splitPath(props.path)
 	return (
 		<React.Fragment>
-			<Typography variant="h5" component="h3">
-				Keys
-			</Typography>
 			<ObjKeys path={props.path} />
 		</React.Fragment>
 	)
@@ -142,20 +139,28 @@ function ObjConfig(props) {
 	//
 	const data = useObjConfig(props.path)
 	const { t, i18n } = useTranslation()
+	const classes = useStyles()
+
 	if (!data) {
-		return ( <CircularProgress /> )
+		var content = ( <CircularProgress /> )
+	} else {
+		var date = new Date(data.mtime * 1000)
+		var content = (
+			<React.Fragment>
+				<Typography variant="caption" color="textSecondary">Last Modified {date.toLocaleString()}</Typography>
+				<pre style={{overflowX: "scroll"}}>{data.data}</pre>
+			</React.Fragment>
+		)
 	}
-	const date = new Date(data.mtime * 1000)
 
 	return (
-		<Card>
+		<Card className={classes.card}>
 			<CardHeader
 				title={t("Configuration")}
 				subheader={props.path}
 			/>
 			<CardContent>
-				<Typography variant="caption" color="textSecondary">Last Modified {date.toLocaleString()}</Typography>
-				<pre style={{overflowX: "scroll"}}>{data.data}</pre>
+				{content}
 			</CardContent>
 		</Card>
 	)
