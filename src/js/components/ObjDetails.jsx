@@ -2,13 +2,13 @@ import React, { useState } from "react";
 
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
-import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { splitPath } from "../utils.js";
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjDigest } from "./ObjDigest.jsx";
 import { Log } from "./Log.jsx"
 import { ObjInstances } from "./ObjInstances.jsx"
 import { ObjKeys } from "./ObjKeys.jsx"
+import { ObjConfig } from "./ObjConfig.jsx"
 import { apiInstanceAction } from "../api.js"
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,11 +17,6 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Box from '@material-ui/core/Box';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
@@ -36,9 +31,6 @@ const useStyles = makeStyles(theme => ({
         },
 	tabSection: {
                 marginBottom: theme.spacing(3),
-	},
-	card: {
-		height: "100%",
 	},
 }))
 
@@ -57,13 +49,11 @@ function ObjDetails(props) {
 
 	return (
 		<Grid container className={classes.root}>
-                        <Grid item xs={12} lg={6} className={classes.section}>
-                                <ObjMain active={active} path={props.path} />
-			</Grid>
+			<ObjMain active={active} path={props.path} />
                         <Grid item xs={12} lg={6} className={classes.section}>
                                 <ObjConfig active={active} path={props.path} />
 			</Grid>
-                        <Grid item xs={12} className={classes.section}>
+                        <Grid item xs={12} lg={6} className={classes.section}>
                                 <ObjLog active={active} path={props.path} />
 			</Grid>
 		</Grid>
@@ -87,9 +77,9 @@ function CfgMain(props) {
 	const classes = useStyles()
 	const sp = splitPath(props.path)
 	return (
-		<React.Fragment>
+		<Grid item xs={12} lg={6} className={classes.section}>
 			<ObjKeys path={props.path} />
-		</React.Fragment>
+		</Grid>
 	)
 }
 
@@ -97,9 +87,9 @@ function UsrMain(props) {
 	const classes = useStyles()
 	const sp = splitPath(props.path)
 	return (
-		<React.Fragment>
+		<Grid item xs={12} lg={6} className={classes.section}>
 			<ObjKeys path={props.path} />
-		</React.Fragment>
+		</Grid>
 	)
 }
 
@@ -122,47 +112,14 @@ function SvcMain(props) {
 		var title = "Object"
 	}
 	return (
-		<div>
-			<div className={classes.tabSection}>
+		<React.Fragment>
+			<Grid item xs={12} lg={6} className={classes.section}>
 				<ObjDigest path={props.path} />
-			</div>
-			<div className={classes.tabSection}>
+			</Grid>
+			<Grid item xs={12} lg={6} className={classes.section}>
 				<ObjInstances path={props.path} />
-			</div>
-		</div>
-	)
-}
-
-function ObjConfig(props) {
-	//
-	// props.path
-	//
-	const data = useObjConfig(props.path)
-	const { t, i18n } = useTranslation()
-	const classes = useStyles()
-
-	if (!data) {
-		var content = ( <CircularProgress /> )
-	} else {
-		var date = new Date(data.mtime * 1000)
-		var content = (
-			<React.Fragment>
-				<Typography variant="caption" color="textSecondary">Last Modified {date.toLocaleString()}</Typography>
-				<pre style={{overflowX: "scroll"}}>{data.data}</pre>
-			</React.Fragment>
-		)
-	}
-
-	return (
-		<Card className={classes.card}>
-			<CardHeader
-				title={t("Configuration")}
-				subheader={props.path}
-			/>
-			<CardContent>
-				{content}
-			</CardContent>
-		</Card>
+			</Grid>
+		</React.Fragment>
 	)
 }
 
@@ -178,19 +135,6 @@ function ObjLog(props) {
 				<Log url={"/object/"+props.path} />
 			</CardContent>
 		</Card>
-	)
-}
-
-function ObjLogButton(props) {
-	return (
-		<Button
-			color="outline-secondary"
-			size="sm"
-			onClick={(e) => setNav({
-				"page": props.path + " Log",
-				"links": ["Objects", props.path, "Log"]
-			})}
-		>Log</Button>
 	)
 }
 
