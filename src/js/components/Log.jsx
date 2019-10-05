@@ -27,10 +27,10 @@ const useStyles = makeStyles(theme => ({
 		paddingTop: theme.spacing(2),
 	},
 	ERROR: {
-		borderColor: theme.status.error[500],
+		borderColor: theme.status.danger,
 	},
 	WARNING: {
-		borderColor: theme.status.warning[500],
+		borderColor: theme.status.warning,
 	},
 }))
 
@@ -111,7 +111,7 @@ function LogLine(props) {
 		props.setSkip(props.id)
 	}
 	return (
-		<div className={clsx([classes.logLine, classes[level]])} id={props.id} onClick={handleClick}>
+		<div className={clsx(classes.logLine, classes[level])} id={props.id} onClick={handleClick}>
 			<Typography variant="caption" color="textSecondary" display="block">
 				{l[0]} - {l[1]}
 			</Typography>
