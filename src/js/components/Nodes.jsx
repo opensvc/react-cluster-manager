@@ -273,13 +273,13 @@ function Nodes(props) {
 										inputProps={{ 'aria-label': 'Select all' }}
 									/>
 								</TableCell>
-								<TableCell>Name</TableCell>
-								<TableCell>State</TableCell>
+								<TableCell>{t("Name")}</TableCell>
+								<TableCell>{t("State")}</TableCell>
 								<Hidden smDown>
 									<TableCell>Score</TableCell>
-									<TableCell>Load15m</TableCell>
-									<TableCell>Mem Avail</TableCell>
-									<TableCell>Swap Avail</TableCell>
+									<TableCell>{t("Load15m")}</TableCell>
+									<TableCell>{t("Mem Avail")}</TableCell>
+									<TableCell>{t("Swap Avail")}</TableCell>
 								</Hidden>
 								<TableCell>Version</TableCell>
 							</TableRow>

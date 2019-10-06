@@ -67,10 +67,10 @@ function Pools(props) {
 					<Table>
 						<TableHead>
 							<TableRow>
-								<TableCell>Name</TableCell>
+								<TableCell>{t("Name")}</TableCell>
 								<TableCell>Type</TableCell>
 								<TableCell>Volumes</TableCell>
-								<TableCell>Usage</TableCell>
+								<TableCell>{t("Usage")}</TableCell>
 								<Hidden smDown>
 									<TableCell>Head</TableCell>
 								</Hidden>

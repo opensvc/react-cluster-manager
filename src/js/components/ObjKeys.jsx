@@ -90,9 +90,9 @@ function ObjKeys(props) {
 											inputProps={{ 'aria-label': 'Select all' }}
 										/>
 									</TableCell>
-									<TableCell>Key</TableCell>
+									<TableCell>{t("Key")}</TableCell>
 									<TableCell>Type</TableCell>
-									<TableCell>Value</TableCell>
+									<TableCell>{t("Value")}</TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
