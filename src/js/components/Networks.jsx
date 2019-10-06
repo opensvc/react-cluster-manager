@@ -63,11 +63,11 @@ function Networks(props) {
 					<Table>
 						<TableHead>
 							<TableRow>
-								<TableCell>Name</TableCell>
+								<TableCell>{t("Name")}</TableCell>
 								<TableCell>Type</TableCell>
-								<TableCell>Network</TableCell>
-								<TableCell>Addresses</TableCell>
-								<TableCell>Usage</TableCell>
+								<TableCell>{t("Network")}</TableCell>
+								<TableCell>{t("Addresses")}</TableCell>
+								<TableCell>{t("Usage")}</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
