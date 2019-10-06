@@ -7,6 +7,7 @@ import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { TableToolbar } from "./TableToolbar.jsx"
 import { ObjKeyActions } from "./ObjKeyActions.jsx"
 import { KeyDecode } from "./KeyDecode.jsx"
+import { ObjKeyAdd } from "./ObjKeyAdd.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -60,6 +61,9 @@ function ObjKeys(props) {
                         <CardHeader
                                 title={t("Keys")}
                                 subheader={props.path}
+				action={
+					<ObjKeyAdd path={props.path} />
+				}
                         />
                         <CardContent>
 				<div className={classes.wrapper}>

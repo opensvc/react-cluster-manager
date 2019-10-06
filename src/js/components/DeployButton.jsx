@@ -5,8 +5,6 @@ import { createDataHasPathKey } from '../utils.js';
 import { Deploy } from "./Deploy.jsx"
 import { apiObjGetConfig, apiObjCreate } from "../api.js"
 
-import { makeStyles } from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -14,16 +12,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-
-const useStyles = makeStyles(theme => ({
-        fab: {
-                marginTop: theme.spacing(2),
-        },
-}))
+import IconButton from '@material-ui/core/IconButton'
 
 function DeployButton(props) {
 	const [open, setOpen] = useState(false)
-	const classes = useStyles()
 	const [{}, dispatch] = useStateValue()
         const [data, setData] = useState({
 		active: 0,
@@ -177,13 +169,13 @@ function DeployButton(props) {
 
 	return (
 		<React.Fragment>
-			<Fab
-				color="primary"
+			<IconButton
 				onClick={handleClick}
-				className={classes.fab}
+				aria-label="Deploy"
+                                aria-haspopup="true"
 			>
 				<AddIcon />
-			</Fab>
+			</IconButton>
                         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                                 <DialogTitle id="form-dialog-title">Deploy</DialogTitle>
                                 <DialogContent>

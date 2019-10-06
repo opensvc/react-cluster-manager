@@ -2,6 +2,7 @@ import React from "react";
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next';
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
+import { NetworkAdd } from "./NetworkAdd.jsx"
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -57,6 +58,9 @@ function Networks(props) {
                         <CardHeader
                                 title={t("Networks")}
                                 onClick={handleTitleClick}
+				action={
+					<NetworkAdd />
+				}
                         />
                         <CardContent>
                                 <div className={classes.wrapper}>

@@ -2,11 +2,13 @@ import React from "react";
 import { useTranslation } from 'react-i18next';
 import { useStateValue } from '../state.js';
 import { state, fancySizeMB } from '../utils.js';
-import { threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue } from "../issues.js";
+import { arbitratorsIssue, heartbeatsIssue, nodesIssue } from "../issues.js";
 import { splitPath } from "../utils.js";
 import { usePoolsStatus } from "../hooks/PoolsStatus.jsx"
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 import { ClusterActions } from "./ClusterActions.jsx"
+import { DeployButton } from "./DeployButton.jsx"
+import { SvcMap } from "./SvcMap.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -14,6 +16,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import WarningIcon from '@material-ui/icons/Warning';
 
 const useStyles = makeStyles(theme => ({
         root: {
@@ -22,6 +25,9 @@ const useStyles = makeStyles(theme => ({
 	item: {
 		minWidth: "10em",
 	},
+        warn: {
+                color: theme.status.warning,
+        },
 }))
 
 function ClusterDigest(props) {
@@ -91,7 +97,10 @@ function ClusterDigest(props) {
 				title={t("Cluster")}
 				subheader={cstat.cluster.name}
 				action={
-					<ClusterActions />
+					<React.Fragment>
+						<DeployButton />
+						<ClusterActions />
+					</React.Fragment>
 				}
 			/>
 			<CardContent>
@@ -146,6 +155,7 @@ function ClusterDigest(props) {
 						</Typography>
 						<Typography variant="h4" color="primary" component="h3">
 							{counts.nodes}
+							{nodesIssue(cstat) != state.OPTIMAL ? ( <WarningIcon className={classes.warn} /> ) : null}
 						</Typography>
 					</Grid>
 					<Grid item xs
@@ -157,6 +167,7 @@ function ClusterDigest(props) {
 						</Typography>
 						<Typography variant="h4" color="primary" component="h3">
 							{counts.heartbeats}
+							{heartbeatsIssue(cstat) != state.OPTIMAL ? ( <WarningIcon className={classes.warn} /> ) : null}
 						</Typography>
 					</Grid>
 					<Grid item xs
@@ -206,6 +217,15 @@ function ClusterDigest(props) {
 							<div>sec: {counts.sec}</div>
 							<div>usr: {counts.usr}</div>
 						</Typography>
+					</Grid>
+					<Grid item sm
+						className={classes.item}
+						onClick={() => dispatch({type: "setNav", page: "Objects", links: ["Objects"]})}
+					>
+						<Typography variant="subtitle1" component="h3">
+							{t("Services")}
+						</Typography>
+						<SvcMap />
 					</Grid>
 				</Grid>
 			</CardContent>

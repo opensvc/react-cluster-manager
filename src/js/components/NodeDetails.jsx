@@ -3,6 +3,7 @@ import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { apiPostNode } from "../api.js";
 import { Log } from "./Log.jsx"
+import { NodeActions } from "./NodeActions.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -84,6 +85,9 @@ function NodeDetails(props) {
 			<CardHeader
 				title={t("Node")}
 				subheader={props.node}
+				action={
+					<NodeActions selected={props.node} />
+				}
 			/>
 			<CardContent>
 				<Tabs

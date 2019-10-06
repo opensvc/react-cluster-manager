@@ -6,6 +6,7 @@ import { ObjActions } from "./ObjActions.jsx";
 import { ObjState } from "./ObjState.jsx";
 import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
+import { DeployButton } from "./DeployButton.jsx";
 
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -242,6 +243,9 @@ function Objs(props) {
 				title={t(title)}
 				subheader={cstat.cluster.name}
 				onClick={handleTitleClick}
+				action={
+					<DeployButton kind={props.kind} />
+				}
 			/>
 			<CardContent>
 				<Grid container className={classes.tools} spacing={1}>

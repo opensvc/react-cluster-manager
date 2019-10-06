@@ -4,7 +4,7 @@ import { apiInstanceAction } from "../api.js"
 import { useStateValue } from '../state.js';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
+import IconButton from '@material-ui/core/IconButton';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -19,9 +19,6 @@ import LinearScaleIcon from '@material-ui/icons/LinearScale';
 const useStyles = makeStyles(theme => ({
         formcontrol: {
                 margin: theme.spacing(2, 0),
-        },
-        fab: {
-                marginTop: theme.spacing(2),
         },
 }))
 
@@ -68,13 +65,13 @@ function ObjScale(props) {
 	}
 	return (
                 <React.Fragment>
-                        <Fab
-                                color="primary"
+                        <IconButton
+                                aria-label="Scale"
+                                aria-haspopup={true}
                                 onClick={handleClickOpen}
-				className={classes.fab}
                         >
                                 <LinearScaleIcon />
-                        </Fab>
+                        </IconButton>
                         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                                 <DialogTitle id="form-dialog-title">Scale {path}</DialogTitle>
                                 <DialogContent>

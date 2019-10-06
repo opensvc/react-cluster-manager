@@ -4,6 +4,7 @@ import { useStateValue } from '../state.js';
 import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { ResourceAddButton } from "./ResourceAddButton.jsx";
 
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -127,6 +128,9 @@ function ObjConfig(props) {
                         <CardHeader
                                 title={t("Configuration")}
                                 subheader={path}
+				action={
+					<ResourceAddButton path={path} />
+				}
                         />
                         <CardContent>
 				<ObjConfigDigest path={path} />

@@ -5,8 +5,6 @@ import { splitPath, createDataHasPathKey } from '../utils.js';
 import { ResourceAdd } from "./ResourceAdd.jsx"
 import { apiInstanceAction } from "../api.js"
 
-import { makeStyles } from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -14,12 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-
-const useStyles = makeStyles(theme => ({
-        fab: {
-                marginTop: theme.spacing(2),
-        },
-}))
+import IconButton from '@material-ui/core/IconButton';
 
 function ResourceAddButton(props) {
         const sp = splitPath(props.path)
@@ -29,7 +22,6 @@ function ResourceAddButton(props) {
         }
 
 	const [open, setOpen] = useState(false)
-	const classes = useStyles()
 	const [{}, dispatch] = useStateValue()
         const [data, setData] = useState({
 		kind: "",
@@ -72,13 +64,13 @@ function ResourceAddButton(props) {
 
 	return (
 		<React.Fragment>
-			<Fab
-				color="primary"
+			<IconButton
+				aria-label="Add Resource"
+				aria-haspopup="true"
 				onClick={handleClick}
-				className={classes.fab}
 			>
 				<AddIcon />
-			</Fab>
+			</IconButton>
                         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                                 <DialogTitle id="form-dialog-title">Add Resource to {props.path}</DialogTitle>
                                 <DialogContent>

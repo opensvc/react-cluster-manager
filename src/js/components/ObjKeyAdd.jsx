@@ -10,7 +10,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import Fab from '@material-ui/core/Fab';
+import IconButton from '@material-ui/core/IconButton';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -23,9 +23,6 @@ const useStyles = makeStyles(theme => ({
 	formcontrol: {
 		margin: theme.spacing(2, 0),
 	},
-        fab: {
-                marginTop: theme.spacing(2),
-        },
 }))
 
 function ObjKeyAdd(props) {
@@ -67,13 +64,13 @@ function ObjKeyAdd(props) {
 	}
 	return (
 		<React.Fragment>
-			<Fab
-				color="primary"
+			<IconButton
+				aria-label="Add Key"
+				aria-haspopup={true}
 				onClick={handleClickOpen}
-				className={classes.fab}
 			>
 				<AddIcon />
-			</Fab>
+			</IconButton>
 			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
 				<DialogTitle id="form-dialog-title">Add Key</DialogTitle>
 				<DialogContent>

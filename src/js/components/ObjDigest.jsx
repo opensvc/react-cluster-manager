@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ObjStateList } from "./ObjStateList.jsx";
 import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
 import { ObjActions } from "./ObjActions.jsx";
+import { ObjScale } from "./ObjScale.jsx";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -31,7 +32,10 @@ function ObjDigest(props) {
 				title={t("Object")}
 				subheader={path}
 				action={
-					<ObjActions selected={[path]} title="" />
+					<React.Fragment>
+						<ObjScale path={path} title="" />
+						<ObjActions selected={[path]} title="" />
+					</React.Fragment>
 				}
 			/>
 			<CardContent>

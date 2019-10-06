@@ -1,6 +1,7 @@
 import React from "react";
 import { usePoolsStatus } from "../hooks/PoolsStatus.jsx"
 import { useTranslation } from 'react-i18next';
+import { PoolAdd } from './PoolAdd.jsx';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -57,6 +58,9 @@ function Pools(props) {
                         <CardHeader
                                 title={t("Pools")}
                                 onClick={handleTitleClick}
+				action={
+					<PoolAdd />
+				}
                         />
                         <CardContent>
                                 <div className={classes.wrapper}>

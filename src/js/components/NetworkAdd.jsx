@@ -8,20 +8,14 @@ import { useStateValue } from '../state.js';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
 
 import AddIcon from '@material-ui/icons/Add';
-
-const useStyles = makeStyles(theme => ({
-        fab: {
-                marginTop: theme.spacing(2),
-        },
-}))
 
 function NetworkAdd(props) {
 	const {path} = props
@@ -29,7 +23,6 @@ function NetworkAdd(props) {
 	const [data, setData] = useState({})
 	const kws = useKeywords("ccfg")
 	const [{user}, dispatch] = useStateValue();
-	const classes = useStyles()
 	if (!("root" in user.grant)) {
 		return null
 	}
@@ -61,13 +54,13 @@ function NetworkAdd(props) {
 	}
 	return (
 		<React.Fragment>
-			<Fab
-				color="primary"
+			<IconButton
+				aria-label="Add Network"
+				aria-haspopup={true}
 				onClick={handleClickOpen}
-				className={classes.fab}
 			>
 				<AddIcon />
-			</Fab>
+			</IconButton>
 			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
 				<DialogTitle id="form-dialog-title">Create New Network</DialogTitle>
 				<DialogContent>
