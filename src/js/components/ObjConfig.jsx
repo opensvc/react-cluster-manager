@@ -35,11 +35,16 @@ const useStyles = makeStyles(theme => ({
 	expandOpen: {
 		transform: 'rotate(180deg)',
 	},
+	list: {
+		paddingTop: 0,
+		paddingBottom: 0,
+	},
 }))
 
 function ObjConfigDigest(props) {
 	const { path } = props
 	const [{ cstat }, dispatch] = useStateValue()
+	const classes = useStyles()
         if (cstat.monitor === undefined) {
                 return null
         }
@@ -68,7 +73,7 @@ function ObjConfigDigest(props) {
 		}
 	}
 	return (
-		<List dense={true}>
+		<List dense={true} className={classes.list}>
 			{Object.keys(groups).map((group, i) => {
 				var data = groups[group]
 				var label = (
@@ -79,10 +84,11 @@ function ObjConfigDigest(props) {
 					</ul>
 				)
 				return (
-					<ListItem key={i}>
+					<ListItem key={i} className={classes.list}>
 						<ListItemText
 							primary={group}
 							secondary={label}
+							secondaryTypographyProps={{component: "div"}}
 						/>
 					</ListItem>
 				)
