@@ -80,8 +80,10 @@ function NodeDetails(props) {
 		setActive(newValue)
 	}
 
-	if (!user.grants || !("root" in user.grant)) {
+	if (!user.grant || !("root" in user.grant)) {
 		tabs[4].disabled = true
+	} else {
+		tabs[4].disabled = false
 	}
 
 	return (
