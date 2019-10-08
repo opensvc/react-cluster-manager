@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 function ObjKeyAdd(props) {
 	const {path} = props
 	const sp = splitPath(path)
-	if (["cfg", "sec"].indexOf(sp.kind) < 0) {
+	if (["cfg", "sec", "usr"].indexOf(sp.kind) < 0) {
 		return null
 	}
 	const [open, setOpen] = React.useState(false)
