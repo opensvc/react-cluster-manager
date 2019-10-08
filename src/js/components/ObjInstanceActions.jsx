@@ -17,6 +17,7 @@ import ShuffleIcon from "@material-ui/icons/Shuffle"
 import LabelIcon from "@material-ui/icons/Label"
 import BackspaceIcon from "@material-ui/icons/Backspace"
 import ReplayIcon from "@material-ui/icons/Replay"
+import SyncIcon from "@material-ui/icons/Sync"
 
 
 function ObjInstanceActions(props) {
@@ -151,6 +152,9 @@ function ObjInstanceActions(props) {
 					/>
 					<ActionsItem value="status" text="Refresh" requires={{role: "operator", namespace: sp.namespace}}
 						icon=<RefreshIcon />
+					/>
+					<ActionsItem value="sync all" text="Sync All" disabled={disable_stop()} requires={{role: "operator", namespace: sp.namespace}}
+						icon=<SyncIcon />
 					/>
 				</ActionsSection>
 				<ActionsDivider />
