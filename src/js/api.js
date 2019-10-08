@@ -12,7 +12,7 @@ function parseApiResponse(data, ok) {
 			<div key={i}>{e}</div>
 		))
 	}
-	if (data.status) {
+	if (data.status !== undefined) {
 		if ("nodes" in data) {
 			for (var node in data.nodes) {
 				var _data = data.nodes[node]
@@ -91,6 +91,7 @@ function apiNodeAction(node, action, options, callback) {
 		},
 		method: "POST",
 		body: JSON.stringify({
+			sync: false,
 			action: action,
 			options: options
 		})
@@ -113,7 +114,8 @@ function apiInstanceAction(node, path, action, options, callback) {
 		body: JSON.stringify({
 			path: path,
 			action: action,
-			options: options
+			options: options,
+			sync: false,
 		})
 	})
 	.then(res => res.json())
