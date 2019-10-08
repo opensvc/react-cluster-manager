@@ -35,13 +35,6 @@ function HeartbeatsDetails(props) {
 		return null
 	}
 	var hbNames = []
-	function handleClick(e) {
-		dispatch({
-			type: "setNav",
-			page: "Heartbeats",
-			links: ["Heartbeats"]
-		})
-	}
         for (var hbName in cstat) {
 		if (!/^hb#/.test(hbName)) {
 			continue

@@ -2,6 +2,8 @@
 
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
+import { useHistory } from 'react-router';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { useStateValue, StateProvider, StateContext } from '../state.js';
 import { apiPostAny, parseApiResponse, apiWhoAmI } from "../api.js";
 import { NavBar } from "./NavBar.jsx";
@@ -99,12 +101,6 @@ const StatefulApp = () => {
 
 	const reducer = (state, action) => {
 		switch (action.type) {
-			case 'setNav':
-				return {
-					...state,
-					nav: {"page": action.page, "links": action.links}
-				};
-
 			case 'setFilter':
 				var new_filters = {}
 				new_filters[action.filter_type] = action.filter_value
@@ -295,7 +291,7 @@ class WrappedApp extends Component {
 	render() {
 
 		return (
-			<React.Fragment>
+			<Router>
 				<CssBaseline />
 				<HideOnScroll>
 					<AppBar>
@@ -308,7 +304,7 @@ class WrappedApp extends Component {
 						<Main />
 					</ErrorBoundary>
 				</Container>
-			</React.Fragment>
+			</Router>
 		)
 	}
 }
@@ -334,11 +330,6 @@ class ErrorBoundary extends React.Component {
 
 	handleResetButtonClick = () => {
 		const [{}, dispatch] = this.context
-		dispatch({
-			"type": "setNav",
-			"page": "Cluster",
-			"links": [],
-		})
 		this.setState(prevState => ({
 			error: null,
 			errorInfo: null,
@@ -355,12 +346,13 @@ class ErrorBoundary extends React.Component {
 
 function AppError(props) {
 	const classes = useStyles()
+	const history = useHistory()
 	return (
 		<Paper className={classes.root}>
 			<Typography variant="h5" component="h3">
 				Something went wrong.
 			</Typography>
-			<Button color="secondary" onClick={props.clear}>
+			<Button color="secondary" onClick={() => {history.push("/");props.clear()}}>
 				Clear
 			</Button>
 			<br />

@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from 'react-router';
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { state, fancySizeMB } from "../utils.js";
@@ -132,6 +133,7 @@ function NodeSwap(props) {
 function Node(props) {
 	const {index, node, selected, setSelected, withScalerSlaves } = props
 	const [{ cstat }, dispatch] = useStateValue();
+	const history = useHistory()
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -159,11 +161,7 @@ function Node(props) {
                 setSelected(newSelected);
         }
 	function handleLineClick(e) {
-		dispatch({
-			"type": "setNav",
-			"page": props.node,
-			"links": ["Nodes", props.node]
-		})
+		history.push("/node?name="+props.node)
 	}
         const isItemSelected = selected.indexOf(node) !== -1
         const labelId = `nodes-checkbox-${index}`
@@ -215,24 +213,17 @@ function NodeVersion(props) {
 function Nodes(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	const { t, i18n } = useTranslation()
+	const classes = useStyles()
+	const [selected, setSelected] = React.useState([]);
+
 	if (cstat.monitor === undefined) {
 		return null
 	}
-
-	const classes = useStyles()
-	const [selected, setSelected] = React.useState([]);
 
 	var vissue = versionIssue(cstat)
 	var cissue = compatIssue(cstat)
 	var rowCount = Object.keys(cstat.monitor.nodes).length
 
-	function handleTitleClick(e) {
-		dispatch({
-			"type": "setNav",
-			"page": "Nodes",
-			"links": ["Nodes"],
-		})
-	}
         function handleSelectAllClick(event) {
                 if (event.target.checked) {
                         const newSelecteds = Object.keys(cstat.monitor.nodes)
@@ -247,7 +238,6 @@ function Nodes(props) {
 			<CardHeader
 				title={t("Nodes")}
 				subheader={cstat.cluster.name}
-				onClick={handleTitleClick}
 			/>
 			<CardContent>
 				<TableToolbar selected={selected} className={classes.table}>

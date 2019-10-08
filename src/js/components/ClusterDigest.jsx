@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from 'react-router'
 import { useTranslation } from 'react-i18next';
 import { useStateValue } from '../state.js';
 import { state, fancySizeMB } from '../utils.js';
@@ -36,6 +37,7 @@ function ClusterDigest(props) {
         const classes = useStyles()
 	const pools = usePoolsStatus()
 	const networks = useNetworksStatus()
+	const history = useHistory()
 
 	var counts = {
 		svc: 0,
@@ -148,7 +150,7 @@ function ClusterDigest(props) {
 					</Grid>
 					<Grid item xs
 						className={classes.item}
-						onClick={() => dispatch({type: "setNav", page: "Nodes", links: ["Nodes"]})}
+						onClick={() => history.push("/nodes")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Nodes")}
@@ -160,7 +162,7 @@ function ClusterDigest(props) {
 					</Grid>
 					<Grid item xs
 						className={classes.item}
-						onClick={() => dispatch({type: "setNav", page: "Heartbeats", links: ["Heartbeats"]})}
+						onClick={() => history.push("/heartbeats")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Heartbeats")}
@@ -172,7 +174,7 @@ function ClusterDigest(props) {
 					</Grid>
 					<Grid item xs
 						className={classes.item}
-						onClick={() => dispatch({type: "setNav", page: "Pools", links: ["Pools"]})}
+						onClick={() => history.push("/pools")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Pools")}
@@ -183,7 +185,7 @@ function ClusterDigest(props) {
 					</Grid>
 					<Grid item xs
 						className={classes.item}
-						onClick={() => dispatch({type: "setNav", page: "Networks", links: ["Networks"]})}
+						onClick={() => history.push("/networks")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Networks")}
@@ -202,7 +204,7 @@ function ClusterDigest(props) {
 					</Grid>
 					<Grid item xs
 						className={classes.item}
-						onClick={() => dispatch({type: "setNav", page: "Objects", links: ["Objects"]})}
+						onClick={() => history.push("/objects")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Objects")}
@@ -220,7 +222,7 @@ function ClusterDigest(props) {
 					</Grid>
 					<Grid item sm
 						className={classes.item}
-						onClick={() => dispatch({type: "setNav", page: "Objects", links: ["Objects"]})}
+						onClick={() => history.push("/services")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Services")}

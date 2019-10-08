@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router";
 import { splitPath } from "../utils.js";
 import { ObjDigest } from "./ObjDigest.jsx";
 import { ObjInstanceDigest } from "./ObjInstanceDigest.jsx";
@@ -21,23 +22,23 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function ObjInstanceDetails(props) {
-	//
-	// props.path
-	// props.node
-	//
+        const loc = useLocation()
+        let params = new URLSearchParams(loc.search)
+        const path = params.get("path")
+        const node = params.get("node")
 	const classes = useStyles()
-	const sp = splitPath(props.path)
+	const sp = splitPath(path)
 	return (
 		<Grid container className={classes.root}>
 			<Grid item xs={12} md={6} className={classes.section}>
-				<ObjDigest path={props.path} />
+				<ObjDigest path={path} />
 			</Grid>
 			<Grid item xs={12} md={6} className={classes.section}>
-				<ObjInstanceDigest path={props.path} node={props.node} />
+				<ObjInstanceDigest path={path} node={node} />
 			</Grid>
 			<Grid item xs={12} className={classes.section}>
 				<Paper>
-					<ObjInstanceResources path={props.path} node={props.node} />
+					<ObjInstanceResources path={path} node={node} />
 				</Paper>
 			</Grid>
 		</Grid>

@@ -49,14 +49,15 @@ function ObjInstanceResources(props) {
 	//
 	const [{ cstat }, dispatch] = useStateValue();
 	const { t, i18n } = useTranslation()
+	const conf = useObjConfig(props.path)
+	const classes = useStyles()
+	const [selected, setSelected] = React.useState([])
+
 	if (cstat.monitor === undefined) {
 		return null
 	}
-	const conf = useObjConfig(props.path)
-	const classes = useStyles()
-	const rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources
-	const [selected, setSelected] = React.useState([])
 	const sp = splitPath(props.path)
+	const rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources
 	var rowCount = Object.keys(rdata).length
         if (!conf || !conf.data) {
 		var configData = {}

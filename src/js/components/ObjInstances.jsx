@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
+import { useHistory, useLocation } from 'react-router'
 import { fmtPath, splitPath } from "../utils.js";
 import { ObjInstanceState } from "./ObjInstanceState.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
@@ -161,8 +162,10 @@ function ObjInstances(props) {
 }
 
 function InstanceLine(props) {
+	const loc = useLocation()
 	const [{ cstat }, dispatch] = useStateValue();
 	const {index, path, instance, selected, setSelected} = props
+	const history = useHistory()
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -200,10 +203,10 @@ function InstanceLine(props) {
                 setSelected(newSelected);
         }
 	function handleLineClick(e) {
-		dispatch({
-			type: "setNav",
-			page: "ObjectInstance",
-			links: ["Objects", instance.path, instance.node]
+		history.push({
+			pathname: "/instance",
+			search: "?path=" + instance.path + "&node=" + instance.node,
+			state: loc.state,
 		})
 	}
         const isItemSelected = selected.some(item => {return (item.path==instance.path) && (item.node==instance.node)})

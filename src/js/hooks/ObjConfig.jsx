@@ -8,6 +8,9 @@ function useObjConfig(path) {
 	const [{cstat}, dispatch] = useStateValue()
 
 	function getCsum() {
+		if (!cstat.monitor) {
+			return null
+		}
 		for (var node in cstat.monitor.nodes) {
 			if (path in cstat.monitor.nodes[node].services.config) {
 				return cstat.monitor.nodes[node].services.config[path].csum

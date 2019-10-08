@@ -40,6 +40,7 @@
     "react-bootstrap-typeahead": "^3.4.5",
     "react-dom": "^16.8.6",
     "react-i18next": "^10.13.1",
+    "react-router-dom": "^5.1.2",
     "react-sparklines": "^1.7.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",

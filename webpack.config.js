@@ -57,6 +57,7 @@ module.exports = {
     })
   ],
   output: {
+    publicPath: '/',
     filename: 'index.js',
   }
 };

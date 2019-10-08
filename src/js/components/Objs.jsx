@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router';
 import { splitPath, kindName } from "../utils.js";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjState } from "./ObjState.jsx";
@@ -215,14 +216,6 @@ function Objs(props) {
 		setSelected([]);
 	}
 
-	function handleTitleClick(e) {
-		dispatch({
-			type: "setNav",
-			page: "Objects",
-			links: ["Objects"],
-		})
-	}
-
 	var rowCount = lines.length
 	var title = "Objects"
 	if (props.kind == "svc") {
@@ -242,7 +235,6 @@ function Objs(props) {
 			<CardHeader
 				title={t(title)}
 				subheader={cstat.cluster.name}
-				onClick={handleTitleClick}
 				action={
 					<DeployButton kind={props.kind} />
 				}
@@ -306,6 +298,7 @@ function Objs(props) {
 }
 
 function ObjLine(props) {
+	const history = useHistory()
 	const {index, path, selected, setSelected, withScalerSlaves, title } = props
 	const [{ cstat, kinds, filters }, dispatch] = useStateValue();
 	const sp = splitPath(path)
@@ -330,10 +323,10 @@ function ObjLine(props) {
 	}
 
 	function handleLineClick(e) {
-		dispatch({
-			type: "setNav",
-			page: title,
-			links: [title, path]
+		history.push({
+			pathname: "/object",
+			search: "?path="+path,
+			state: {kind: title},
 		})
 	}
 	const isItemSelected = selected.indexOf(path) !== -1

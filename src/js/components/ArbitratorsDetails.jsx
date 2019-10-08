@@ -34,13 +34,6 @@ function ArbitratorsDetails(props) {
 	var arbitrators = {}
 	var arbNames = []
 	var arbAddr = {}
-	function handleClick(e) {
-		dispatch({
-			type: "setNav",
-			page: "Arbitrators",
-			links: ["Arbitrators"]
-		})
-	}
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -71,7 +64,6 @@ function ArbitratorsDetails(props) {
                         <CardHeader
                                 title={t("Arbitrators")}
                                 subheader={cstat.cluster.name}
-				onClick={handleClick}
                         />
                         <CardContent>
                                 <div className={classes.wrapper}>

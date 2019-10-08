@@ -22,6 +22,9 @@ function PoolAdd(props) {
 	const [data, setData] = useState({})
 	const kws = useKeywords("ccfg")
 	const [{user}, dispatch] = useStateValue();
+	if (!user.grant) {
+		return null
+	}
 	if (!("root" in user.grant)) {
 		return null
 	}

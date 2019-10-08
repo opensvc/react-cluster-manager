@@ -2,6 +2,8 @@
 
 //import PropTypes from "prop-types";
 import React from "react";
+import { useLocation, useHistory, matchPath } from 'react-router'
+import { Link as RouteLink } from 'react-router-dom'
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { state } from "../utils.js";
@@ -10,7 +12,7 @@ import { Alerts } from "./Alerts.jsx";
 import { Subsystems } from "./Subsystems.jsx";
 import { LangSelector } from "./LangSelector.jsx";
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles, emphasize } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
@@ -21,11 +23,32 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
 import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
 import MenuIcon from '@material-ui/icons/Menu';
+
+const StyledBreadcrumb = withStyles(theme => ({
+	root: {
+		backgroundColor: "inherit",
+		height: theme.spacing(3),
+		color: "inherit",
+		fontWeight: theme.typography.fontWeightRegular,
+		'&:hover, &:focus': {
+			backgroundColor: "rgba(255, 255, 255, 0.3)",
+		},
+		'&:active': {
+			boxShadow: theme.shadows[1],
+			backgroundColor: "inherit",
+		},
+	},
+}))(Chip); // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
 
 const useStyles = makeStyles(theme => ({
 	breadcrumbs: {
 		flexGrow: 1,
+	},
+	separator: {
+		marginLeft: 0,
+		marginRight: 0,
 	},
 	menuButton: {
 		marginRight: theme.spacing(2),
@@ -35,18 +58,124 @@ const useStyles = makeStyles(theme => ({
 	},
 }))
 
+function breadcrumbs(clusterName) {
+	const loc = useLocation()
+	let params = new URLSearchParams(loc.search)
+
+	var crumbs = [
+		{
+			text: clusterName,
+			to: "/",
+		}
+	]
+
+	var heads = [
+		{ path: "/heartbeats", text: "Heartbeats" },
+		{ path: "/threads", text: "Threads" },
+		{ path: "/arbitrators", text: "Arbitrators" },
+		{ path: "/networks", text: "Networks" },
+		{ path: "/pools", text: "Pools" },
+		{ path: "/nodes", text: "Nodes" },
+		{ path: "/objects", text: "Objects" },
+		{ path: "/services", text: "Services" },
+		{ path: "/volumes", text: "Volumes" },
+		{ path: "/configs", text: "Configs" },
+		{ path: "/secrets", text: "Secrets" },
+		{ path: "/users", text: "Users" },
+	]
+	for (var head of heads) {
+		var match = matchPath(loc.pathname, {path: head.path, exact: true})
+		if (match) {
+			crumbs.push({
+				text: head.text,
+			})
+			return crumbs
+		}
+	}
+
+	var match = matchPath(loc.pathname, {path: "/node", exact: true})
+	if (match) {
+		crumbs.push({
+			text: "Nodes",
+			to: "/nodes",
+		})
+		crumbs.push({
+			text: params.get("name"),
+		})
+		return crumbs
+	}
+
+	var match = matchPath(loc.pathname, {path: "/network", exact: true})
+	if (match) {
+		crumbs.push({
+			text: "Networks",
+			to: "/networks",
+		})
+		crumbs.push({
+			text: params.get("name"),
+		})
+		return crumbs
+	}
+
+	var match = matchPath(loc.pathname, {path: "/object", exact: true})
+	if (match) {
+		var kind = (loc.state !== undefined) ? loc.state.kind : "Objects"
+		crumbs.push({
+			text: kind,
+			to: "/" + kind.toLowerCase(),
+		})
+		crumbs.push({
+			text: params.get("path"),
+		})
+		return crumbs
+	}
+
+	var match = matchPath(loc.pathname, {path: "/instance", exact: true})
+	if (match) {
+		var kind = (loc.state !== undefined) ? loc.state.kind : "Objects"
+		crumbs.push({
+			text: kind,
+			to: "/" + kind.toLowerCase(),
+		})
+		crumbs.push({
+			text: params.get("path") + "@" + params.get("node"),
+		})
+		return crumbs
+	}
+
+	return crumbs
+}
+
+function Crumbs(props) {
+	const classes = useStyles()
+	const [{ cstat }, dispatch] = useStateValue();
+	if (!cstat.cluster) {
+		var clusterName = "-"
+	} else {
+		var clusterName = cstat.cluster.name
+	}
+	const crumbs = breadcrumbs(clusterName)
+	return (
+		<Breadcrumbs
+			color="inherit"
+			className={classes.breadcrumbs}
+			separator={<NavigateNextIcon fontSize="small" />}
+			classes={{"separator": classes.separator}}
+			aria-label="Breadcrumb"
+		>
+			{crumbs.map((data, i) => (
+				<NavLink key={i} text={data.text} to={data.to} />
+			))}
+		</Breadcrumbs>
+	)
+}
+
 function NavBar(props) {
-	const [{ nav }, dispatch] = useStateValue();
 	const classes = useStyles()
 	return (
 		<Toolbar className={classes.root}>
 			<NavBarMenu />
-			<Breadcrumbs color="inherit" className={classes.breadcrumbs} separator={<NavigateNextIcon fontSize="small" />} aria-label="Breadcrumb">
-				<ClusterName />
-				{Object.keys(nav.links).map((l) => (
-					<NavLink key={l} link={nav.links[l]} links={nav.links} />
-				))}
-			</Breadcrumbs>
+			<Crumbs />
 			<LangSelector />
 			<UserLink />
 			<Alerts />
@@ -87,50 +216,38 @@ function NavBarMenu(props) {
 }
 
 function NavLink(props) {
-	const [{}, dispatch] = useStateValue();
+	const {text, to} = props
 	const { t, i18n } = useTranslation()
+	const history = useHistory()
 	function handleClick(e) {
-		var i = props.links.indexOf(props.link)
-		dispatch({
-			type: "setNav",
-			page: props.links[i],
-			links: props.links.slice(0, i+1)
-		})
+		e.preventDefault()
+		if (!to) {
+			return
+		}
+		history.push(to)
 	}
 	return (
-		<Link color="inherit" href="#" onClick={handleClick}>{t(props.link)}</Link>
+		<StyledBreadcrumb
+			onClick={handleClick}
+			component="a"
+			label={t(text)}
+		/>
 	)
 }
 
 function UserLink(props) {
 	const [{ user }, dispatch] = useStateValue();
+	const history = useHistory()
 	if (user.name === undefined) {
 		return null
 	}
 	function handleClick(e) {
-		dispatch({
-			type: "setNav",
-			page: "User",
-			links: []
-		})
-	}
-	return <Avatar color="inherit" href="#" onClick={handleClick}>{user.name[0].toUpperCase()}</Avatar>
-}
-
-function ClusterName(props) {
-	const [{ cstat }, dispatch] = useStateValue();
-	if (!cstat.cluster) {
-		return null
-	}
-	function handleClick(e) {
-		dispatch({
-			type: "setNav",
-			page: "Cluster",
-			links: []
-		})
+		history.push("/user")
 	}
 	return (
-		<Link href="#" color="inherit" onClick={handleClick}>{cstat.cluster.name}</Link>
+		<Avatar color="inherit" href="#" onClick={handleClick}>
+			{user.name[0].toUpperCase()}
+		</Avatar>
 	)
 }
 

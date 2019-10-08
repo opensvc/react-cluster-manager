@@ -44,20 +44,12 @@ function Pools(props) {
 	const classes = useStyles()
 	const { t, i18n } = useTranslation()
 	const data = usePoolsStatus()
-        function handleTitleClick(e) {
-                dispatch({
-                        "type": "setNav",
-                        "page": "Pools",
-                        "links": ["Pools"],
-                })
-        }
 	var lines = getLines(data)
 
 	return (
 		<Card id="pools" className={classes.root}>
                         <CardHeader
                                 title={t("Pools")}
-                                onClick={handleTitleClick}
 				action={
 					<PoolAdd />
 				}

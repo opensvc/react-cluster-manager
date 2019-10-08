@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
 import { splitPath } from "../utils.js";
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjDigest } from "./ObjDigest.jsx";
@@ -35,9 +36,9 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function ObjDetails(props) {
-	//
-	// props.path
-	//
+        const loc = useLocation()
+        let params = new URLSearchParams(loc.search)
+        const path = params.get("path")
 	const classes = useStyles()
         const [nodeData, setNodeData] = useState()
         const [active, setActive] = useState(0)
@@ -49,12 +50,12 @@ function ObjDetails(props) {
 
 	return (
 		<Grid container className={classes.root}>
-			<ObjMain active={active} path={props.path} />
+			<ObjMain active={active} path={path} />
                         <Grid item xs={12} lg={6} className={classes.section}>
-                                <ObjConfig active={active} path={props.path} />
+                                <ObjConfig active={active} path={path} />
 			</Grid>
                         <Grid item xs={12} lg={6} className={classes.section}>
-                                <ObjLog active={active} path={props.path} />
+                                <ObjLog active={active} path={path} />
 			</Grid>
 		</Grid>
 	)

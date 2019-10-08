@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
 import { apiPostNode } from "../api.js";
 import { Log } from "./Log.jsx"
 import { NodeActions } from "./NodeActions.jsx"
@@ -57,6 +58,9 @@ const tabs = [
 ]
 
 function NodeDetails(props) {
+        const loc = useLocation()
+        let params = new URLSearchParams(loc.search)
+        const name = params.get("name")
 	const classes = useStyles()
 	const { t, i18n } = useTranslation()
 	const [nodeData, setNodeData] = useState()
@@ -67,7 +71,7 @@ function NodeDetails(props) {
 		if (nodeData) {
 			return
 		}
-		apiPostNode(props.node, "/get_node", {}, (data) => {
+		apiPostNode(name, "/get_node", {}, (data) => {
 			setNodeData(data)
 		})
 	})
@@ -76,7 +80,7 @@ function NodeDetails(props) {
 		setActive(newValue)
 	}
 
-	if (!("root" in user.grant)) {
+	if (!user.grants || !("root" in user.grant)) {
 		tabs[4].disabled = true
 	}
 
@@ -84,9 +88,9 @@ function NodeDetails(props) {
 		<Card className={classes.root}>
 			<CardHeader
 				title={t("Node")}
-				subheader={props.node}
+				subheader={name}
 				action={
-					<NodeActions selected={props.node} />
+					<NodeActions selected={name} />
 				}
 			/>
 			<CardContent>
@@ -107,7 +111,7 @@ function NodeDetails(props) {
 					{active === 1 && <Network nodeData={nodeData} />}
 					{active === 2 && <Initiators nodeData={nodeData} />}
 					{active === 3 && <Hardware nodeData={nodeData} />}
-					{active === 4 && <NodeLog node={props.node} />}
+					{active === 4 && <NodeLog node={name} />}
 				</Box>
 			</CardContent>
 		</Card>
@@ -307,19 +311,6 @@ function Hardware(props) {
 function NodeLog(props) {
 	return (
 		<Log url={"/node/"+props.node} />
-	)
-}
-
-function NodeLogButton(props) {
-	return (
-		<Button
-			color="outline-secondary"
-			size="sm"
-			onClick={(e) => setNav({
-				"page": props.node + " Log",
-				"links": ["Nodes", props.node, "Log"]
-			})}
-		>Log</Button>
 	)
 }
 

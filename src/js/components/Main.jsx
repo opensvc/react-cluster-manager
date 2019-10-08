@@ -1,4 +1,5 @@
 import React from "react";
+import { Switch, Route } from 'react-router-dom';
 import { useStateValue } from '../state.js';
 import { Cluster } from "./Cluster.jsx";
 import { Threads } from "./Threads.jsx";
@@ -14,6 +15,7 @@ import { User } from "./User.jsx";
 import { Pools } from "./Pools.jsx";
 import { Networks } from "./Networks.jsx";
 import { NetworkDetails } from "./NetworkDetails.jsx"
+import { NotFound } from "./NotFound.jsx"
 
 function Main(props) {
 	const [{ nav }, dispatch] = useStateValue();
@@ -26,87 +28,73 @@ function Main(props) {
 		"Users": "usr",
 	}
 
-	if (nav.page == "Cluster") {
-		return (
-			<Cluster />
-		)
-	}
-	if (nav.page == "Threads") {
-		return ( <Threads /> )
-	}
-	if (nav.page == "Deploy") {
-		return ( <Deploy /> )
-	}
-	if (nav.page == "Heartbeats") {
-		return ( <HeartbeatsDetails /> )
-	}
-	if (nav.page == "Arbitrators") {
-		return ( <ArbitratorsDetails /> )
-	}
-	if (nav.page == "User") {
-		return ( <User /> )
-	}
-	var n = nav.links.length
-	if (nav.page == "ObjectInstance") {
-		var path = nav.links[n-2]
-		var node = nav.links[n-1]
-		return (
-			<ObjInstanceDetails path={path} node={node} />
-		)
-	}
-	if (nav.links[n-1] == "Networks") {
-		return (
-			<Networks />
-		)
-	}
-	if (nav.links[n-2] == "Networks") {
-		return (
-			<NetworkDetails name={nav.links[n-1]} />
-		)
-	}
-	if (nav.links[n-1] == "Pools") {
-		return (
-			<Pools />
-		)
-	}
-	if (nav.links[n-1] == "Nodes") {
-		return (
-			<Nodes />
-		)
-	}
-	if (nav.links[n-2] == "Nodes") {
-		return (
-			<NodeDetails node={nav.links[n-1]} />
-		)
-	}
-	if (nav.links[n-1] in objects) {
-		return (
-			<React.Fragment>
-				<Objs kind={objects[nav.links[n-1]]} />
-			</React.Fragment>
-		)
-	}
-	if (nav.links[n-2] in objects) {
-		const path = nav.links[n-1]
-		return (
-			<ObjDetails path={path} />
-		)
-	}
-	if ([nav.links[n-3], nav.links[n-1]] == ["Objects", "Log"]) {
-		return (
-			<Log
-				url={"/object/"+nav.links[n-2]}
-			/>
-		)
-	}
-	if ([nav.links[n-3], nav.links[n-1]] == ["Nodes", "Log"]) {
-		return (
-			<Log
-				url={"/node/"+nav.links[n-2]}
-			/>
-		)
-	}
-	return ( <div>Page not found</div> )
+	return (
+		<Switch>
+			<Route exact path='/'>
+				<Cluster />
+			</Route>
+			<Route exact path='/threads'>
+				<Threads />
+			</Route>
+			<Route exact path='/deploy'>
+				<Deploy />
+			</Route>
+			<Route exact path='/heartbeats'>
+				<HeartbeatsDetails />
+			</Route>
+			<Route exact path='/arbitrators'>
+				<ArbitratorsDetails />
+			</Route>
+			<Route exact path='/user'>
+				<User />
+			</Route>
+			<Route exact path='/nodes'>
+				<Nodes />
+			</Route>
+			<Route exact path='/networks'>
+				<Networks />
+			</Route>
+			<Route exact path='/pools'>
+				<Pools />
+			</Route>
+			<Route exact path='/objects'>
+				<Objs />
+			</Route>
+			<Route exact path='/services'>
+				<Objs kind="svc" />
+			</Route>
+			<Route exact path='/volumes'>
+				<Objs kind="vol" />
+			</Route>
+			<Route exact path='/configs'>
+				<Objs kind="cfg" />
+			</Route>
+			<Route exact path='/secrets'>
+				<Objs kind="sec" />
+			</Route>
+			<Route exact path='/users'>
+				<Objs kind="usr" />
+			</Route>
+			<Route exact path='/network'>
+				<NetworkDetails />
+			</Route>
+			<Route exact path='/node'>
+				<NodeDetails />
+			</Route>
+			<Route exact path='/pool'>
+				<NotFound />
+			</Route>
+			<Route exact path='/object'>
+				<ObjDetails />
+			</Route>
+			<Route exact path='/instance'>
+				<ObjInstanceDetails />
+			</Route>
+			<Route>
+				<NotFound />
+			</Route>
+		</Switch>
+	)
 }
 
 export {

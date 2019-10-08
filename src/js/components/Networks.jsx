@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from 'react-router';
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next';
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
@@ -44,20 +45,12 @@ function Networks(props) {
 	const { t, i18n } = useTranslation()
         const data = useNetworksStatus()
 	const [{}, dispatch] = useStateValue()
-        function handleTitleClick(e) {
-                dispatch({
-                        "type": "setNav",
-                        "page": "Networks",
-                        "links": ["Networks"],
-                })
-        }
         var lines = getLines(data)
 
 	return (
                 <Card id="networks" className={classes.root}>
                         <CardHeader
                                 title={t("Networks")}
-                                onClick={handleTitleClick}
 				action={
 					<NetworkAdd />
 				}
@@ -89,13 +82,10 @@ function Networks(props) {
 function NetworksLine(props) {
         const {index, data} = props
 	const [{}, dispatch] = useStateValue()
+	const history = useHistory()
         function handleLineClick(event) {
 		event.stopPropagation()
-                dispatch({
-                        "type": "setNav",
-                        "page": data.name,
-                        "links": ["Networks", data.name]
-                })
+		history.push("/network?name="+data.name)
         }
         return (
                 <TableRow onClick={handleLineClick}>

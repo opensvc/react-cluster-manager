@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import { useStateValue } from '../state.js';
 import { apiNodeAction } from "../api.js";
 
@@ -12,35 +13,33 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import Chip from '@material-ui/core/Chip';
 import { useColorStyles } from "../styles.js";
 
 const useStyles = makeStyles(theme => ({
-        root: {
-                padding: theme.spacing(3, 2),
-                marginTop: theme.spacing(3),
-                overflowX: 'auto',
-        },
-        chip: {
-                margin: theme.spacing(1),
-        },
+	root: {
+		marginTop: theme.spacing(3),
+	},
+	wrapper: {
+		overflowX: "auto",
+		marginLeft: -theme.spacing(2),
+		marginRight: -theme.spacing(2),
+	},
+	chip: {
+		margin: theme.spacing(1),
+	},
 }))
 
 
 function Threads(props) {
+	const { t, i18n } = useTranslation()
 	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
 	if (!("monitor" in cstat)) {
 		return null
-	}
-	function handleTitleClick(e) {
-		dispatch({
-			type: "setNav",
-			page: "Threads",
-			links: ["Threads"],
-		})
 	}
 	var threads = ["listener", "dns", "monitor", "scheduler"]
 	for (var section in cstat) {
@@ -49,24 +48,29 @@ function Threads(props) {
 		}
 	}
 	return (
-		<Paper id="threads" className={classes.root}>
-			<Typography variant="h4" component="h3">
-				<Link className="text-dark" href="#" onClick={handleTitleClick}>Threads</Link>
-			</Typography>
-			<Table>
-				<TableHead>
-					<TableRow className="text-secondary">
-						<TableCell>Name</TableCell>
-						<TableCell>State</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{threads.map((name) => (
-						<Thread key={name} name={name} data={cstat[name]} />
-					))}
-				</TableBody>
-			</Table>
-		</Paper>
+		<Card id="threads" className={classes.root}>
+			<CardHeader
+				title={t("Threads")}
+				subheader={cstat.cluster.name}
+			/>
+			<CardContent>
+				<div className={classes.wrapper}>
+					<Table>
+						<TableHead>
+							<TableRow className="text-secondary">
+								<TableCell>Name</TableCell>
+								<TableCell>State</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{threads.map((name) => (
+								<Thread key={name} name={name} data={cstat[name]} />
+							))}
+						</TableBody>
+					</Table>
+				</div>
+			</CardContent>
+		</Card>
 	)
 }
 

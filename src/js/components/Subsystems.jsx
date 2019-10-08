@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from 'react-router'
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { clusterIssue, threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue, objectsIssue } from "../issues.js";
@@ -49,6 +50,7 @@ function SubsystemsLink(props) {
 
 function Subsystems(props) {
 	const [{ cstat }, dispatch] = useStateValue()
+	const history = useHistory()
 	const classes = useStyles()
 	return (
 		<List>
@@ -57,7 +59,7 @@ function Subsystems(props) {
 				href="#cluster"
 				title="Cluster"
 				icon={ <GroupWorkIcon /> }
-				onClick={() => dispatch({type: "setNav", page: "Cluster", links: []})}
+				onClick={() => history.push("/")}
 				closeDrawer={props.closeDrawer}
 			/>
 			<SubsystemsLink
@@ -65,7 +67,7 @@ function Subsystems(props) {
 				href="#threads"
 				title="Threads"
 				icon={ <SubscriptionsIcon /> }
-				onClick={() => dispatch({type: "setNav", page: "Threads", links: ["Threads"]})}
+				onClick={() => history.push("/threads")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -74,7 +76,7 @@ function Subsystems(props) {
 				href="#heartbeats"
 				title="Heartbeats"
 				icon={ <SwapHorizIcon /> }
-				onClick={() => dispatch({type: "setNav", page: "Heartbeats", links: ["Heartbeats"]})}
+				onClick={() => history.push("/heartbeats")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -83,7 +85,7 @@ function Subsystems(props) {
 				href="#arbitrators"
 				title="Arbitrators"
 				icon={ <HowToVoteIcon /> }
-				onClick={() => dispatch({type: "setNav", page: "Arbitrators", links: ["Arbitrators"]})}
+				onClick={() => history.push("/arbitrators")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -92,7 +94,7 @@ function Subsystems(props) {
 				href="#nodes"
 				title="Nodes"
 				icon={ <StorageIcon /> }
-				onClick={() => dispatch({type: "setNav", page: "Nodes", links: ["Nodes"]})}
+				onClick={() => history.push("/nodes")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -101,7 +103,7 @@ function Subsystems(props) {
 				href="#pools"
 				title="Pools"
 				icon={ <StorageIcon /> }
-				onClick={() => dispatch({type: "setNav", page: "Pools", links: ["Pools"]})}
+				onClick={() => history.push("/pools")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -110,7 +112,7 @@ function Subsystems(props) {
 				href="#networks"
 				title="Networks"
 				icon={ <LinkIcon /> }
-				onClick={() => dispatch({type: "setNav", page: "Networks", links: ["Networks"]})}
+				onClick={() => history.push("/networks")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -120,7 +122,7 @@ function Subsystems(props) {
 				href="#objects"
 				title="Objects"
 				icon={ <WidgetsIcon /> }
-				onClick={() => dispatch({type: "setNav", page: "Objects", links: ["Objects"]})}
+				onClick={() => history.push("/objects")}
 				closeDrawer={props.closeDrawer}
 			/>
 			<SubsystemsLink
@@ -128,7 +130,7 @@ function Subsystems(props) {
 				href="#svc"
 				title="Services"
 				icon={ <FiberManualRecordIcon /> }
-				onClick={() => dispatch({type: "setNav", page: "Services", links: ["Services"]})}
+				onClick={() => history.push("/services")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -137,7 +139,7 @@ function Subsystems(props) {
 				href="#vol"
 				title="Volumes"
 				icon={ <SaveIcon /> }
-				onClick={() => dispatch({type: "setNav", page: "Volumes", links: ["Volumes"]})}
+				onClick={() => history.push("/volumes")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -146,7 +148,7 @@ function Subsystems(props) {
 				href="#cfg"
 				title="Configs"
 				icon={ <LockOpenIcon /> }
-				onClick={() => dispatch({type: "setNav", page: "Configs", links: ["Configs"]})}
+				onClick={() => history.push("/configs")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -155,7 +157,7 @@ function Subsystems(props) {
 				href="#sec"
 				title="Secrets"
 				icon={ <LockIcon /> }
-				onClick={() => dispatch({type: "setNav", page: "Secrets", links: ["Secrets"]})}
+				onClick={() => history.push("/secrets")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -164,7 +166,7 @@ function Subsystems(props) {
 				href="#usr"
 				title="Users"
 				icon={ <AccountCircleIcon /> }
-				onClick={() => dispatch({type: "setNav", page: "Users", links: ["Users"]})}
+				onClick={() => history.push("/users")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>

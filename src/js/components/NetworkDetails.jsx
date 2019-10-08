@@ -1,6 +1,7 @@
 import React from "react";
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -26,22 +27,16 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function NetworkDetails(props) {
-	const {name} = props
+	const loc = useLocation()
+	let params = new URLSearchParams(loc.search)
+	const name = params.get("name")
 	const { t, i18n } = useTranslation()
 	const classes = useStyles()
-        function handleTitleClick(e) {
-                dispatch({
-                        "type": "setNav",
-                        "page": name,
-                        "links": ["Network", name],
-                })
-        }
 	return (
                 <Card className={classes.root}>
                         <CardHeader
                                 title={t("Network Addresses")}
 				subheader={name}
-                                onClick={handleTitleClick}
                         />
                         <CardContent>
                                 <div className={classes.wrapper}>
@@ -83,14 +78,6 @@ function NetworkAddrs(props) {
 function NetworksLine(props) {
         const {index, data} = props
 	const [{}, dispatch] = useStateValue()
-        function handleLineClick(event) {
-		event.stopPropagation()
-                dispatch({
-                        "type": "setNav",
-                        "page": props.name,
-                        "links": ["Networks", props.name]
-                })
-        }
         return (
                 <TableRow>
                         <TableCell>{data.ip}</TableCell>

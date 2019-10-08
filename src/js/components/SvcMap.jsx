@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from 'react-router';
 import { useStateValue } from '../state.js';
 import { makeStyles } from '@material-ui/core/styles';
 import { ObjAvail } from "./ObjAvail.jsx"
@@ -13,6 +14,7 @@ const useStyles = makeStyles(theme => ({
 
 function SvcMap(props) {
         const [{ cstat }, dispatch] = useStateValue();
+	const history = useHistory()
 	const classes = useStyles()
         if (cstat.monitor === undefined) {
                 return null
@@ -30,11 +32,11 @@ function SvcMap(props) {
 	}
         const handleClick = path => event => {
 		event.stopPropagation()
-                dispatch({
-                        type: "setNav",
-                        page: "Services",
-                        links: ["Services", path]
-                })
+		history.push({
+			pathname: "/object",
+			search: "?path="+path,
+			state: {kind: "Services"},
+		})
         }
 
 	return (

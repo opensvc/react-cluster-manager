@@ -22,6 +22,9 @@ import ReplayIcon from "@material-ui/icons/Replay"
 function ObjInstanceActions(props) {
 	const [{cstat}, dispatch] = useStateValue();
 	const {selected} = props
+        if (!cstat.monitor) {
+                return null
+        }
 	if (selected === undefined) {
 		return null
 	}
