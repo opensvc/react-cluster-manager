@@ -1,12 +1,11 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
-import { parseIni, splitPath } from '../utils.js';
+import { splitPath } from '../utils.js';
 import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjProvisioned } from "./ObjProvisioned.jsx";
 import { ObjInstanceResourceActions } from "./ObjInstanceResourceActions.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
-import { SectionEdit } from "./SectionEdit.jsx";
 import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { useColorStyles } from '../styles.js'
 
@@ -49,7 +48,6 @@ function ObjInstanceResources(props) {
 	//
 	const [{ cstat }, dispatch] = useStateValue();
 	const { t, i18n } = useTranslation()
-	const conf = useObjConfig(props.path)
 	const classes = useStyles()
 	const [selected, setSelected] = React.useState([])
 
@@ -59,11 +57,6 @@ function ObjInstanceResources(props) {
 	const sp = splitPath(props.path)
 	const rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources
 	var rowCount = Object.keys(rdata).length
-        if (!conf || !conf.data) {
-		var configData = {}
-        } else {
-		var configData = parseIni(conf.data)
-	}
 
         function handleSelectAllClick(event) {
                 if (event.target.checked) {
@@ -120,7 +113,6 @@ function ObjInstanceResources(props) {
 									path={props.path}
 									selected={selected}
 									setSelected={setSelected}
-									conf={configData}
 									sp={sp}
 								/>
 							))}
@@ -134,7 +126,7 @@ function ObjInstanceResources(props) {
 
 function ObjInstanceResourceLine(props) {
 	const [{ cstat, user }, dispatch] = useStateValue();
-	const {index, node, path, rid, selected, setSelected, conf, sp} = props
+	const {index, node, path, rid, selected, setSelected, sp} = props
 	const classes = useStyles()
 	if (cstat.monitor === undefined) {
 		return null
@@ -175,9 +167,6 @@ function ObjInstanceResourceLine(props) {
                         </TableCell>
 			<TableCell>
 				<Typography component="div" noWrap className={classes.iconText}>
-					{(("root" in user.grant) || (user.grant.admin.indexOf(sp.namespace) > -1)) &&
-					<SectionEdit path={path} rid={rid} conf={conf} />
-					}
 					{rid}
 				</Typography>
 			</TableCell>

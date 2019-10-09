@@ -50,14 +50,20 @@ function SectionEdit(props) {
 	}
         function handleClick(e) {
                 e.stopPropagation()
+		setData(false)
                 setOpen(true)
         }
         function handleClose(e) {
+		setData(false)
                 setOpen(false)
         }
         function handleSubmit() {
 		var kws = []
-		var section = data.kind+"#"+data.keywords.sectionName
+		if (["DEFAULT", "env", "data"].indexOf(data.kind) < 0) {
+			var section = data.kind+"#"+data.keywords.sectionName
+		} else {
+			var section = data.kind
+		}
 		for (var k in data.keywords) {
 			if (k == "sectionName") {
 				continue
@@ -76,16 +82,12 @@ function SectionEdit(props) {
                         ok: ok,
                         data: $
                 }))
-		setData({
-			kind: "",
-			keywords: {}
-		})
 		handleClose()
 	}
 
 	return (
 		<React.Fragment>
-			<EditIcon color="primary" className={classes.icon} onClick={handleClick} />
+			<EditIcon color="action" className={classes.icon} onClick={handleClick} />
                         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                                 <DialogTitle id="form-dialog-title">Edit Resource {rid} of {path}</DialogTitle>
                                 <DialogContent>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { getBool } from '../utils.js';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -25,6 +26,9 @@ const useStyles = makeStyles(theme => ({
 	code: {
 		fontFamily: "monospace",
 		fontWeight: "bold",
+	},
+	helper: {
+		wordBreak: "break-word",
 	},
 }))
 
@@ -190,7 +194,7 @@ function Keyword(props) {
 	if (kwData.convert == "boolean") {
 		var el = (
 			<Switch
-				checked={data[kwData.keyword] ? data[kwData.keyword] : kwData.default ? kwData.default : false}
+				checked={(data[kwData.keyword] !== undefined) ? getBool(data[kwData.keyword]) : kwData.default ? kwData.default : false}
 				onChange={e => setData({...data, [kwData.keyword]: e.target.checked})}
 				value={kwData.keyword}
 				color="primary"
@@ -280,8 +284,8 @@ function Keyword(props) {
 		<FormControl className={classes.formcontrol} fullWidth>
 			<Typography variant="caption" color="textSecondary">{kwData.keyword}</Typography>
 			{el}
-			<FormHelperText>{formatKeywordText(kwData.text)}</FormHelperText>
-			{requiredError && <FormHelperText>This keyword is required.</FormHelperText>}
+			<FormHelperText className={classes.helper}>{formatKeywordText(kwData.text)}</FormHelperText>
+			{requiredError && <FormHelperText className={classes.helper}>This keyword is required.</FormHelperText>}
 		</FormControl>
 	)
 }

@@ -188,6 +188,11 @@ function createDataHasPathKey() {
 	}
 }
 
+function getBool(val){
+	var num = +val;
+	return !isNaN(num) ? !!num : !!String(val).toLowerCase().replace(!!0,'');
+}
+
 export {
 	state,
 	mergeStates,
@@ -198,4 +203,5 @@ export {
 	nameValid,
 	namespaceValid,
 	createDataHasPathKey,
+	getBool,
 }

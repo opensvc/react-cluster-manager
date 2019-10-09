@@ -5,11 +5,14 @@ import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { ResourceAddButton } from "./ResourceAddButton.jsx";
+import { parseIni } from "../utils.js"
+import { SectionEdit } from "./SectionEdit.jsx";
 
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -35,19 +38,22 @@ const useStyles = makeStyles(theme => ({
 	expandOpen: {
 		transform: 'rotate(180deg)',
 	},
-	list: {
-		paddingTop: 0,
-		paddingBottom: 0,
-	},
 }))
 
 function ObjConfigDigest(props) {
 	const { path } = props
-	const [{ cstat }, dispatch] = useStateValue()
-	const classes = useStyles()
+	const [{ cstat, user }, dispatch] = useStateValue()
+        const config = useObjConfig(path)
         if (cstat.monitor === undefined) {
                 return null
         }
+	if (!user) {
+		return null
+	}
+	if (!config) {
+		return null
+	}
+	var data = parseIni(config.data)
 	var instance = null
 	for (var node in cstat.monitor.nodes) {
 		instance = cstat.monitor.nodes[node].services.status[path]
@@ -58,38 +64,33 @@ function ObjConfigDigest(props) {
 	if (!instance) {
 		return null
 	}
-	var groups = {}
-	for (var rid in instance.resources) {
-		if (!rid.match(/#/)) {
-			continue
+	var sections = []
+	for (var section in data) {
+		try {
+			var label = instance.resources[section].label
+		} catch(e) {
+			var label = ""
 		}
-		var l = rid.split(/#/)
-		var group = l[0]
-		var name = l[1]
-		if (group in groups) {
-			groups[group].push(instance.resources[rid].label)
-		} else {
-			groups[group] = [instance.resources[rid].label]
-		}
+		sections.push({
+			section: section,
+			label: label,
+		})
 	}
 	return (
-		<List dense={true} className={classes.list}>
-			{Object.keys(groups).map((group, i) => {
-				var data = groups[group]
-				var label = (
-					<ul>
-						{data.map((label, j) => (
-							<li key={j}>{label}</li>
-						))}
-					</ul>
-				)
+		<List dense={true}>
+			{sections.map((s, i) => {
 				return (
-					<ListItem key={i} className={classes.list}>
+					<ListItem key={i}>
 						<ListItemText
-							primary={group}
-							secondary={label}
+							primary={s.section}
+							secondary={s.label}
 							secondaryTypographyProps={{component: "div"}}
 						/>
+						{(("root" in user.grant) || (user.grant.admin.indexOf(sp.namespace) > -1)) &&
+						<ListItemSecondaryAction>
+							<SectionEdit path={path} rid={s.section} conf={data} />
+						</ListItemSecondaryAction>
+						}
 					</ListItem>
 				)
 			})}
