@@ -175,7 +175,7 @@ function ObjInstanceResourceLine(props) {
                         </TableCell>
 			<TableCell>
 				<Typography component="div" noWrap className={classes.iconText}>
-					{(user.grant.admin.indexOf(sp.namespace) > -1) &&
+					{(("root" in user.grant) || (user.grant.admin.indexOf(sp.namespace) > -1)) &&
 					<SectionEdit path={path} rid={rid} conf={conf} />
 					}
 					{rid}

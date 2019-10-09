@@ -44,7 +44,7 @@ function formatKeywordText(text) {
 			parts[i+2] = <span className={classes.code} key={i+2}>{parts[i+2]}</span>
 		}
 	}
-	return <div>{parts}</div>
+	return <React.Fragment>{parts}</React.Fragment>
 }
 
 function SectionForm(props) {
@@ -58,6 +58,7 @@ function SectionForm(props) {
 	}
 	return (
 		<React.Fragment>
+			{(["DEFAULT", "data", "env"].indexOf(kind) < 0) &&
 			<FormControl className={classes.formcontrol} fullWidth>
 				<TextField
 					label={kind + " Name"}
@@ -66,6 +67,7 @@ function SectionForm(props) {
 					onChange={e => setData({...data, "sectionName": e.target.value})}
 				/>
 			</FormControl>
+			}
 			{typeKw &&
 			<FormControl className={classes.formcontrol} fullWidth>
 				<Typography variant="caption" color="textSecondary">Type</Typography>
@@ -169,7 +171,6 @@ function SizeInput(props) {
 		<TextField
 			value={val}
 			error={error(val)}
-			requiredError={requiredError}
 			onChange={(e) => {setVal(e.target.value)}}
 		/>
 	)

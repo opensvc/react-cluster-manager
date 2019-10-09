@@ -36,7 +36,11 @@ function ResourceAddButton(props) {
         }
         function handleSubmit() {
 		var kws = []
-		var section = data.kind+"#"+data.keywords.sectionName
+		if (data.keywords.sectionName) {
+			var section = data.kind+"#"+data.keywords.sectionName
+		} else {
+			var section = data.kind
+		}
 		for (var k in data.keywords) {
 			if (k == "sectionName") {
 				continue
