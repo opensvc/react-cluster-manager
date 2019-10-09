@@ -1,4 +1,9 @@
 {
+	"en": {
+		"translation": {
+			"delete_resource": "Deleting a section does not stop the corresponding resource. You might want to stop the resource before."
+		}
+	},
 	"fr": {
 		"translation": {
 			"15min average": "Moyenne sur 15min",
@@ -6,6 +11,8 @@
 			"Arbitrators": "Arbitres",
 			"Availability": "Disponibilité",
 			"Cluster": "Grappe",
+			"Delete section {{rid}} of {{path}}": "Supprimer la section {{rid}} de {{path}}",
+			"delete_resource": "Supprimer une section ne stoppe pas la resource correspondante. Vous pourriez vouloir stopper la ressource au préalable.",
 			"Filters": "Filtres",
 			"Heartbeats": "Pulseurs",
 			"Key": "Clef",

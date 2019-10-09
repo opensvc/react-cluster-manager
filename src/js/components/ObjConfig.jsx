@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { ResourceAddButton } from "./ResourceAddButton.jsx";
 import { parseIni } from "../utils.js"
 import { SectionEdit } from "./SectionEdit.jsx";
+import { SectionDelete } from "./SectionDelete.jsx";
 
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -88,6 +89,7 @@ function ObjConfigDigest(props) {
 						/>
 						{(("root" in user.grant) || (user.grant.admin.indexOf(sp.namespace) > -1)) &&
 						<ListItemSecondaryAction>
+							<SectionDelete path={path} rid={s.section} />
 							<SectionEdit path={path} rid={s.section} conf={data} />
 						</ListItemSecondaryAction>
 						}
