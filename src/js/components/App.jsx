@@ -82,12 +82,6 @@ const StatefulApp = () => {
 	const initialState = {
 		cstat: {},
 		refreshQueued: false,
-		filters: {
-			name: "",
-			namespace: "",
-			path: ""
-		},
-		kinds: ["svc"],
 		user: {},
 		nav: {
 			page: "Cluster",
@@ -101,20 +95,6 @@ const StatefulApp = () => {
 
 	const reducer = (state, action) => {
 		switch (action.type) {
-			case 'setFilter':
-				var new_filters = {}
-				new_filters[action.filter_type] = action.filter_value
-				return {
-					...state,
-					filters: new_filters
-				};
-
-			case 'setKindFilter':
-				return {
-					...state,
-					kinds: action.data
-				};
-
 			case 'loadUser':
 				return {
 					...state,

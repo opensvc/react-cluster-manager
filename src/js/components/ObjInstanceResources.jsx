@@ -72,19 +72,13 @@ function ObjInstanceResources(props) {
 			<CardHeader
 				title={t("Resources")}
 				subheader={props.path+"@"+props.node}
+				action={
+					<TableToolbar selected={selected}>
+						{(selected.length > 0) && <ObjInstanceResourceActions path={props.path} node={props.node} rids={selected} title="" />}
+					</TableToolbar>
+				}
 			/>
 			<CardContent className={classes.content}>
-				<TableToolbar selected={selected}>
-					{selected.length > 0 ? (
-						<ObjInstanceResourceActions path={props.path} node={props.node} rids={selected} title="" />
-					) : (
-						<Tooltip title="Filter list">
-							<IconButton aria-label="Filter list">
-								<FilterListIcon />
-							</IconButton>
-						</Tooltip>
-					)}
-				</TableToolbar>
 				<div style={{overflowX: "auto"}}>
 					<Table>
 						<TableHead>

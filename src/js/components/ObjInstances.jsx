@@ -112,19 +112,13 @@ function ObjInstances(props) {
                         <CardHeader
                                 title={t("Instances")}
 				subheader={props.path}
+				action={
+					<TableToolbar selected={selected}>
+						{(selected.length > 0) && <ObjInstanceActions selected={selected} title="" />}
+					</TableToolbar>
+				}
                         />
                         <CardContent className={classes.content}>
-				<TableToolbar selected={selected}>
-					{selected.length > 0 ? (
-						<ObjInstanceActions selected={selected} title="" />
-					) : (
-						<Tooltip title="Filter list">
-							<IconButton aria-label="Filter list">
-								<FilterListIcon />
-							</IconButton>
-						</Tooltip>
-					)}
-				</TableToolbar>
 				<div className={classes.tableWrapper}>
 					<Table>
 						<TableHead>

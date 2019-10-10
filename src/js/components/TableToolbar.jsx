@@ -1,13 +1,14 @@
-import React from "react";
-import { lighten, makeStyles } from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import clsx from 'clsx';
+import React from "react"
+import { useTranslation } from 'react-i18next'
+import { lighten, makeStyles } from '@material-ui/core/styles'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import clsx from 'clsx'
 
 const useToolbarStyles = makeStyles(theme => ({
         root: {
-                paddingLeft: theme.spacing(2),
-                paddingRight: theme.spacing(1),
+                paddingLeft: theme.spacing(1),
+                paddingRight: theme.spacing(0),
         },
         highlight:
                 theme.palette.type === 'light'
@@ -24,15 +25,18 @@ const useToolbarStyles = makeStyles(theme => ({
         },
         actions: {
                 color: theme.palette.text.secondary,
+		display: "flex",
+		flexWrap: "nowrap",
         },
         title: {
                 flex: '0 0 auto',
         },
-}));
+}))
 
 const TableToolbar = props => {
-        const classes = useToolbarStyles();
-        const { selected } = props;
+	const { t, i18n } = useTranslation()
+        const classes = useToolbarStyles()
+        const { selected } = props
 
         return (
                 <Toolbar
@@ -41,22 +45,19 @@ const TableToolbar = props => {
                         })}
                 >
                         <div className={classes.title}>
-                                {selected.length > 0 ? (
-                                        <Typography color="inherit" variant="subtitle1">
-                                                {selected.length} selected
-                                        </Typography>
-                                ) : (
-                                        <Typography variant="h6" id="tableTitle">
-                                        </Typography>
-                                )}
+                                {(selected.length > 0) &&
+				<Typography color="inherit" variant="subtitle1">
+					{t("{{count}} selected", {count: selected.length})}
+				</Typography>
+                                }
                         </div>
                         <div className={classes.spacer} />
                         <div className={classes.actions}>
                                 {props.children}
                         </div>
                 </Toolbar>
-        );
-};
+        )
+}
 
 export {
 	TableToolbar,

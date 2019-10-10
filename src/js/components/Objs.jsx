@@ -2,16 +2,14 @@ import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
-import { splitPath, kindName } from "../utils.js";
+import { splitPath } from "../utils.js";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjState } from "./ObjState.jsx";
 import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
 import { DeployButton } from "./DeployButton.jsx";
 
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import { makeStyles, lighten } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -21,23 +19,11 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
 import Hidden from '@material-ui/core/Hidden';
 import Toolbar from '@material-ui/core/Toolbar';
 
@@ -55,105 +41,38 @@ const useStyles = makeStyles(theme => ({
 		marginLeft: -theme.spacing(2),
 		marginRight: -theme.spacing(2),
 	},
+	content: {
+		paddingTop: 0,
+	},
 }))
 
-function ObjsKindFilter(props) {
-	const [{ kinds }, dispatch] = useStateValue();
-	const { t, i18n } = useTranslation()
-	function handleChange(e) {
-		dispatch({"type": "setKindFilter", "data": e.target.value})
-	}
-	return (
-		<FormGroup row>
-			<FormControl>
-				<InputLabel htmlFor="select-multiple-checkbox">{t("Kinds")}</InputLabel>
-				<Select
-					multiple
-					value={kinds}
-					onChange={handleChange}
-					input={<Input id="select-multiple-checkbox" />}
-					renderValue={selected => selected.join(', ')}
-				>
-				{["svc", "vol", "cfg", "sec", "usr", "ccfg"].map(kind => (
-					<MenuItem key={kind} value={kind}>
-						<Checkbox checked={kinds.indexOf(kind) > -1} />
-						<ListItemText primary={kind} />
-					</MenuItem>
-				))}
-				</Select>
-			</FormControl>
-		</FormGroup>
-	)
-}
-
 function ObjsFilter(props) {
-	const [{ filters }, dispatch] = useStateValue()
+	const {search, setSearch} = props
 	const { t, i18n } = useTranslation()
-	function handleChange(e) {
-		var t = e.target.getAtTableRowibute("t")
-		dispatch({"type": "setFilter", "filter_type": t, "filter_value": e.target.value})
-	}
-	function handleTypeChange(e) {
-		var t = e.target.value
-		var currentType = Object.keys(filters)[0]
-		var v = filters[currentType]
-		dispatch({"type": "setFilter", "filter_type": t, "filter_value": v})
-	}
-	function handleChange(e) {
-		var t = Object.keys(filters)[0]
-		var v = e.target.value
-		dispatch({"type": "setFilter", "filter_type": t, "filter_value": v})
-	}
-	var currentType = Object.keys(filters)[0]
 	return (
-		<FormGroup row>
-			<FormControl>
-				<InputLabel htmlFor="obj-search-type">{t("Search In")}</InputLabel>
-				<Select
-					value={currentType}
-					onChange={handleTypeChange}
-					inputProps={{
-						name: 'obj-search-type',
-						id: 'obj-search-type',
-					}}
-				>
-					<MenuItem value="name">{t("Name")}</MenuItem>
-					<MenuItem value="namespace">{t("Namespace")}</MenuItem>
-					<MenuItem value="path">{t("Path")}</MenuItem>
-				</Select>
-			</FormControl>
-			<FormControl>
-				<TextField
-					id="obj-search"
-					label={t("Regular Expression")}
-					value={filters[currentType]}
-					onChange={handleChange}
-					margin="none"
-				/>
-			</FormControl>
-		</FormGroup>
+		<TextField
+			id="obj-filter"
+			label={t("Filter")}
+			value={search}
+			onChange={(e) => {setSearch(e.target.value)}}
+			margin="none"
+			variant="outlined"
+			type="search"
+			fullWidth
+			autoFocus
+		/>
 	)
 }
 
 function getLines(props) {
-	const [{ cstat, kinds, filters }, dispatch] = useStateValue();
-	const { kind, withScalerSlaves } = props
+	const [{ cstat }, dispatch] = useStateValue();
+	const { kind, search, withScalerSlaves } = props
 	var lines = []
 	if (cstat.monitor === undefined) {
 		return lines
 	}
-	if (filters.name) {
-		var reName = RegExp(filters.name, "i")
-	} else {
-		var reName = null
-	}
-	if (filters.namespace) {
-		var reNamespace = RegExp(filters.namespace, "i")
-	} else {
-		var reNamespace = null
-	}
-	if (filters.path) {
-		var rePath = RegExp(filters.path, "i")
+	if (search) {
+		var rePath = RegExp(search, "i")
 	} else {
 		var rePath = null
 	}
@@ -165,21 +84,7 @@ function getLines(props) {
 			if (sp.kind != kind) {
 				continue
 			}
-		} else {
-			if (kinds.indexOf(sp.kind) < 0) {
-				continue
-			}
 		}
-		try {
-			if (reName && !reName.test(sp.name)) {
-				continue
-			}
-		} catch (e) {}
-		try {
-			if (reNamespace && !reNamespace.test(sp.namespace)) {
-				continue
-			}
-		} catch (e) {}
 		try {
 			if (rePath && !rePath.test(path)) {
 				continue
@@ -197,11 +102,13 @@ function getLines(props) {
 
 function Objs(props) {
 	const classes = useStyles()
-	const [{ cstat }, dispatch] = useStateValue();
-	const [selected, setSelected] = React.useState([]);
+	const [{ cstat }, dispatch] = useStateValue()
+	const [selected, setSelected] = useState([])
+	const [search, setSearch] = useState("")
+	const [searchOpen, setSearchOpen] = useState(false)
 	const { kind, withScalerSlaves } = props
 	const { t, i18n } = useTranslation()
-	var lines = getLines({kind: props.kind})
+	var lines = getLines({kind: props.kind, search: search})
 
 	if (cstat.monitor === undefined) {
 		return lines
@@ -236,31 +143,19 @@ function Objs(props) {
 				title={t(title)}
 				subheader={cstat.cluster.name}
 				action={
-					<DeployButton kind={props.kind} />
-				}
-			/>
-			<CardContent>
-				<Grid container className={classes.tools} spacing={1}>
-					{!props.kind &&
-					<Grid item>
-						<ObjsKindFilter />
-					</Grid>
-					}
-					<Grid item>
-						<ObjsFilter />
-					</Grid>
-				</Grid>
-				<TableToolbar selected={selected} className={classes.table}>
-					{selected.length > 0 ? (
-						<ObjActions selected={selected} title="" />
-					) : (
+					<TableToolbar selected={selected} className={classes.table}>
+						{(selected.length > 0) && <ObjActions selected={selected} title="" />}
+						<DeployButton kind={props.kind} />
 						<Tooltip title={t("Filters")}>
-							<IconButton aria-label="Filters">
+							<IconButton aria-label="Filters" disabled={search?true:false} onClick={() => {(!search) && setSearchOpen(!searchOpen)}}>
 								<FilterListIcon />
 							</IconButton>
 						</Tooltip>
-					)}
-				</TableToolbar>
+					</TableToolbar>
+				}
+			/>
+			<CardContent className={classes.content}>
+				{(searchOpen || search) && <ObjsFilter search={search} setSearch={setSearch} />}
 				<div style={{overflowX: "auto"}} className={classes.table}>
 					<Table>
 						<TableHead>

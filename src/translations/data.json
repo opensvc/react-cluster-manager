@@ -6,6 +6,7 @@
 	},
 	"fr": {
 		"translation": {
+			"{{count}} selected": "{{count}} sélectionnés",
 			"15min average": "Moyenne sur 15min",
 			"Addresses": "Adresses",
 			"Arbitrators": "Arbitres",
@@ -13,6 +14,7 @@
 			"Cluster": "Grappe",
 			"Delete section {{rid}} of {{path}}": "Supprimer la section {{rid}} de {{path}}",
 			"delete_resource": "Supprimer une section ne stoppe pas la resource correspondante. Vous pourriez vouloir stopper la ressource au préalable.",
+			"Filter": "Filtre",
 			"Filters": "Filtres",
 			"Heartbeats": "Pulseurs",
 			"Key": "Clef",
