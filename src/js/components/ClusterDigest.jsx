@@ -9,7 +9,6 @@ import { usePoolsStatus } from "../hooks/PoolsStatus.jsx"
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 import { ClusterActions } from "./ClusterActions.jsx"
 import { DeployButton } from "./DeployButton.jsx"
-import { SvcMap } from "./SvcMap.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -20,9 +19,9 @@ import Grid from '@material-ui/core/Grid';
 import WarningIcon from '@material-ui/icons/Warning';
 
 const useStyles = makeStyles(theme => ({
-        root: {
-                marginTop: theme.spacing(3),
-        },
+	root: {
+		height: "100%",
+	},
 	item: {
 		minWidth: "10em",
 	},
@@ -219,15 +218,6 @@ function ClusterDigest(props) {
 							<div>sec: {counts.sec}</div>
 							<div>usr: {counts.usr}</div>
 						</Typography>
-					</Grid>
-					<Grid item sm
-						className={classes.item}
-						onClick={() => history.push("/services")}
-					>
-						<Typography variant="subtitle1" component="h3">
-							{t("Services")}
-						</Typography>
-						<SvcMap />
 					</Grid>
 				</Grid>
 			</CardContent>
