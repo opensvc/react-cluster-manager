@@ -186,13 +186,13 @@ function NavBar(props) {
 function NavBarMenu(props) {
         const [state, setState] = React.useState(false)
 	const [{ cstat }, dispatch] = useStateValue();
+	const classes = useStyles()
         const toggleDrawer = (open) => event => {
                 if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
                         return
                 }
                 setState(open)
         }
-	const classes = useStyles()
 	var issue = allIssue(cstat)
 	if (issue == state.OPTIMAL) {
 		var count = 0
@@ -201,7 +201,7 @@ function NavBarMenu(props) {
 	}
 	return (
 		<React.Fragment>
-			<IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="Menu" onClick={toggleDrawer(true)}>
+			<IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="Menu" onClick={toggleDrawer(!state)}>
 				<Badge badgeContent={count} color="secondary" variant="dot">
 					<MenuIcon />
 				</Badge>
