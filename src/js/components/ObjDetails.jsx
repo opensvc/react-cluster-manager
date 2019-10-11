@@ -78,7 +78,7 @@ function CfgMain(props) {
 	const classes = useStyles()
 	const sp = splitPath(props.path)
 	return (
-		<Grid item xs={12} lg={6} className={classes.section}>
+		<Grid item xs={12} className={classes.section}>
 			<ObjKeys path={props.path} />
 		</Grid>
 	)
@@ -88,7 +88,7 @@ function UsrMain(props) {
 	const classes = useStyles()
 	const sp = splitPath(props.path)
 	return (
-		<Grid item xs={12} lg={6} className={classes.section}>
+		<Grid item xs={12} className={classes.section}>
 			<ObjKeys path={props.path} />
 		</Grid>
 	)
@@ -114,10 +114,10 @@ function SvcMain(props) {
 	}
 	return (
 		<React.Fragment>
-			<Grid item xs={12} lg={6} className={classes.section}>
+			<Grid item xs={12} md={6} className={classes.section}>
 				<ObjDigest path={props.path} />
 			</Grid>
-			<Grid item xs={12} lg={6} className={classes.section}>
+			<Grid item xs={12} md={6} className={classes.section}>
 				<ObjInstances path={props.path} />
 			</Grid>
 		</React.Fragment>
@@ -127,15 +127,11 @@ function SvcMain(props) {
 function ObjLog(props) {
 	const { t, i18n } = useTranslation()
 	return (
-		<Card>
-			<CardHeader
-				title={t("Log")}
-				subheader={props.path}
-			/>
-			<CardContent>
-				<Log url={"/object/"+props.path} />
-			</CardContent>
-		</Card>
+		<Log
+			title={t("Log")}
+			subheader={props.path}
+			url={"/object/"+props.path}
+		/>
 	)
 }
 

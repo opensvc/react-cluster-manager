@@ -5,67 +5,53 @@ import { useLocation } from 'react-router';
 import { apiPostNode } from "../api.js";
 import { Log } from "./Log.jsx"
 import { NodeActions } from "./NodeActions.jsx"
+import { NodeNetwork } from "./NodeNetwork.jsx"
+import { NodeHardware } from "./NodeHardware.jsx"
+import { NodeInitiators } from "./NodeInitiators.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Box from '@material-ui/core/Box';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
+import Chip from '@material-ui/core/Chip';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles(theme => ({
         root: {
                 marginTop: theme.spacing(3),
+		flexGrow: 1,
         },
-	tabContent: {
-                paddingTop: theme.spacing(2),
+	prop: {
+                paddingTop: theme.spacing(1),
 	},
 	tableWrapper: {
                 overflowX: 'auto',
+		marginLeft: -theme.spacing(2),
+		marginRight: -theme.spacing(2),
 	},
+	content: {
+		height: "100%",
+	},
+        expand: {
+                transform: 'rotate(0deg)',
+                marginLeft: 'auto',
+                transition: theme.transitions.create('transform', {
+                        duration: theme.transitions.duration.shortest,
+                }),
+        },
+        expandOpen: {
+                transform: 'rotate(180deg)',
+        },
 }))
 
-const tabs = [
-	{
-		name: "Main",
-		disabled: false,
-	},
-	{
-		name: "Network",
-		disabled: false,
-	},
-	{
-		name: "Initiators",
-		disabled: false,
-	},
-	{
-		name: "Hardware",
-		disabled: false,
-	},
-	{
-		name: "Log",
-		disabled: false,
-	},
-]
-
 function NodeDetails(props) {
+	const classes = useStyles()
         const loc = useLocation()
+	const [nodeData, setNodeData] = useState()
         let params = new URLSearchParams(loc.search)
         const name = params.get("name")
-	const classes = useStyles()
-	const { t, i18n } = useTranslation()
-	const [nodeData, setNodeData] = useState()
-	const [active, setActive] = useState(0)
-	const [{user}, dispatch] = useStateValue()
 
 	useEffect(() => {
 		if (nodeData) {
@@ -76,18 +62,30 @@ function NodeDetails(props) {
 		})
 	})
 
-	const handleChange = (event, newValue) => {
-		setActive(newValue)
-	}
+	return (
+		<Grid container spacing={2} className={classes.root}>
+			<Grid item xs={12} sm={6} md={4}>
+				<NodeDigest name={name} nodeData={nodeData} />
+			</Grid>
+			<Main nodeData={nodeData} />
+			<NodeNetwork nodeData={nodeData} />
+			<NodeInitiators nodeData={nodeData} />
+			<NodeHardware nodeData={nodeData} />
+			<Grid item xs={12}>
+				<NodeLog node={name} />
+			</Grid>
+		</Grid>
+	)
+}
 
-	if (!user.grant || !("root" in user.grant)) {
-		tabs[4].disabled = true
-	} else {
-		tabs[4].disabled = false
-	}
+function NodeDigest(props) {
+	const classes = useStyles()
+	const { name, nodeData } = props
+	const { t, i18n } = useTranslation()
+	const [{user}, dispatch] = useStateValue()
 
 	return (
-		<Card className={classes.root}>
+		<Card className={classes.content}>
 			<CardHeader
 				title={t("Node")}
 				subheader={name}
@@ -96,67 +94,60 @@ function NodeDetails(props) {
 				}
 			/>
 			<CardContent>
-				<Tabs
-					value={active}
-					onChange={handleChange}
-					indicatorColor="primary"
-					textColor="primary"
-					variant="scrollable"
-					scrollButtons="auto"
-				>
-					{tabs.map((tab, i) => (
-						<Tab key={i} href="#" label={tab.name} disabled={tab.disabled} />
+				<Grid container spacing={1}>
+					{["Server", "Processor", "Memory", "System", "Agent", "Network", "Initiators", "Hardware", "Log"].map((id) => (
+					<Grid item key={id}>
+						<Chip label={id} component="a" href={"#"+id} clickable />
+					</Grid>
 					))}
-				</Tabs>
-				<Box className={classes.tabContent}>
-					{active === 0 && <Main nodeData={nodeData} />}
-					{active === 1 && <Network nodeData={nodeData} />}
-					{active === 2 && <Initiators nodeData={nodeData} />}
-					{active === 3 && <Hardware nodeData={nodeData} />}
-					{active === 4 && <NodeLog node={name} />}
-				</Box>
+				</Grid>
 			</CardContent>
 		</Card>
 	)
 }
 
 function PropGroup(props) {
+	const classes = useStyles()
+	const { i18n, t } = useTranslation()
 	return (
 		<Grid item xs={12} sm={6} md={4}>
-			<Typography variant="h5" component="h3">
-				{props.title}
-			</Typography>
-			<Table>
-				<TableBody>
+			<Card id={props.title} className={classes.content}>
+				<CardHeader
+					title={t(props.title)}
+				/>
+				<CardContent>
 					{props.children}
-				</TableBody>
-			</Table>
+				</CardContent>
+			</Card>
 		</Grid>
 	)
 }
 
 function Prop(props) {
+	const classes = useStyles()
 	return (
-		<TableRow>
-			<TableCell style={{width: "40%"}}>
-				<Typography variant="caption" component="h3">
+		<Grid container className={classes.prop}>
+			<Grid item xs={8}>
+				<Typography color="textSecondary">
 					{props.title}
 				</Typography>
-			</TableCell>
-			<TableCell style={{width: "60%"}}>
-				{props.value}
-			</TableCell>
-		</TableRow>
+			</Grid>
+			<Grid item xs={4}>
+				<Typography>
+					{props.value}
+				</Typography>
+			</Grid>
+		</Grid>
 	)
 }
 
 function Main(props) {
 	if (!props.nodeData) {
-		return <CircularProgress />
+		return null
 	}
 	return (
-		<Grid container container spacing={2}>
-			<PropGroup title="Main">
+		<React.Fragment>
+			<PropGroup title="Server">
 				<Prop title="Manufacturer" value={props.nodeData.manufacturer.value} />
 				<Prop title="Model" value={props.nodeData.model.value} />
 				<Prop title="Serial" value={props.nodeData.serial.value} />
@@ -177,7 +168,7 @@ function Main(props) {
 				<Prop title="Banks" value={props.nodeData.mem_banks.value} />
 				<Prop title="Slots" value={props.nodeData.mem_slots.value} />
 			</PropGroup>
-			<PropGroup title="OS">
+			<PropGroup title="System">
 				<Prop title="Name" value={props.nodeData.os_name.value} />
 				<Prop title="Vendor" value={props.nodeData.os_vendor.value} />
 				<Prop title="Release" value={props.nodeData.os_release.value} />
@@ -189,128 +180,15 @@ function Main(props) {
 				<Prop title="Version" value={props.nodeData.version.value} />
 				<Prop title="Env" value={props.nodeData.node_env.value} />
 			</PropGroup>
-		</Grid>
-	)
-}
-
-function NetworkInterface(props) {
-	return props.data.map((e, i) => (
-		<NetworkLine key={props.mac+"-"+i} mac={props.mac} data={e} />
-	))
-}
-
-function NetworkLine(props) {
-	return (
-		<TableRow>
-			<TableCell data-title="Interface" style={{"flexBasis": "11rem"}}>{props.data.intf}</TableCell>
-			<TableCell data-title="L2 Address" style={{"flexBasis": "11rem"}}>{props.mac}</TableCell>
-			<TableCell data-title="L3 Address" style={{"flexBasis": "11rem"}}>{props.data.addr}</TableCell>
-			<TableCell data-title="L3 Mask" style={{"flexBasis": "11rem"}}>{props.data.mask}</TableCell>
-		</TableRow>
-	)
-}
-
-function Network(props) {
-	const classes = useStyles()
-	if (props.nodeData.lan === undefined) {
-		return <CircularProgress />
-	}
-	return (
-		<Box className={classes.tableWrapper}>
-			<Table>
-				<TableHead>
-					<TableRow className="text-secondary">
-						<TableCell>Interface</TableCell>
-						<TableCell>L2 Address</TableCell>
-						<TableCell>L3 Address</TableCell>
-						<TableCell>L3 Mask</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{Object.keys(props.nodeData.lan).map((mac) => (
-						<NetworkInterface key={mac} mac={mac} data={props.nodeData.lan[mac]} />
-					))}
-				</TableBody>
-			</Table>
-		</Box>
-	)
-}
-
-function InitiatorsLine(props) {
-	return (
-		<TableRow>
-			<TableCell data-title="Id">{props.data.hba_id}</TableCell>
-			<TableCell data-title="Type">{props.data.hba_type}</TableCell>
-			<TableCell data-title="Host">{props.data.host}</TableCell>
-		</TableRow>
-	)
-}
-
-function Initiators(props) {
-	const classes = useStyles()
-	if (props.nodeData.hba === undefined) {
-		return <CircularProgress />
-	}
-	return (
-		<Box className={classes.tableWrapper}>
-			<Table>
-				<TableHead>
-					<TableRow className="text-secondary">
-						<TableCell>Id</TableCell>
-						<TableCell>Type</TableCell>
-						<TableCell>Host</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{props.nodeData.hba.map((e, i) => (
-						<InitiatorsLine key={i} data={e} />
-					))}
-				</TableBody>
-			</Table>
-		</Box>
-	)
-}
-
-function HardwareLine(props) {
-	return (
-		<TableRow>
-			<TableCell data-title="Type">{props.data.type}</TableCell>
-			<TableCell data-title="Path">{props.data.path}</TableCell>
-			<TableCell data-title="Class">{props.data.class}</TableCell>
-			<TableCell data-title="Driver">{props.data.driver}</TableCell>
-			<TableCell data-title="Description"  style={{"flexBasis": "100%"}} >{props.data.description}</TableCell>
-		</TableRow>
-	)
-}
-
-function Hardware(props) {
-	const classes = useStyles()
-	if (props.nodeData.hardware === undefined) {
-		return <CircularProgress />
-	}
-	return (
-		<Box className={classes.tableWrapper}>
-			<Table>
-				<TableHead>
-					<TableRow className="text-secondary">
-						<TableCell>Type</TableCell>
-						<TableCell>Path</TableCell>
-						<TableCell>Class</TableCell>
-						<TableCell>Driver</TableCell>
-						<TableCell>Description</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{props.nodeData.hardware.map((e, i) => (
-						<HardwareLine key={i} data={e} />
-					))}
-				</TableBody>
-			</Table>
-		</Box>
+		</React.Fragment>
 	)
 }
 
 function NodeLog(props) {
+	const [{user}, dispatch] = useStateValue()
+	if (!user.grant || !("root" in user.grant)) {
+		return null
+	}
 	return (
 		<Log url={"/node/"+props.node} />
 	)

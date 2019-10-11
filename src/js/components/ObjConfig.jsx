@@ -22,7 +22,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Collapse from '@material-ui/core/Collapse';
 
 const useStyles = makeStyles(theme => ({
@@ -127,7 +126,7 @@ function ObjConfig(props) {
 	const { path } = props
         const classes = useStyles()
         const { t, i18n } = useTranslation()
-	const [expanded, setExpanded] = React.useState(false);
+	const [expanded, setExpanded] = useState(false);
 
 	function handleExpandClick(e) {
 		setExpanded(!expanded)

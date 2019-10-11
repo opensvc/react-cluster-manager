@@ -1,14 +1,24 @@
 import React, {useState, useEffect} from "react";
 import { useLog } from "../hooks/Log.jsx"
 import { useTranslation } from 'react-i18next'
+import { TableToolbar } from "./TableToolbar.jsx";
 
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import clsx from 'clsx'
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import FilterListIcon from '@material-ui/icons/FilterList';
 
 const useStyles = makeStyles(theme => ({
+	content: {
+		paddingTop: 0,
+	},
 	textField: {
 		width: "100%",
 	},
@@ -36,6 +46,7 @@ const useStyles = makeStyles(theme => ({
 
 function Log(props) {
 	const log = useLog(props.url)
+	const [searchOpen, setSearchOpen] = useState(false)
 	const [search, setSearch] = useState("")
 	const [skip, setSkip] = useState()
 	const classes = useStyles()
@@ -52,24 +63,42 @@ function Log(props) {
 		}
 	})
 	return (
-		<div>
-			<TextField
-				className={classes.textField}
-				id="search"
-				label={t("Search Regular Expression")}
-				type="search"
-				margin="normal"
-				variant="outlined"
-				onChange={handleChange}
-				value={search}
-			/>
-			<LogLines
-				log={log}
-				search={search}
-				setSearch={setSearch}
-				setSkip={setSkip}
-			/>
-		</div>
+                <Card>
+                        <CardHeader
+                                title={props.title}
+                                subheader={props.subheader}
+				action={
+                                        <TableToolbar selected={[]} className={classes.table}>
+                                                <Tooltip title={t("Filters")}>
+                                                        <IconButton aria-label="Filters" disabled={search?true:false} onClick={() => {(!search) && setSearchOpen(!searchOpen)}}>
+                                                                <FilterListIcon />
+                                                        </IconButton>
+                                                </Tooltip>
+                                        </TableToolbar>
+				}
+                        />
+                        <CardContent className={classes.content}>
+				{(searchOpen || search) &&
+				<TextField
+					className={classes.textField}
+					id="search"
+					label={t("Search Regular Expression")}
+					type="search"
+					margin="normal"
+					variant="outlined"
+					onChange={handleChange}
+					value={search}
+				/>
+				}
+				<LogLines
+					log={log}
+					search={search}
+					setSearch={setSearch}
+					setSkip={setSkip}
+				/>
+			</CardContent>
+                </Card>
+
 	)
 }
 
