@@ -48,7 +48,7 @@ function ObjConfigDigest(props) {
         if (cstat.monitor === undefined) {
                 return null
         }
-	if (!user) {
+	if (user.grant === undefined) {
 		return null
 	}
 	if (!config) {
