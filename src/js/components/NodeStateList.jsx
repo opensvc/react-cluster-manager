@@ -17,7 +17,7 @@ function NodeStateList(props) {
 	return (
 		<List dense={true}>
 			<ObjFrozenItem frozen={data.frozen} />
-			<NodeStateSpeakerItem speaker={data.speaker} />,
+			<NodeStateSpeakerItem speaker={data.speaker} />
 			<MonitorStatusBadgeItem state={data.monitor.status} />
 			<MonitorTargetBadgeItem target={data.monitor.global_expect} />
 		</List>
