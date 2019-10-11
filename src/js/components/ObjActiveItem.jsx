@@ -62,7 +62,7 @@ function ObjActiveItem(props) {
 						</Typography>
 					</ListItemIcon>
 					<ListItemText>
-						{t("Action in progress")}
+						{t("Action in progress.")}
 					</ListItemText>
 				</ListItem>
 			)

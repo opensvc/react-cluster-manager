@@ -9,6 +9,7 @@ import { NodeNetwork } from "./NodeNetwork.jsx"
 import { NodeHardware } from "./NodeHardware.jsx"
 import { NodeInitiators } from "./NodeInitiators.jsx"
 import { NodeStateList } from "./NodeStateList.jsx"
+import { NodeDigest } from "./NodeDigest.jsx"
 
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -16,8 +17,6 @@ import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 import Grid from '@material-ui/core/Grid'
-import Chip from '@material-ui/core/Chip'
-import Skeleton from '@material-ui/lab/Skeleton'
 
 const useStyles = makeStyles(theme => ({
         root: {
@@ -64,37 +63,6 @@ function NodeDetails(props) {
 	)
 }
 
-function NodeDigest(props) {
-	const classes = useStyles()
-	const { name, nodeData } = props
-	const { t, i18n } = useTranslation()
-	const [{user}, dispatch] = useStateValue()
-
-	return (
-		<Card className={classes.content}>
-			<CardHeader
-				title={t("Node")}
-				subheader={name}
-				action={
-					<NodeActions selected={name} />
-				}
-			/>
-			<CardContent>
-				<Typography variant="body2" color="textSecondary" component="div">
-					<NodeStateList name={name} />
-				</Typography>
-				<Grid container spacing={1}>
-					{["Server", "Processor", "Memory", "System", "Agent", "Network", "Initiators", "Hardware", "Log"].map((id) => (
-					<Grid item key={id}>
-						<Chip label={id} component="a" href={"#"+id} clickable />
-					</Grid>
-					))}
-				</Grid>
-			</CardContent>
-		</Card>
-	)
-}
-
 function PropGroup(props) {
 	const classes = useStyles()
 	const { i18n, t } = useTranslation()
@@ -114,11 +82,12 @@ function PropGroup(props) {
 
 function Prop(props) {
 	const classes = useStyles()
+	const { i18n, t } = useTranslation()
 	return (
 		<Grid container className={classes.prop}>
 			<Grid item xs={8}>
 				<Typography color="textSecondary">
-					{props.title}
+					{t(props.title)}
 				</Typography>
 			</Grid>
 			<Grid item xs={4}>

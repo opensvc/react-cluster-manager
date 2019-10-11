@@ -26,7 +26,7 @@ function ObjOverallItem(props) {
 					</Typography>
 				</ListItemIcon>
 				<ListItemText>
-					{t("Overall state is") + " " + props.overall}
+					{t("Overall state is {{state}}.", {state: props.overall})}
 				</ListItemText>
 			</ListItem>
 		)

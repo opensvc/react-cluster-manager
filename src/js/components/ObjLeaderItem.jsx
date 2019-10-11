@@ -23,7 +23,7 @@ function ObjLeaderItem(props) {
 					</Typography>
                                 </ListItemIcon>
                                 <ListItemText>
-                                        {t("Placement Leader")}
+                                        {t("Placement leader.")}
                                 </ListItemText>
                         </ListItem>
 	)

@@ -18,7 +18,7 @@ function ObjProvisionedItem(props) {
 					</Typography>
 				</ListItemIcon>
 				<ListItemText>
-					{t("Not provisioned, orchestration is disabled")}
+					{t("Not provisioned. Orchestration is disabled.")}
 				</ListItemText>
 			</ListItem>
 		)

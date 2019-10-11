@@ -22,7 +22,7 @@ function ObjFrozenItem(props) {
 				</Typography>
                         </ListItemIcon>
                         <ListItemText>
-                                {t("Frozen, orchestration is disabled")}
+                                {t("Frozen. Orchestration is disabled.")}
                         </ListItemText>
                 </ListItem>
 

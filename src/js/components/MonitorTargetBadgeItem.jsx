@@ -17,7 +17,7 @@ function MonitorTargetBadgeItem(props) {
                                 <SkipNextIcon color="primary" />
                         </ListItemIcon>
                         <ListItemText>
-                                {t("Target state is") + " " + props.target}
+                                {t("Target state is {{state}}.", {state: props.target})}
                         </ListItemText>
                 </ListItem>
         )

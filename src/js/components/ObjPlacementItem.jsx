@@ -26,7 +26,7 @@ function ObjPlacementItem(props) {
 				</Typography>
 			</ListItemIcon>
 			<ListItemText>
-				{t("Placement is not optimal")}
+				{t("Placement is not optimal.")}
 			</ListItemText>
 		</ListItem>
 	)

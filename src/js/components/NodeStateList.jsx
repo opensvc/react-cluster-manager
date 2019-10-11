@@ -4,6 +4,8 @@ import { ObjFrozenItem } from "./ObjFrozenItem.jsx";
 import { MonitorStatusBadgeItem } from "./MonitorStatusBadgeItem.jsx";
 import { MonitorTargetBadgeItem } from "./MonitorTargetBadgeItem.jsx";
 import { NodeStateSpeakerItem } from "./NodeStateSpeakerItem.jsx";
+import { NodeStateVersionItem } from "./NodeStateVersionItem.jsx";
+import { NodeStateCompatItem } from "./NodeStateCompatItem.jsx";
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -20,6 +22,8 @@ function NodeStateList(props) {
 			<NodeStateSpeakerItem speaker={data.speaker} />
 			<MonitorStatusBadgeItem state={data.monitor.status} />
 			<MonitorTargetBadgeItem target={data.monitor.global_expect} />
+			<NodeStateCompatItem />
+			<NodeStateVersionItem />
 		</List>
 	)
 }
