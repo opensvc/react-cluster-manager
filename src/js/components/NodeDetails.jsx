@@ -80,10 +80,10 @@ function NodeDigest(props) {
 				}
 			/>
 			<CardContent>
+				<Typography variant="body2" color="textSecondary" component="div">
+					<NodeStateList name={name} />
+				</Typography>
 				<Grid container spacing={1}>
-					<Typography variant="body2" color="textSecondary" component="div">
-						<NodeStateList name={name} />
-					</Typography>
 					{["Server", "Processor", "Memory", "System", "Agent", "Network", "Initiators", "Hardware", "Log"].map((id) => (
 					<Grid item key={id}>
 						<Chip label={id} component="a" href={"#"+id} clickable />
