@@ -143,12 +143,13 @@ function Main(props) {
 }
 
 function NodeLog(props) {
+	const { i18n, t } = useTranslation()
 	const [{user}, dispatch] = useStateValue()
 	if (!user.grant || !("root" in user.grant)) {
 		return null
 	}
 	return (
-		<Log url={"/node/"+props.node} />
+		<Log title={t("Log")} url={"/node/"+props.node} />
 	)
 }
 
