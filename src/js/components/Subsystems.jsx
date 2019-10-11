@@ -102,7 +102,7 @@ function Subsystems(props) {
 				issue={state.OPTIMAL}
 				href="#pools"
 				title="Pools"
-				icon={ <StorageIcon /> }
+				icon={ <SaveIcon /> }
 				onClick={() => history.push("/pools")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
