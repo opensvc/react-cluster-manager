@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { useStateValue } from '../state.js';
-import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router';
-import { apiPostNode } from "../api.js";
+import React, { useState, useEffect } from "react"
+import { useStateValue } from '../state.js'
+import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router'
+import { apiPostNode } from "../api.js"
 import { Log } from "./Log.jsx"
 import { NodeActions } from "./NodeActions.jsx"
 import { NodeNetwork } from "./NodeNetwork.jsx"
 import { NodeHardware } from "./NodeHardware.jsx"
 import { NodeInitiators } from "./NodeInitiators.jsx"
+import { NodeStateList } from "./NodeStateList.jsx"
 
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
-import Chip from '@material-ui/core/Chip';
-import Skeleton from '@material-ui/lab/Skeleton';
+import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
+import CardContent from '@material-ui/core/CardContent'
+import Grid from '@material-ui/core/Grid'
+import Chip from '@material-ui/core/Chip'
+import Skeleton from '@material-ui/lab/Skeleton'
 
 const useStyles = makeStyles(theme => ({
         root: {
@@ -26,24 +27,9 @@ const useStyles = makeStyles(theme => ({
 	prop: {
                 paddingTop: theme.spacing(1),
 	},
-	tableWrapper: {
-                overflowX: 'auto',
-		marginLeft: -theme.spacing(2),
-		marginRight: -theme.spacing(2),
-	},
 	content: {
 		height: "100%",
 	},
-        expand: {
-                transform: 'rotate(0deg)',
-                marginLeft: 'auto',
-                transition: theme.transitions.create('transform', {
-                        duration: theme.transitions.duration.shortest,
-                }),
-        },
-        expandOpen: {
-                transform: 'rotate(180deg)',
-        },
 }))
 
 function NodeDetails(props) {
@@ -95,6 +81,9 @@ function NodeDigest(props) {
 			/>
 			<CardContent>
 				<Grid container spacing={1}>
+					<Typography variant="body2" color="textSecondary" component="div">
+						<NodeStateList name={name} />
+					</Typography>
 					{["Server", "Processor", "Memory", "System", "Agent", "Network", "Initiators", "Hardware", "Log"].map((id) => (
 					<Grid item key={id}>
 						<Chip label={id} component="a" href={"#"+id} clickable />
