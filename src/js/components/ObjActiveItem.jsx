@@ -11,15 +11,19 @@ import Typography from '@material-ui/core/Typography';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 const useStyles = makeStyles(theme => ({
-	wrapper: {
-		position: 'relative',
+	animate: {
+		animation: '$animate 1.5s ease-in-out infinite'
 	},
-	progress: {
-		position: 'absolute',
-		left: "-0.15em",
-		zoom: 0.7,
-		top: "-0.15em",
-		zIndex: 1,
+	'@keyframes animate': {
+		'0%': {
+			opacity: 1
+		},
+		'50%': {
+			opacity: 0.4
+		},
+		'100%': {
+			opacity: 1
+		}
 	},
 }))
 
@@ -55,10 +59,7 @@ function ObjActiveItem(props) {
 				<ListItem>
 					<ListItemIcon>
 						<Typography className={props.className} component="span">
-							<div className={classes.wrapper}>
-								<PlayArrowIcon color="primary" />
-								<CircularProgress className={classes.progress} />
-							</div>
+							<PlayArrowIcon color="primary" className={classes.animate} />
 						</Typography>
 					</ListItemIcon>
 					<ListItemText>
