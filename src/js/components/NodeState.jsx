@@ -3,6 +3,8 @@ import { ObjFrozen } from "./ObjFrozen.jsx";
 import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
 import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
 import { NodeStateSpeaker } from "./NodeStateSpeaker.jsx";
+import NodeStateSwapOverload from "./NodeStateSwapOverload.jsx"
+import NodeStateMemOverload from "./NodeStateMemOverload.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -19,7 +21,9 @@ function NodeState(props) {
 		<ObjFrozen className={classes.child} frozen={props.data.frozen} />,
 		<NodeStateSpeaker className={classes.child} speaker={props.data.speaker} />,
 		<MonitorStatusBadge className={classes.child} state={props.data.monitor.status} />,
-		<MonitorTargetBadge className={classes.child} target={props.data.monitor.global_expect} />
+		<MonitorTargetBadge className={classes.child} target={props.data.monitor.global_expect} />,
+		<NodeStateMemOverload className={classes.child} data={props.data} />,
+		<NodeStateSwapOverload className={classes.child} data={props.data} />
 	]
 	return (
 		<Grid container spacing={0}>

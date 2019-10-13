@@ -1,34 +1,32 @@
 import React from "react"
 import { state } from "../utils.js"
-import { compatIssue } from "../issues.js";
+import { nodeMemOverloadIssue } from "../issues.js"
 import { useTranslation } from "react-i18next"
-import { useStateValue } from '../state.js';
+import { useStateValue } from '../state.js'
+import WarningIcon from './WarningIcon.jsx'
 import Typography from '@material-ui/core/Typography'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ErrorIcon from "./ErrorIcon.jsx"
 
-function NodeStateCompatItem(props) {
+function NodeStateMemOverloadItem(props) {
 	const { t, i18n } = useTranslation()
 	const [{ cstat }, dispatch] = useStateValue()
-	var cissue = compatIssue(cstat)
-        if (cissue == state.OPTIMAL) {
+	var issue = nodeMemOverloadIssue(props.data)
+        if (issue != state.WARNING) {
                 return null
         }
         return (
                 <ListItem>
                         <ListItemIcon>
-                                <ErrorIcon />
+                                <WarningIcon />
                         </ListItemIcon>
                         <ListItemText>
-				{t("Nodes run incompatible versions. Orchestration is disabled.")}
+				{t("Memory overload. Orchestration is disabled.")}
                         </ListItemText>
                 </ListItem>
         )
 }
 
-export {
-        NodeStateCompatItem
-}
+export default NodeStateMemOverloadItem
 

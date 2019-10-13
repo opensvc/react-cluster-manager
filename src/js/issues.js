@@ -28,23 +28,21 @@ function versionIssue(cstat) {
 	return state.OPTIMAL
 }
 
-function nodeMemOverloadIssue(cstat, node) {
-	if (cstat.monitor === undefined) {
+function nodeMemOverloadIssue(ndata) {
+	if (ndata === undefined) {
 		return state.NOTAPPLICABLE
 	}
-	var ndata = cstat.monitor.nodes[node]
-	if (ndata.min_avail_mem > ndata.stats.avail_mem) {
+	if (ndata.min_avail_mem > ndata.stats.mem_avail) {
 		return state.WARNING
 	}
 	return state.OPTIMAL
 }
 
-function nodeSwapOverloadIssue(cstat, node) {
-	if (cstat.monitor === undefined) {
+function nodeSwapOverloadIssue(ndata) {
+	if (ndata === undefined) {
 		return state.NOTAPPLICABLE
 	}
-	var ndata = cstat.monitor.nodes[node]
-	if (ndata.min_avail_swap > ndata.stats.avail_swap) {
+	if (ndata.min_avail_swap > ndata.stats.swap_avail) {
 		return state.WARNING
 	}
 	return state.OPTIMAL
@@ -56,8 +54,9 @@ function nodesOverloadIssue(cstat, node) {
 	}
 	var s = state.OPTIMAL
 	for (var node in cstat.monitor.nodes) {
-		s = mergeStates(s, nodeMemOverloadIssue(cstat, node))
-		s = mergeStates(s, nodeSwapOverloadIssue(cstat, node))
+		var ndata = cstat.monitor.nodes[node]
+		s = mergeStates(s, nodeMemOverloadIssue(ndata))
+		s = mergeStates(s, nodeSwapOverloadIssue(ndata))
 		if (s == state.WARNING) {
 			break
 		}

@@ -13,6 +13,7 @@ import CardContent from '@material-ui/core/CardContent';
 import clsx from 'clsx'
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
+import Skeleton from '@material-ui/lab/Skeleton';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
 const useStyles = makeStyles(theme => ({
@@ -130,6 +131,9 @@ function LogLines(props) {
 
 function LogLine(props) {
 	const classes = useStyles()
+	if (!props.data) {
+		return <Skeleton />
+	}
 	var l = props.data.split(" - ")
 	var level = l[2]
 	if (props.re && !props.data.match(props.re)) {

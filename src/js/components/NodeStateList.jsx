@@ -6,6 +6,8 @@ import { MonitorTargetBadgeItem } from "./MonitorTargetBadgeItem.jsx";
 import { NodeStateSpeakerItem } from "./NodeStateSpeakerItem.jsx";
 import { NodeStateVersionItem } from "./NodeStateVersionItem.jsx";
 import { NodeStateCompatItem } from "./NodeStateCompatItem.jsx";
+import NodeStateMemOverloadItem from "./NodeStateMemOverloadItem.jsx";
+import NodeStateSwapOverloadItem from "./NodeStateSwapOverloadItem.jsx";
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -22,6 +24,8 @@ function NodeStateList(props) {
 			<NodeStateSpeakerItem speaker={data.speaker} />
 			<MonitorStatusBadgeItem state={data.monitor.status} />
 			<MonitorTargetBadgeItem target={data.monitor.global_expect} />
+			<NodeStateMemOverloadItem data={data} />
+			<NodeStateSwapOverloadItem data={data} />
 			<NodeStateCompatItem />
 			<NodeStateVersionItem />
 		</List>
