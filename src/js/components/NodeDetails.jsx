@@ -10,6 +10,9 @@ import { NodeHardware } from "./NodeHardware.jsx"
 import { NodeInitiators } from "./NodeInitiators.jsx"
 import { NodeStateList } from "./NodeStateList.jsx"
 import { NodeDigest } from "./NodeDigest.jsx"
+import PropGroup from "./PropGroup.jsx"
+import Prop from "./Prop.jsx"
+import NodeLabels from "./NodeLabels.jsx"
 
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -23,12 +26,6 @@ const useStyles = makeStyles(theme => ({
                 marginTop: theme.spacing(3),
 		flexGrow: 1,
         },
-	prop: {
-                paddingTop: theme.spacing(1),
-	},
-	content: {
-		height: "100%",
-	},
 }))
 
 function NodeDetails(props) {
@@ -52,48 +49,13 @@ function NodeDetails(props) {
 			<Grid item xs={12} sm={6} md={4}>
 				<NodeDigest name={name} nodeData={nodeData} />
 			</Grid>
+			<NodeLabels name={name} />
 			<Main nodeData={nodeData} />
 			<NodeNetwork nodeData={nodeData} />
 			<NodeInitiators nodeData={nodeData} />
 			<NodeHardware nodeData={nodeData} />
 			<Grid item xs={12}>
 				<NodeLog node={name} />
-			</Grid>
-		</Grid>
-	)
-}
-
-function PropGroup(props) {
-	const classes = useStyles()
-	const { i18n, t } = useTranslation()
-	return (
-		<Grid item xs={12} sm={6} md={4}>
-			<Card id={props.title} className={classes.content}>
-				<CardHeader
-					title={t(props.title)}
-				/>
-				<CardContent>
-					{props.children}
-				</CardContent>
-			</Card>
-		</Grid>
-	)
-}
-
-function Prop(props) {
-	const classes = useStyles()
-	const { i18n, t } = useTranslation()
-	return (
-		<Grid container className={classes.prop}>
-			<Grid item xs={8}>
-				<Typography color="textSecondary">
-					{t(props.title)}
-				</Typography>
-			</Grid>
-			<Grid item xs={4}>
-				<Typography>
-					{props.value}
-				</Typography>
 			</Grid>
 		</Grid>
 	)

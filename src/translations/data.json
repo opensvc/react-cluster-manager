@@ -1,7 +1,8 @@
 {
 	"en": {
 		"translation": {
-			"delete_resource": "Deleting a section does not stop the corresponding resource. You might want to stop the resource before."
+			"delete_resource": "Deleting a section does not stop the corresponding resource. You might want to stop the resource before.",
+			"add_node_label": "Node labels can be used in node selector expressions."
 		}
 	},
 	"fr": {
@@ -9,6 +10,7 @@
 			"{{count}} selected": "{{count}} sélectionnés",
 			"15min average": "Moyenne sur 15min",
 			"Action in progress.": "Action en cours.",
+			"add_node_label": "Les labels de noeud peuvent être utilisés dans les expressions du sélecteur de noeuds.",
 			"Addresses": "Adresses",
 		       	"Agent": "Agent",
 			"Arch": "Arch",

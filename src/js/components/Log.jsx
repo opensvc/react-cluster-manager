@@ -64,7 +64,7 @@ function Log(props) {
 		}
 	})
 	return (
-                <Card>
+                <Card id="Log">
                         <CardHeader
                                 title={props.title}
                                 subheader={props.subheader}
