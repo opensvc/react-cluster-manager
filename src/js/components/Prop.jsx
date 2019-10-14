@@ -13,6 +13,11 @@ const useStyles = makeStyles(theme => ({
 		paddingTop: theme.spacing(2),
 		paddingBottom: theme.spacing(2),
 	},
+	actions: {
+		"&:first-child": {
+			marginRight: -theme.spacing(1),
+		},
+	},
 }))
 
 function Prop(props) {
@@ -39,9 +44,9 @@ function Prop(props) {
 			</Grid>
 			{(props.remove || props.change) &&
 			<Grid item xs={cols.action}>
-				<Grid container wrap="nowrap">
-					{props.change && <Grid item>{props.change}</Grid>}
-					{props.remove && <Grid item>{props.remove}</Grid>}
+				<Grid container direction="row-reverse" wrap="nowrap">
+					{props.change && <Grid item className={classes.actions}>{props.change}</Grid>}
+					{props.remove && <Grid item className={classes.actions}>{props.remove}</Grid>}
 				</Grid>
 			</Grid>
 			}
