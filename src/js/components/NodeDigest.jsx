@@ -44,7 +44,7 @@ function NodeDigest(props) {
 				</Typography>
 				<Divider className={classes.divider} />
 				<Grid container spacing={1}>
-					{["Server", "Processor", "Memory", "System", "Agent", "Network", "Initiators", "Hardware", "Log"].map((id) => (
+					{["Labels", "Server", "Processor", "Memory", "System", "Agent", "Network", "Initiators", "Hardware", "Log"].map((id) => (
 					<Grid item key={id}>
 						<Chip label={t(id)} component="a" href={"#"+id} clickable />
 					</Grid>
