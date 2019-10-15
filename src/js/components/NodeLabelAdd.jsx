@@ -69,7 +69,7 @@ function NodeLabelAdd(props) {
 				<AddIcon />
 			</IconButton>
 			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-				<DialogTitle id="form-dialog-title">Add Node Label</DialogTitle>
+				<DialogTitle id="form-dialog-title">{t("Add Node Label")}</DialogTitle>
 				<DialogContent>
 					<DialogContentText>
 						{t("add_node_label")}
