@@ -66,7 +66,7 @@ function NodeLabelEdit(props) {
 				<EditIcon />
 			</IconButton>
 			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-				<DialogTitle id="form-dialog-title">Change Node Label</DialogTitle>
+				<DialogTitle id="form-dialog-title">{t("Change Node Label")}</DialogTitle>
 				<DialogContent>
 					<DialogContentText>
 						{t("add_node_label")}

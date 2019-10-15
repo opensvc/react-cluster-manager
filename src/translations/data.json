@@ -21,6 +21,7 @@
 			"Available": "Disponible",
 			"Banks": "Banques",
 			"Bios": "Bios",
+			"Change Node Label": "Changer un label de noeud",
 			"Cluster": "Grappe",
 			"Cores": "Coeurs",
 			"Delete section {{rid}} of {{path}}": "Supprimer la section {{rid}} de {{path}}",
