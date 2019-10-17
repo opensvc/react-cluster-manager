@@ -22,6 +22,9 @@ install:
 - npm list -g --depth=0
 
 script:
+- npm run build
+- rm -rf debug
+- mv dist debug
 - npm config set opensvc-cluster-manager:mode production
 - npm run build
 
