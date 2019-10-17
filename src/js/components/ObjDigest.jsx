@@ -65,12 +65,8 @@ function ObjDigest(props) {
 				}
 			/>
 			<CardContent>
-				<Typography variant="body2" color="textSecondary" component="div">
-					<ObjInstanceCounts path={path} />&nbsp;{t("instances")}
-				</Typography>
-				<Typography variant="body2" color="textSecondary" component="div">
-					<ObjStateList path={path} />
-				</Typography>
+				<ObjInstanceCounts path={path} />&nbsp;{t("instances")}
+				<ObjStateList path={path} />
 			</CardContent>
 		</Card>
 	)
