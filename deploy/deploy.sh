@@ -54,11 +54,17 @@ BUNDLE_DIR="$REPO_ROOT/$API_VERSION/$BUNDLE_VERSION"
 _echo "=> creating target repo <$BUNDLE_DIR>"
 _ssh "test -d $BUNDLE_DIR || mkdir -p $BUNDLE_DIR"
 
-_echo "=> creating tar.gz bundle in <$BUNDLE_DIR>"
+_echo "=> creating production tar.gz bundle in <$BUNDLE_DIR>"
 (cd dist; tar -czf - .) | $SSH "cat > $BUNDLE_DIR/bundle"
 
-_echo "=> displaying bundle content in <${DEPLOY_NODE}:$BUNDLE_DIR>"
+_echo "=> creating debug tar.gz bundle in <$BUNDLE_DIR>"
+(cd debug; tar -czf - .) | $SSH "cat > $BUNDLE_DIR/bundle.debug"
+
+_echo "=> displaying production bundle content in <${DEPLOY_NODE}:$BUNDLE_DIR>"
 _ssh "tar tzvf $BUNDLE_DIR/bundle"
+
+_echo "=> displaying debug bundle content in <${DEPLOY_NODE}:$BUNDLE_DIR>"
+_ssh "tar tzvf $BUNDLE_DIR/bundle.debug"
 
 API_LATEST=$($SSH "cd $BUNDLE_DIR/.. && ls -1 | grep -v current | tail -1")
 _echo "=> latest entry in $REPO_ROOT/$API_VERSION is $API_LATEST"
