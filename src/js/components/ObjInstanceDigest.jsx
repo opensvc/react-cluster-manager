@@ -31,9 +31,7 @@ function ObjInstanceDigest(props) {
 				}
 			/>
 			<CardContent>
-				<Typography variant="body2" color="textSecondary" component="div">
-					<ObjInstanceStateList node={props.node} path={props.path} />
-				</Typography>
+				<ObjInstanceStateList node={props.node} path={props.path} />
 			</CardContent>
 		</Card>
 	)

@@ -32,6 +32,7 @@ const StyledBreadcrumb = withStyles(theme => ({
 		height: theme.spacing(3),
 		color: "inherit",
 		fontWeight: theme.typography.fontWeightRegular,
+		fontSize: "inherit",
 		'&:hover, &:focus': {
 			backgroundColor: "rgba(255, 255, 255, 0.3)",
 		},

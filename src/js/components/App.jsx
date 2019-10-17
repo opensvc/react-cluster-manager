@@ -46,6 +46,12 @@ const theme = createMuiTheme({
 		warning: amber[700],
 		notapplicable: grey[500],
 	},
+	typography: {
+		fontWeight: 300,
+		fontWeightLight: 200,
+		fontWeightRegular: 300,
+		fontWeightMedium: 400,
+	},
 })
 
 function HideOnScroll(props) {
@@ -72,7 +78,9 @@ const App = () => {
 	return (
 		<SnackbarProvider maxSnack={3}>
 			<ThemeProvider theme={theme}>
-				<StatefulApp />
+				<Box fontWeight={300}>
+					<StatefulApp />
+				</Box>
 			</ThemeProvider>
 		</SnackbarProvider>
 	)

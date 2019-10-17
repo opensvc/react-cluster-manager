@@ -39,9 +39,7 @@ function NodeDigest(props) {
 				}
 			/>
 			<CardContent>
-				<Typography variant="body2" color="textSecondary" component="div">
-					<NodeStateList name={name} />
-				</Typography>
+				<NodeStateList name={name} />
 				<Divider className={classes.divider} />
 				<Grid container spacing={1}>
 					{["Labels", "Server", "Processor", "Memory", "System", "Agent", "Network", "Initiators", "Hardware", "Log"].map((id) => (
