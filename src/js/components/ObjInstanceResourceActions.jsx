@@ -1,4 +1,5 @@
 import React from "react";
+import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useStateValue } from '../state.js';
 import { splitPath } from '../utils.js';
 import { confirmations } from '../confirmations.js';
@@ -19,6 +20,7 @@ import ReplayIcon from "@material-ui/icons/Replay"
 import SkipNextIcon from "@material-ui/icons/SkipNext"
 
 function ObjInstanceResourceActions(props) {
+	const { oidcUser } = useReactOidc()
 	const [{cstat}, dispatch] = useStateValue();
 	const sp = splitPath(props.path)
 	const {node, path, rids, title, fab} = props
@@ -31,7 +33,8 @@ function ObjInstanceResourceActions(props) {
 			{
 				"rid": rids.join(",")
 			},
-			(data) => dispatch({type: "parseApiResponse", data: data})
+			(data) => dispatch({type: "parseApiResponse", data: data}),
+			oidcUser
 		)
 	}
 	function disable_enable() {

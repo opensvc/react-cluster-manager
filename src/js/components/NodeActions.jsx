@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useStateValue } from '../state.js';
 import { apiNodeAction } from "../api.js";
 import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
@@ -10,6 +11,7 @@ import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew"
 import RefreshIcon from "@material-ui/icons/Refresh"
 
 function NodeActions(props) {
+	const { oidcUser } = useReactOidc()
 	const [{cstat}, dispatch] = useStateValue();
 	if (cstat.monitor === undefined) {
 		return null
@@ -39,7 +41,8 @@ function NodeActions(props) {
 				node,
 				props.value,
 				{},
-				(data) => dispatch({type: "parseApiResponse", data: data})
+				(data) => dispatch({type: "parseApiResponse", data: data}),
+				oidcUser
 			)
 		}
 	}

@@ -1,5 +1,6 @@
 import React from "react";
-import { useStateValue } from '../state.js';
+import useClusterStatus from "../hooks/ClusterStatus.jsx"
+import useUser from "../hooks/User.jsx"
 import { useTranslation } from 'react-i18next';
 import { splitPath } from '../utils.js';
 import { ObjAvail } from "./ObjAvail.jsx";
@@ -46,7 +47,7 @@ function ObjInstanceResources(props) {
 	// props.path
 	// props.node
 	//
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	const { t, i18n } = useTranslation()
 	const classes = useStyles()
 	const [selected, setSelected] = React.useState([])
@@ -119,7 +120,8 @@ function ObjInstanceResources(props) {
 }
 
 function ObjInstanceResourceLine(props) {
-	const [{ cstat, user }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
+	const { user } = useUser()
 	const {index, node, path, rid, selected, setSelected, sp} = props
 	const classes = useStyles()
 	if (cstat.monitor === undefined) {

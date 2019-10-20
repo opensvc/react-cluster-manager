@@ -4,14 +4,17 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { useHistory } from 'react-router';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { useStateValue, StateProvider, StateContext } from '../state.js';
-import { apiPostAny, parseApiResponse, apiWhoAmI } from "../api.js";
+import { StateProvider, StateContext } from '../state.js';
+import { parseApiResponse, apiWhoAmI } from "../api.js";
 import { NavBar } from "./NavBar.jsx";
-import { Main } from "./Main.jsx";
+import useAuthInfo from "../hooks/AuthInfo.jsx"
+import oidcConfiguration from "../OidcConfiguration.js"
+import Main from "./Main.jsx";
+import LoginCallback from "./LoginCallback.jsx";
 import "../json_delta.js"
+import { AuthenticationProvider, oidcLog } from '@axa-fr/react-oidc-context';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -89,15 +92,8 @@ const App = () => {
 const StatefulApp = () => {
 	const initialState = {
 		cstat: {},
-		refreshQueued: false,
 		user: {},
-		nav: {
-			page: "Cluster",
-			links: [],
-		},
 		alerts: [],      // ex: [{level: "warning", body: (<div>foo</div>)}],
-		logEventSources: {},
-		logs: {},
 	}
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -110,6 +106,9 @@ const StatefulApp = () => {
 				};
 
 			case 'loadCstat':
+				if (action.data.cluster === undefined) {
+					return state
+				}
 				if (document.title != action.data.cluster.name) {
 					document.title = action.data.cluster.name
 				}
@@ -154,147 +153,53 @@ const StatefulApp = () => {
 
 	return (
 		<StateProvider initialState={initialState} reducer={reducer}>
-			<WrappedApp />
+			<RoutedApp />
 		</StateProvider>
 	)
 }
 
-class WrappedApp extends Component {
-	constructor(props) {
-		super(props)
-		this.timer = null
-		this.eventSource = null
-		this.lastReload = 0
-		this.lastPatchId = 0
-		this.refreshQueued = false
-		this.cstatRef = React.createRef()
-	}
-	static contextType = StateContext
+function RoutedApp(props) {
+	return (
+		<Router>
+			<AuthenticatedApp />
+		</Router>
+	)
+}
 
-	stopEventSource() {
-                clearTimeout(this.timer)
-                this.eventSource.close()
-                this.eventSource = null
-        }
+function AuthenticatedApp(props) {
+	const authInfo = useAuthInfo()
+	if (!authInfo) {
+		return null
+	}
+	return (
+		<AuthenticationProvider
+			configuration={oidcConfiguration(authInfo)}
+			loggerLevel={oidcLog.DEBUG}
+			callbackComponentOverride={LoginCallback}
+			isEnabled={oidcConfiguration.authority === "" ? false : true}
+		>
+			<WrappedApp />
+		</AuthenticationProvider>
+	)
+}
 
-        initEventSource() {
-                if (this.eventSource !== null) {
-                        return
-                }
-                console.log("initEventSource")
-                this.eventSource = new EventSource("/events")
-                this.eventSource.onmessage = (e) => {
-			this.handleEvent(e)
-                }
-                //this.eventSource.onerror = () => {
-                //      this.stopEventSource()
-                //}
-                //this.eventSource.addEventListener("closedConnection", (e) => {
-                //      this.stopEventSource()
-                //})
-        }
-
-	handleEvent(e) {
-		const [{}, dispatch] = this.context
-		if (!this.cstatRef.current) {
-			console.log("initial cluster status fetch")
-			this.loadCstat()
-			return
-		}
-		var data = JSON.parse(e.data)
-		console.log("event", e.data);
-		if (data.kind != "patch") {
-			return
-		}
-		try {
-			if (this.lastPatchId && (this.lastPatchId+1 != data.id)) {
-				console.log("broken patch chain")
-				this.loadCstat()
-				this.lastPatchId = data.id
-				return
-			}
-			this.cstatRef.current = JSON_delta.patch(this.cstatRef.current, data.data)
-			dispatch({
-				"type": "loadCstat",
-				"data": this.cstatRef.current
-			})
-			this.lastPatchId = data.id
-			console.log("patched cluster status, id", data.id)
-		} catch(e) {
-			console.log("error patching cstat:", e)
-			this.loadCstat()
-			this.lastPatchId = data.id
-		}
-	}
-
-	loadCstat(last) {
-		const now = + new Date()
-		const [{}, dispatch] = this.context
-		if (last && (this.lastReload > last)) {
-			//console.log("already reloaded by another event ... drop")
-			return
-		}
-		if ((now - this.lastReload) < 1000) {
-			//console.log("last reload too fresh ... delay")
-			var fn = this.loadCstat.bind(this, now)
-			this.refreshQueued = true
-			this.timer = setTimeout(fn, 1000)
-			return
-		}
-		this.lastReload = now
-		this.refreshQueued = false
-		fetch('/daemon_status')
-			.then(res => res.json())
-			.then((data) => {
-				console.log(data)
-				this.cstatRef.current = data
-				dispatch({
-					"type": "loadCstat",
-					"data": data
-				})
-			})
-			.catch(console.log)
-	}
-	loadUser() {
-		const [{}, dispatch] = this.context
-		apiWhoAmI(data => {
-			console.log("I am", data)
-			dispatch({
-				type: "loadUser",
-				data: data
-			})
-		})
-	}
-
-	componentDidMount() {
-		this.loadCstat()
-		this.loadUser()
-		this.initEventSource()
-	}
-	componentWillUnmount() {
-		this.stopEventSource()
-	}
-	componentDidUpdate(prevProps, prevState) {
-	}
-	render() {
-
-		return (
-			<Router>
-				<CssBaseline />
-				<HideOnScroll>
-					<AppBar>
-						<NavBar />
-					</AppBar>
-				</HideOnScroll>
-				<Toolbar />
-				<Container>
-					<ErrorBoundary>
-						<Main />
-					</ErrorBoundary>
-				</Container>
-			</Router>
-		)
-	}
+function WrappedApp(props) {
+	return (
+		<React.Fragment>
+			<CssBaseline />
+			<HideOnScroll>
+				<AppBar>
+					<NavBar />
+				</AppBar>
+			</HideOnScroll>
+			<Toolbar />
+			<Container>
+				<ErrorBoundary>
+					<Main />
+				</ErrorBoundary>
+			</Container>
+		</React.Fragment>
+	)
 }
 
 class ErrorBoundary extends React.Component {

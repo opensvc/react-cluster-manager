@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useStateValue } from '../state.js';
+import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { splitPath } from "../utils.js";
@@ -64,7 +64,7 @@ function ObjsFilter(props) {
 }
 
 function getLines(props) {
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	const { kind, search, withScalerSlaves } = props
 	var lines = []
 	if (cstat.monitor === undefined) {
@@ -101,7 +101,7 @@ function getLines(props) {
 
 function Objs(props) {
 	const classes = useStyles()
-	const [{ cstat }, dispatch] = useStateValue()
+	const { cstat } = useClusterStatus()
 	const [selected, setSelected] = useState([])
 	const [search, setSearch] = useState("")
 	const [searchOpen, setSearchOpen] = useState(false)
@@ -194,7 +194,7 @@ function Objs(props) {
 function ObjLine(props) {
 	const history = useHistory()
 	const {index, path, selected, setSelected, withScalerSlaves, title } = props
-	const [{ cstat, kinds, filters }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	const sp = splitPath(path)
 	function handleClick(event) {
 		event.stopPropagation()

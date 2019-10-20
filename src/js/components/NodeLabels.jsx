@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 import { useStateValue } from '../state.js'
+import useClusterStatus from "../hooks/ClusterStatus.jsx"
+import useUser from "../hooks/User.jsx"
 import PropGroup from "./PropGroup.jsx"
 import Prop from "./Prop.jsx"
 import NodeLabelAdd from "./NodeLabelAdd.jsx"
@@ -10,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
 
 function EditButton(props) {
-	const [{ user }, dispatch] = useStateValue()
+	const { user } = useUser()
         if (!user.grant) {
                 return null
         }
@@ -30,7 +32,7 @@ function EditButton(props) {
 
 function NodeLabels(props) {
 	const { name } = props
-	const [{ cstat }, dispatch] = useStateValue()
+	const { cstat } = useClusterStatus()
 	const [edit, setEdit] = useState(false)
 
 	try {

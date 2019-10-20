@@ -2,6 +2,8 @@
 
 //import PropTypes from "prop-types";
 import React from "react";
+import useUser from "../hooks/User.jsx"
+import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useLocation, useHistory, matchPath } from 'react-router'
 import { Link as RouteLink } from 'react-router-dom'
 import { useStateValue } from '../state.js';
@@ -11,6 +13,7 @@ import { allIssue } from "../issues.js";
 import { Alerts } from "./Alerts.jsx";
 import { Subsystems } from "./Subsystems.jsx";
 import { LangSelector } from "./LangSelector.jsx";
+import { useReactOidc } from '@axa-fr/react-oidc-context';
 
 import { makeStyles, withStyles, emphasize } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -149,7 +152,7 @@ function breadcrumbs(clusterName) {
 
 function Crumbs(props) {
 	const classes = useStyles()
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	if (!cstat.cluster) {
 		var clusterName = "-"
 	} else {
@@ -186,7 +189,7 @@ function NavBar(props) {
 
 function NavBarMenu(props) {
         const [state, setState] = React.useState(false)
-	const [{ cstat }, dispatch] = useStateValue();
+	const cstat = useClusterStatus()
 	const classes = useStyles()
         const toggleDrawer = (open) => event => {
                 if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -237,13 +240,28 @@ function NavLink(props) {
 }
 
 function UserLink(props) {
-	const [{ user }, dispatch] = useStateValue();
+	const { user } = useUser()
 	const history = useHistory()
-	if (user.name === undefined) {
-		return null
-	}
+	const { oidcUser, login, logout } = useReactOidc()
+
 	function handleClick(e) {
 		history.push("/user")
+	}
+
+	if (!oidcUser) {
+		return (
+			<Button onClick={login} color="inherit">
+				Login
+			</Button>
+		)
+	}
+	var logoutbutton = (
+		<Button onClick={logout} color="inherit">
+			Logout
+		</Button>
+	)
+	if (user.name === undefined ) {
+		return logoutbutton
 	}
 	return (
 		<Avatar color="inherit" href="#" onClick={handleClick}>

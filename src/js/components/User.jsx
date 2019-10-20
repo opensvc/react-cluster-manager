@@ -1,4 +1,6 @@
 import React from "react"
+import { useReactOidc } from "@axa-fr/react-oidc-context"
+import useAuthInfo from "../hooks/AuthInfo.jsx"
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
@@ -11,6 +13,8 @@ import TableBody from '@material-ui/core/TableBody'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
+import CardActions from '@material-ui/core/CardActions'
+import Button from '@material-ui/core/Button'
 import Skeleton from '@material-ui/lab/Skeleton'
 
 const useStyles = makeStyles(theme => ({
@@ -21,9 +25,15 @@ const useStyles = makeStyles(theme => ({
 		display: "inline-block",
 		margin: 0,
 	},
+	pre: {
+		whiteSpace: "normal",
+		fontFamily: "monospace",
+		wordBreak: "break-all",
+	},
 }))
 
 function User(props) {
+	const { oidcUser, logout } = useReactOidc()
 	const { i18n, t } = useTranslation()
 	const [{ user }, dispatch] = useStateValue()
 	const classes = useStyles()
@@ -33,7 +43,7 @@ function User(props) {
 				title={user.name ? user.name : <Skeleton width="5rem" />}
 			/>
 			<CardContent>
-				<Typography component="p">
+				<Typography component="div">
 					Authenticated via <strong>{user.auth ? user.auth : <Skeleton width="5rem" className={classes.inline} />}</strong>
 				</Typography>
 				<br />
@@ -41,8 +51,60 @@ function User(props) {
 					{t("Grants")}
 				</Typography>
 				<UserGrants />
+				<br />
+				<OidcUserInfo />
 			</CardContent>
+			<CardActions>
+				<Button onClick={logout} color="primary">
+					{t("Logout")}
+				</Button>
+			</CardActions>
 		</Card>
+	)
+}
+
+function WellKown(props) {
+	const authInfo = useAuthInfo()
+	if (!authInfo) {
+		return <Skeleton />
+	}
+	if (authInfo.openid === undefined) {
+		return "n/a"
+	}
+	return (
+		<React.Fragment>
+			{authInfo.openid.well_known_uri}
+		</React.Fragment>
+	)
+}
+
+function OidcUserInfo(props) {
+	const { oidcUser } = useReactOidc()
+	const { i18n, t } = useTranslation()
+	const classes = useStyles()
+	if (!oidcUser) {
+		return null
+	}
+	var date = new Date(oidcUser.expires_at*1000)
+	return (
+		<React.Fragment>
+			<Typography variant="h5" component="h3">
+				{t("Openid Provider")}
+			</Typography>
+			<Typography variant="body1" component="pre" className={classes.pre}>
+				<WellKown />
+			</Typography>
+			<br />
+			<Typography variant="h5" component="h3">
+				{t("Access Token")}
+			</Typography>
+			<Typography variant="body1">
+				{t("Expires at {{date}}", {date: date.toLocaleString()})}
+			</Typography>
+			<Typography variant="body1" component="pre" className={classes.pre}>
+				{oidcUser.access_token}
+			</Typography>
+		</React.Fragment>
 	)
 }
 

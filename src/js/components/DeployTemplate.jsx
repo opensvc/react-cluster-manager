@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { apiPostAny, apiObjGetConfig, apiObjCreate } from "../api.js";
 import { nameValid, namespaceValid, createDataHasPathKey, parseIni } from "../utils.js";
 import { NamespaceSelector } from './NamespaceSelector.jsx'
 

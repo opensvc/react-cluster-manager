@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useStateValue } from '../state.js';
 import { useCatalogs } from '../hooks/Catalogs.jsx';
 import { useCatalogTemplates } from '../hooks/CatalogTemplates.jsx';
-import { apiPostAny, apiObjGetConfig, apiObjCreate } from "../api.js";
+import { apiPostAny } from "../api.js";
 import { nameValid, namespaceValid, parseIni, createDataHasPathKey } from "../utils.js";
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { NamespaceSelector } from './NamespaceSelector.jsx';
@@ -31,6 +32,7 @@ const useStyles = makeStyles(theme => ({
 
 function DeployCatalog(props) {
 	const {data, set} = props
+	const { oidcUser } = useReactOidc()
 	const classes = useStyles()
 	const catalogs = useCatalogs()
 	if ((catalogs.length > 0) && !data.catalog) {
@@ -42,7 +44,7 @@ function DeployCatalog(props) {
 		apiPostAny("/get_template", {catalog: data.catalog.name, template: template.id}, (buff) => {
 			console.log(buff)
 			set({...data, template: template, text: buff, data: toData(buff)})
-		})
+		}, oidcUser)
 	}
 	function handleCatalogChange(selected) {
 		console.log("selected catalog:", selected)

@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { apiObjGetConfig } from "../api.js";
-import { useStateValue } from '../state.js';
+import React, { useState, useEffect } from "react"
+import { useReactOidc } from "@axa-fr/react-oidc-context"
+import { apiObjGetConfig } from "../api.js"
+import { useStateValue } from "../state.js"
+import useClusterStatus from "../hooks/ClusterStatus.jsx"
 
 function useObjConfig(path) {
 	const [conf, setConf] = useState(null)
 	const [csum, setCsum] = useState(null)
-	const [{cstat}, dispatch] = useStateValue()
+	const { cstat } = useClusterStatus()
+	const { oidcUser } = useReactOidc()
 
 	function getCsum() {
 		if (!cstat.monitor) {
@@ -26,7 +29,7 @@ function useObjConfig(path) {
 			console.log("load new", path, "config, csum", liveCsum)
 			setCsum(liveCsum)
 			setConf(data)
-                })
+                }, oidcUser)
 	}
 
 	getConf()

@@ -1,13 +1,10 @@
 import React, { useState } from "react"
+import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useTranslation } from 'react-i18next'
-
+import { useStateValue } from "../state.js"
 import { apiNodeAction } from "../api.js"
-import { useKeywords } from "../hooks/Keywords.jsx"
-import { SectionForm } from "./SectionForm.jsx"
-import { useStateValue } from '../state.js'
 
 import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -28,7 +25,8 @@ const useStyles = makeStyles(theme => ({
 
 function NodeLabelAdd(props) {
 	const {node} = props
-	const [open, setOpen] = React.useState(false)
+	const { oidcUser } = useReactOidc()
+	const [open, setOpen] = useState(false)
 	const [key, setKey] = useState(props.key ? props.key : "")
 	const [val, setVal] = useState(props.val ? props.val : "")
 	const [{user}, dispatch] = useStateValue()
@@ -54,7 +52,7 @@ function NodeLabelAdd(props) {
 		}
 		var _kw = "labels."+key+"="+val
 		kw.push(_kw)
-		apiNodeAction(node, "set", {kw: kw}, (data) => dispatch({type: "parseApiResponse", data: data}))
+		apiNodeAction(node, "set", {kw: kw}, (data) => dispatch({type: "parseApiResponse", data: data}), oidcUser)
 		setKey("")
 		setVal("")
 		handleClose(e)

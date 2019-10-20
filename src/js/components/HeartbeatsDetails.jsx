@@ -1,5 +1,5 @@
 import React from "react";
-import { useStateValue } from '../state.js';
+import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useTranslation } from 'react-i18next';
 
 import clsx from 'clsx';
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 
 function HeartbeatsDetails(props) {
 	const classes = useStyles()
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	const { t, i18n } = useTranslation()
 	if (cstat.monitor === undefined) {
 		return null
@@ -87,7 +87,7 @@ function NodeHeartbeats(props) {
 
 function NodeHeartbeat(props) {
 	const classes = useColorStyles()
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	if (cstat.monitor === undefined) {
 		return null
 	}

@@ -1,5 +1,5 @@
 import React from "react";
-import { useStateValue } from '../state.js';
+import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useTranslation } from 'react-i18next';
 import { state } from "../utils.js";
 
@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 function ArbitratorsDetails(props) {
 	const classes = useStyles()
 	const { t, i18n } = useTranslation()
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	var arbitrators = {}
 	var arbNames = []
 	var arbAddr = {}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
@@ -31,6 +32,7 @@ const useStyles = makeStyles(theme => ({
 function NodeDetails(props) {
 	const classes = useStyles()
         const loc = useLocation()
+	const { oidcUser } = useReactOidc()
 	const [nodeData, setNodeData] = useState()
         let params = new URLSearchParams(loc.search)
         const name = params.get("name")
@@ -41,7 +43,7 @@ function NodeDetails(props) {
 		}
 		apiPostNode(name, "/get_node", {}, (data) => {
 			setNodeData(data)
-		})
+		}, oidcUser)
 	})
 
 	return (

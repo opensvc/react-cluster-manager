@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useStateValue } from '../state.js';
 import { splitPath, createDataHasPathKey } from '../utils.js';
 import { ResourceAdd } from "./ResourceAdd.jsx"
@@ -30,6 +31,7 @@ function SectionEdit(props) {
                 return null
         }
 
+	const { oidcUser } = useReactOidc()
 	const [open, setOpen] = useState(false)
 	const classes = useStyles()
 	const [{}, dispatch] = useStateValue()
@@ -81,7 +83,7 @@ function SectionEdit(props) {
                         type: "parseApiResponse",
                         ok: ok,
                         data: $
-                }))
+                }), oidcUser)
 		handleClose()
 	}
 

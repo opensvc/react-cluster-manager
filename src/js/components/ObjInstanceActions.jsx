@@ -1,4 +1,5 @@
 import React from "react";
+import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useStateValue } from '../state.js';
 import { splitPath } from "../utils.js";
 import { confirmations } from "../confirmations.js";
@@ -21,6 +22,7 @@ import SyncIcon from "@material-ui/icons/Sync"
 
 
 function ObjInstanceActions(props) {
+	const { oidcUser } = useReactOidc()
 	const [{cstat}, dispatch] = useStateValue();
 	const {selected} = props
         if (!cstat.monitor) {
@@ -41,7 +43,8 @@ function ObjInstanceActions(props) {
 				instance.path,
 				props.value,
 				{},
-				(data) => dispatch({type: "parseApiResponse", data: data})
+				(data) => dispatch({type: "parseApiResponse", data: data}),
+				oidcUser
 			)
 		}
 	}

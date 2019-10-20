@@ -15,6 +15,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Hidden from '@material-ui/core/Hidden';
+import { useReactOidc } from '@axa-fr/react-oidc-context'
 
 const useStyles = makeStyles(theme => ({
         root: {
@@ -45,7 +46,10 @@ function Networks(props) {
 	const { t, i18n } = useTranslation()
         const data = useNetworksStatus()
 	const [{}, dispatch] = useStateValue()
+	const { isEnabled, login, logout, oidcUser } = useReactOidc()
+	//const { profile } = oidcUser
         var lines = getLines(data)
+	console.log(oidcUser)
 
 	return (
                 <Card id="networks" className={classes.root}>

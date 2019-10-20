@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { apiInstanceAction } from "../api.js"
 import { useKeywords } from "../hooks/Keywords.jsx"
 import { SectionForm } from "./SectionForm.jsx"
@@ -18,6 +19,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 function PoolAdd(props) {
 	const {path} = props
+	const { oidcUser } = useReactOidc()
 	const [open, setOpen] = React.useState(false)
 	const [data, setData] = useState({})
 	const kws = useKeywords("ccfg")
@@ -51,7 +53,7 @@ function PoolAdd(props) {
 			kw.push(_kw)
 		}
 		console.log("SUBMIT", data.sectionName, data.type, data, "=>", kw)
-		apiInstanceAction("ANY", "cluster", "set", {kw: kw}, (data) => dispatch({type: "parseApiResponse", data: data}))
+		apiInstanceAction("ANY", "cluster", "set", {kw: kw}, (data) => dispatch({type: "parseApiResponse", data: data}), oidcUser)
 		handleClose(e)
 	}
 	return (

@@ -1,10 +1,9 @@
 import React from "react";
+import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useHistory } from 'react-router';
-import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { state, fancySizeMB } from "../utils.js";
 import { useColorStyles } from "../styles.js";
-import { apiNodeAction } from "../api.js";
 import { nodeMemOverloadIssue, nodeSwapOverloadIssue, compatIssue, versionIssue } from "../issues.js";
 import { NodeActions } from "./NodeActions.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
@@ -58,7 +57,7 @@ function NodeCpuSparkline(props) {
 }
 
 function NodeMetric(props) {
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	if (props.issue == state.WARNING) {
 		var cl = "error"
 	} else {
@@ -85,7 +84,7 @@ function NodeMetric(props) {
 	)
 }
 function NodeScore(props) {
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	return (
 		<NodeMetric
 			label="Score"
@@ -94,7 +93,7 @@ function NodeScore(props) {
 		/>
 	)
 }function NodeLoad(props) {
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	return (
 		<NodeMetric
 			label="Load15m"
@@ -104,7 +103,7 @@ function NodeScore(props) {
 	)
 }
 function NodeMem(props) {
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	var memIssue = nodeMemOverloadIssue(cstat, props.node)
 	return (
 		<NodeMetric
@@ -117,7 +116,7 @@ function NodeMem(props) {
 	)
 }
 function NodeSwap(props) {
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	var swapIssue = nodeSwapOverloadIssue(cstat, props.node)
 	return (
 		<NodeMetric
@@ -132,7 +131,7 @@ function NodeSwap(props) {
 
 function Node(props) {
 	const {index, node, selected, setSelected, withScalerSlaves } = props
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	const history = useHistory()
 	if (cstat.monitor === undefined) {
 		return null
@@ -211,7 +210,7 @@ function NodeVersion(props) {
 }
 
 function Nodes(props) {
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	const { t, i18n } = useTranslation()
 	const classes = useStyles()
 	const [selected, setSelected] = React.useState([]);

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { apiInstanceAction } from "../api.js"
 import { useStateValue } from '../state.js';
 
@@ -24,6 +25,7 @@ const useStyles = makeStyles(theme => ({
 
 function ObjScale(props) {
         const {path} = props
+	const { oidcUser } = useReactOidc()
 	const [{ cstat }, dispatch] = useStateValue();
 
 	if (cstat.monitor === undefined) {
@@ -59,7 +61,8 @@ function ObjScale(props) {
 			path,
 			"scale",
 			{"to": scale},
-			(data) => dispatch({type: "parseApiResponse", data: data})
+			(data) => dispatch({type: "parseApiResponse", data: data}),
+			oidcUser
 		)
 		handleClose()
 	}

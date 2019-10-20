@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useStateValue } from '../state.js';
+import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router'
 import { fmtPath, splitPath } from "../utils.js";
@@ -80,7 +80,7 @@ function ObjInstances(props) {
 	// props.path
 	//
 	const classes = useStyles()
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
         const [selected, setSelected] = React.useState([]);
 	const { t, i18n } = useTranslation()
 
@@ -157,7 +157,7 @@ function ObjInstances(props) {
 
 function InstanceLine(props) {
 	const loc = useLocation()
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	const {index, path, instance, selected, setSelected} = props
 	const history = useHistory()
 	if (cstat.monitor === undefined) {

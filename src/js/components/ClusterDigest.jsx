@@ -1,7 +1,7 @@
 import React from "react";
+import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useHistory } from 'react-router'
 import { useTranslation } from 'react-i18next';
-import { useStateValue } from '../state.js';
 import { state, fancySizeMB } from '../utils.js';
 import { arbitratorsIssue, heartbeatsIssue, nodesIssue } from "../issues.js";
 import { splitPath } from "../utils.js";
@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 
 function ClusterDigest(props) {
 	const { t, i18n } = useTranslation()
-        const [{ cstat }, dispatch] = useStateValue()
+        const { cstat } = useClusterStatus()
         const classes = useStyles()
 	const pools = usePoolsStatus()
 	const networks = useNetworksStatus()

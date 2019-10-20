@@ -86,7 +86,6 @@ function ConfirmationDialog(props) {
 		setData({...data, acks: [], confirmations: [], action: null})
 	}
 	function handleEntering(e) {
-		console.log(e)
 	}
 
 	return (

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useStateValue } from '../state.js';
 import { splitPath, createDataHasPathKey } from '../utils.js';
 import { ResourceAdd } from "./ResourceAdd.jsx"
@@ -21,6 +22,7 @@ function ResourceAddButton(props) {
                 return null
         }
 
+	const { oidcUser } = useReactOidc()
 	const [open, setOpen] = useState(false)
 	const [{}, dispatch] = useStateValue()
         const [data, setData] = useState({
@@ -58,7 +60,7 @@ function ResourceAddButton(props) {
                         type: "parseApiResponse",
                         ok: ok,
                         data: $
-                }))
+                }), oidcUser)
 		setData({
 			kind: "",
 			keywords: {}

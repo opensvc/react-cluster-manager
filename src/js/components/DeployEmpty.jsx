@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { apiObjCreate } from "../api.js";
 import { nameValid } from "../utils.js";
 import { ObjKindSelector } from './ObjKindSelector.jsx';
 import { NamespaceSelector } from './NamespaceSelector.jsx';

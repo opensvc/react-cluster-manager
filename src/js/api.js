@@ -64,12 +64,16 @@ function parseApiResponse(data, ok) {
 //
 // API calls
 //
-function apiWhoAmI(callback) {
+function apiWhoAmI(callback, user) {
+	var headers = {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json',
+	}
+	if (user) {
+		headers["Authorization"] = "Bearer " + user.access_token
+	}
 	fetch('/whoami', {
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json',
-		},
+		headers: headers,
 		method: "GET",
 	})
 	.then(res => res.json())
@@ -79,16 +83,20 @@ function apiWhoAmI(callback) {
 	.catch(console.log)
 }
 
-function apiNodeAction(node, action, options, callback) {
+function apiNodeAction(node, action, options, callback, user) {
+	var headers = {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json',
+		'o-node': node
+	}
+	if (user) {
+		headers["Authorization"] = "Bearer " + user.access_token
+	}
 	if (!options) {
 		options = {}
 	}
 	fetch('/node_action', {
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json',
-			'o-node': node
-		},
+		headers: headers,
 		method: "POST",
 		body: JSON.stringify({
 			sync: false,
@@ -103,13 +111,17 @@ function apiNodeAction(node, action, options, callback) {
 	.catch(console.log)
 }
 
-function apiInstanceAction(node, path, action, options, callback) {
+function apiInstanceAction(node, path, action, options, callback, user) {
+	var headers = {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json',
+		'o-node': node
+	}
+	if (user) {
+		headers["Authorization"] = "Bearer " + user.access_token
+	}
 	fetch('/service_action', {
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json',
-			'o-node': node
-		},
+		headers: headers,
 		method: "POST",
 		body: JSON.stringify({
 			path: path,
@@ -125,12 +137,16 @@ function apiInstanceAction(node, path, action, options, callback) {
 	.catch(console.log)
 }
 
-function apiNodeSetMonitor(global_expect, callback) {
+function apiNodeSetMonitor(global_expect, callback, user) {
+	var headers = {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json'
+	}
+	if (user) {
+		headers["Authorization"] = "Bearer " + user.access_token
+	}
 	fetch('/set_node_monitor', {
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		},
+		headers: headers,
 		method: "POST",
 		body: JSON.stringify({
 			global_expect: global_expect
@@ -143,12 +159,16 @@ function apiNodeSetMonitor(global_expect, callback) {
 	.catch(console.log)
 }
 
-function apiObjSetMonitor(path, global_expect, callback) {
+function apiObjSetMonitor(path, global_expect, callback, user) {
+	var headers = {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json'
+	}
+	if (user) {
+		headers["Authorization"] = "Bearer " + user.access_token
+	}
 	fetch('/set_service_monitor', {
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		},
+		headers: headers,
 		method: "POST",
 		body: JSON.stringify({
 			path: path,
@@ -162,13 +182,17 @@ function apiObjSetMonitor(path, global_expect, callback) {
 	.catch(console.log)
 }
 
-function apiObjGetConfig(options, callback) {
+function apiObjGetConfig(options, callback, user) {
+	var headers = {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json',
+		'o-node': 'ANY'
+	}
+	if (user) {
+		headers["Authorization"] = "Bearer " + user.access_token
+	}
 	fetch('/get_service_config', {
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json',
-			'o-node': 'ANY'
-		},
+		headers: headers,
 		method: "POST",
 		body: JSON.stringify(options)
 	})
@@ -186,13 +210,17 @@ function apiObjGetConfig(options, callback) {
 	.catch(console.log)
 }
 
-function apiPostNode(node, path, options, callback) {
+function apiPostNode(node, path, options, callback, user) {
+	var headers = {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json',
+		'o-node': node,
+	}
+	if (user) {
+		headers["Authorization"] = "Bearer " + user.access_token
+	}
 	fetch(path, {
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json',
-			'o-node': node,
-		},
+		headers: headers,
 		method: "POST",
 		body: JSON.stringify(options)
 	})
@@ -210,13 +238,17 @@ function apiPostNode(node, path, options, callback) {
 	.catch(console.log)
 }
 
-function apiPostAny(path, options, callback) {
+function apiPostAny(path, options, callback, user) {
+	var headers = {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json',
+		'o-node': 'ANY'
+	}
+	if (user) {
+		headers["Authorization"] = "Bearer " + user.access_token
+	}
 	fetch(path, {
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json',
-			'o-node': 'ANY'
-		},
+		headers: headers,
 		method: "POST",
 		body: JSON.stringify(options)
 	})
@@ -234,13 +266,17 @@ function apiPostAny(path, options, callback) {
 	.catch(console.log)
 }
 
-function apiFetchLogs(path, options, callback) {
+function apiFetchLogs(path, options, callback, user) {
+	var headers = {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json',
+		'o-node': '*'
+	}
+	if (user) {
+		headers["Authorization"] = "Bearer " + user.access_token
+	}
         fetch(path, {
-                headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'o-node': '*'
-                },
+                headers: headers,
                 method: "POST",
                 body: JSON.stringify(options)
         })
@@ -258,13 +294,17 @@ function apiFetchLogs(path, options, callback) {
         .catch(console.log)
 }
 
-function apiObjCreate(data, callback) {
+function apiObjCreate(data, callback, user) {
+	var headers = {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json',
+		'o-node': 'ANY'
+	}
+	if (user) {
+		headers["Authorization"] = "Bearer " + user.access_token
+	}
 	fetch('/create', {
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json',
-			'o-node': 'ANY'
-		},
+		headers: headers,
 		method: "POST",
 		body: JSON.stringify(data)
 	})

@@ -1,7 +1,8 @@
 import React from "react";
+import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useTranslation } from 'react-i18next';
-import { useStateValue } from '../state.js';
 import { apiNodeAction } from "../api.js";
+import useClusterStatus from "../hooks/ClusterStatus.jsx"
 
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -37,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 function Threads(props) {
 	const { t, i18n } = useTranslation()
 	const classes = useStyles()
-	const [{ cstat }, dispatch] = useStateValue();
+	const { cstat } = useClusterStatus()
 	if (!("monitor" in cstat)) {
 		return null
 	}
@@ -92,9 +93,10 @@ function Thread(props) {
 }
 
 function ThreadActions(props) {
+	const { oidcUser } = useReactOidc()
 	function handleClick(e) {
 		var action = e.target.getAttribute("value")
-		apiNodeAction(props.node, action, {thread_id: props.thread_id})
+		apiNodeAction(props.node, action, {thread_id: props.thread_id}, oidcUser)
 	}
 	return (
 		<div className="dropdown">

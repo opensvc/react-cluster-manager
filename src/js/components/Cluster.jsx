@@ -1,6 +1,4 @@
 import React from "react"
-import { useStateValue } from '../state.js'
-import { state } from '../utils.js'
 import { ClusterDigest } from "./ClusterDigest.jsx"
 import { SvcMap } from "./SvcMap.jsx"
 import { makeStyles } from '@material-ui/core/styles'
@@ -13,11 +11,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function Cluster(props) {
-	const [{ cstat }, dispatch] = useStateValue()
 	const classes = useStyles()
-	if (!cstat.cluster) {
-		return null
-	}
 	return (
 		<Grid container spacing={2} className={classes.root}>
 			<Grid item md={6}>

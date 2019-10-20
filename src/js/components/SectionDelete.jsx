@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useTranslation } from 'react-i18next';
 import { useStateValue } from '../state.js';
 import { splitPath, createDataHasPathKey } from '../utils.js';
@@ -22,6 +23,7 @@ function SectionDelete(props) {
                 return null
         }
 
+	const { oidcUser } = useReactOidc()
 	const [open, setOpen] = useState(false)
 	const { t, i18n } = useTranslation()
 	const [{}, dispatch] = useStateValue()
@@ -41,7 +43,7 @@ function SectionDelete(props) {
                         type: "parseApiResponse",
                         ok: ok,
                         data: $
-                }))
+                }), oidcUser)
 		handleClose()
 	}
 
