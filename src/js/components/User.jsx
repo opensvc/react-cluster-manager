@@ -5,11 +5,9 @@ import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import Table from '@material-ui/core/Table'
-import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell'
-import TableHead from '@material-ui/core/TableHead'
-import TableBody from '@material-ui/core/TableBody'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
@@ -108,6 +106,18 @@ function OidcUserInfo(props) {
 	)
 }
 
+function parseGrant(grant) {
+	var data = []
+	if ("root" in grant) {
+		data.push({role: "root"})
+		return data
+	}
+	for (role in grant) {
+		data.push({role: role, namespaces: grant[role]})
+	}
+	return data
+}
+
 function UserGrants(props) {
 	const [{ user }, dispatch] = useStateValue()
 	const classes = useStyles()
@@ -115,36 +125,30 @@ function UserGrants(props) {
 	if (user.grant === undefined) {
 		return <Skeleton variant="rect" width="100%" height="8rem" />
 	}
+	var data = parseGrant(user.grant)
 	return (
-		<div style={{overflowX: "auto"}}>
-			<Table>
-				<TableHead>
-					<TableRow className="text-secondary">
-						<TableCell>Role</TableCell>
-						<TableCell>Namespaces</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{Object.keys(user.grant).map((g) => (
-						<GrantLine key={g} namespaces={user.grant[g]} role={g} />
-					))}
-				</TableBody>
-			</Table>
-		</div>
+		<List>
+			{data.map((item, i) => (
+				<GrantLine key={i} namespaces={item.namespaces} role={item.role} />
+			))}
+		</List>
 	)
 }
 
 function GrantLine(props) {
 	if (!props.namespaces) {
-		var ns = ""
+		if (["squatter", "root"].indexOf(props.role) > -1) {
+			var text = ""
+		} else {
+			return null
+		}
 	} else {
-		var ns = props.namespaces.join(", ")
+		var text = t("On namespaces {{ns}}", {ns: props.namespaces.join(", ")})
 	}
 	return (
-		<TableRow>
-			<TableCell>{props.role}</TableCell>
-			<TableCell>{ns}</TableCell>
-		</TableRow>
+		<ListItem disableGutters={true}>
+			<ListItemText primary={props.role} secondary={text} />
+		</ListItem>
 	)
 }
 

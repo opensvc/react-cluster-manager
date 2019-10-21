@@ -1,6 +1,6 @@
 import React from "react"
-import { ClusterDigest } from "./ClusterDigest.jsx"
-import { SvcMap } from "./SvcMap.jsx"
+import ClusterDigest from "./ClusterDigest.jsx"
+import SvcMap from "./SvcMap.jsx"
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 
@@ -24,6 +24,4 @@ function Cluster(props) {
 	)
 }
 
-export {
-	Cluster
-}
+export default Cluster

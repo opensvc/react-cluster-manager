@@ -1,7 +1,8 @@
 import React from "react";
+import { useHistory } from 'react-router'
 import { Switch, Route } from 'react-router-dom';
 import { useStateValue } from '../state.js';
-import { Cluster } from "./Cluster.jsx";
+import Cluster from "./Cluster.jsx";
 import { Threads } from "./Threads.jsx";
 import { Nodes } from "./Nodes.jsx";
 import { NodeDetails } from "./NodeDetails.jsx";
@@ -18,8 +19,10 @@ import { NetworkDetails } from "./NetworkDetails.jsx"
 import { NotFound } from "./NotFound.jsx"
 import { withOidcUser, OidcSecure } from '@axa-fr/react-oidc-context';
 
+
 function Main(props) {
 	const [{ nav }, dispatch] = useStateValue();
+	const history = useHistory()
 	const objects = {
 		"Objects": null,
 		"Services": "svc",
@@ -28,68 +31,72 @@ function Main(props) {
 		"Secrets": "sec",
 		"Users": "usr",
 	}
+	console.log("router path:", history.location.pathname)
 
 	return (
 		<Switch>
 			<OidcSecure>
-				<Route exact path='/'>
+				<Route exact path="/">
 					<Cluster />
 				</Route>
-				<Route exact path='/threads'>
+				<Route exact path="/authentication/callback">
+					<Cluster />
+				</Route>
+				<Route exact path="/threads">
 					<Threads />
 				</Route>
-				<Route exact path='/deploy'>
+				<Route exact path="/deploy">
 					<Deploy />
 				</Route>
-				<Route exact path='/heartbeats'>
+				<Route exact path="/heartbeats">
 					<HeartbeatsDetails />
 				</Route>
-				<Route exact path='/arbitrators'>
+				<Route exact path="/arbitrators">
 					<ArbitratorsDetails />
 				</Route>
-				<Route exact path='/nodes'>
+				<Route exact path="/nodes">
 					<Nodes />
 				</Route>
-				<Route exact path='/networks'>
+				<Route exact path="/networks">
 					<Networks />
 				</Route>
-				<Route exact path='/pools'>
+				<Route exact path="/pools">
 					<Pools />
 				</Route>
-				<Route exact path='/objects'>
+				<Route exact path="/objects">
 					<Objs />
 				</Route>
-				<Route exact path='/services'>
+				<Route exact path="/services">
 					<Objs kind="svc" />
 				</Route>
-				<Route exact path='/volumes'>
+				<Route exact path="/volumes">
 					<Objs kind="vol" />
 				</Route>
-				<Route exact path='/configs'>
+				<Route exact path="/configs">
 					<Objs kind="cfg" />
 				</Route>
-				<Route exact path='/secrets'>
+				<Route exact path="/secrets">
 					<Objs kind="sec" />
 				</Route>
-				<Route exact path='/users'>
+				<Route exact path="/users">
 					<Objs kind="usr" />
 				</Route>
-				<Route exact path='/network'>
+				<Route exact path="/network">
 					<NetworkDetails />
 				</Route>
-				<Route exact path='/node'>
+				<Route exact path="/node">
 					<NodeDetails />
 				</Route>
-				<Route exact path='/pool'>
+				<Route exact path="/pool">
 					<NotFound />
 				</Route>
-				<Route exact path='/object'>
+				<Route exact path="/object">
 					<ObjDetails />
 				</Route>
-				<Route exact path='/instance'>
+				<Route exact path="/instance">
 					<ObjInstanceDetails />
 				</Route>
-				<Route exact path='/user'>
+				<Route exact path="/user">
 					<User />
 				</Route>
 			</OidcSecure>

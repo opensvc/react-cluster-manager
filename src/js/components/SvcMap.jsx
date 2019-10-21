@@ -94,6 +94,4 @@ function SvcMap(props) {
 	)
 }
 
-export {
-	SvcMap,
-}
+export default SvcMap

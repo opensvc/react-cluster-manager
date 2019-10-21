@@ -225,7 +225,5 @@ function ClusterDigest(props) {
 	)
 }
 
-export {
-        ClusterDigest
-}
+export default ClusterDigest
 
