@@ -67,6 +67,4 @@ function LangSelector(props) {
 	)
 }
 
-export {
-	LangSelector
-}
+export default LangSelector

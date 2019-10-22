@@ -10,7 +10,6 @@ import { state } from "../utils.js"
 import { allIssue } from "../issues.js"
 import Alerts from "./Alerts.jsx"
 import { Subsystems } from "./Subsystems.jsx"
-import { LangSelector } from "./LangSelector.jsx"
 import { useReactOidc } from "@axa-fr/react-oidc-context"
 
 import { makeStyles, withStyles, emphasize } from "@material-ui/core/styles"
@@ -172,9 +171,8 @@ function NavBar(props) {
 		<Toolbar className={classes.root}>
 			<NavBarMenu />
 			<Crumbs />
-			<LangSelector />
-			<UserLink />
 			<Alerts />
+			<UserLink />
 		</Toolbar>
 	)
 }
