@@ -29,21 +29,23 @@ function versionIssue(cstat) {
 }
 
 function nodeMemOverloadIssue(ndata) {
-	if (ndata === undefined) {
+	try {
+		if (ndata.min_avail_mem > ndata.stats.mem_avail) {
+			return state.WARNING
+		}
+	} catch(e) {
 		return state.NOTAPPLICABLE
-	}
-	if (ndata.min_avail_mem > ndata.stats.mem_avail) {
-		return state.WARNING
 	}
 	return state.OPTIMAL
 }
 
 function nodeSwapOverloadIssue(ndata) {
-	if (ndata === undefined) {
+	try {
+		if (ndata.min_avail_swap > ndata.stats.swap_avail) {
+			return state.WARNING
+		}
+	} catch(e) {
 		return state.NOTAPPLICABLE
-	}
-	if (ndata.min_avail_swap > ndata.stats.swap_avail) {
-		return state.WARNING
 	}
 	return state.OPTIMAL
 }
