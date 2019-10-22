@@ -129,7 +129,7 @@ function useClusterStatus(props) {
 		}
 	}, [])
 
-	return {cstat: cstat, reset: reset}
+	return {cstat: cstat, reset: reset, init: init}
 }
 
 export default useClusterStatus
