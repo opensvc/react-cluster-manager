@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 
 import { useStateValue } from '../state.js';
 import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { ResourceAddButton } from "./ResourceAddButton.jsx";
-import { parseIni } from "../utils.js"
+import { parseIni, splitPath } from "../utils.js"
 import { SectionEdit } from "./SectionEdit.jsx";
 import { SectionDelete } from "./SectionDelete.jsx";
 
@@ -22,6 +22,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import EditIcon from '@material-ui/icons/Edit';
 import Collapse from '@material-ui/core/Collapse';
 
 const useStyles = makeStyles(theme => ({
@@ -40,8 +41,28 @@ const useStyles = makeStyles(theme => ({
 	},
 }))
 
+function EditButton(props) {
+	const sp = splitPath(props.path)
+	const [{ user }, dispatch] = useStateValue()
+        if (!user.grant) {
+                return null
+        }
+        if (!("root" in user.grant) && (user.grant.admin.indexOf(sp.namespace) < 0)) {
+                return null
+	}
+        return (
+                <IconButton
+                        aria-label="Edit Labels"
+                        aria-haspopup={true}
+                        onClick={props.toggle}
+                >
+                        <EditIcon />
+                </IconButton>
+        )
+}
+
 function ObjConfigDigest(props) {
-	const { path } = props
+	const { path, edit } = props
 	const [{ cstat, user }, dispatch] = useStateValue()
         const config = useObjConfig(path)
         if (cstat.monitor === undefined) {
@@ -86,12 +107,10 @@ function ObjConfigDigest(props) {
 							secondary={s.label}
 							secondaryTypographyProps={{component: "div"}}
 						/>
-						{(("root" in user.grant) || (user.grant.admin.indexOf(sp.namespace) > -1)) &&
 						<ListItemSecondaryAction>
-							<SectionDelete path={path} rid={s.section} />
-							<SectionEdit path={path} rid={s.section} conf={data} />
+							{edit && <SectionDelete path={path} rid={s.section} />}
+							{edit && <SectionEdit path={path} rid={s.section} conf={data} />}
 						</ListItemSecondaryAction>
-						}
 					</ListItem>
 				)
 			})}
@@ -108,17 +127,17 @@ function ObjConfigFile(props) {
         } else {
                 var date = new Date(data.mtime * 1000)
                 var content = (
-                        <React.Fragment>
+                        <Fragment>
                                 <Typography variant="caption" color="textSecondary">Last Modified {date.toLocaleString()}</Typography>
                                 <pre style={{overflowX: "scroll"}}>{data.data}</pre>
-                        </React.Fragment>
+                        </Fragment>
                 )
         }
 
         return (
-		<React.Fragment>
+		<Fragment>
 			{content}
-		</React.Fragment>
+		</Fragment>
         )
 }
 
@@ -126,7 +145,8 @@ function ObjConfig(props) {
 	const { path } = props
         const classes = useStyles()
         const { t, i18n } = useTranslation()
-	const [expanded, setExpanded] = useState(false);
+	const [expanded, setExpanded] = useState(false)
+	const [edit, setEdit] = useState(false)
 
 	function handleExpandClick(e) {
 		setExpanded(!expanded)
@@ -137,17 +157,18 @@ function ObjConfig(props) {
                                 title={t("Configuration")}
                                 subheader={path}
 				action={
-					<ResourceAddButton path={path} />
+					<Fragment>
+						<EditButton path={path} toggle={() => {setEdit(!edit)}} />
+						<ResourceAddButton path={path} />
+					</Fragment>
 				}
                         />
                         <CardContent>
-				<ObjConfigDigest path={path} />
+				<ObjConfigDigest path={path} edit={edit} />
                         </CardContent>
 			<CardActions disableSpacing>
 				<IconButton
-					className={clsx(classes.expand, {
-					[classes.expandOpen]: expanded,
-					})}
+					className={clsx(classes.expand, {[classes.expandOpen]: expanded})}
 					onClick={handleExpandClick}
 					aria-expanded={expanded}
 					aria-label="show more"
@@ -164,6 +185,4 @@ function ObjConfig(props) {
         )
 }
 
-export {
-	ObjConfig
-}
+export default ObjConfig

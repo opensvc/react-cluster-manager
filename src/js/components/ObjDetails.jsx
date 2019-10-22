@@ -9,7 +9,7 @@ import { ObjDigest } from "./ObjDigest.jsx";
 import { Log } from "./Log.jsx"
 import { ObjInstances } from "./ObjInstances.jsx"
 import { ObjKeys } from "./ObjKeys.jsx"
-import { ObjConfig } from "./ObjConfig.jsx"
+import ObjConfig from "./ObjConfig.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
