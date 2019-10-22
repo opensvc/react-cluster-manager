@@ -2,9 +2,8 @@ import React from "react";
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useTranslation } from 'react-i18next';
 import { state } from "../utils.js";
+import { useColorStyles } from "../styles.js";
 
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -58,15 +57,16 @@ function ArbitratorsDetails(props) {
 	if (!arbNames.length) {
 		return null
 	}
+	console.log("rerender Arb")
 
 	return (
 		<Card className={classes.root}>
-                        <CardHeader
-                                title={t("Arbitrators")}
-                                subheader={cstat.cluster.name}
-                        />
-                        <CardContent>
-                                <div className={classes.wrapper}>
+			<CardHeader
+				title={t("Arbitrators")}
+				subheader={cstat.cluster.name}
+			/>
+			<CardContent>
+				<div className={classes.wrapper}>
 					<Table>
 						<TableHead>
 							<TableRow className="text-secondary">
@@ -89,6 +89,7 @@ function ArbitratorsDetails(props) {
 }
 
 function ArbitratorDetails(props) {
+	const classes = useColorStyles()
 	var ans = []
 	var an
 	for (an in props.arbitrators) {
@@ -102,7 +103,7 @@ function ArbitratorDetails(props) {
 			<TableCell data-title="Node">{props.node}</TableCell>
 			{ans.map((adata, i) => (
 				<TableCell key={i} data-title={adata.name}>
-					<Typography component="span" color={adata.status == "up" ? "primary" : "error"}>
+					<Typography component="span" className={classes[adata.status ? "up" : "down"]}>
 						{adata.status}
 					</Typography>
 				</TableCell>
@@ -111,6 +112,4 @@ function ArbitratorDetails(props) {
 	)
 }
 
-export {
-	ArbitratorsDetails
-}
+export default ArbitratorsDetails
