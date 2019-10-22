@@ -6,7 +6,6 @@ import useUser from "../hooks/User.jsx"
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useLocation, useHistory, matchPath } from 'react-router'
 import { Link as RouteLink } from 'react-router-dom'
-import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { state } from "../utils.js";
 import { allIssue } from "../issues.js";
@@ -62,17 +61,10 @@ const useStyles = makeStyles(theme => ({
 	},
 }))
 
-function breadcrumbs(clusterName) {
+function breadcrumbs() {
 	const loc = useLocation()
 	let params = new URLSearchParams(loc.search)
-
-	var crumbs = [
-		{
-			text: clusterName,
-			to: "/",
-		}
-	]
-
+	var crumbs = []
 	var heads = [
 		{ path: "/heartbeats", text: "Heartbeats" },
 		{ path: "/threads", text: "Threads" },
@@ -153,12 +145,12 @@ function breadcrumbs(clusterName) {
 function Crumbs(props) {
 	const classes = useStyles()
 	const { cstat } = useClusterStatus()
-	if (!cstat.cluster) {
-		var clusterName = "-"
-	} else {
+	const crumbs = breadcrumbs()
+	try {
 		var clusterName = cstat.cluster.name
+	} catch(e) {
+		var clusterName = "/"
 	}
-	const crumbs = breadcrumbs(clusterName)
 	return (
 		<Breadcrumbs
 			color="inherit"
@@ -167,6 +159,7 @@ function Crumbs(props) {
 			classes={{"separator": classes.separator}}
 			aria-label="Breadcrumb"
 		>
+			<NavLink key="cluster" text={clusterName} to="/" />
 			{crumbs.map((data, i) => (
 				<NavLink key={i} text={data.text} to={data.to} />
 			))}
@@ -234,8 +227,10 @@ function NavLink(props) {
 		<StyledBreadcrumb
 			onClick={handleClick}
 			component="a"
-			label={t(text)}
-		/>
+			label={props.children ? null : t(text)}
+		>
+			{props.children}
+		</StyledBreadcrumb>
 	)
 }
 
