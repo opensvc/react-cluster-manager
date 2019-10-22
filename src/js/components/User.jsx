@@ -114,7 +114,7 @@ function parseGrant(grant) {
 		data.push({role: "root"})
 		return data
 	}
-	for (role in grant) {
+	for (var role in grant) {
 		data.push({role: role, namespaces: grant[role]})
 	}
 	return data
@@ -138,6 +138,8 @@ function UserGrants(props) {
 }
 
 function GrantLine(props) {
+	const { i18n, t } = useTranslation()
+
 	if (!props.namespaces) {
 		if (["squatter", "root"].indexOf(props.role) > -1) {
 			var text = ""
