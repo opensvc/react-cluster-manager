@@ -47,7 +47,14 @@ function User(props) {
 				</Typography>
 				<br />
 				<Typography variant="h5" component="h3">
-					{t("Grants")}
+					{t("Raw Grants")}
+				</Typography>
+				<Typography variant="body1" component="pre" className={classes.pre}>
+					{user.raw_grant}
+				</Typography>
+				<br />
+				<Typography variant="h5" component="h3">
+					{t("Actual Grants")}
 				</Typography>
 				<UserGrants />
 				<br />
@@ -141,11 +148,13 @@ function GrantLine(props) {
 	const { i18n, t } = useTranslation()
 
 	if (!props.namespaces) {
-		if (["squatter", "root"].indexOf(props.role) > -1) {
+		if (["hearbeat", "blacklistadmin", "squatter", "root"].indexOf(props.role) > -1) {
 			var text = ""
 		} else {
 			return null
 		}
+	} else if (props.namespaces.length == 0) {
+		var text = ""
 	} else {
 		var text = t("On namespaces {{ns}}", {ns: props.namespaces.join(", ")})
 	}
