@@ -46,7 +46,7 @@ function LangSelector(props) {
 			<Button
 				aria-controls="language"
 				aria-haspopup="true"
-				color="inherit"
+				color="primary"
 				onClick={handleClick}
 			>
 				{i18n.languages[0]}
