@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react"
 import EventSource from "eventsource"
 import { useStateValue } from '../state.js'
 import { useReactOidc } from '@axa-fr/react-oidc-context'
-import { apiWhoAmI } from "../api.js";
+import { apiWhoAmI } from "../api.js"
 
 function useClusterStatus(props) {
 	const [{cstat, user}, dispatch] = useStateValue()
 	const { oidcUser } = useReactOidc()
+	const lastDispatch = useRef(Date.now())
+	const limit = 500
 
 	var timer = null
+	var evtimer = null
 	var eventSource = null
 	var lastReload = 0
 	var lastPatchId = 0
@@ -19,6 +22,7 @@ function useClusterStatus(props) {
 			return
 		}
 		clearTimeout(timer)
+		clearTimeout(evtimer)
 		eventSource.close()
 		eventSource = null
 	}
@@ -51,7 +55,7 @@ function useClusterStatus(props) {
 			return
 		}
 		var data = JSON.parse(e.data)
-		console.log("event", e.data);
+		console.log("event", e.data)
 		if (data.kind != "patch") {
 			return
 		}
@@ -63,10 +67,16 @@ function useClusterStatus(props) {
 				return
 			}
 			cstatRef.current = JSON_delta.patch(cstatRef.current, data.data)
-			dispatch({
-				"type": "loadCstat",
-				"data": cstatRef.current
-			})
+			evtimer = setTimeout(function() {
+				if (Date.now() - lastDispatch.current >= limit) {
+					dispatch({
+						"type": "loadCstat",
+						"data": cstatRef.current
+					})
+					lastDispatch.current = Date.now()
+				}
+			}, limit - (Date.now() - lastDispatch.current))
+
 			lastPatchId = data.id
 			console.log("patched cluster status, id", data.id)
 		} catch(e) {
