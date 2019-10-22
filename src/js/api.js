@@ -34,12 +34,14 @@ function parseApiResponse(data, ok) {
 				}
 			}
 		} else {
-			alerts.push({
-				"date": date,
-				"level": "error",
-				"color": "secondary",
-				"body": (<div>{fmt(data.error)}</div>)
-			})
+			if (data.error) {
+				alerts.push({
+					"date": date,
+					"level": "error",
+					"color": "secondary",
+					"body": (<div>{fmt(data.error)}</div>)
+				})
+			}
 		}
 	}
 	if (data.info) {

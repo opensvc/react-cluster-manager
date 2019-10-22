@@ -1,20 +1,20 @@
-import React from "react";
-import { useStateValue } from '../state.js';
+import React from "react"
+import { useStateValue } from '../state.js'
 
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
-import Divider from '@material-ui/core/Divider';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import Badge from '@material-ui/core/Badge';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import Drawer from '@material-ui/core/Drawer'
+import IconButton from '@material-ui/core/IconButton'
+import Divider from '@material-ui/core/Divider'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import NotificationsIcon from '@material-ui/icons/Notifications'
+import Badge from '@material-ui/core/Badge'
+import DeleteIcon from '@material-ui/icons/Delete'
+import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 
 const useStyles = makeStyles({
 	closeButton: {
@@ -29,9 +29,9 @@ const useStyles = makeStyles({
 })
 
 function Alerts(props) {
-	const [{ alerts }, dispatch] = useStateValue();
+	const [{ alerts }, dispatch] = useStateValue()
 	const [state, setState] = React.useState(false)
-	const classes = useStyles();
+	const classes = useStyles()
 	if (!alerts) {
 		return null
 	}
@@ -69,7 +69,7 @@ function Alerts(props) {
 }
 
 function AlertsList(props) {
-	const [{ alerts }, dispatch] = useStateValue();
+	const [{ alerts }, dispatch] = useStateValue()
 	if (!alerts) {
 		return <Box>No notifications</Box>
 	}
@@ -83,24 +83,26 @@ function AlertsList(props) {
 }
 
 function Alert(props) {
-	const [{}, dispatch] = useStateValue();
-	function handleClick(e) {
+	const { data, i } = props
+	const [{}, dispatch] = useStateValue()
+	const handleClick = (i) => (e) => {
 		dispatch({
 			type: "closeAlert",
-			i: e.target.getAttribute("i")
+			i: i,
 		})
 	}
 	return (
 		<ListItem>
 			<ListItemIcon>
-				<NotificationsIcon color={props.data.color} />
+				<NotificationsIcon color={data.color} />
 			</ListItemIcon>
 			<ListItemText
-				primary=<Typography component="span" variant="caption">{props.data.date.toLocaleString()}</Typography>
-				secondary={props.data.body}
+				primary=<Typography component="span" variant="caption">{data.date.toLocaleString()}</Typography>
+				secondary={data.body}
+				secondaryTypographyProps={{component: "div"}}
 			/>
 			<ListItemSecondaryAction>
-				<IconButton edge="end" aria-label="Delete" i={props.i} onClick={handleClick}>
+				<IconButton edge="end" aria-label="Delete" onClick={handleClick(i)}>
 					<DeleteIcon />
 				</IconButton>
 			</ListItemSecondaryAction>
@@ -108,6 +110,6 @@ function Alert(props) {
 	)
 }
 
-export { Alerts };
+export default Alerts
 
 

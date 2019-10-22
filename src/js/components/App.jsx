@@ -2,6 +2,7 @@
 
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
+import { useTranslation } from "react-i18next"
 import { useHistory } from 'react-router';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { StateProvider, StateContext } from '../state.js';
@@ -78,8 +79,19 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const App = () => {
+	const { t } = useTranslation()
+	const notistackRef = React.createRef()
+	const onClickDismiss = key => () => {
+		notistackRef.current.closeSnackbar(key)
+	}
+	const action = (key) => (
+		<Button onClick={onClickDismiss(key)} color="inherit">
+			{t("Dismiss")}
+		</Button>
+	)
+
 	return (
-		<SnackbarProvider maxSnack={3}>
+		<SnackbarProvider maxSnack={2} ref={notistackRef} action={action}>
 			<ThemeProvider theme={theme}>
 				<Box fontWeight={300}>
 					<StatefulApp />

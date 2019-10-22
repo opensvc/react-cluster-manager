@@ -1,32 +1,31 @@
-'use strict';
+"use strict";
 
-//import PropTypes from "prop-types";
-import React from "react";
+import React from "react"
 import useUser from "../hooks/User.jsx"
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
-import { useLocation, useHistory, matchPath } from 'react-router'
-import { Link as RouteLink } from 'react-router-dom'
-import { useTranslation } from 'react-i18next';
-import { state } from "../utils.js";
-import { allIssue } from "../issues.js";
-import { Alerts } from "./Alerts.jsx";
-import { Subsystems } from "./Subsystems.jsx";
-import { LangSelector } from "./LangSelector.jsx";
-import { useReactOidc } from '@axa-fr/react-oidc-context';
+import { useLocation, useHistory, matchPath } from "react-router"
+import { Link as RouteLink } from "react-router-dom"
+import { useTranslation } from "react-i18next"
+import { state } from "../utils.js"
+import { allIssue } from "../issues.js"
+import Alerts from "./Alerts.jsx"
+import { Subsystems } from "./Subsystems.jsx"
+import { LangSelector } from "./LangSelector.jsx"
+import { useReactOidc } from "@axa-fr/react-oidc-context"
 
-import { makeStyles, withStyles, emphasize } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
-import Badge from '@material-ui/core/Badge';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Toolbar from '@material-ui/core/Toolbar';
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
-import MenuIcon from '@material-ui/icons/Menu';
+import { makeStyles, withStyles, emphasize } from "@material-ui/core/styles"
+import Drawer from "@material-ui/core/Drawer"
+import Breadcrumbs from "@material-ui/core/Breadcrumbs"
+import Typography from "@material-ui/core/Typography"
+import Link from "@material-ui/core/Link"
+import Badge from "@material-ui/core/Badge"
+import NavigateNextIcon from "@material-ui/icons/NavigateNext"
+import Button from "@material-ui/core/Button"
+import IconButton from "@material-ui/core/IconButton"
+import Toolbar from "@material-ui/core/Toolbar"
+import Avatar from "@material-ui/core/Avatar"
+import Chip from "@material-ui/core/Chip"
+import MenuIcon from "@material-ui/icons/Menu"
 
 const StyledBreadcrumb = withStyles(theme => ({
 	root: {

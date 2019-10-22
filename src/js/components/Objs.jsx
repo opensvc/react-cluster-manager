@@ -64,8 +64,7 @@ function ObjsFilter(props) {
 }
 
 function getLines(props) {
-	const { cstat } = useClusterStatus()
-	const { kind, search, withScalerSlaves } = props
+	const { kind, search, withScalerSlaves, cstat } = props
 	var lines = []
 	if (cstat.monitor === undefined) {
 		return lines
@@ -107,7 +106,7 @@ function Objs(props) {
 	const [searchOpen, setSearchOpen] = useState(false)
 	const { kind, withScalerSlaves } = props
 	const { t, i18n } = useTranslation()
-	var lines = getLines({kind: props.kind, search: search})
+	var lines = getLines({kind: props.kind, search: search, cstat: cstat})
 
 	if (cstat.monitor === undefined) {
 		return lines
@@ -181,7 +180,7 @@ function Objs(props) {
 						</TableHead>
 						<TableBody>
 							{lines.sort().map((path, i) => (
-								<ObjLine key={path} index={i} path={path} selected={selected} setSelected={setSelected} title={title} />
+								<ObjLine key={path} index={i} path={path} selected={selected} setSelected={setSelected} title={title} cstat={cstat} />
 							))}
 						</TableBody>
 					</Table>
@@ -193,8 +192,7 @@ function Objs(props) {
 
 function ObjLine(props) {
 	const history = useHistory()
-	const {index, path, selected, setSelected, withScalerSlaves, title } = props
-	const { cstat } = useClusterStatus()
+	const {index, path, selected, setSelected, withScalerSlaves, title, cstat } = props
 	const sp = splitPath(path)
 	function handleClick(event) {
 		event.stopPropagation()
