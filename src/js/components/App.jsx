@@ -12,7 +12,7 @@ import oidcConfiguration from "../OidcConfiguration.js"
 import Main from "./Main.jsx";
 import LoginCallback from "./LoginCallback.jsx";
 import "../json_delta.js"
-import { AuthenticationProvider, oidcLog } from '@axa-fr/react-oidc-context';
+import { AuthenticationProvider, oidcLog, OidcSecure } from '@axa-fr/react-oidc-context';
 
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -114,8 +114,8 @@ const StatefulApp = () => {
 				}
 				return {
 					...state,
-					cstat: action.data
-				};
+					cstat: action.data,
+				}
 
 			case 'parseApiResponse':
 				//var alerts = parseApiResponse(action.data, action.ok)
@@ -178,7 +178,9 @@ function AuthenticatedApp(props) {
 			callbackComponentOverride={LoginCallback}
 			isEnabled={oidcConfiguration.authority === "" ? false : true}
 		>
-			<WrappedApp />
+			<OidcSecure>
+				<WrappedApp />
+			</OidcSecure>
 		</AuthenticationProvider>
 	)
 }
