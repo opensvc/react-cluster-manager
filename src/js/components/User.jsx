@@ -1,10 +1,11 @@
-import React from "react"
+import React, { Fragment } from "react"
 import { useReactOidc } from "@axa-fr/react-oidc-context"
 import useAuthInfo from "../hooks/AuthInfo.jsx"
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import Link from '@material-ui/core/Link'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -32,6 +33,16 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function User(props) {
+	return (
+		<Fragment>
+			<UserDigest />
+			<UserGrants />
+			<OidcAccessToken />
+		</Fragment>
+	)
+}
+
+function UserDigest(props) {
 	const { oidcUser, logout } = useReactOidc()
 	const { i18n, t } = useTranslation()
 	const [{ user }, dispatch] = useStateValue()
@@ -39,26 +50,16 @@ function User(props) {
 	return (
 		<Card className={classes.root}>
 			<CardHeader
-				title={user.name ? user.name : <Skeleton width="5rem" />}
+				title={t("User")}
+				subheader={user.name ? user.name : <Skeleton width="5rem" />}
 			/>
 			<CardContent>
-				<Typography component="div">
-					Authenticated via <strong>{user.auth ? user.auth : <Skeleton width="5rem" className={classes.inline} />}</strong>
+				<Typography>
+					<UserAuthMethod user={user}/>
 				</Typography>
-				<br />
-				<Typography variant="h5" component="h3">
-					{t("Raw Grants")}
+				<Typography>
+					<OidcProvider />
 				</Typography>
-				<Typography variant="body1" component="pre" className={classes.pre}>
-					{user.raw_grant}
-				</Typography>
-				<br />
-				<Typography variant="h5" component="h3">
-					{t("Actual Grants")}
-				</Typography>
-				<UserGrants />
-				<br />
-				<OidcUserInfo />
 			</CardContent>
 			<CardActions>
 				<Button onClick={logout} color="primary">
@@ -70,22 +71,57 @@ function User(props) {
 	)
 }
 
-function WellKown(props) {
+function UserAuthMethod(props) {
+	const { user } = props
+	const { i18n, t } = useTranslation()
+	const classes = useStyles()
+	return (
+		<Fragment>
+			{t("Authenticated via")}
+			&nbsp;
+			<Link href={"#"+user.auth}>
+				{user.auth ? user.auth : <Skeleton width="5rem" className={classes.inline} />}
+			</Link>
+			.
+		</Fragment>
+	)
+}
+
+function HostnameLink(props) {
+	const { href } = props
+	var l = new URL(href)
+	return (
+		<Link href={href}>
+			{l.hostname}
+		</Link>
+	)
+}
+
+function OidcProvider(props) {
+	const { oidcUser } = useReactOidc()
+	const { i18n, t } = useTranslation()
 	const authInfo = useAuthInfo()
+	const classes = useStyles()
 	if (!authInfo) {
 		return <Skeleton />
 	}
 	if (authInfo.openid === undefined) {
 		return "n/a"
 	}
+	if (!oidcUser || (authInfo.openid === undefined)) {
+		return null
+	}
 	return (
-		<React.Fragment>
-			{authInfo.openid.well_known_uri}
-		</React.Fragment>
+		<Fragment>
+			{t("Token provided by openid provider")}
+			&nbsp;
+			<HostnameLink href={authInfo.openid.well_known_uri} />
+			.
+		</Fragment>
 	)
 }
 
-function OidcUserInfo(props) {
+function OidcAccessToken(props) {
 	const { oidcUser } = useReactOidc()
 	const { i18n, t } = useTranslation()
 	const classes = useStyles()
@@ -94,24 +130,17 @@ function OidcUserInfo(props) {
 	}
 	var date = new Date(oidcUser.expires_at*1000)
 	return (
-		<React.Fragment>
-			<Typography variant="h5" component="h3">
-				{t("Openid Provider")}
-			</Typography>
-			<Typography variant="body1" component="pre" className={classes.pre}>
-				<WellKown />
-			</Typography>
-			<br />
-			<Typography variant="h5" component="h3">
-				{t("Access Token")}
-			</Typography>
-			<Typography variant="body1">
-				{t("Expires at {{date}}", {date: date.toLocaleString()})}
-			</Typography>
-			<Typography variant="body1" component="pre" className={classes.pre}>
-				{oidcUser.access_token}
-			</Typography>
-		</React.Fragment>
+		<Card id="jwt" className={classes.root}>
+			<CardHeader
+				title={t("Access Token")}
+				subheader={t("Expires at {{date}}", {date: date.toLocaleString()})}
+			/>
+			<CardContent>
+				<Typography variant="body1" component="pre" className={classes.pre}>
+					{oidcUser.access_token}
+				</Typography>
+			</CardContent>
+		</Card>
 	)
 }
 
@@ -129,6 +158,7 @@ function parseGrant(grant) {
 
 function UserGrants(props) {
 	const [{ user }, dispatch] = useStateValue()
+	const { i18n, t } = useTranslation()
 	const classes = useStyles()
 
 	if (user.grant === undefined) {
@@ -136,11 +166,19 @@ function UserGrants(props) {
 	}
 	var data = parseGrant(user.grant)
 	return (
-		<List>
-			{data.map((item, i) => (
-				<GrantLine key={i} namespaces={item.namespaces} role={item.role} />
-			))}
-		</List>
+		<Card className={classes.root}>
+			<CardHeader
+				title={t("Grants")}
+				subheader={user.raw_grant}
+			/>
+			<CardContent>
+				<List>
+					{data.map((item, i) => (
+						<GrantLine key={i} namespaces={item.namespaces} role={item.role} />
+					))}
+				</List>
+			</CardContent>
+		</Card>
 	)
 }
 
@@ -154,9 +192,9 @@ function GrantLine(props) {
 			return null
 		}
 	} else if (props.namespaces.length == 0) {
-		var text = ""
+		var text = t("on no existing namespaces")
 	} else {
-		var text = t("On namespaces {{ns}}", {ns: props.namespaces.join(", ")})
+		var text = t("on namespaces {{ns}}", {ns: props.namespaces.join(", ")})
 	}
 	return (
 		<ListItem disableGutters={true}>

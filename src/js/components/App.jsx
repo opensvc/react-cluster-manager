@@ -9,6 +9,9 @@ import { StateProvider, StateContext } from '../state.js';
 import { parseApiResponse, apiWhoAmI } from "../api.js";
 import { NavBar } from "./NavBar.jsx";
 import useAuthInfo from "../hooks/AuthInfo.jsx"
+import NotAuthenticated from "./NotAuthenticated.jsx"
+import NotAuthorized from "./NotAuthorized.jsx"
+import Authenticating from "./Authenticating.jsx"
 import oidcConfiguration from "../OidcConfiguration.js"
 import Main from "./Main.jsx";
 import LoginCallback from "./LoginCallback.jsx";
@@ -187,6 +190,9 @@ function AuthenticatedApp(props) {
 		<AuthenticationProvider
 			configuration={oidcConfiguration(authInfo)}
 			loggerLevel={oidcLog.DEBUG}
+			notAuthenticated={NotAuthenticated}
+			notAuthorized={NotAuthorized}
+			authenticating={Authenticating}
 			callbackComponentOverride={LoginCallback}
 			isEnabled={oidcConfiguration.authority === "" ? false : true}
 		>
