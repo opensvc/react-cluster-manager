@@ -57,6 +57,7 @@ function UserDigest(props) {
 				<Typography>
 					<UserAuthMethod user={user}/>
 				</Typography>
+				<br />
 				<Typography>
 					<OidcProvider />
 				</Typography>
@@ -113,7 +114,7 @@ function OidcProvider(props) {
 	}
 	return (
 		<Fragment>
-			{t("Token provided by openid provider")}
+			{t("Token provided by openid server")}
 			&nbsp;
 			<HostnameLink href={authInfo.openid.well_known_uri} />
 			.
