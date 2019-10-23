@@ -5,6 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import Button from '@material-ui/core/Button'
 
 function Authenticating(props) {
 	const {i18n, t} = useTranslation()
@@ -18,9 +19,14 @@ function Authenticating(props) {
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText>
-					{t("Authentication in progress. You will be redirected to the openid provider.")}
+					{t("You are being redirected to the openid provider.")}
 				</DialogContentText>
 			</DialogContent>
+			<DialogActions>
+				<Button onClick={() => location.reload()}>
+					{t("Reload")}
+				</Button>
+			</DialogActions>
 		</Dialog>
 	)
 }
