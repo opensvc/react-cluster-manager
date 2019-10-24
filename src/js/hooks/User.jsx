@@ -23,7 +23,7 @@ function useUser(props) {
 		})
 	}
 
-	if ((user.name === undefined) && oidcUser) {
+	if (user.name === undefined) {
 		loadUser()
 	}
 

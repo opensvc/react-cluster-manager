@@ -3,6 +3,7 @@
 import React from "react"
 import useUser from "../hooks/User.jsx"
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
+import useAuthInfo from "../hooks/AuthInfo.jsx"
 import { useLocation, useHistory, matchPath } from "react-router"
 import { Link as RouteLink } from "react-router-dom"
 import { useTranslation } from "react-i18next"
@@ -235,25 +236,39 @@ function UserLink(props) {
 	const { user } = useUser()
 	const history = useHistory()
 	const { oidcUser, login, logout } = useReactOidc()
+	const authInfo = useAuthInfo()
+	if (!authInfo) {
+		return null
+	}
+	try {
+		var enabled = authInfo.openid.well_known_uri ? true : false
+	} catch(e) {
+		var enabled = false
+	}
 
 	function handleClick(e) {
 		history.push("/user")
 	}
 
-	if (!oidcUser) {
-		return (
-			<Button onClick={login} color="inherit">
-				Login
+	if (enabled) {
+		if (!oidcUser) {
+			return (
+				<Button onClick={login} color="inherit">
+					Login
+				</Button>
+			)
+		}
+		var logoutbutton = (
+			<Button onClick={logout} color="inherit">
+				Logout
 			</Button>
 		)
+		if (user.name === undefined ) {
+			return logoutbutton
+		}
 	}
-	var logoutbutton = (
-		<Button onClick={logout} color="inherit">
-			Logout
-		</Button>
-	)
 	if (user.name === undefined ) {
-		return logoutbutton
+		return null
 	}
 	return (
 		<Avatar color="inherit" href="#" onClick={handleClick}>
