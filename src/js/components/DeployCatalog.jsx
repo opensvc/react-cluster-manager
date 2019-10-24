@@ -5,7 +5,6 @@ import { useCatalogs } from '../hooks/Catalogs.jsx';
 import { useCatalogTemplates } from '../hooks/CatalogTemplates.jsx';
 import { apiPostAny } from "../api.js";
 import { nameValid, namespaceValid, parseIni, createDataHasPathKey } from "../utils.js";
-import { Typeahead } from 'react-bootstrap-typeahead';
 import { NamespaceSelector } from './NamespaceSelector.jsx';
 import { TemplateSelector } from './TemplateSelector.jsx';
 import { CatalogSelector } from './CatalogSelector.jsx';
