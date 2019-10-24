@@ -186,6 +186,12 @@ function AuthenticatedApp(props) {
 	if (!authInfo) {
 		return null
 	}
+	try {
+		var enabled = authInfo.openid.well_known_uri ? true : false
+	} catch(e) {
+		var enabled = false
+	}
+	console.log("oidc enabled:", enabled)
 	return (
 		<AuthenticationProvider
 			configuration={oidcConfiguration(authInfo)}
@@ -194,7 +200,7 @@ function AuthenticatedApp(props) {
 			notAuthorized={NotAuthorized}
 			authenticating={Authenticating}
 			callbackComponentOverride={LoginCallback}
-			isEnabled={oidcConfiguration.authority === "" ? false : true}
+			isEnabled={enabled}
 		>
 			<OidcSecure>
 				<WrappedApp />
