@@ -56,7 +56,7 @@ function HeartbeatsDetails(props) {
 					<Table>
 						<TableHead>
 							<TableRow className="text-secondary">
-								<TableCell>Nodes</TableCell>
+								<TableCell>{t("Nodes")}</TableCell>
 								{hbNames.map((hbName, i) => (
 									<TableCell key={i}>{hbName}</TableCell>
 								))}

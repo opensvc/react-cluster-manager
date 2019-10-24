@@ -59,8 +59,8 @@ function Threads(props) {
 					<Table>
 						<TableHead>
 							<TableRow className="text-secondary">
-								<TableCell>Name</TableCell>
-								<TableCell>State</TableCell>
+								<TableCell>{t("Name")}</TableCell>
+								<TableCell>{t("State")}</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>

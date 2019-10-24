@@ -132,8 +132,8 @@ function ObjInstances(props) {
 									/>
 								</TableCell>
 								{slice}
-								<TableCell>Node</TableCell>
-								<TableCell>State</TableCell>
+								<TableCell>{t("Node")}</TableCell>
+								<TableCell>{t("State")}</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>

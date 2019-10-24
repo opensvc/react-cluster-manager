@@ -93,7 +93,7 @@ function ObjInstanceResources(props) {
 									/>
 								</TableCell>
 								<TableCell>Id</TableCell>
-								<TableCell>Availability</TableCell>
+								<TableCell>{t("Availability")}</TableCell>
 								<TableCell>Flags</TableCell>
 								<TableCell>Desc</TableCell>
 							</TableRow>
