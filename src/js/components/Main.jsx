@@ -16,6 +16,7 @@ import { User } from "./User.jsx";
 import { Pools } from "./Pools.jsx";
 import { Networks } from "./Networks.jsx";
 import { NetworkDetails } from "./NetworkDetails.jsx"
+import Stats from "./Stats.jsx"
 import { NotFound } from "./NotFound.jsx"
 import { withOidcUser, OidcSecure } from '@axa-fr/react-oidc-context';
 
@@ -97,6 +98,9 @@ function Main(props) {
 			</Route>
 			<Route exact path="/user">
 				<User />
+			</Route>
+			<Route exact path="/stats">
+				<Stats />
 			</Route>
 			<Route>
 				<NotFound />

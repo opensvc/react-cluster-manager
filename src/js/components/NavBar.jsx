@@ -77,6 +77,7 @@ function breadcrumbs() {
 		{ path: "/configs", text: "Configs" },
 		{ path: "/secrets", text: "Secrets" },
 		{ path: "/users", text: "Users" },
+		{ path: "/stats", text: "Stats" },
 	]
 	for (var head of heads) {
 		var match = matchPath(loc.pathname, {path: head.path, exact: true})

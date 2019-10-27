@@ -106,7 +106,10 @@ function ClusterDigest(props) {
 			/>
 			<CardContent>
 				<Grid container spacing={3}>
-					<Grid item xs className={classes.item}>
+					<Grid item xs
+						className={classes.item}
+						onClick={() => history.push("/stats")}
+					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Memory")}
 						</Typography>
@@ -120,7 +123,10 @@ function ClusterDigest(props) {
 							<div>{t("MaxAvail")}: {fancySizeMB(stats.memAvailMax)}</div>
 						</Typography>
 					</Grid>
-					<Grid item xs className={classes.item}>
+					<Grid item xs
+						className={classes.item}
+						onClick={() => history.push("/stats")}
+					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Swap")}
 						</Typography>
@@ -134,7 +140,10 @@ function ClusterDigest(props) {
 							<div>{t("MaxAvail")}: {fancySizeMB(stats.swapAvailMax)}</div>
 						</Typography>
 					</Grid>
-					<Grid item xs className={classes.item}>
+					<Grid item xs
+						className={classes.item}
+						onClick={() => history.push("/stats")}
+					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Load")}
 						</Typography>
