@@ -118,7 +118,13 @@ function fancySizeMB(size) {
 	} else {
 		var sign = ""
 	}
-	if (size<1024) {
+	if (size<0.001) {
+		var unit = ''
+		var _size = size * 1048576
+	} else if (size<1) {
+		var unit = 'k'
+		var _size = size * 1024
+	} else if (size<1024) {
 		var unit = 'm'
 		var _size = size
 	} else if (size<1048576) {
