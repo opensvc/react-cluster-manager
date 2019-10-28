@@ -1,5 +1,6 @@
 import React, { useState, Fragment } from "react"
 import { splitPath, fancySizeMB } from "../utils.js"
+import HorizontalBars from "./HorizontalBars.jsx"
 
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from "@material-ui/core/Typography"
@@ -24,6 +25,8 @@ const useStyles = makeStyles(theme => ({
 		textAlign: "right",
 	},
 	bar: {
+		width: "0.3em",
+		marginRight: "3px",
        		background: theme.palette.primary.main,
 		borderBottomWidth: "1px",
 		borderBottomStyle: "solid",
@@ -117,8 +120,6 @@ function DiskBandwidthNodeMapItem(props) {
 		var height = pct.toFixed(0)+"%"
 	}
 	var style = {
-		width: "0.3em",
-		marginRight: "3px",
 		height: height,
 	}
 	return (
@@ -151,11 +152,27 @@ function DiskBandwidth(props) {
 	)
 }
 
+function DiskBandwidthBias(props) {
+	const { value } = props
+	var values = [
+		{
+			label: "r",
+			value: value.rb,
+		},
+		{
+			label: "w",
+			value: value.wb,
+		},
+	]
+	return (
+		<HorizontalBars values={values} />
+	)
+}
+
 function StatsDiskBandwidth(props) {
 	const {last, prev, sortKey, agg} = props
 	const classes = useStyles()
 	var bw = parseDiskBandwidth(last, prev)
-	console.log(bw)
 	if (agg == "ns") {
 		var data = bw.sum.namespaces
 	} else {
@@ -174,10 +191,11 @@ function StatsDiskBandwidth(props) {
 		<List>
 			{names.map((name) => (
 				<ListItem key={name}>
-					<Grid container className={classes.itemGrid} spacing={1}>
-						<Grid item xs={4} className={classes.itemTitle}>{name}</Grid>
-						<Grid item xs={4}><DiskBandwidthNodeMap data={bw} agg={agg} name={name} /></Grid>
-						<Grid item xs={4}><DiskBandwidth value={data[name]} /></Grid>
+					<Grid container alignItems="center" className={classes.itemGrid} spacing={1}>
+						<Grid item xs={3} className={classes.itemTitle}>{name}</Grid>
+						<Grid item xs={3}><DiskBandwidthNodeMap data={bw} agg={agg} name={name} /></Grid>
+						<Grid item xs={3}><DiskBandwidthBias value={data[name]} /></Grid>
+						<Grid item xs={3}><DiskBandwidth value={data[name]} /></Grid>
 					</Grid>
 				</ListItem>
 			))}

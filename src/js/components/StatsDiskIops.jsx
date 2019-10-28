@@ -1,5 +1,6 @@
 import React, { useState, Fragment } from "react"
 import { splitPath, fancySizeMB } from "../utils.js"
+import HorizontalBars from "./HorizontalBars.jsx"
 
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from "@material-ui/core/Typography"
@@ -141,6 +142,23 @@ function DiskIopsNodeMap(props) {
 	)
 }
 
+function DiskIopsBias(props) {
+	const { value } = props
+	var values = [
+		{
+			label: "r",
+			value: value.r,
+		},
+		{
+			label: "w",
+			value: value.w,
+		},
+	]
+	return (
+		<HorizontalBars values={values} />
+	)
+}
+
 function DiskIops(props) {
 	const { value } = props
 	const classes = useStyles()
@@ -175,9 +193,10 @@ function StatsDiskIops(props) {
 			{names.map((name) => (
 				<ListItem key={name}>
 					<Grid container className={classes.itemGrid} spacing={1}>
-						<Grid item xs={4} className={classes.itemTitle}>{name}</Grid>
-						<Grid item xs={4}><DiskIopsNodeMap data={iops} agg={agg} name={name} /></Grid>
-						<Grid item xs={4}><DiskIops value={data[name]} /></Grid>
+						<Grid item xs={3} className={classes.itemTitle}>{name}</Grid>
+						<Grid item xs={3}><DiskIopsNodeMap data={iops} agg={agg} name={name} /></Grid>
+						<Grid item xs={3}><DiskIopsBias value={data[name]} /></Grid>
+						<Grid item xs={3}><DiskIops value={data[name]} /></Grid>
 					</Grid>
 				</ListItem>
 			))}
