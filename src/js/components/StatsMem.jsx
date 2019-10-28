@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-function parseMem(last, prev) {
+function parseMem(last, prev, search) {
 	var d = {
 		nodes: {},
 		sum: {
@@ -47,6 +47,9 @@ function parseMem(last, prev) {
 	for (var node in last.nodes) {
 		var nlast = last.nodes[node].data
 		for (var path in nlast.services) {
+			if (search && !path.match(search)) {
+				continue
+			}
 			var sp = splitPath(path)
 			var plast = nlast.services[path]
 			var pTotal = plast.mem.total
@@ -132,9 +135,9 @@ function MemTotal(props) {
 }
 
 function StatsMem(props) {
-	const {last, prev, sortKey, agg} = props
+	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
 	const classes = useStyles()
-	var mem = parseMem(last, prev)
+	var mem = parseMem(last, prev, search)
 	if (agg == "ns") {
 		var data = mem.sum.namespaces
 	} else {
@@ -148,11 +151,19 @@ function StatsMem(props) {
 	} else {
 		names.sort()
 	}
+	const handleClick = (name) => (e) => {
+		if (agg == "ns") {
+			setSearch("^"+name+"/")
+		} else {
+			setSearch(name)
+		}
+		setAgg("path")
+	}
 
 	return (
 		<List>
 			{names.map((name) => (
-				<ListItem key={name}>
+				<ListItem key={name} onClick={handleClick(name)}>
 					<Grid container className={classes.itemGrid} spacing={1}>
 						<Grid item xs={4} className={classes.itemTitle}>{name}</Grid>
 						<Grid item xs={4}><MemNodeMap data={mem} agg={agg} name={name} /></Grid>

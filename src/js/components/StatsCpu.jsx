@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-function parseCpu(last, prev) {
+function parseCpu(last, prev, search) {
 	var d = {
 		nodes: {},
 		sum: {
@@ -55,6 +55,9 @@ function parseCpu(last, prev) {
 			continue
 		}
 		for (var path in nlast.services) {
+			if (search && !path.match(search)) {
+				continue
+			}
 			var sp = splitPath(path)
 			var plast = nlast.services[path]
 			var pCpuTime = plast.cpu.time
@@ -148,9 +151,9 @@ function CpuPct(props) {
 }
 
 function StatsCpu(props) {
-	const {last, prev, sortKey, agg} = props
+	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
 	const classes = useStyles()
-	var cpu = parseCpu(last, prev)
+	var cpu = parseCpu(last, prev, search)
 	if (agg == "ns") {
 		var data = cpu.sum.namespaces
 	} else {
@@ -164,11 +167,19 @@ function StatsCpu(props) {
 	} else {
 		names.sort()
 	}
+	const handleClick = (name) => (e) => {
+		if (agg == "ns") {
+			setSearch("^"+name+"/")
+		} else {
+			setSearch(name)
+		}
+		setAgg("path")
+	}
 
 	return (
 		<List>
 			{names.map((name) => (
-				<ListItem key={name}>
+				<ListItem key={name} onClick={handleClick(name)}>
 					<Grid container className={classes.itemGrid} spacing={1}>
 						<Grid item xs={4} className={classes.itemTitle}>{name}</Grid>
 						<Grid item xs={4}><CpuNodeMap data={cpu} agg={agg} name={name} /></Grid>

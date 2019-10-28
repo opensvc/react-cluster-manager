@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-function parseTasks(last, prev) {
+function parseTasks(last, prev, search) {
 	var d = {
 		nodes: {},
 		sum: {
@@ -47,6 +47,9 @@ function parseTasks(last, prev) {
 	for (var node in last.nodes) {
 		var nlast = last.nodes[node].data
 		for (var path in nlast.services) {
+			if (search && !path.match(search)) {
+				continue
+			}
 			var sp = splitPath(path)
 			var plast = nlast.services[path]
 			var pTasks = plast.tasks
@@ -132,9 +135,9 @@ function Tasks(props) {
 }
 
 function StatsTasks(props) {
-	const {last, prev, sortKey, agg} = props
+	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
 	const classes = useStyles()
-	var tasks = parseTasks(last, prev)
+	var tasks = parseTasks(last, prev, search)
 	if (agg == "ns") {
 		var data = tasks.sum.namespaces
 	} else {
@@ -148,11 +151,19 @@ function StatsTasks(props) {
 	} else {
 		names.sort()
 	}
+	const handleClick = (name) => (e) => {
+		if (agg == "ns") {
+			setSearch("^"+name+"/")
+		} else {
+			setSearch(name)
+		}
+		setAgg("path")
+	}
 
 	return (
 		<List>
 			{names.map((name) => (
-				<ListItem key={name}>
+				<ListItem key={name} onClick={handleClick(name)}>
 					<Grid container className={classes.itemGrid} spacing={1}>
 						<Grid item xs={4} className={classes.itemTitle}>{name}</Grid>
 						<Grid item xs={4}><TasksNodeMap data={tasks} agg={agg} name={name} /></Grid>

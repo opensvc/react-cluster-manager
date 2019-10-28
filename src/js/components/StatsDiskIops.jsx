@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-function parseDiskIops(last, prev) {
+function parseDiskIops(last, prev, search) {
 	var d = {
 		nodes: {},
 		sum: {
@@ -54,6 +54,9 @@ function parseDiskIops(last, prev) {
 		}
 		var elapsed = nlast.timestamp - nprev.timestamp
 		for (var path in nlast.services) {
+			if (search && !path.match(search)) {
+				continue
+			}
 			var sp = splitPath(path)
 			var plast = nlast.services[path]
 			try {
@@ -170,10 +173,9 @@ function DiskIops(props) {
 }
 
 function StatsDiskIops(props) {
-	const {last, prev, sortKey, agg} = props
+	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
 	const classes = useStyles()
-	var iops = parseDiskIops(last, prev)
-	console.log(iops)
+	var iops = parseDiskIops(last, prev, search)
 	if (agg == "ns") {
 		var data = iops.sum.namespaces
 	} else {
@@ -187,11 +189,19 @@ function StatsDiskIops(props) {
 	} else {
 		names.sort()
 	}
+	const handleClick = (name) => (e) => {
+		if (agg == "ns") {
+			setSearch("^"+name+"/")
+		} else {
+			setSearch(name)
+		}
+		setAgg("path")
+	}
 
 	return (
 		<List>
 			{names.map((name) => (
-				<ListItem key={name}>
+				<ListItem key={name} onClick={handleClick(name)}>
 					<Grid container className={classes.itemGrid} spacing={1}>
 						<Grid item xs={3} className={classes.itemTitle}>{name}</Grid>
 						<Grid item xs={3}><DiskIopsNodeMap data={iops} agg={agg} name={name} /></Grid>

@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-function parseDiskBandwidth(last, prev) {
+function parseDiskBandwidth(last, prev, search) {
 	var d = {
 		nodes: {},
 		sum: {
@@ -56,6 +56,9 @@ function parseDiskBandwidth(last, prev) {
 		}
 		var elapsed = nlast.timestamp - nprev.timestamp
 		for (var path in nlast.services) {
+			if (search && !path.match(search)) {
+				continue
+			}
 			var sp = splitPath(path)
 			var plast = nlast.services[path]
 			try {
@@ -170,9 +173,9 @@ function DiskBandwidthBias(props) {
 }
 
 function StatsDiskBandwidth(props) {
-	const {last, prev, sortKey, agg} = props
+	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
 	const classes = useStyles()
-	var bw = parseDiskBandwidth(last, prev)
+	var bw = parseDiskBandwidth(last, prev, search)
 	if (agg == "ns") {
 		var data = bw.sum.namespaces
 	} else {
@@ -186,11 +189,19 @@ function StatsDiskBandwidth(props) {
 	} else {
 		names.sort()
 	}
+	const handleClick = (name) => (e) => {
+		if (agg == "ns") {
+			setSearch("^"+name+"/")
+		} else {
+			setSearch(name)
+		}
+		setAgg("path")
+	}
 
 	return (
 		<List>
 			{names.map((name) => (
-				<ListItem key={name}>
+				<ListItem key={name} onClick={handleClick(name)}>
 					<Grid container alignItems="center" className={classes.itemGrid} spacing={1}>
 						<Grid item xs={3} className={classes.itemTitle}>{name}</Grid>
 						<Grid item xs={3}><DiskBandwidthNodeMap data={bw} agg={agg} name={name} /></Grid>

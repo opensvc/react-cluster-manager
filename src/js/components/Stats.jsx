@@ -16,6 +16,7 @@ import Tabs from "@material-ui/core/Tabs"
 import Tab from "@material-ui/core/Tab"
 import Typography from "@material-ui/core/Typography"
 import Box from "@material-ui/core/Box"
+import TextField from "@material-ui/core/TextField"
 
 import IconButton from "@material-ui/core/IconButton"
 import PauseIcon from "@material-ui/icons/Pause"
@@ -24,6 +25,7 @@ import SortIcon from "@material-ui/icons/Sort"
 import SortByAlphaIcon from "@material-ui/icons/SortByAlpha"
 import ViewStreamIcon from "@material-ui/icons/ViewStream"
 import ViewHeadlineIcon from "@material-ui/icons/ViewHeadline"
+import FilterListIcon from "@material-ui/icons/FilterList"
 
 const useStyles = makeStyles(theme => ({
         root: {
@@ -33,6 +35,21 @@ const useStyles = makeStyles(theme => ({
 		marginBottom: theme.spacing(2),
 	},
 }))
+
+function FilterButton(props) {
+	const { search, searchOpen, setSearchOpen } = props
+	function handleClick(e) {
+		if (search) {
+			return
+		}
+		setSearchOpen(!searchOpen)
+	}
+	return (
+		<IconButton onClick={handleClick}>
+			<FilterListIcon />
+		</IconButton>
+	)
+}
 
 function AggStats(props) {
 	const { agg, setAgg } = props
@@ -100,11 +117,31 @@ function TabPanel(props) {
 	)
 }
 
+function Filter(props) {
+        const {search, setSearch} = props
+        const { t, i18n } = useTranslation()
+        return (
+                <TextField
+                        id="filter"
+                        label={t("Filter")}
+                        value={search}
+                        onChange={(e) => {setSearch(e.target.value)}}
+                        margin="none"
+                        variant="outlined"
+                        type="search"
+                        fullWidth
+                        autoFocus
+                />
+        )
+}
+
 function Stats(props) {
 	const {last, prev, pause, play, playing } = useDaemonStats()
 	const [sortKey, setSortKey] = useState("value")
 	const [agg, setAgg] = useState("ns")
 	const [tab, setTab] = useState(0)
+	const [search, setSearch] = useState("")
+	const [searchOpen, setSearchOpen] = useState(false)
 	const { i18n, t } = useTranslation()
 	const classes = useStyles()
 
@@ -119,6 +156,7 @@ function Stats(props) {
 				subheader={t("Aggregation by {{agg}}", {agg: agg})}
 				action={
 					<Fragment>
+						<FilterButton search={search} searchOpen={searchOpen} setSearchOpen={setSearchOpen} />
 						<AggStats agg={agg} setAgg={setAgg} />
 						<SortStats sortKey={sortKey} setSortKey={setSortKey} />
 						<PlayStats play={play} pause={pause} playing={playing} />
@@ -126,6 +164,7 @@ function Stats(props) {
 				}
 			/>
 			<CardContent>
+				{(search || searchOpen) && <Filter search={search} setSearch={setSearch} />}
 				<Tabs
 					value={tab}
 					onChange={handleChange}
@@ -141,19 +180,19 @@ function Stats(props) {
 					<Tab label="Disk B/W" {...a11yProps(4)} />
 				</Tabs>
 				<TabPanel value={tab} index={0}>
-					<StatsMem prev={prev} last={last} sortKey={sortKey} agg={agg} />
+					<StatsMem prev={prev} last={last} sortKey={sortKey} agg={agg} setAgg={setAgg} search={search} setSearch={setSearch} />
 				</TabPanel>
 				<TabPanel value={tab} index={1}>
-					<StatsCpu prev={prev} last={last} sortKey={sortKey} agg={agg} />
+					<StatsCpu prev={prev} last={last} sortKey={sortKey} agg={agg} setAgg={setAgg} search={search} setSearch={setSearch} />
 				</TabPanel>
 				<TabPanel value={tab} index={2}>
-					<StatsTasks prev={prev} last={last} sortKey={sortKey} agg={agg} />
+					<StatsTasks prev={prev} last={last} sortKey={sortKey} agg={agg} setAgg={setAgg} search={search} setSearch={setSearch} />
 				</TabPanel>
 				<TabPanel value={tab} index={3}>
-					<StatsDiskIops prev={prev} last={last} sortKey={sortKey} agg={agg} />
+					<StatsDiskIops prev={prev} last={last} sortKey={sortKey} agg={agg} setAgg={setAgg} search={search} setSearch={setSearch} />
 				</TabPanel>
 				<TabPanel value={tab} index={4}>
-					<StatsDiskBandwidth prev={prev} last={last} sortKey={sortKey} agg={agg} />
+					<StatsDiskBandwidth prev={prev} last={last} sortKey={sortKey} agg={agg} setAgg={setAgg} search={search} setSearch={setSearch} />
 				</TabPanel>
 			</CardContent>
 		</Card>
