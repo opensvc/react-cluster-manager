@@ -60,8 +60,8 @@ function parseCpu(last, prev, search) {
 			}
 			var sp = splitPath(path)
 			var plast = nlast.services[path]
-			var pCpuTime = plast.cpu.time
 			try {
+				var pCpuTime = plast.cpu.time
 				var pprev = nprev.services[path]
 				var pPrevCpuTime = pprev.cpu.time
 			} catch(e) {

@@ -63,13 +63,13 @@ function parseDiskBandwidth(last, prev, search) {
 			var plast = nlast.services[path]
 			try {
 				var pprev = nprev.services[path]
+				var m = {}
+				m.rb = (plast.blk.rb - pprev.blk.rb) / elapsed
+				m.wb = (plast.blk.wb - pprev.blk.wb) / elapsed
+				m.rwb = m.rb + m.wb
 			} catch(e) {
 				continue
 			}
-			var m = {}
-			m.rb = (plast.blk.rb - pprev.blk.rb) / elapsed
-			m.wb = (plast.blk.wb - pprev.blk.wb) / elapsed
-			m.rwb = m.rb + m.wb
 			if (!(node in d.nodes)) {
 				d.nodes[node] = {
 					namespaces: {},

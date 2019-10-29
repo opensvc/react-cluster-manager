@@ -1,5 +1,6 @@
 import React, { useState, Fragment } from "react"
 import { splitPath, fancySizeMB } from "../utils.js"
+import HorizontalBars from "./HorizontalBars.jsx"
 
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from "@material-ui/core/Typography"
@@ -24,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 		textAlign: "right",
 	},
 	bar: {
-		background: theme.palette.primary.main,
+       		background: theme.palette.primary.main,
 		borderBottomWidth: "1px",
 		borderBottomStyle: "solid",
 		borderBottomColor: theme.palette.primary.main,
@@ -33,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-function parseMem(last, prev, search) {
+function parseNetIops(last, prev, search) {
 	var d = {
 		nodes: {},
 		sum: {
@@ -46,6 +47,12 @@ function parseMem(last, prev, search) {
 	}
 	for (var node in last.nodes) {
 		var nlast = last.nodes[node].data
+		try {
+			var nprev = prev.nodes[node].data
+		} catch(e) {
+			continue
+		}
+		var elapsed = nlast.timestamp - nprev.timestamp
 		for (var path in nlast.services) {
 			if (search && !path.match(search)) {
 				continue
@@ -53,7 +60,11 @@ function parseMem(last, prev, search) {
 			var sp = splitPath(path)
 			var plast = nlast.services[path]
 			try {
-				var pTotal = plast.mem.total
+				var pprev = nprev.services[path]
+				var m = {}
+				m.r = (plast.net.r - pprev.net.r) / elapsed
+				m.w = (plast.net.w - pprev.net.w) / elapsed
+				m.rw = m.r + m.w
 			} catch(e) {
 				continue
 			}
@@ -63,37 +74,43 @@ function parseMem(last, prev, search) {
 					services: {},
 				}
 			}
-			d.nodes[node].services[path] = pTotal
+			d.nodes[node].services[path] = m
 			if (sp.namespace in d.nodes[node].namespaces) {
-				d.nodes[node].namespaces[sp.namespace] += pTotal
+				d.nodes[node].namespaces[sp.namespace].r += m.r
+				d.nodes[node].namespaces[sp.namespace].w += m.w
+				d.nodes[node].namespaces[sp.namespace].rw += m.rw
 			} else {
-				d.nodes[node].namespaces[sp.namespace] = pTotal
+				d.nodes[node].namespaces[sp.namespace] = m
 			}
 			if (path in d.sum.services) {
-				d.sum.services[path] += pTotal
+				d.sum.services[path].r += m.r
+				d.sum.services[path].w += m.w
+				d.sum.services[path].rw += m.rw
 			} else {
-				d.sum.services[path] = pTotal
+				d.sum.services[path] = m
 			}
 			if (sp.namespace in d.sum.namespaces) {
-				d.sum.namespaces[sp.namespace] += pTotal
+				d.sum.namespaces[sp.namespace].r += m.r
+				d.sum.namespaces[sp.namespace].w += m.w
+				d.sum.namespaces[sp.namespace].rw += m.rw
 			} else {
-				d.sum.namespaces[sp.namespace] = pTotal
+				d.sum.namespaces[sp.namespace] = m
 			}
 		}
 	}
 	return d
 }
 
-function MemNodeMapItem(props) {
+function NetIopsNodeMapItem(props) {
 	const { data, node, name, agg } = props
 	const classes = useStyles()
 	try {
 		if (agg == "ns") {
-			var value = data.nodes[node].namespaces[name]
-			var pct = 100 * value / data.sum.namespaces[name]
+			var value = data.nodes[node].namespaces[name].rw
+			var pct = 100 * value / data.sum.namespaces[name].rw
 		} else {
-			var value = data.nodes[node].services[name]
-			var pct = 100 * value / data.sum.services[name]
+			var value = data.nodes[node].services[name].rw
+			var pct = 100 * value / data.sum.services[name].rw
 		}
 	} catch(e) {
 		var value = undefined
@@ -115,42 +132,59 @@ function MemNodeMapItem(props) {
 	)
 }
 
-function MemNodeMap(props) {
+function NetIopsNodeMap(props) {
 	const classes = useStyles()
 	const { data, name, agg } = props
 	var nodes = Object.keys(data.nodes).sort()
 	return (
 		<Grid container className={classes.mapGrid} spacing={0}>
 			{nodes.map((node) => (
-				<MemNodeMapItem key={node} node={node} name={name} data={data} agg={agg} />
+				<NetIopsNodeMapItem key={node} node={node} name={name} data={data} agg={agg} />
 			))}
 		</Grid>
 	)
 }
 
-function MemTotal(props) {
+function NetIopsBias(props) {
+	const { value } = props
+	var values = [
+		{
+			label: "r",
+			value: value.r,
+		},
+		{
+			label: "w",
+			value: value.w,
+		},
+	]
+	return (
+		<HorizontalBars values={values} />
+	)
+}
+
+function NetIops(props) {
 	const { value } = props
 	const classes = useStyles()
 	return (
 		<Typography component="div" className={classes.value}>
-			{fancySizeMB(value/1048576)}
+			{fancySizeMB(value.rw/1048576)}rw/s
 		</Typography>
 	)
 }
 
-function StatsMem(props) {
+function StatsNetIops(props) {
 	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
 	const classes = useStyles()
-	var mem = parseMem(last, prev, search)
+	var iops = parseNetIops(last, prev, search)
 	if (agg == "ns") {
-		var data = mem.sum.namespaces
+		var data = iops.sum.namespaces
 	} else {
-		var data = mem.sum.services
+		var data = iops.sum.services
 	}
 	var names = Object.keys(data)
 	if (sortKey == "value") {
 		names.sort(function(a, b) {
-			return data[b] - data[a]
+			return data[b].rw - data[a].rw
 		})
 	} else {
 		names.sort()
@@ -169,9 +203,10 @@ function StatsMem(props) {
 			{names.map((name) => (
 				<ListItem key={name} onClick={handleClick(name)}>
 					<Grid container className={classes.itemGrid} spacing={1}>
-						<Grid item xs={4} className={classes.itemTitle}>{name}</Grid>
-						<Grid item xs={4}><MemNodeMap data={mem} agg={agg} name={name} /></Grid>
-						<Grid item xs={4}><MemTotal value={data[name]} /></Grid>
+						<Grid item xs={3} className={classes.itemTitle}>{name}</Grid>
+						<Grid item xs={3}><NetIopsNodeMap data={iops} agg={agg} name={name} /></Grid>
+						<Grid item xs={3}><NetIopsBias value={data[name]} /></Grid>
+						<Grid item xs={3}><NetIops value={data[name]} /></Grid>
 					</Grid>
 				</ListItem>
 			))}
@@ -179,4 +214,4 @@ function StatsMem(props) {
 	)
 }
 
-export default StatsMem
+export default StatsNetIops

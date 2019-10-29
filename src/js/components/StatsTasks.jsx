@@ -52,7 +52,11 @@ function parseTasks(last, prev, search) {
 			}
 			var sp = splitPath(path)
 			var plast = nlast.services[path]
-			var pTasks = plast.tasks
+			try {
+				var pTasks = plast.tasks
+			} catch(e) {
+				continue
+			}
 			if (!(node in d.nodes)) {
 				d.nodes[node] = {
 					namespaces: {},

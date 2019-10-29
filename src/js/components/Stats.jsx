@@ -6,6 +6,8 @@ import StatsMem from "./StatsMem.jsx"
 import StatsTasks from "./StatsTasks.jsx"
 import StatsDiskIops from "./StatsDiskIops.jsx"
 import StatsDiskBandwidth from "./StatsDiskBandwidth.jsx"
+import StatsNetIops from "./StatsNetIops.jsx"
+import StatsNetBandwidth from "./StatsNetBandwidth.jsx"
 
 import { makeStyles } from '@material-ui/core/styles'
 import Card from "@material-ui/core/Card"
@@ -172,12 +174,15 @@ function Stats(props) {
 					indicatorColor="primary"
 					textColor="primary"
 					className={classes.tabs}
+					variant="scrollable"
 				>
 					<Tab label="Mem" {...a11yProps(0)} />
 					<Tab label="Cpu" {...a11yProps(1)} />
 					<Tab label="Tasks" {...a11yProps(2)} />
 					<Tab label="Disk I/O" {...a11yProps(3)} />
 					<Tab label="Disk B/W" {...a11yProps(4)} />
+					<Tab label="Net I/O" {...a11yProps(5)} />
+					<Tab label="Net B/W" {...a11yProps(6)} />
 				</Tabs>
 				<TabPanel value={tab} index={0}>
 					<StatsMem prev={prev} last={last} sortKey={sortKey} agg={agg} setAgg={setAgg} search={search} setSearch={setSearch} />
@@ -193,6 +198,12 @@ function Stats(props) {
 				</TabPanel>
 				<TabPanel value={tab} index={4}>
 					<StatsDiskBandwidth prev={prev} last={last} sortKey={sortKey} agg={agg} setAgg={setAgg} search={search} setSearch={setSearch} />
+				</TabPanel>
+				<TabPanel value={tab} index={5}>
+					<StatsNetIops prev={prev} last={last} sortKey={sortKey} agg={agg} setAgg={setAgg} search={search} setSearch={setSearch} />
+				</TabPanel>
+				<TabPanel value={tab} index={6}>
+					<StatsNetBandwidth prev={prev} last={last} sortKey={sortKey} agg={agg} setAgg={setAgg} search={search} setSearch={setSearch} />
 				</TabPanel>
 			</CardContent>
 		</Card>

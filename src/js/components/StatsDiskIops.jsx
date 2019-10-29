@@ -61,13 +61,13 @@ function parseDiskIops(last, prev, search) {
 			var plast = nlast.services[path]
 			try {
 				var pprev = nprev.services[path]
+				var m = {}
+				m.r = (plast.blk.r - pprev.blk.r) / elapsed
+				m.w = (plast.blk.w - pprev.blk.w) / elapsed
+				m.rw = m.r + m.w
 			} catch(e) {
 				continue
 			}
-			var m = {}
-			m.r = (plast.blk.r - pprev.blk.r) / elapsed
-			m.w = (plast.blk.w - pprev.blk.w) / elapsed
-			m.rw = m.r + m.w
 			if (!(node in d.nodes)) {
 				d.nodes[node] = {
 					namespaces: {},

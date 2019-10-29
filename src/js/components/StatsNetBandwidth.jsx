@@ -1,5 +1,6 @@
 import React, { useState, Fragment } from "react"
 import { splitPath, fancySizeMB } from "../utils.js"
+import HorizontalBars from "./HorizontalBars.jsx"
 
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from "@material-ui/core/Typography"
@@ -24,7 +25,9 @@ const useStyles = makeStyles(theme => ({
 		textAlign: "right",
 	},
 	bar: {
-		background: theme.palette.primary.main,
+		width: "0.3em",
+		marginRight: "3px",
+       		background: theme.palette.primary.main,
 		borderBottomWidth: "1px",
 		borderBottomStyle: "solid",
 		borderBottomColor: theme.palette.primary.main,
@@ -33,7 +36,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-function parseMem(last, prev, search) {
+function parseNetBandwidth(last, prev, search) {
 	var d = {
 		nodes: {},
 		sum: {
@@ -46,6 +49,12 @@ function parseMem(last, prev, search) {
 	}
 	for (var node in last.nodes) {
 		var nlast = last.nodes[node].data
+		try {
+			var nprev = prev.nodes[node].data
+		} catch(e) {
+			continue
+		}
+		var elapsed = nlast.timestamp - nprev.timestamp
 		for (var path in nlast.services) {
 			if (search && !path.match(search)) {
 				continue
@@ -53,7 +62,11 @@ function parseMem(last, prev, search) {
 			var sp = splitPath(path)
 			var plast = nlast.services[path]
 			try {
-				var pTotal = plast.mem.total
+				var pprev = nprev.services[path]
+				var m = {}
+				m.rb = (plast.net.rb - pprev.net.rb) / elapsed
+				m.wb = (plast.net.wb - pprev.net.wb) / elapsed
+				m.rwb = m.rb + m.wb
 			} catch(e) {
 				continue
 			}
@@ -63,37 +76,43 @@ function parseMem(last, prev, search) {
 					services: {},
 				}
 			}
-			d.nodes[node].services[path] = pTotal
+			d.nodes[node].services[path] = m
 			if (sp.namespace in d.nodes[node].namespaces) {
-				d.nodes[node].namespaces[sp.namespace] += pTotal
+				d.nodes[node].namespaces[sp.namespace].rb += m.rb
+				d.nodes[node].namespaces[sp.namespace].wb += m.wb
+				d.nodes[node].namespaces[sp.namespace].rwb += m.rwb
 			} else {
-				d.nodes[node].namespaces[sp.namespace] = pTotal
+				d.nodes[node].namespaces[sp.namespace] = m
 			}
 			if (path in d.sum.services) {
-				d.sum.services[path] += pTotal
+				d.sum.services[path].rb += m.rb
+				d.sum.services[path].wb += m.wb
+				d.sum.services[path].rwb += m.rwb
 			} else {
-				d.sum.services[path] = pTotal
+				d.sum.services[path] = m
 			}
 			if (sp.namespace in d.sum.namespaces) {
-				d.sum.namespaces[sp.namespace] += pTotal
+				d.sum.namespaces[sp.namespace].rb += m.rb
+				d.sum.namespaces[sp.namespace].wb += m.wb
+				d.sum.namespaces[sp.namespace].rwb += m.rwb
 			} else {
-				d.sum.namespaces[sp.namespace] = pTotal
+				d.sum.namespaces[sp.namespace] = m
 			}
 		}
 	}
 	return d
 }
 
-function MemNodeMapItem(props) {
+function NetBandwidthNodeMapItem(props) {
 	const { data, node, name, agg } = props
 	const classes = useStyles()
 	try {
 		if (agg == "ns") {
-			var value = data.nodes[node].namespaces[name]
-			var pct = 100 * value / data.sum.namespaces[name]
+			var value = data.nodes[node].namespaces[name].rwb
+			var pct = 100 * value / data.sum.namespaces[name].rwb
 		} else {
-			var value = data.nodes[node].services[name]
-			var pct = 100 * value / data.sum.services[name]
+			var value = data.nodes[node].services[name].rwb
+			var pct = 100 * value / data.sum.services[name].rwb
 		}
 	} catch(e) {
 		var value = undefined
@@ -104,8 +123,6 @@ function MemNodeMapItem(props) {
 		var height = pct.toFixed(0)+"%"
 	}
 	var style = {
-		width: "0.3em",
-		marginRight: "3px",
 		height: height,
 	}
 	return (
@@ -115,42 +132,59 @@ function MemNodeMapItem(props) {
 	)
 }
 
-function MemNodeMap(props) {
+function NetBandwidthNodeMap(props) {
 	const classes = useStyles()
 	const { data, name, agg } = props
 	var nodes = Object.keys(data.nodes).sort()
 	return (
 		<Grid container className={classes.mapGrid} spacing={0}>
 			{nodes.map((node) => (
-				<MemNodeMapItem key={node} node={node} name={name} data={data} agg={agg} />
+				<NetBandwidthNodeMapItem key={node} node={node} name={name} data={data} agg={agg} />
 			))}
 		</Grid>
 	)
 }
 
-function MemTotal(props) {
+function NetBandwidth(props) {
 	const { value } = props
 	const classes = useStyles()
 	return (
 		<Typography component="div" className={classes.value}>
-			{fancySizeMB(value/1048576)}
+			{fancySizeMB(value.rwb/1048576)}b/s
 		</Typography>
 	)
 }
 
-function StatsMem(props) {
+function NetBandwidthBias(props) {
+	const { value } = props
+	var values = [
+		{
+			label: "r",
+			value: value.rb,
+		},
+		{
+			label: "w",
+			value: value.wb,
+		},
+	]
+	return (
+		<HorizontalBars values={values} />
+	)
+}
+
+function StatsNetBandwidth(props) {
 	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
 	const classes = useStyles()
-	var mem = parseMem(last, prev, search)
+	var bw = parseNetBandwidth(last, prev, search)
 	if (agg == "ns") {
-		var data = mem.sum.namespaces
+		var data = bw.sum.namespaces
 	} else {
-		var data = mem.sum.services
+		var data = bw.sum.services
 	}
 	var names = Object.keys(data)
 	if (sortKey == "value") {
 		names.sort(function(a, b) {
-			return data[b] - data[a]
+			return data[b].rwb - data[a].rwb
 		})
 	} else {
 		names.sort()
@@ -168,10 +202,11 @@ function StatsMem(props) {
 		<List>
 			{names.map((name) => (
 				<ListItem key={name} onClick={handleClick(name)}>
-					<Grid container className={classes.itemGrid} spacing={1}>
-						<Grid item xs={4} className={classes.itemTitle}>{name}</Grid>
-						<Grid item xs={4}><MemNodeMap data={mem} agg={agg} name={name} /></Grid>
-						<Grid item xs={4}><MemTotal value={data[name]} /></Grid>
+					<Grid container alignItems="center" className={classes.itemGrid} spacing={1}>
+						<Grid item xs={3} className={classes.itemTitle}>{name}</Grid>
+						<Grid item xs={3}><NetBandwidthNodeMap data={bw} agg={agg} name={name} /></Grid>
+						<Grid item xs={3}><NetBandwidthBias value={data[name]} /></Grid>
+						<Grid item xs={3}><NetBandwidth value={data[name]} /></Grid>
 					</Grid>
 				</ListItem>
 			))}
@@ -179,4 +214,4 @@ function StatsMem(props) {
 	)
 }
 
-export default StatsMem
+export default StatsNetBandwidth
