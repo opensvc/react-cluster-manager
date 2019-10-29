@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import EventSource from "eventsource"
+import "../json_delta.js"
 import { useStateValue } from '../state.js'
 import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { apiWhoAmI } from "../api.js"

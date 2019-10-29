@@ -15,7 +15,6 @@ import Authenticating from "./Authenticating.jsx"
 import oidcConfiguration from "../OidcConfiguration.js"
 import Main from "./Main.jsx";
 import LoginCallback from "./LoginCallback.jsx";
-import "../json_delta.js"
 import { AuthenticationProvider, oidcLog, OidcSecure } from '@axa-fr/react-oidc-context';
 
 import { makeStyles } from '@material-ui/core/styles';

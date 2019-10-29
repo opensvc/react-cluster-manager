@@ -25,10 +25,7 @@ function useDaemonStats(props) {
 	}
 
 	function loop() {
-		fetchStats()
-		timerRef.current = setTimeout(function() {
-			loop()
-		}, period)
+		timerRef.current = setInterval(fetchStats, period)
 	}
 
 	function fetchStats() {
@@ -71,6 +68,7 @@ function useDaemonStats(props) {
 		if (timerRef.current) {
 			return
 		}
+		console.log("start daemon stats loop")
 		loop()
 	}
 
@@ -78,6 +76,7 @@ function useDaemonStats(props) {
 		if (!timerRef.current) {
 			return
 		}
+		console.log("stop daemon stats loop")
 		clearTimeout(timerRef.current)
 		timerRef.current = null
 	}
@@ -87,7 +86,7 @@ function useDaemonStats(props) {
 		return () => {
 			stop()
 		}
-	}, [])
+	}, [oidcUser.access_token])
 
 	return {
 		last: series.last,
@@ -95,6 +94,7 @@ function useDaemonStats(props) {
 		pause: pause,
 		play: play,
 		playing: playing,
+		stop: stop,
 	}
 }
 
