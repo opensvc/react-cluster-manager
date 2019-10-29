@@ -94,7 +94,6 @@ function useDaemonStats(props) {
 		pause: pause,
 		play: play,
 		playing: playing,
-		stop: stop,
 	}
 }
 
