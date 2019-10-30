@@ -52,9 +52,8 @@ function parseTasks(last, prev, search) {
 			}
 			var sp = splitPath(path)
 			var plast = nlast.services[path]
-			try {
-				var pTasks = plast.tasks
-			} catch(e) {
+			var pTasks = plast.tasks
+			if (pTasks === undefined) {
 				continue
 			}
 			if (!(node in d.nodes)) {

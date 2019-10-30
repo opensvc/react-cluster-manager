@@ -10,7 +10,7 @@ import ListItem from "@material-ui/core/ListItem"
 
 const useStyles = makeStyles(theme => ({
 	itemGrid: {
-		flexWrap: "nowrap",
+		flexWrap: "wrap",
 	},
 	itemTitle: {
 		whiteSpace: "nowrap",
@@ -203,10 +203,10 @@ function StatsNetBandwidth(props) {
 			{names.map((name) => (
 				<ListItem key={name} onClick={handleClick(name)}>
 					<Grid container alignItems="center" className={classes.itemGrid} spacing={1}>
-						<Grid item xs={3} className={classes.itemTitle}>{name}</Grid>
-						<Grid item xs={3}><NetBandwidthNodeMap data={bw} agg={agg} name={name} /></Grid>
-						<Grid item xs={3}><NetBandwidthBias value={data[name]} /></Grid>
-						<Grid item xs={3}><NetBandwidth value={data[name]} /></Grid>
+						<Grid item xs={12} sm={6} className={classes.itemTitle}>{name}</Grid>
+						<Grid item xs={4} sm={2}><NetBandwidthNodeMap data={bw} agg={agg} name={name} /></Grid>
+						<Grid item xs={4} sm={2}><NetBandwidthBias value={data[name]} /></Grid>
+						<Grid item xs={4} sm={2}><NetBandwidth value={data[name]} /></Grid>
 					</Grid>
 				</ListItem>
 			))}

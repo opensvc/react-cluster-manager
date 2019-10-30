@@ -10,7 +10,7 @@ import ListItem from "@material-ui/core/ListItem"
 
 const useStyles = makeStyles(theme => ({
 	itemGrid: {
-		flexWrap: "nowrap",
+		flexWrap: "wrap",
 	},
 	itemTitle: {
 		whiteSpace: "nowrap",
@@ -203,10 +203,10 @@ function StatsNetIops(props) {
 			{names.map((name) => (
 				<ListItem key={name} onClick={handleClick(name)}>
 					<Grid container className={classes.itemGrid} spacing={1}>
-						<Grid item xs={3} className={classes.itemTitle}>{name}</Grid>
-						<Grid item xs={3}><NetIopsNodeMap data={iops} agg={agg} name={name} /></Grid>
-						<Grid item xs={3}><NetIopsBias value={data[name]} /></Grid>
-						<Grid item xs={3}><NetIops value={data[name]} /></Grid>
+						<Grid item xs={12} sm={6} className={classes.itemTitle}>{name}</Grid>
+						<Grid item xs={4} sm={2}><NetIopsNodeMap data={iops} agg={agg} name={name} /></Grid>
+						<Grid item xs={4} sm={2}><NetIopsBias value={data[name]} /></Grid>
+						<Grid item xs={4} sm={2}><NetIops value={data[name]} /></Grid>
 					</Grid>
 				</ListItem>
 			))}
