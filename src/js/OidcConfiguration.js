@@ -16,7 +16,11 @@ function OidcConfiguration(authInfo) {
 	if (!authInfo || authInfo.openid === undefined || authInfo.openid.well_known_uri === undefined) {
 		return initData
 	}
-	return {...initData, authority: authInfo.openid.well_known_uri}
+	return {
+		...initData,
+		authority: authInfo.openid.well_known_uri,
+		client_id: authInfo.openid.client_id
+	}
 }
 
 export default OidcConfiguration
