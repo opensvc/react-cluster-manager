@@ -3,7 +3,7 @@ import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useHistory } from 'react-router'
 import { useTranslation } from 'react-i18next';
 import { state, fancySizeMB } from '../utils.js';
-import { arbitratorsIssue, heartbeatsIssue, nodesIssue } from "../issues.js";
+import { arbitratorsIssue, heartbeatsIssue, nodesIssue, objectsIssue } from "../issues.js";
 import { splitPath } from "../utils.js";
 import { usePoolsStatus } from "../hooks/PoolsStatus.jsx"
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
@@ -219,6 +219,7 @@ function ClusterDigest(props) {
 						</Typography>
 						<Typography variant="h4" color="primary" component="h3">
 							{counts.svc+counts.vol+counts.cfg+counts.sec+counts.usr}
+							{objectsIssue(cstat) != state.OPTIMAL ? ( <WarningIcon className={classes.warn} /> ) : null}
 						</Typography>
 						<Typography variant="caption" color="textSecondary" component="h3">
 							<div>svc: {counts.svc}</div>
