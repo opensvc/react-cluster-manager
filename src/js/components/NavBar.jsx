@@ -180,15 +180,15 @@ function NavBar(props) {
 }
 
 function NavBarMenu(props) {
-        const [state, setState] = React.useState(false)
-	const cstat = useClusterStatus()
+	const [drawerOpen, setDrawerOpen] = React.useState(false)
+	const { cstat } = useClusterStatus()
 	const classes = useStyles()
-        const toggleDrawer = (open) => event => {
-                if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-                        return
-                }
-                setState(open)
-        }
+	const toggleDrawer = (open) => event => {
+		if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+			return
+		}
+		setDrawerOpen(open)
+	}
 	var issue = allIssue(cstat)
 	if (issue == state.OPTIMAL) {
 		var count = 0
@@ -197,13 +197,13 @@ function NavBarMenu(props) {
 	}
 	return (
 		<React.Fragment>
-			<IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="Menu" onClick={toggleDrawer(!state)}>
+			<IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="Menu" onClick={toggleDrawer(!drawerOpen)}>
 				<Badge badgeContent={count} color="secondary" variant="dot">
 					<MenuIcon />
 				</Badge>
 			</IconButton>
-			<Drawer anchor="left" open={state} onClose={toggleDrawer(false)}>
-                                <Subsystems
+			<Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+				<Subsystems
 					closeDrawer={toggleDrawer(false)}
 				/>
 			</Drawer>
