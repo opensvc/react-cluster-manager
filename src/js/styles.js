@@ -1,5 +1,20 @@
 import { makeStyles } from '@material-ui/core/styles';
 
+const useBgColorStyles = makeStyles(theme => ({
+        "optimal": {
+                backgroundColor: theme.status.up,
+        },
+        "danger": {
+                backgroundColor: theme.status.danger,
+        },
+        "warning": {
+                backgroundColor: theme.status.warning,
+        },
+        "n/a": {
+                backgroundColor: theme.status.notapplicable,
+        },
+}))
+
 const useColorStyles = makeStyles(theme => ({
         "running": {
                 color: theme.status.up,
@@ -38,5 +53,6 @@ const useColorStyles = makeStyles(theme => ({
 
 
 export {
-	useColorStyles
+	useColorStyles,
+	useBgColorStyles
 }

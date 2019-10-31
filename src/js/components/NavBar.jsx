@@ -12,6 +12,7 @@ import { allIssue } from "../issues.js"
 import Alerts from "./Alerts.jsx"
 import { Subsystems } from "./Subsystems.jsx"
 import { useReactOidc } from "@axa-fr/react-oidc-context"
+import { useBgColorStyles } from "../styles.js"
 
 import { makeStyles, withStyles, emphasize } from "@material-ui/core/styles"
 import Drawer from "@material-ui/core/Drawer"
@@ -182,6 +183,7 @@ function NavBar(props) {
 function NavBarMenu(props) {
 	const [drawerOpen, setDrawerOpen] = React.useState(false)
 	const { cstat } = useClusterStatus()
+	const bgcolor = useBgColorStyles()
 	const classes = useStyles()
 	const toggleDrawer = (open) => event => {
 		if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -198,7 +200,7 @@ function NavBarMenu(props) {
 	return (
 		<React.Fragment>
 			<IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="Menu" onClick={toggleDrawer(!drawerOpen)}>
-				<Badge badgeContent={count} color="secondary" variant="dot">
+				<Badge badgeContent={count} classes={{badge: bgcolor[issue.name]}} variant="dot">
 					<MenuIcon />
 				</Badge>
 			</IconButton>
