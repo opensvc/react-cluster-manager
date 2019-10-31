@@ -53,7 +53,7 @@ function HorizontalBars(props) {
 		<div className={classes.biasContainer}>
 			<div className={classes.biasContent}>
 				{values.map((value, i) => (
-					<div className={classes.hline}>
+					<div key={i} className={classes.hline}>
 						<div className={classes.hlabel}>
 							{value.label}
 						</div>
