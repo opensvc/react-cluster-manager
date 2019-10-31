@@ -86,7 +86,7 @@ function useDaemonStats(props) {
 		return () => {
 			stop()
 		}
-	}, [oidcUser.access_token])
+	}, [oidcUser ? oidcUser.access_token : null])
 
 	return {
 		last: series.last,
