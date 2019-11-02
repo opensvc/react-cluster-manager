@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react"
+import { useStateValue } from '../state.js'
 import useUser from "../hooks/User.jsx"
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import useAuthInfo from "../hooks/AuthInfo.jsx"
@@ -11,7 +12,6 @@ import { state } from "../utils.js"
 import { allIssue } from "../issues.js"
 import Alerts from "./Alerts.jsx"
 import { Subsystems } from "./Subsystems.jsx"
-import { useReactOidc } from "@axa-fr/react-oidc-context"
 import { useBgColorStyles } from "../styles.js"
 
 import { makeStyles, withStyles, emphasize } from "@material-ui/core/styles"
@@ -238,37 +238,13 @@ function NavLink(props) {
 function UserLink(props) {
 	const { user } = useUser()
 	const history = useHistory()
-	const { oidcUser, login, logout } = useReactOidc()
+	const [{ authChoice }, dispatch] = useStateValue()
 	const authInfo = useAuthInfo()
 	if (!authInfo) {
 		return null
 	}
-	try {
-		var enabled = authInfo.openid.well_known_uri ? true : false
-	} catch(e) {
-		var enabled = false
-	}
-
 	function handleClick(e) {
 		history.push("/user")
-	}
-
-	if (enabled) {
-		if (!oidcUser) {
-			return (
-				<Button onClick={login} color="inherit">
-					Login
-				</Button>
-			)
-		}
-		var logoutbutton = (
-			<Button onClick={logout} color="inherit">
-				Logout
-			</Button>
-		)
-		if (user.name === undefined ) {
-			return logoutbutton
-		}
 	}
 	if (user.name === undefined ) {
 		return null

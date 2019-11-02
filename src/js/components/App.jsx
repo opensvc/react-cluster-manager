@@ -2,13 +2,16 @@
 
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
+import { useReactOidc } from "@axa-fr/react-oidc-context"
 import { useTranslation } from "react-i18next"
+import { useStateValue } from '../state.js'
 import { useHistory } from 'react-router';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { StateProvider, StateContext } from '../state.js';
 import { parseApiResponse, apiWhoAmI } from "../api.js";
 import { NavBar } from "./NavBar.jsx";
 import useAuthInfo from "../hooks/AuthInfo.jsx"
+import AuthChoice from "./AuthChoice.jsx"
 import NotAuthenticated from "./NotAuthenticated.jsx"
 import NotAuthorized from "./NotAuthorized.jsx"
 import Authenticating from "./Authenticating.jsx"
@@ -42,6 +45,7 @@ import { useSnackbar } from 'notistack';
 
 const theme = createMuiTheme({
 	palette: {
+		type: "light",
 		primary: { main: "#0c6d9c" },
 		secondary: { main: "#ff392b" },
 	},
@@ -93,18 +97,19 @@ const App = () => {
 	)
 
 	return (
-		<SnackbarProvider maxSnack={2} ref={notistackRef} action={action}>
-			<ThemeProvider theme={theme}>
+		<ThemeProvider theme={theme}>
+			<SnackbarProvider maxSnack={2} ref={notistackRef} action={action}>
 				<Box fontWeight={300}>
 					<StatefulApp />
 				</Box>
-			</ThemeProvider>
-		</SnackbarProvider>
+			</SnackbarProvider>
+		</ThemeProvider>
 	)
 }
 
 const StatefulApp = () => {
 	const initialState = {
+		authChoice: "",
 		cstat: {},
 		user: {},
 		alerts: [],      // ex: [{level: "warning", body: (<div>foo</div>)}],
@@ -117,7 +122,14 @@ const StatefulApp = () => {
 				return {
 					...state,
 					user: action.data
-				};
+				}
+
+			case 'setAuthChoice':
+				console.log("setAuthChoice", action)
+				return {
+					...state,
+					authChoice: action.data
+				}
 
 			case 'loadCstat':
 				if (action.data.cluster === undefined) {
@@ -182,11 +194,21 @@ function RoutedApp(props) {
 
 function AuthenticatedApp(props) {
 	const authInfo = useAuthInfo()
+	const [{ authChoice }, dispatch] = useStateValue()
+	try {
+		const { oidcUser } = useReactOidc()
+	} catch(e) {
+		var oidcUser = null
+	}
 	if (!authInfo) {
 		return null
 	}
+	console.log("authChoice", authChoice)
+	if (!authChoice && !oidcUser && location.pathname != "/authentication/callback") {
+		return <AuthChoice />
+	}
 	try {
-		var enabled = authInfo.openid.well_known_uri ? true : false
+		var enabled = authChoice == "openid" ? true : false
 	} catch(e) {
 		var enabled = false
 	}

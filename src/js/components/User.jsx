@@ -47,6 +47,10 @@ function UserDigest(props) {
 	const { i18n, t } = useTranslation()
 	const [{ user }, dispatch] = useStateValue()
 	const classes = useStyles()
+	function handleLogout(e) {
+		logout()
+		dispatch({type: "setAuthChoice", data: ""})
+	}
 	return (
 		<Card className={classes.root}>
 			<CardHeader
@@ -63,7 +67,7 @@ function UserDigest(props) {
 				</Typography>
 			</CardContent>
 			<CardActions>
-				<Button onClick={logout} color="primary">
+				<Button onClick={handleLogout} color="primary">
 					{t("Logout")}
 				</Button>
 				<LangSelector />
