@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
 import { useReactOidc } from '@axa-fr/react-oidc-context'
-import { useStateValue } from '../state.js';
 import { splitPath, createDataHasPathKey } from '../utils.js';
 import { ResourceAdd } from "./ResourceAdd.jsx"
 import { apiInstanceAction } from "../api.js"
+import useApiResponse from "../hooks/ApiResponse.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
@@ -34,7 +34,7 @@ function SectionEdit(props) {
 	const { oidcUser } = useReactOidc()
 	const [open, setOpen] = useState(false)
 	const classes = useStyles()
-	const [{}, dispatch] = useStateValue()
+	const { dispatchAlerts } = useApiResponse()
 	const [data, setData] = useState(null)
 	var sectionData = conf[rid]
 	var kind = rid.split("#")[0]
@@ -79,8 +79,7 @@ function SectionEdit(props) {
 			kw: kws,
 		}
 		var ok = "Resource " + data.keywords.sectionName + " added."
-                apiInstanceAction("ANY", path, "set", _data, ($) => dispatch({
-                        type: "parseApiResponse",
+                apiInstanceAction("ANY", path, "set", _data, ($) => dispatchAlerts({
                         ok: ok,
                         data: $
                 }), oidcUser)

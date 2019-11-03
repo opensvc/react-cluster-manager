@@ -5,6 +5,7 @@ import { apiInstanceAction } from "../api.js"
 import { useKeywords } from "../hooks/Keywords.jsx"
 import { SectionForm } from "./SectionForm.jsx"
 import { useStateValue } from '../state.js';
+import useApiResponse from "../hooks/ApiResponse.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -24,7 +25,7 @@ function NetworkAdd(props) {
 	const [open, setOpen] = React.useState(false)
 	const [data, setData] = useState({})
 	const kws = useKeywords("ccfg")
-	const [{user}, dispatch] = useStateValue();
+	const [{user}, dispatch] = useStateValue()
 	if (!user.grant) {
 		return null
 	}
@@ -54,7 +55,7 @@ function NetworkAdd(props) {
 			kw.push(_kw)
 		}
 		console.log("SUBMIT", data.sectionName, data.type, data, "=>", kw)
-		apiInstanceAction("ANY", "cluster", "set", {kw: kw}, (data) => dispatch({type: "parseApiResponse", data: data}), oidcUser)
+		apiInstanceAction("ANY", "cluster", "set", {kw: kw}, (data) => dispatchAlerts({data: data}), oidcUser)
 		handleClose(e)
 	}
 	return (

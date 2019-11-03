@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useStateValue } from '../state.js';
 import { splitPath, createDataHasPathKey } from '../utils.js';
 import { apiInstanceAction } from "../api.js"
+import useApiResponse from "../hooks/ApiResponse.jsx"
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -18,6 +19,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 function SectionDelete(props) {
 	const {path, rid} = props
         const sp = splitPath(path)
+	const { dispatchAlerts } = useApiResponse()
 
         if (["vol", "svc"].indexOf(sp.kind) < 0) {
                 return null
@@ -39,8 +41,7 @@ function SectionDelete(props) {
 			rid: rid,
 		}
 		var ok = "Resource " + rid + " deleted."
-                apiInstanceAction("ANY", path, "delete", _data, ($) => dispatch({
-                        type: "parseApiResponse",
+                apiInstanceAction("ANY", path, "delete", _data, ($) => dispatchAlerts({
                         ok: ok,
                         data: $
                 }), oidcUser)

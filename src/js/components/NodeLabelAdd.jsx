@@ -3,6 +3,7 @@ import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useTranslation } from 'react-i18next'
 import { useStateValue } from "../state.js"
 import { apiNodeAction } from "../api.js"
+import useApiResponse from "../hooks/ApiResponse.jsx"
 
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
@@ -30,6 +31,7 @@ function NodeLabelAdd(props) {
 	const [key, setKey] = useState(props.key ? props.key : "")
 	const [val, setVal] = useState(props.val ? props.val : "")
 	const [{user}, dispatch] = useStateValue()
+	const { dispatchAlerts } = useApiResponse()
 	const { t, i18n } = useTranslation()
 	const classes = useStyles()
 	if (!user.grant) {
@@ -52,7 +54,7 @@ function NodeLabelAdd(props) {
 		}
 		var _kw = "labels."+key+"="+val
 		kw.push(_kw)
-		apiNodeAction(node, "set", {kw: kw}, (data) => dispatch({type: "parseApiResponse", data: data}), oidcUser)
+		apiNodeAction(node, "set", {kw: kw}, (data) => dispatch({data: data}), oidcUser)
 		setKey("")
 		setVal("")
 		handleClose(e)

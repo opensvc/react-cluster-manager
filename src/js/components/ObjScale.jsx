@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { apiInstanceAction } from "../api.js"
 import { useStateValue } from '../state.js';
+import useApiResponse from "../hooks/ApiResponse.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -26,7 +27,8 @@ const useStyles = makeStyles(theme => ({
 function ObjScale(props) {
         const {path} = props
 	const { oidcUser } = useReactOidc()
-	const [{ cstat }, dispatch] = useStateValue();
+	const [{ cstat }, dispatch] = useStateValue()
+	const { dispatchAlerts } = useApiResponse()
 
 	if (cstat.monitor === undefined) {
 		return null
@@ -61,7 +63,7 @@ function ObjScale(props) {
 			path,
 			"scale",
 			{"to": scale},
-			(data) => dispatch({type: "parseApiResponse", data: data}),
+			(data) => dispatchAlerts({data: data}),
 			oidcUser
 		)
 		handleClose()

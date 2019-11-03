@@ -3,6 +3,7 @@ import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useStateValue } from '../state.js';
 import { apiNodeAction } from "../api.js";
 import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
+import useApiResponse from "../hooks/ApiResponse.jsx"
 
 import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled"
 import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
@@ -12,7 +13,8 @@ import RefreshIcon from "@material-ui/icons/Refresh"
 
 function NodeActions(props) {
 	const { oidcUser } = useReactOidc()
-	const [{cstat}, dispatch] = useStateValue();
+	const [{cstat}, dispatch] = useStateValue()
+	const { dispatchAlerts } = useApiResponse()
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -41,7 +43,7 @@ function NodeActions(props) {
 				node,
 				props.value,
 				{},
-				(data) => dispatch({type: "parseApiResponse", data: data}),
+				(data) => dispatchAlerts({data: data}),
 				oidcUser
 			)
 		}

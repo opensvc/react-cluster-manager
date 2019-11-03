@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
 import { useReactOidc } from '@axa-fr/react-oidc-context'
-import { useStateValue } from '../state.js';
 import { createDataHasPathKey } from '../utils.js';
 import { Deploy } from "./Deploy.jsx"
 import { apiObjGetConfig, apiObjCreate } from "../api.js"
+import useApiResponse from "../hooks/ApiResponse.jsx"
 
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
@@ -18,7 +18,6 @@ import IconButton from '@material-ui/core/IconButton'
 function DeployButton(props) {
 	const { oidcUser } = useReactOidc()
 	const [open, setOpen] = useState(false)
-	const [{}, dispatch] = useStateValue()
         const [data, setData] = useState({
 		active: 0,
                 empty: {
@@ -68,8 +67,7 @@ function DeployButton(props) {
 				[path]: {}
 			}
                 }
-                apiObjCreate(_data, ($) => dispatch({
-                        type: "parseApiResponse",
+                apiObjCreate(_data, ($) => dispatchAlerts({
                         ok: "Object " + path + " created",
                         data: $
                 }), oidcUser)
@@ -87,8 +85,7 @@ function DeployButton(props) {
                                 delete cdata["metadata"]
                         }
                         _data.data[path] = cdata
-                        apiObjCreate(_data, ($) => dispatch({
-                                type: "parseApiResponse",
+                        apiObjCreate(_data, ($) => dispatchAlerts({
                                 ok: "Object " + path + " cloned",
                                 data: $
                         }))
@@ -118,8 +115,7 @@ function DeployButton(props) {
                         }
                         var ok = "Object " + path + " deployed."
                 }
-                apiObjCreate(_data, ($) => dispatch({
-                        type: "parseApiResponse",
+                apiObjCreate(_data, ($) => dispatchAlerts({
                         ok: ok,
                         data: $,
                 }), oidcUser)
@@ -150,8 +146,7 @@ function DeployButton(props) {
                         var ok = "Object " + path + " deployed."
                 }
                 console.log("submit", _data)
-                apiObjCreate(_data, ($) => dispatch({
-                        type: "parseApiResponse",
+                apiObjCreate(_data, ($) => dispatchAlerts({
                         ok: ok,
                         data: $
                 }), oidcUser)

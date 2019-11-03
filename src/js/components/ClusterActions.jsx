@@ -4,13 +4,15 @@ import { useStateValue } from '../state.js';
 import { apiNodeSetMonitor } from "../api.js";
 import { confirmations } from "../confirmations.js";
 import { Actions, ActionsSection, ActionsItem } from './Actions.jsx';
+import useApiResponse from "../hooks/ApiResponse.jsx"
 
 import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled"
 import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
 
 function ClusterActions(props) {
 	const { oidcUser } = useReactOidc()
-	const [{cstat}, dispatch] = useStateValue();
+	const [{cstat}, dispatch] = useStateValue()
+	const { dispatchAlerts } = useApiResponse()
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -18,7 +20,7 @@ function ClusterActions(props) {
 	function submit(props) {
 		apiNodeSetMonitor(
 			props.value,
-			(data) => dispatch({type: "parseApiResponse", data: data}),
+			(data) => dispatchAlerts({data: data}),
 			oidcUser
 		)
 	}

@@ -1,15 +1,15 @@
 import React from "react"
 import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useTranslation } from 'react-i18next'
-import { useStateValue } from '../state.js'
 import { apiNodeAction } from "../api.js"
+import useApiResponse from "../hooks/ApiResponse.jsx"
 
 import IconButton from '@material-ui/core/IconButton'
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
 
 function NodeLabelRemove(props) {
 	const {node, labelKey} = props
-	const [{}, dispatch] = useStateValue()
+	const { dispatchAlerts } = useApiResponse()
 	const { oidcUser } = useReactOidc()
 
 	function unset() {
@@ -20,7 +20,7 @@ function NodeLabelRemove(props) {
                 }
                 var _kw = "labels."+labelKey
                 kw.push(_kw)
-                apiNodeAction(node, "unset", {kw: kw}, (data) => dispatch({type: "parseApiResponse", data: data}), oidcUser)
+                apiNodeAction(node, "unset", {kw: kw}, (data) => dispatchAlerts({data: data}), oidcUser)
         }
 
         return (

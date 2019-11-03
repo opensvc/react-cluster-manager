@@ -8,7 +8,7 @@ import { useStateValue } from '../state.js'
 import { useHistory } from 'react-router';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { StateProvider, StateContext } from '../state.js';
-import { parseApiResponse, apiWhoAmI } from "../api.js";
+import { apiWhoAmI } from "../api.js";
 import { NavBar } from "./NavBar.jsx";
 import useAuthInfo from "../hooks/AuthInfo.jsx"
 import AuthChoice from "./AuthChoice.jsx"
@@ -41,18 +41,17 @@ import grey from '@material-ui/core/colors/grey';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { SnackbarProvider } from 'notistack';
-import { useSnackbar } from 'notistack';
 
-const theme = createMuiTheme({
+const makeTheme = (data) => createMuiTheme({
 	palette: {
-		type: "light",
+		type: data.theme ? data.theme : "light",
 		primary: { main: "#0c6d9c" },
 		secondary: { main: "#ff392b" },
 	},
 	status: {
 		up: green[500],
-		danger:  red[500],
-		error:  red[500],
+		danger: red[500],
+		error: red[500],
 		warning: amber[700],
 		notapplicable: grey[500],
 	},
@@ -85,36 +84,60 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const App = () => {
+	return (
+		<AppStateProvider>
+			<AppThemeProvider>
+				<SnackProvider>
+					<Box fontWeight={300}>
+						<Router>
+							<AuthProvider>
+								<WrappedApp />
+							</AuthProvider>
+						</Router>
+					</Box>
+				</SnackProvider>
+			</AppThemeProvider>
+		</AppStateProvider>
+	)
+}
+
+const AppThemeProvider = (props) => {
+	const [{ theme }, dispatch] = useStateValue()
+	return (
+		<ThemeProvider theme={makeTheme({theme: theme})}>
+			{props.children}
+		</ThemeProvider>
+	)
+}
+
+const SnackProvider = (props) => {
 	const { t } = useTranslation()
 	const notistackRef = React.createRef()
-	const onClickDismiss = key => () => {
+	const snackDismiss = key => () => {
 		notistackRef.current.closeSnackbar(key)
 	}
-	const action = (key) => (
-		<Button onClick={onClickDismiss(key)} color="inherit">
+	const snackAction = (key) => (
+		<Button onClick={snackDismiss(key)} color="inherit">
 			{t("Dismiss")}
 		</Button>
 	)
 
 	return (
-		<ThemeProvider theme={theme}>
-			<SnackbarProvider maxSnack={2} ref={notistackRef} action={action}>
-				<Box fontWeight={300}>
-					<StatefulApp />
-				</Box>
-			</SnackbarProvider>
-		</ThemeProvider>
+		<SnackbarProvider maxSnack={2} ref={notistackRef} action={snackAction}>
+			{props.children}
+		</SnackbarProvider>
 	)
 }
 
-const StatefulApp = () => {
+const AppStateProvider = (props) => {
+	const initialTheme = localStorage.getItem("opensvc.theme")
 	const initialState = {
+		theme: initialTheme ? initialTheme : "light",
 		authChoice: "",
 		cstat: {},
 		user: {},
 		alerts: [],      // ex: [{level: "warning", body: (<div>foo</div>)}],
 	}
-	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 	const reducer = (state, action) => {
 		switch (action.type) {
@@ -125,10 +148,16 @@ const StatefulApp = () => {
 				}
 
 			case 'setAuthChoice':
-				console.log("setAuthChoice", action)
 				return {
 					...state,
 					authChoice: action.data
+				}
+
+			case 'setTheme':
+				localStorage.setItem("opensvc.theme", action.data)
+				return {
+					...state,
+					theme: action.data
 				}
 
 			case 'loadCstat':
@@ -143,13 +172,8 @@ const StatefulApp = () => {
 					cstat: action.data,
 				}
 
-			case 'parseApiResponse':
-				//var alerts = parseApiResponse(action.data, action.ok)
-				var alerts = parseApiResponse(action.data, true)
-				for (var a of alerts) {
-					enqueueSnackbar(a.body, {variant: a.level})
-				}
-				var new_alerts = state.alerts.concat(alerts)
+			case 'pushAlerts':
+				var new_alerts = state.alerts.concat(action.data)
 				return {
 					...state,
 					alerts: new_alerts
@@ -179,20 +203,12 @@ const StatefulApp = () => {
 
 	return (
 		<StateProvider initialState={initialState} reducer={reducer}>
-			<RoutedApp />
+			{props.children}
 		</StateProvider>
 	)
 }
 
-function RoutedApp(props) {
-	return (
-		<Router>
-			<AuthenticatedApp />
-		</Router>
-	)
-}
-
-function AuthenticatedApp(props) {
+function AuthProvider(props) {
 	const authInfo = useAuthInfo()
 	const [{ authChoice }, dispatch] = useStateValue()
 	try {
@@ -224,7 +240,7 @@ function AuthenticatedApp(props) {
 			isEnabled={enabled}
 		>
 			<OidcSecure>
-				<WrappedApp />
+				{props.children}
 			</OidcSecure>
 		</AuthenticationProvider>
 	)

@@ -5,6 +5,7 @@ import { splitPath } from '../utils.js';
 import { confirmations } from '../confirmations.js';
 import { apiInstanceAction } from "../api.js";
 import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
+import useApiResponse from "../hooks/ApiResponse.jsx"
 
 import RefreshIcon from "@material-ui/icons/Refresh"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
@@ -21,7 +22,8 @@ import SkipNextIcon from "@material-ui/icons/SkipNext"
 
 function ObjInstanceResourceActions(props) {
 	const { oidcUser } = useReactOidc()
-	const [{cstat}, dispatch] = useStateValue();
+	const [{cstat}, dispatch] = useStateValue()
+	const { dispatchAlerts } = useApiResponse()
 	const sp = splitPath(props.path)
 	const {node, path, rids, title, fab} = props
 
@@ -33,7 +35,7 @@ function ObjInstanceResourceActions(props) {
 			{
 				"rid": rids.join(",")
 			},
-			(data) => dispatch({type: "parseApiResponse", data: data}),
+			(data) => dispatchAlerts({data: data}),
 			oidcUser
 		)
 	}

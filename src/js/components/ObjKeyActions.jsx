@@ -4,6 +4,7 @@ import { useStateValue } from '../state.js';
 import { splitPath } from '../utils.js';
 import { apiInstanceAction } from "../api.js";
 import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
+import useApiResponse from "../hooks/ApiResponse.jsx"
 
 import RefreshIcon from "@material-ui/icons/Refresh"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
@@ -18,7 +19,8 @@ import LabelIcon from "@material-ui/icons/Label"
 
 function ObjKeyActions(props) {
 	const { oidcUser } = useReactOidc()
-	const [{cstat}, dispatch] = useStateValue();
+	const [{cstat}, dispatch] = useStateValue()
+	const { dispatchAlerts } = useApiResponse()
 	const {path, selected, title, fab} = props
 	const sp = splitPath(path)
 
@@ -35,7 +37,7 @@ function ObjKeyActions(props) {
 				{
 					"kw": kws
 				},
-				(data) => dispatch({type: "parseApiResponse", data: data}),
+				(data) => dispatchAlerts({data: data}),
 				oidcUser
 			)
 		}

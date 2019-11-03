@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 
 import { useReactOidc } from '@axa-fr/react-oidc-context'
-import { useStateValue } from '../state.js';
 import { splitPath, createDataHasPathKey } from '../utils.js';
 import { ResourceAdd } from "./ResourceAdd.jsx"
 import { apiInstanceAction } from "../api.js"
+import useApiResponse from "../hooks/ApiResponse.jsx"
+
 
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
@@ -23,8 +24,8 @@ function ResourceAddButton(props) {
         }
 
 	const { oidcUser } = useReactOidc()
+	const { dispatchAlerts } = useApiResponse()
 	const [open, setOpen] = useState(false)
-	const [{}, dispatch] = useStateValue()
         const [data, setData] = useState({
 		kind: "",
                 keywords: {}
@@ -56,8 +57,7 @@ function ResourceAddButton(props) {
 			kw: kws,
 		}
 		var ok = "Resource " + data.keywords.sectionName + " added."
-                apiInstanceAction("ANY", props.path, "set", _data, ($) => dispatch({
-                        type: "parseApiResponse",
+                apiInstanceAction("ANY", props.path, "set", _data, ($) => dispatchAlerts({
                         ok: ok,
                         data: $
                 }), oidcUser)

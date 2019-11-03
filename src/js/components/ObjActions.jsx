@@ -5,6 +5,7 @@ import { splitPath } from '../utils.js';
 import { apiObjSetMonitor } from "../api.js";
 import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
 import { confirmations } from "../confirmations.js"
+import useApiResponse from "../hooks/ApiResponse.jsx"
 
 import CancelIcon from "@material-ui/icons/Cancel"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
@@ -19,7 +20,8 @@ import LabelIcon from "@material-ui/icons/Label"
 
 function ObjActions(props) {
 	const { oidcUser } = useReactOidc()
-	const [{cstat}, dispatch] = useStateValue();
+	const [{cstat}, dispatch] = useStateValue()
+	const { dispatchAlerts } = useApiResponse()
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -59,7 +61,7 @@ function ObjActions(props) {
 			apiObjSetMonitor(
 				path,
 				props.value,
-				(data) => dispatch({type: "parseApiResponse", data: data}),
+				(data) => dispatchAlerts({data: data}),
 				oidcUser
 			)
 		}
@@ -149,7 +151,7 @@ function ObjActions(props) {
 				apiObjSetMonitor(
 					p,
 					props.value,
-					(data) => dispatch({type: "parseApiResponse", data: data}),
+					(data) => dispatchAlerts({data: data}),
 					oidcUser
 				)
 			}

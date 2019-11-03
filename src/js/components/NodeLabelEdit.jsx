@@ -6,6 +6,7 @@ import { apiNodeAction } from "../api.js"
 import { useKeywords } from "../hooks/Keywords.jsx"
 import { SectionForm } from "./SectionForm.jsx"
 import { useStateValue } from '../state.js'
+import useApiResponse from "../hooks/ApiResponse.jsx"
 
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -33,6 +34,7 @@ function NodeLabelEdit(props) {
 	const [open, setOpen] = React.useState(false)
 	const [val, setVal] = useState(props.val ? props.val : "")
 	const [{user}, dispatch] = useStateValue()
+	const { dispatchAlerts } = useApiResponse()
 	const { t, i18n } = useTranslation()
 	const classes = useStyles()
 	if (!user.grant) {
@@ -55,7 +57,7 @@ function NodeLabelEdit(props) {
 		}
 		var _kw = "labels."+props.labelKey+"="+val
 		kw.push(_kw)
-		apiNodeAction(node, "set", {kw: kw}, (data) => dispatch({type: "parseApiResponse", data: data}), oidcUser)
+		apiNodeAction(node, "set", {kw: kw}, (data) => dispatchAlerts({data: data}), oidcUser)
 		handleClose(e)
 	}
 	return (

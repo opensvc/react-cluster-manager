@@ -16,6 +16,7 @@ import CardActions from '@material-ui/core/CardActions'
 import Button from '@material-ui/core/Button'
 import Skeleton from '@material-ui/lab/Skeleton'
 import LangSelector from "./LangSelector.jsx"
+import ThemeSelector from "./ThemeSelector.jsx"
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -70,6 +71,7 @@ function UserDigest(props) {
 				<Button onClick={handleLogout} color="primary">
 					{t("Logout")}
 				</Button>
+				<ThemeSelector />
 				<LangSelector />
 			</CardActions>
 		</Card>
