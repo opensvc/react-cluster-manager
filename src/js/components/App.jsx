@@ -37,6 +37,7 @@ import amber from '@material-ui/core/colors/amber';
 import red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
 import grey from '@material-ui/core/colors/grey';
+import lightBlue from '@material-ui/core/colors/lightBlue';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
@@ -45,7 +46,7 @@ import { SnackbarProvider } from 'notistack';
 const makeTheme = (data) => createMuiTheme({
 	palette: {
 		type: data.theme ? data.theme : "light",
-		primary: { main: "#0c6d9c" },
+		primary: { main: (data.theme == "light") ? lightBlue[900] : lightBlue[100]},
 		secondary: { main: "#ff392b" },
 	},
 	status: {
@@ -54,6 +55,11 @@ const makeTheme = (data) => createMuiTheme({
 		error: red[500],
 		warning: amber[700],
 		notapplicable: grey[500],
+	},
+	overrides: {
+		MuiAppBar: {
+			colorPrimary: lightBlue[900]
+		},
 	},
 	typography: {
 		fontWeight: 300,
@@ -251,7 +257,7 @@ function WrappedApp(props) {
 		<React.Fragment>
 			<CssBaseline />
 			<HideOnScroll>
-				<AppBar>
+				<AppBar color="default">
 					<NavBar />
 				</AppBar>
 			</HideOnScroll>
