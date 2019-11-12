@@ -1,5 +1,26 @@
 import React from "react";
 
+function encodeQueryData(data) {
+	const ret = []
+	for (let d in data) {
+		ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]))
+	}
+	return ret.join('&')
+}
+
+function addQueryData(path, data) {
+	var post = encodeQueryData(data)
+	if (!post) {
+		return path
+	}
+	if (path.indexOf("?") < 0) {
+		path += "?"
+	} else {
+		path += "&"
+	}
+	return path + post
+}
+
 function parseApiResponse(data, ok) {
 	var alerts = []
 	var date = new Date()
@@ -122,7 +143,7 @@ function apiInstanceAction(node, path, action, options, callback, user) {
 	if (user) {
 		headers["Authorization"] = "Bearer " + user.access_token
 	}
-	fetch('/service_action', {
+	fetch('/object_action', {
 		headers: headers,
 		method: "POST",
 		body: JSON.stringify({
@@ -147,7 +168,7 @@ function apiNodeSetMonitor(global_expect, callback, user) {
 	if (user) {
 		headers["Authorization"] = "Bearer " + user.access_token
 	}
-	fetch('/set_node_monitor', {
+	fetch('/node_monitor', {
 		headers: headers,
 		method: "POST",
 		body: JSON.stringify({
@@ -169,7 +190,7 @@ function apiObjSetMonitor(path, global_expect, callback, user) {
 	if (user) {
 		headers["Authorization"] = "Bearer " + user.access_token
 	}
-	fetch('/set_service_monitor', {
+	fetch('/object_monitor', {
 		headers: headers,
 		method: "POST",
 		body: JSON.stringify({
@@ -193,11 +214,12 @@ function apiObjGetConfig(options, callback, user) {
 	if (user) {
 		headers["Authorization"] = "Bearer " + user.access_token
 	}
-	fetch('/get_service_config', {
-		headers: headers,
-		method: "POST",
-		body: JSON.stringify(options)
-	})
+	var request = {
+		"headers": headers,
+		"method": "GET",
+	}
+	var path = addQueryData("/object_config", options)
+	fetch(path, request)
 	.then(res => res.json())
 	.then(data => {
 		// {nodes: {n1: {...}} => {...}
@@ -213,6 +235,14 @@ function apiObjGetConfig(options, callback, user) {
 }
 
 function apiPostNode(node, path, options, callback, user) {
+	return apiReqNode("POST", node, path, options, callback, user)
+}
+
+function apiGetNode(node, path, options, callback, user) {
+	return apiReqNode("GET", node, path, options, callback, user)
+}
+
+function apiReqNode(method, node, path, options, callback, user) {
 	var headers = {
 		'Accept': 'application/json',
 		'Content-Type': 'application/json',
@@ -221,11 +251,16 @@ function apiPostNode(node, path, options, callback, user) {
 	if (user) {
 		headers["Authorization"] = "Bearer " + user.access_token
 	}
-	fetch(path, {
-		headers: headers,
-		method: "POST",
-		body: JSON.stringify(options)
-	})
+	var request = {
+		"headers": headers,
+		"method": method,
+	}
+	if (method == "GET") {
+		path = addQueryData(path, options)
+	} else {
+		request["body"] = JSON.stringify(options)
+        }
+	fetch(path, request)
 	.then(res => res.json())
 	.then(data => {
 		// {nodes: {n1: {...}} => {...}
@@ -241,6 +276,14 @@ function apiPostNode(node, path, options, callback, user) {
 }
 
 function apiPostAny(path, options, callback, user) {
+	return apiReqAny("POST", path, options, callback, user)
+}
+
+function apiGetAny(path, options, callback, user) {
+	return apiReqAny("GET", path, options, callback, user)
+}
+
+function apiReqAny(method, path, options, callback, user) {
 	var headers = {
 		'Accept': 'application/json',
 		'Content-Type': 'application/json',
@@ -249,11 +292,16 @@ function apiPostAny(path, options, callback, user) {
 	if (user) {
 		headers["Authorization"] = "Bearer " + user.access_token
 	}
-	fetch(path, {
-		headers: headers,
-		method: "POST",
-		body: JSON.stringify(options)
-	})
+	var request = {
+		"headers": headers,
+		"method": method,
+	}
+	if (method == "GET") {
+		path = addQueryData(path, options)
+	} else {
+		request["body"] = JSON.stringify(options)
+        }
+	fetch(path, request)
 	.then(res => res.json())
 	.then(data => {
 		// {nodes: {n1: {...}} => {...}
@@ -277,11 +325,12 @@ function apiFetchLogs(path, options, callback, user) {
 	if (user) {
 		headers["Authorization"] = "Bearer " + user.access_token
 	}
-        fetch(path, {
-                headers: headers,
-                method: "POST",
-                body: JSON.stringify(options)
-        })
+	var request = {
+		"headers": headers,
+		"method": "GET",
+	}
+	path = addQueryData(path, options)
+        fetch(path, request)
         .then(res => res.json())
         .then(data => {
                 // {nodes: {n1: {...}} => {...}
@@ -328,7 +377,11 @@ export {
 	apiObjSetMonitor,
 	apiObjGetConfig,
 	apiObjCreate,
+	apiReqAny,
+	apiGetAny,
 	apiPostAny,
+	apiGetNode,
 	apiPostNode,
+	apiReqNode,
 	apiFetchLogs,
 }

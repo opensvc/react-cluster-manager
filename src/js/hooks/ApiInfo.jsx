@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 
-function useAuthInfo(props) {
-	const [authInfo, setAuthInfo] = useState()
+function useApiInfo(props) {
+	const [apiInfo, setApiInfo] = useState()
 	useEffect(() => {
 		async function fetchData() {
-			const res = await fetch('/authinfo')
+			const res = await fetch('/api')
 			res
 				.json()
 				.then((data) => {
 					console.log(data)
-					setAuthInfo(data)
+					setApiInfo(data)
 				})
 				.catch(console.log)
 		}
 		fetchData()
 	}, [])
-	return authInfo
+	return apiInfo
 }
 
-export default useAuthInfo
+export default useApiInfo

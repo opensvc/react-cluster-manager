@@ -57,7 +57,7 @@ function ObjKeyAdd(props) {
 	}
 	function handleSubmit(e) {
 		if (active == source.INPUT) {
-			apiPostAny("/set_key", {path: path, key: keyName, data: inputValue}, (data) => {
+			apiPostAny("/key", {path: path, key: keyName, data: inputValue}, (data) => {
 				// reload config custom hook
 				console.log(data)
 			}, oidcUser)

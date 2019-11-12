@@ -79,12 +79,14 @@ function breadcrumbs() {
 		{ path: "/secrets", text: "Secrets" },
 		{ path: "/users", text: "Users" },
 		{ path: "/stats", text: "Stats" },
+		{ path: "/api", text: "Api", to: "/api" },
 	]
 	for (var head of heads) {
 		var match = matchPath(loc.pathname, {path: head.path, exact: true})
 		if (match) {
 			crumbs.push({
 				text: head.text,
+				to: head.to,
 			})
 			return crumbs
 		}

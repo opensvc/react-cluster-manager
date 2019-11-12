@@ -3,7 +3,7 @@ import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
-import { apiPostNode } from "../api.js"
+import { apiGetNode } from "../api.js"
 import { Log } from "./Log.jsx"
 import { NodeActions } from "./NodeActions.jsx"
 import { NodeNetwork } from "./NodeNetwork.jsx"
@@ -41,7 +41,7 @@ function NodeDetails(props) {
 		if (nodeData) {
 			return
 		}
-		apiPostNode(name, "/get_node", {}, (data) => {
+		apiGetNode(name, "/node", {}, (data) => {
 			setNodeData(data)
 		}, oidcUser)
 	})

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useReactOidc } from '@axa-fr/react-oidc-context'
-import { apiPostAny } from "../api.js"
+import { apiGetAny } from "../api.js"
 
 function useCatalogs() {
 	const [data, setData] = useState([])
@@ -10,7 +10,7 @@ function useCatalogs() {
 		if (data.length > 0) {
 			return
 		}
-                apiPostAny("/get_catalogs", {}, ($) => {
+                apiGetAny("/catalogs", {}, ($) => {
                         console.log("catalogs", $)
 			setData($)
 		}, oidcUser)

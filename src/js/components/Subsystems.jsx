@@ -26,6 +26,7 @@ import LockIcon from '@material-ui/icons/Lock';
 import SaveIcon from '@material-ui/icons/Save';
 import GroupWorkIcon from '@material-ui/icons/GroupWork';
 import LinkIcon from '@material-ui/icons/Link';
+import CodeIcon from '@material-ui/icons/Code';
 
 const useStyles = makeStyles(theme => ({
 	nested: {
@@ -169,6 +170,15 @@ function Subsystems(props) {
 				onClick={() => history.push("/users")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
+			/>
+
+			<SubsystemsLink
+				issue={state.OPTIMAL}
+				href="#api"
+				title="Api"
+				icon={ <CodeIcon /> }
+				onClick={() => history.push("/api")}
+				closeDrawer={props.closeDrawer}
 			/>
 		</List>
 	)

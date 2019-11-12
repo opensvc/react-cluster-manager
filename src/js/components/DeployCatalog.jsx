@@ -3,7 +3,7 @@ import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { useStateValue } from '../state.js';
 import { useCatalogs } from '../hooks/Catalogs.jsx';
 import { useCatalogTemplates } from '../hooks/CatalogTemplates.jsx';
-import { apiPostAny } from "../api.js";
+import { apiGetAny } from "../api.js";
 import { nameValid, namespaceValid, parseIni, createDataHasPathKey } from "../utils.js";
 import { NamespaceSelector } from './NamespaceSelector.jsx';
 import { TemplateSelector } from './TemplateSelector.jsx';
@@ -40,7 +40,7 @@ function DeployCatalog(props) {
 	const templates = useCatalogTemplates(data.catalog ? data.catalog.name : null)
 
 	function loadTemplate(template) {
-		apiPostAny("/get_template", {catalog: data.catalog.name, template: template.id}, (buff) => {
+		apiGetAny("/template", {catalog: data.catalog.name, template: template.id}, (buff) => {
 			console.log(buff)
 			set({...data, template: template, text: buff, data: toData(buff)})
 		}, oidcUser)

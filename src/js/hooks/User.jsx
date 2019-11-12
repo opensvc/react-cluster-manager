@@ -23,13 +23,13 @@ function useUser(props) {
 		})
 	}
 
-	if (user.name === undefined) {
+	useEffect(() => {
 		loadUser()
-	}
+	}, [])
 
 	return {
 		user: user,
-		loadUser:loadUser,
+		loadUser: loadUser,
 		unloadUser: unloadUser,
 	}
 }
