@@ -6,9 +6,9 @@ import useClusterStatus from "../hooks/ClusterStatus.jsx"
 
 function useObjConfig(path) {
 	const [conf, setConf] = useState(null)
-	const [csum, setCsum] = useState(null)
 	const { cstat } = useClusterStatus()
 	const { oidcUser } = useReactOidc()
+	var liveCsum = getCsum()
 
 	function getCsum() {
 		if (!cstat.monitor) {
@@ -21,18 +21,18 @@ function useObjConfig(path) {
 		}
 	}
 	function getConf() {
-		var liveCsum = getCsum()
-		if ((conf !== null) && (liveCsum == csum)) {
-			return
-		}
 		apiObjGetConfig({path: path}, (data) => {
 			console.log("load new", path, "config, csum", liveCsum)
-			setCsum(liveCsum)
 			setConf(data)
                 }, oidcUser)
 	}
 
-	getConf()
+	useEffect(() => {
+		if (!liveCsum) {
+			return
+		}
+		getConf()
+	}, [liveCsum])
 	return conf
 }
 
