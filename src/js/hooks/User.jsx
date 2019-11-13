@@ -25,7 +25,7 @@ function useUser(props) {
 
 	useEffect(() => {
 		loadUser()
-	}, [])
+	}, [oidcUser ? oidcUser.access_token : null])
 
 	return {
 		user: user,
