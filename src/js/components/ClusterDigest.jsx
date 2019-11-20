@@ -131,7 +131,7 @@ function ClusterDigest(props) {
 							{t("Swap")}
 						</Typography>
 						<Typography variant="h4" color="primary" component="h3">
-							{stats.swapUse.toFixed(0)}%
+							{stats.swapTotal ? stats.swapUse.toFixed(0) + "%" : "-"}
 						</Typography>
 						<Typography variant="caption" color="textSecondary" component="h3">
 							<div>{t("Used")}: {fancySizeMB(stats.swapTotal-stats.swapAvail)}</div>
