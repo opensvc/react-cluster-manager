@@ -240,7 +240,6 @@ function NavLink(props) {
 function UserLink(props) {
 	const { user } = useUser()
 	const history = useHistory()
-	const [{ authChoice }, dispatch] = useStateValue()
 	const authInfo = useAuthInfo()
 	if (!authInfo) {
 		return null

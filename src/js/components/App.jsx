@@ -139,7 +139,7 @@ const AppStateProvider = (props) => {
 	const initialTheme = localStorage.getItem("opensvc.theme")
 	const initialState = {
 		theme: initialTheme ? initialTheme : "light",
-		authChoice: "",
+		authChoice: localStorage.getItem("opensvc.authChoice"),
 		cstat: {},
 		user: {},
 		alerts: [],      // ex: [{level: "warning", body: (<div>foo</div>)}],
@@ -154,6 +154,7 @@ const AppStateProvider = (props) => {
 				}
 
 			case 'setAuthChoice':
+				localStorage.setItem("opensvc.authChoice", action.data)
 				return {
 					...state,
 					authChoice: action.data
