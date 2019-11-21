@@ -8,7 +8,6 @@ import { useStateValue } from '../state.js'
 import { useHistory } from 'react-router';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { StateProvider, StateContext } from '../state.js';
-import { apiWhoAmI } from "../api.js";
 import { NavBar } from "./NavBar.jsx";
 import useAuthInfo from "../hooks/AuthInfo.jsx"
 import AuthChoice from "./AuthChoice.jsx"
@@ -217,7 +216,7 @@ const AppStateProvider = (props) => {
 
 function AuthProvider(props) {
 	const authInfo = useAuthInfo()
-	const [{ authChoice }, dispatch] = useStateValue()
+	const [{ authChoice, user }, dispatch] = useStateValue()
 	try {
 		const { oidcUser } = useReactOidc()
 	} catch(e) {
@@ -229,6 +228,9 @@ function AuthProvider(props) {
 	console.log("authChoice", authChoice)
 	if (!authChoice && !oidcUser && location.pathname != "/authentication/callback") {
 		return <AuthChoice />
+	}
+	if (!oidcUser && location.pathname != "/authentication/callback" && user.status == 401) {
+		return <NotAuthorized />
 	}
 	try {
 		var enabled = authChoice == "openid" ? true : false

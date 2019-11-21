@@ -27,6 +27,7 @@ import Toolbar from "@material-ui/core/Toolbar"
 import Avatar from "@material-ui/core/Avatar"
 import Chip from "@material-ui/core/Chip"
 import MenuIcon from "@material-ui/icons/Menu"
+import BlockIcon from "@material-ui/icons/Block"
 
 const StyledBreadcrumb = withStyles(theme => ({
 	root: {
@@ -246,6 +247,12 @@ function UserLink(props) {
 	}
 	function handleClick(e) {
 		history.push("/user")
+	}
+	if (user.status == 401) {
+		localStorage.setItem("opensvc.authChoice", "")
+		return (
+			<BlockIcon />
+		)
 	}
 	if (user.name === undefined ) {
 		return null

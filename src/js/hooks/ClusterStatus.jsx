@@ -3,7 +3,6 @@ import EventSource from "eventsource"
 import "../json_delta.js"
 import { useStateValue } from '../state.js'
 import { useReactOidc } from '@axa-fr/react-oidc-context'
-import { apiWhoAmI } from "../api.js"
 
 function useClusterStatus(props) {
 	const [{cstat, user}, dispatch] = useStateValue()
