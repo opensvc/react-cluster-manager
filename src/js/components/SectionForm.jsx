@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { useTranslation } from 'react-i18next'
 import { getBool } from "../utils.js"
 import SizeInput from "./SizeInput.jsx"
+import clsx from "clsx"
 
 import { makeStyles } from "@material-ui/core/styles"
 import Typography from "@material-ui/core/Typography"
@@ -14,6 +15,11 @@ import Switch from "@material-ui/core/Switch"
 import Slider from "@material-ui/core/Slider"
 import Chip from "@material-ui/core/Chip"
 import Grid from "@material-ui/core/Grid"
+import Collapse from '@material-ui/core/Collapse';
+import IconButton from '@material-ui/core/IconButton';
+
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 
 const useStyles = makeStyles(theme => ({
 	formcontrol: {
@@ -37,6 +43,16 @@ const useStyles = makeStyles(theme => ({
 	convert: {
 		marginLeft: "auto",
 	},
+        expand: {
+                transform: 'rotate(0deg)',
+                marginLeft: 'auto',
+                transition: theme.transitions.create('transform', {
+                        duration: theme.transitions.duration.shortest,
+                }),
+        },
+        expandOpen: {
+                transform: 'rotate(180deg)',
+        },
 }))
 
 function formatKeywordText(text) {
@@ -115,7 +131,7 @@ function RequiredKeywords(props) {
 	return (
 		<React.Fragment>
 			<Typography component="p" variant="h5">
-				{_title}
+				{_title} ({requiredKws.length})
 			</Typography>
 			{requiredKws.map((kwData, i) => (
 				<Keyword key={i} kwData={kwData} data={data} setData={setData} />
@@ -126,7 +142,14 @@ function RequiredKeywords(props) {
 
 function OptionalKeywords(props) {
 	const { t, i18n } = useTranslation()
+	const [expanded, setExpanded] = useState(false)
+	const classes = useStyles()
 	const {title, kws, data, setData, typeKw} = props
+
+        function handleExpandClick(e) {
+                setExpanded(!expanded)
+        }
+
 	if (typeKw && !data.type) {
 		return null
 	}
@@ -137,12 +160,28 @@ function OptionalKeywords(props) {
 	}
 	return (
 		<React.Fragment>
-			<Typography component="p" variant="h5">
-				{_title}
-			</Typography>
-			{optionalKws.map((kwData, i) => (
-				<Keyword key={i} kwData={kwData} data={data} setData={setData} />
-			))}
+			<Grid container>
+				<Grid item>
+					<Typography component="p" variant="h5">
+						{_title} ({optionalKws.length})
+					</Typography>
+				</Grid>
+				<Grid item className={classes.convert}>
+					<IconButton
+						className={clsx(classes.expand, {[classes.expandOpen]: expanded})}
+						onClick={handleExpandClick}
+						aria-expanded={expanded}
+						aria-label="show more"
+					>
+						<ExpandMoreIcon />
+					</IconButton>
+				</Grid>
+			</Grid>
+                        <Collapse in={expanded} timeout="auto" unmountOnExit>
+				{optionalKws.map((kwData, i) => (
+					<Keyword key={i} kwData={kwData} data={data} setData={setData} />
+				))}
+                        </Collapse>
 		</React.Fragment>
 	)
 }
