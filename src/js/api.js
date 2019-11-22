@@ -261,7 +261,7 @@ function apiReq(method, node, path, options, callback, user) {
 }
 
 function apiReqNode(method, node, path, options, callback, user) {
-	apiReq(method, node, path, options, (_) => {
+	apiReq(method, node, path, options, (data) => {
 		// {nodes: {n1: {...}} => {...}
 		// because the user ask for only one cf data
 		var _data = null
@@ -282,15 +282,15 @@ function apiGetNode(node, path, options, callback, user) {
 }
 
 function apiReqAny(method, path, options, callback, user) {
-	apiGetNode(method, "ANY", path, options, callback, user)
+	apiReqNode(method, "ANY", path, options, callback, user)
 }
 
 function apiPostAny(path, options, callback, user) {
-	return apiReqAny("POST", path, options, callback, user)
+	return apiReqNode("POST", "ANY", path, options, callback, user)
 }
 
 function apiGetAny(path, options, callback, user) {
-	return apiReqAny("GET", path, options, callback, user)
+	return apiReqNode("GET", "ANY", path, options, callback, user)
 }
 
 function apiFetchLogs(path, options, callback, user) {
