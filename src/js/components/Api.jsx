@@ -93,6 +93,8 @@ function ApiHandler(props) {
 					{data.desc}
 				</Typography>
 				<br />
+				<ApiHandlerAccess data={data.access} />
+				<br />
 				<ApiHandlerParameters
 					method={data.routes[0].method}
 					data={data.prototype}
@@ -114,10 +116,47 @@ function ApiHandler(props) {
 	)
 }
 
+function ApiHandlerAccess(props) {
+	const { t, i18n } = useTranslation()
+	const { data } = props
+	var buff = ""
+console.log(data)
+	if (data == "custom") {
+		buff = t("Custom access policy.")
+	} else if (!data.roles) {
+		buff = t("World-usable.")
+	} else {
+		var roles = data.roles.join(", ")
+		if (!data.namespaces) {
+			buff = t("Usable with {{roles}} privileges.", {"roles": roles})
+		} else {
+			if (data.namespaces == "FROM:path") {
+				var namespaces = t("extracted from the 'path' request parameter or data key")
+				buff = t("Usable with {{roles}} privileges on namespaces {{namespaces}}.", {"roles": roles, "namespaces": namespaces})
+			} else if (data.namespaces == "ANY") {
+				var namespaces = t("any")
+				buff = t("Usable with {{roles}} privileges on any namespace.", {"roles": roles})
+			} else {
+				var namespaces = data.namespaces.join(", ")
+				buff = t("Usable with {{roles}} privileges on namespaces {{namespaces}}.", {"roles": roles, "namespaces": namespaces})
+			}
+		}
+	}
+	return (
+		<Fragment>
+			<Typography variant="h5">
+				{t("Access")}
+			</Typography>
+			<Typography component="div">
+				{buff}
+			</Typography>
+		</Fragment>
+	)
+}
+
 function FormResult(props) {
 	const { t, i18n } = useTranslation()
 	const { data } = props
-	console.log("result", data)
 	if (!data) {
 		return null
 	}
