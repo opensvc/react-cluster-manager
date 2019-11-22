@@ -346,6 +346,7 @@ function apiObjCreate(data, callback, user) {
 
 
 export {
+	addQueryData,
 	parseApiResponse,
 	apiWhoAmI,
 	apiNodeAction,

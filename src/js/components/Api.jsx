@@ -3,7 +3,7 @@ import useApiInfo from "../hooks/ApiInfo.jsx"
 import { useTranslation } from 'react-i18next'
 import { useHistory, useLocation } from "react-router"
 import { SectionForm } from "./SectionForm.jsx"
-import { apiReq } from "../api.js"
+import { addQueryData, apiReq } from "../api.js"
 import { useReactOidc } from "@axa-fr/react-oidc-context"
 
 import { makeStyles } from "@material-ui/core/styles"
@@ -17,6 +17,7 @@ import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
 import ListItemText from "@material-ui/core/ListItemText"
 import Button from "@material-ui/core/Button"
+import Box from "@material-ui/core/Box"
 import Skeleton from "@material-ui/lab/Skeleton"
 
 const useStyles = makeStyles(theme => ({
@@ -38,6 +39,17 @@ const useStyles = makeStyles(theme => ({
 	},
 	cardAction: {
                 marginLeft: 'auto',
+        },
+	section: {
+                paddingBottom: theme.spacing(3),
+        },
+	tt: {
+		fontFamily: "monospace",
+	},
+	pre: {
+                overflowX: "auto",
+                whiteSpace: "pre",
+		fontFamily: "monospace",
         },
 }))
 
@@ -87,20 +99,21 @@ function ApiHandler(props) {
 		<Card className={classes.root}>
                         <CardHeader
 				title=<HandlerTitle data={data} />
-			 />
+			/>
                         <CardContent>
-				<Typography>
-					{data.desc}
-				</Typography>
-				<br />
+				<Box className={classes.section}>
+					<Typography>
+						{data.desc}
+					</Typography>
+				</Box>
 				<ApiHandlerAccess data={data.access} />
-				<br />
 				<ApiHandlerParameters
 					method={data.routes[0].method}
 					data={data.prototype}
 					formData={formData}
 					setFormData={setFormData}
 				/>
+				<ApiHandlerExample data={data} formData={formData} />
 				<FormResult data={formResult} />
                         </CardContent>
 			<CardActions>
@@ -116,11 +129,48 @@ function ApiHandler(props) {
 	)
 }
 
+function ApiHandlerExample(props) {
+	const { t, i18n } = useTranslation()
+	const { oidcUser } = useReactOidc()
+	const classes = useStyles()
+	const { data, formData } = props
+	var buff = "curl -s --http2 -X " + data.routes[0].method
+	if (data.stream) {
+		buff += " -N -H 'Content-Type: text/event-stream'"
+	} else {
+		buff += " -H 'Content-Type: application/json'"
+	}
+        if (oidcUser && oidcUser.access_token) {
+		buff += " -H 'Authorization: Bearer <token>'"
+	} else {
+		buff += " --cert-type P12 -E <p12file>:<pass>"
+	}
+	if (data.routes[0].method == "POST") {
+		buff += "--data '" + JSON.stringify(formData) + "'"
+	}
+	buff += " https://" + window.location.host
+	if (data.routes[0].method == "GET") {
+		buff += addQueryData("/" + data.routes[0].path, formData)
+	}
+	return (
+		<Box className={classes.section}>
+			<Typography variant="h5">
+				{t("Example")}
+			</Typography>
+			<Typography component="div">
+				<Box className={classes.tt}>
+					{buff}
+				</Box>
+			</Typography>
+		</Box>
+	)
+}
+
 function ApiHandlerAccess(props) {
 	const { t, i18n } = useTranslation()
+	const classes = useStyles()
 	const { data } = props
 	var buff = ""
-console.log(data)
 	if (data == "custom") {
 		buff = t("Custom access policy.")
 	} else if (!data.roles) {
@@ -143,39 +193,41 @@ console.log(data)
 		}
 	}
 	return (
-		<Fragment>
+		<Box className={classes.section}>
 			<Typography variant="h5">
 				{t("Access")}
 			</Typography>
 			<Typography component="div">
 				{buff}
 			</Typography>
-		</Fragment>
+		</Box>
 	)
 }
 
 function FormResult(props) {
 	const { t, i18n } = useTranslation()
+	const classes = useStyles()
 	const { data } = props
 	if (!data) {
 		return null
 	}
 	return (
-		<Fragment>
+		<Box className={classes.section}>
 			<Typography variant="h5">
 				{t("Response")}
 			</Typography>
 			<Typography component="div">
-				<pre>
+				<Box className={classes.pre}>
 					{JSON.stringify(data, null, 4)}
-				</pre>
+				</Box>
 			</Typography>
-		</Fragment>
+		</Box>
 	)
 }
 
 function ApiHandlerParameters(props) {
 	const {data, method, formData, setFormData } = props
+	const classes = useStyles()
 	const { t, i18n } = useTranslation()
 	if (!data.length) {
 		return null
@@ -194,14 +246,16 @@ function ApiHandlerParameters(props) {
 	}
 	var what = method == "GET" ? t("Parameters") : t("Data")
 	return (
-		<SectionForm
-			kind="data"
-			kws={kws}
-			data={formData}
-			setData={setFormData}
-			requiredTitle={t("Required {{what}}", {"what": what})}
-			optionalTitle={t("Optional {{what}}", {"what": what})}
-		/>
+		<Box className={classes.section}>
+			<SectionForm
+				kind="data"
+				kws={kws}
+				data={formData}
+				setData={setFormData}
+				requiredTitle={t("Required {{what}}", {"what": what})}
+				optionalTitle={t("Optional {{what}}", {"what": what})}
+			/>
+		</Box>
 	)
 }
 
