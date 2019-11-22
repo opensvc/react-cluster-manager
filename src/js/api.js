@@ -234,15 +234,7 @@ function apiObjGetConfig(options, callback, user) {
 	.catch(console.log)
 }
 
-function apiPostNode(node, path, options, callback, user) {
-	return apiReqNode("POST", node, path, options, callback, user)
-}
-
-function apiGetNode(node, path, options, callback, user) {
-	return apiReqNode("GET", node, path, options, callback, user)
-}
-
-function apiReqNode(method, node, path, options, callback, user) {
+function apiReq(method, node, path, options, callback, user) {
 	var headers = {
 		'Accept': 'application/json',
 		'Content-Type': 'application/json',
@@ -263,6 +255,13 @@ function apiReqNode(method, node, path, options, callback, user) {
 	fetch(path, request)
 	.then(res => res.json())
 	.then(data => {
+		if (callback) { callback(data) }
+	})
+	.catch(console.log)
+}
+
+function apiReqNode(method, node, path, options, callback, user) {
+	apiReq(method, node, path, options, (_) => {
 		// {nodes: {n1: {...}} => {...}
 		// because the user ask for only one cf data
 		var _data = null
@@ -271,8 +270,19 @@ function apiReqNode(method, node, path, options, callback, user) {
 			break
 		}
 		if (callback) { callback(_data) }
-	})
-	.catch(console.log)
+	}, user)
+}
+
+function apiPostNode(node, path, options, callback, user) {
+	return apiReqNode("POST", node, path, options, callback, user)
+}
+
+function apiGetNode(node, path, options, callback, user) {
+	return apiReqNode("GET", node, path, options, callback, user)
+}
+
+function apiReqAny(method, path, options, callback, user) {
+	apiGetNode(method, "ANY", path, options, callback, user)
 }
 
 function apiPostAny(path, options, callback, user) {
@@ -281,39 +291,6 @@ function apiPostAny(path, options, callback, user) {
 
 function apiGetAny(path, options, callback, user) {
 	return apiReqAny("GET", path, options, callback, user)
-}
-
-function apiReqAny(method, path, options, callback, user) {
-	var headers = {
-		'Accept': 'application/json',
-		'Content-Type': 'application/json',
-		'o-node': 'ANY'
-	}
-	if (user) {
-		headers["Authorization"] = "Bearer " + user.access_token
-	}
-	var request = {
-		"headers": headers,
-		"method": method,
-	}
-	if (method == "GET") {
-		path = addQueryData(path, options)
-	} else {
-		request["body"] = JSON.stringify(options)
-        }
-	fetch(path, request)
-	.then(res => res.json())
-	.then(data => {
-		// {nodes: {n1: {...}} => {...}
-		// because the user ask for only one cf data
-		var _data = null
-		for (var node in data.nodes) {
-			_data = data.nodes[node]
-			break
-		}
-		if (callback) { callback(_data) }
-	})
-	.catch(console.log)
 }
 
 function apiFetchLogs(path, options, callback, user) {
@@ -377,6 +354,7 @@ export {
 	apiObjSetMonitor,
 	apiObjGetConfig,
 	apiObjCreate,
+	apiReq,
 	apiReqAny,
 	apiGetAny,
 	apiPostAny,

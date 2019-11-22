@@ -1,17 +1,22 @@
-import React, { Fragment } from "react"
+import React, { Fragment, useState } from "react"
 import useApiInfo from "../hooks/ApiInfo.jsx"
 import { useTranslation } from 'react-i18next'
 import { useHistory, useLocation } from "react-router"
+import { SectionForm } from "./SectionForm.jsx"
+import { apiReq } from "../api.js"
+import { useReactOidc } from "@axa-fr/react-oidc-context"
 
 import { makeStyles } from "@material-ui/core/styles"
 import Card from "@material-ui/core/Card"
 import CardHeader from "@material-ui/core/CardHeader"
 import CardContent from "@material-ui/core/CardContent"
+import CardActions from "@material-ui/core/CardActions"
 import Typography from "@material-ui/core/Typography"
 import Chip from "@material-ui/core/Chip"
 import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
 import ListItemText from "@material-ui/core/ListItemText"
+import Button from "@material-ui/core/Button"
 import Skeleton from "@material-ui/lab/Skeleton"
 
 const useStyles = makeStyles(theme => ({
@@ -27,6 +32,13 @@ const useStyles = makeStyles(theme => ({
                 marginLeft: -theme.spacing(2),
                 marginRight: -theme.spacing(2),
         },
+	method: {
+		width: "7em",
+		marginRight: theme.spacing(2),
+	},
+	cardAction: {
+                marginLeft: 'auto',
+        },
 }))
 
 function Api(props) {
@@ -37,15 +49,22 @@ function Api(props) {
 	let params = new URLSearchParams(loc.search)
 	const index = params.get("index")
 
-	if (data && index !== null) {
-		return <ApiHandler data={data[index]} index={index} />
+	if (data === undefined) {
+		return null
+	}
+	var _data = data.sort((a, b) => {
+		return a.routes[0].path.localeCompare(b.routes[0].path) || a.routes[0].method.localeCompare(b.routes[0].method)
+	})
+
+	if (_data && index !== null) {
+		return <ApiHandler data={_data[index]} index={index} />
 	}
 
 	return (
 		<Card id="api" className={classes.root}>
                         <CardHeader title={t("Api")} />
                         <CardContent>
-				<ApiHandlers data={data} />
+				<ApiHandlers data={_data} />
                         </CardContent>
 		</Card>
 	)
@@ -53,68 +72,97 @@ function Api(props) {
 
 function ApiHandler(props) {
 	const {data, index} = props
-	const { t, i18n } = useTranslation()
+	const { oidcUser } = useReactOidc()
 	const classes = useStyles()
+	const [formData, setFormData] = useState({})
+	const [formResult, setFormResult] = useState("")
 
-	if (!data) {
-		var title = <Skeleton />
-	} else {
-		var title = data.routes[0].method + " /" + data.routes[0].path
+	function handleSubmit(e) {
+		apiReq(data.routes[0].method, "ANY", data.routes[0].path, formData, (_) => {
+			setFormResult(_)
+		}, oidcUser)
 	}
+
 	return (
 		<Card className={classes.root}>
                         <CardHeader
-				title={title}
+				title=<HandlerTitle data={data} />
 			 />
                         <CardContent>
 				<Typography>
 					{data.desc}
 				</Typography>
 				<br />
-				<ApiHandlerParameters method={data.routes[0].method} data={data.prototype} />
+				<ApiHandlerParameters
+					method={data.routes[0].method}
+					data={data.prototype}
+					formData={formData}
+					setFormData={setFormData}
+				/>
+				<FormResult data={formResult} />
                         </CardContent>
+			<CardActions>
+				<Button
+					className={classes.cardAction}
+					onClick={handleSubmit}
+					color={data.routes[0].method == "GET" ? "primary" : "secondary"}
+				>
+					{data.routes[0].method}
+				</Button>
+			</CardActions>
 		</Card>
 	)
 }
 
-function ApiHandlerParameter(props) {
-	const {data} = props
+function FormResult(props) {
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
-	return (
-		<div className={classes.param}>
-			<Typography variant="h6">
-				{data.name}
-				{data.required &&
-				<Typography variant="h6" component="span" color="primary">&nbsp;*</Typography>
-				}
-			</Typography>
-			<Typography color="textSecondary">
-				{data.desc}
-			</Typography>
-			<Chip
-				size="small"
-				label={data.format}
-			/>
-		</div>
-	)
-}
-
-function ApiHandlerParameters(props) {
-	const {data, method} = props
-	const { t, i18n } = useTranslation()
-	if (!data.length) {
+	const { data } = props
+	console.log("result", data)
+	if (!data) {
 		return null
 	}
 	return (
 		<Fragment>
 			<Typography variant="h5">
-				{method == "GET" ? t("Parameters") : t("Data")}
+				{t("Response")}
 			</Typography>
-			{data.map((param, i) => (
-				<ApiHandlerParameter key={i} data={param} />
-			))}
+			<Typography component="div">
+				<pre>
+					{JSON.stringify(data, null, 4)}
+				</pre>
+			</Typography>
 		</Fragment>
+	)
+}
+
+function ApiHandlerParameters(props) {
+	const {data, method, formData, setFormData } = props
+	const { t, i18n } = useTranslation()
+	if (!data.length) {
+		return null
+	}
+	var kws = []
+	for (var param of data) {
+		var kw = {
+			"keyword": param.name,
+			"default": param.default,
+			"convert": param.format,
+			"text": param.desc,
+			"candidates": param.candidates,
+			"required": param.required,
+		}
+		kws.push(kw)
+	}
+	var what = method == "GET" ? t("Parameters") : t("Data")
+	return (
+		<SectionForm
+			kind="data"
+			kws={kws}
+			data={formData}
+			setData={setFormData}
+			requiredTitle={t("Required {{what}}", {"what": what})}
+			optionalTitle={t("Optional {{what}}", {"what": what})}
+		/>
 	)
 }
 
@@ -133,6 +181,31 @@ function ApiHandlers(props) {
 	)
 }
 
+function Method(props) {
+	const { method } = props
+	const classes = useStyles()
+	return (
+		<Chip
+			color={method == "GET" ? "primary" : "secondary"}
+			label={method}
+			className={classes.method}
+		/>
+	)
+}
+
+function HandlerTitle(props) {
+	const { data } = props
+	if (!data) {
+		return <Skeleton />
+	}
+	return (
+		<Fragment>
+			<Method method={data.routes[0].method} />
+			/{data.routes[0].path}
+		</Fragment>
+	)
+}
+
 function ApiHandlerItem(props) {
 	const {data, index} = props
 	const history = useHistory()
@@ -144,7 +217,7 @@ function ApiHandlerItem(props) {
 	return (
 		<ListItem button component="a" onClick={handleClick}>
 			<ListItemText>
-				{data.routes[0].method} /{data.routes[0].path}
+				<HandlerTitle data={data} />
 			</ListItemText>
 		</ListItem>
 	)

@@ -1,15 +1,19 @@
-import React, { useState } from "react";
-import { getBool } from '../utils.js';
+import React, { useState } from "react"
+import { useTranslation } from 'react-i18next'
+import { getBool } from "../utils.js"
+import SizeInput from "./SizeInput.jsx"
 
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Switch from '@material-ui/core/Switch';
-import Slider from '@material-ui/core/Slider';
+import { makeStyles } from "@material-ui/core/styles"
+import Typography from "@material-ui/core/Typography"
+import FormControl from "@material-ui/core/FormControl"
+import FormHelperText from "@material-ui/core/FormHelperText"
+import Select from "@material-ui/core/Select"
+import TextField from "@material-ui/core/TextField"
+import MenuItem from "@material-ui/core/MenuItem"
+import Switch from "@material-ui/core/Switch"
+import Slider from "@material-ui/core/Slider"
+import Chip from "@material-ui/core/Chip"
+import Grid from "@material-ui/core/Grid"
 
 const useStyles = makeStyles(theme => ({
 	formcontrol: {
@@ -29,6 +33,9 @@ const useStyles = makeStyles(theme => ({
 	},
 	helper: {
 		wordBreak: "break-word",
+	},
+	convert: {
+		marginLeft: "auto",
 	},
 }))
 
@@ -52,7 +59,7 @@ function formatKeywordText(text) {
 }
 
 function SectionForm(props) {
-	const {kind, kws, data, setData} = props
+	const {kind, kws, data, setData, optionalTitle, requiredTitle} = props
 	const classes = useStyles()
 	var typeKw
 	for (var kw of kws) {
@@ -88,24 +95,28 @@ function SectionForm(props) {
 				</Select>
 			</FormControl>
 			}
-			<RequiredKeywords kws={kws} data={data} setData={setData} typeKw={typeKw} />
-			<OptionalKeywords kws={kws} data={data} setData={setData} typeKw={typeKw} />
+			<RequiredKeywords title={requiredTitle} kws={kws} data={data} setData={setData} typeKw={typeKw} />
+			<OptionalKeywords title={optionalTitle} kws={kws} data={data} setData={setData} typeKw={typeKw} />
 		</React.Fragment>
 	)
 }
 
 function RequiredKeywords(props) {
-	const {kws, data, setData, typeKw} = props
+	const { t, i18n } = useTranslation()
+	const {title, kws, data, setData, typeKw} = props
 	if (typeKw && !data.type) {
 		return null
 	}
 	const requiredKws = kws.filter(item => item.required)
+	var _title = title ? title : t("Required")
 	if (requiredKws.length == 0) {
 		return null
 	}
 	return (
 		<React.Fragment>
-			<Typography component="p" variant="h5">Required</Typography>
+			<Typography component="p" variant="h5">
+				{_title}
+			</Typography>
 			{requiredKws.map((kwData, i) => (
 				<Keyword key={i} kwData={kwData} data={data} setData={setData} />
 			))}
@@ -114,69 +125,25 @@ function RequiredKeywords(props) {
 }
 
 function OptionalKeywords(props) {
-	const {kws, data, setData, typeKw} = props
+	const { t, i18n } = useTranslation()
+	const {title, kws, data, setData, typeKw} = props
 	if (typeKw && !data.type) {
 		return null
 	}
+	var _title = title ? title : t("Optional")
 	const optionalKws = kws.filter(item => !item.required)
 	if (optionalKws.length == 0) {
 		return null
 	}
 	return (
 		<React.Fragment>
-			<Typography component="p" variant="h5">Optional</Typography>
+			<Typography component="p" variant="h5">
+				{_title}
+			</Typography>
 			{optionalKws.map((kwData, i) => (
 				<Keyword key={i} kwData={kwData} data={data} setData={setData} />
 			))}
 		</React.Fragment>
-	)
-}
-
-function SizeInput(props) {
-	const {setVal, val, requiredError} = props
-
-	function error(val) {
-		var u
-		const units = [
-			'', 'k', 'm', 'g', 't', 'p', 'e',
-			'b', 'kb', 'mb', 'gb', 'tb', 'pb', 'eb',
-			'ki', 'mi', 'gi', 'ti', 'pi', 'ei',
-			'kib', 'mib', 'gib', 'tib', 'pib', 'eib'
-		]
-
-		if ((val === undefined) || (val == "") || (val == null)) {
-			return requiredError
-		}
-
-		var c = val.split(/([0-9\.]+)/)
-
-		if (c.length != 3)  {
-			return true
-		}
-
-		if (c[0].trim() != "") {
-			return true
-		}
-
-		if (c[2] == "") {
-			u = units[0]
-		}
-		else {
-			u = c[2].trim()
-		}
-
-		if (units.indexOf(u) > -1) {
-			return false
-		}
-		return true
-	}
-
-	return (
-		<TextField
-			value={val}
-			error={error(val)}
-			onChange={(e) => {setVal(e.target.value)}}
-		/>
 	)
 }
 
@@ -282,7 +249,22 @@ function Keyword(props) {
 
 	return (
 		<FormControl className={classes.formcontrol} fullWidth>
-			<Typography variant="caption" color="textSecondary">{kwData.keyword}</Typography>
+			<Typography variant="h6">
+				<Grid container>
+					<Grid item>
+						{kwData.keyword}
+						{kwData.required &&
+						<Typography variant="h6" component="span" color="primary">&nbsp;*</Typography>
+						}
+					</Grid>
+					<Grid item className={classes.convert}>
+						<Chip
+							size="small"
+							label={kwData.convert}
+						/>
+					</Grid>
+				</Grid>
+			</Typography>
 			{el}
 			<FormHelperText className={classes.helper}>{formatKeywordText(kwData.text)}</FormHelperText>
 			{requiredError && <FormHelperText className={classes.helper}>This keyword is required.</FormHelperText>}
