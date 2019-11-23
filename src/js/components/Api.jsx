@@ -146,7 +146,7 @@ function ApiHandlerExample(props) {
 		buff += " --cert-type P12 -E <p12file>:<pass>"
 	}
 	if (data.routes[0].method == "POST") {
-		buff += "--data '" + JSON.stringify(formData) + "'"
+		buff += " --data '" + JSON.stringify(formData) + "'"
 	}
 	buff += " https://" + window.location.host
 	if (data.routes[0].method == "GET") {
