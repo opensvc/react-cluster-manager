@@ -234,6 +234,9 @@ function ApiHandlerParameters(props) {
 	}
 	var kws = []
 	for (var param of data) {
+		if (param.deprecated) {
+			continue
+		}
 		var kw = {
 			"keyword": param.name,
 			"default": param.default,
