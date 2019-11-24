@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { useTranslation } from 'react-i18next'
 import { getBool } from "../utils.js"
 import SizeInput from "./SizeInput.jsx"
+import JsonInput from "./JsonInput.jsx"
 import clsx from "clsx"
 
 import { makeStyles } from "@material-ui/core/styles"
@@ -206,6 +207,10 @@ function Keyword(props) {
 				color="primary"
 				inputProps={{ 'aria-label': 'primary checkbox' }}
 			/>
+		)
+	} else if (kwData.convert == "dict") {
+		var el = (
+			<JsonInput setVal={(v)=>setData({...data, [kwData.keyword]: v})} val={data[kwData.keyword]} />
 		)
 	} else if (kwData.convert == "size") {
 		var el = (
