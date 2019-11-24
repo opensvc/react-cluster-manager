@@ -240,6 +240,7 @@ function ApiHandlerParameters(props) {
 			"convert": param.format,
 			"text": param.desc,
 			"candidates": param.candidates,
+			"strict_candidates": param.strict_candidates,
 			"required": param.required,
 		}
 		kws.push(kw)
