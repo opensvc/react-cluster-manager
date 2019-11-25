@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useTranslation } from 'react-i18next'
 import { getBool } from "../utils.js"
+import NodeSelector from "./NodeSelector.jsx"
 import SizeInput from "./SizeInput.jsx"
 import JsonInput from "./JsonInput.jsx"
 import clsx from "clsx"
@@ -76,7 +77,7 @@ function formatKeywordText(text) {
 }
 
 function SectionForm(props) {
-	const {kind, kws, data, setData, optionalTitle, requiredTitle} = props
+	const {kind, kws, data, setData, optionalTitle, requiredTitle, optionalExpanded} = props
 	const classes = useStyles()
 	var typeKw
 	for (var kw of kws) {
@@ -113,7 +114,7 @@ function SectionForm(props) {
 			</FormControl>
 			}
 			<RequiredKeywords title={requiredTitle} kws={kws} data={data} setData={setData} typeKw={typeKw} />
-			<OptionalKeywords title={optionalTitle} kws={kws} data={data} setData={setData} typeKw={typeKw} />
+			<OptionalKeywords title={optionalTitle} kws={kws} data={data} setData={setData} typeKw={typeKw} optionalExpanded={optionalExpanded} />
 		</React.Fragment>
 	)
 }
@@ -142,10 +143,10 @@ function RequiredKeywords(props) {
 }
 
 function OptionalKeywords(props) {
+	const {title, kws, data, setData, typeKw, optionalExpanded} = props
 	const { t, i18n } = useTranslation()
-	const [expanded, setExpanded] = useState(false)
+	const [expanded, setExpanded] = useState(optionalExpanded !== undefined ? optionalExpanded : false)
 	const classes = useStyles()
-	const {title, kws, data, setData, typeKw} = props
 
         function handleExpandClick(e) {
                 setExpanded(!expanded)
@@ -211,6 +212,16 @@ function Keyword(props) {
 	} else if (kwData.convert == "dict") {
 		var el = (
 			<JsonInput setVal={(v)=>setData({...data, [kwData.keyword]: v})} val={data[kwData.keyword]} />
+		)
+	} else if (kwData.convert == "node_selector") {
+		var el = (
+			<NodeSelector
+				setVal={(v)=>setData({...data, [kwData.keyword]: v})}
+				val={data[kwData.keyword]}
+				defaultValue={kwData.default ? kwData.default : ""}
+				keyword={kwData.keyword}
+				requiredError={requiredError}
+			/>
 		)
 	} else if (kwData.convert == "size") {
 		var el = (

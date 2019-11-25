@@ -86,11 +86,12 @@ function ApiHandler(props) {
 	const {data, index} = props
 	const { oidcUser } = useReactOidc()
 	const classes = useStyles()
+	const [node, setNode] = useState({"node": "ANY"})
 	const [formData, setFormData] = useState({})
 	const [formResult, setFormResult] = useState("")
 
 	function handleSubmit(e) {
-		apiReq(data.routes[0].method, "ANY", data.routes[0].path, formData, (_) => {
+		apiReq(data.routes[0].method, node.node, data.routes[0].path, formData, (_) => {
 			setFormResult(_)
 		}, oidcUser)
 	}
@@ -112,6 +113,11 @@ function ApiHandler(props) {
 					data={data.prototype}
 					formData={formData}
 					setFormData={setFormData}
+				/>
+				<ApiHandlerRouting
+					data={data}
+					formData={node}
+					setFormData={setNode}
 				/>
 				<ApiHandlerExample data={data} formData={formData} />
 				<FormResult data={formResult} />
@@ -225,8 +231,47 @@ function FormResult(props) {
 	)
 }
 
+function ApiHandlerRouting(props) {
+	const {
+		data,
+		formData,
+		setFormData
+	} = props
+	const classes = useStyles()
+	const { t, i18n } = useTranslation()
+	if (!data.multiplex == "never") {
+		return null
+	}
+	var kws = [
+		{
+			"keyword": "node",
+			"default": "ANY",
+			"convert": "node_selector",
+			"text": "Route request to nodes",
+		}
+	]
+	return (
+		<Box className={classes.section}>
+			<SectionForm
+				kind="data"
+				kws={kws}
+				data={formData}
+				setData={setFormData}
+				requiredTitle={""}
+				optionalTitle={"Routing"}
+//				optionalExpanded={false}
+			/>
+		</Box>
+	)
+}
+
 function ApiHandlerParameters(props) {
-	const {data, method, formData, setFormData } = props
+	const {
+		data,
+		method,
+		formData,
+		setFormData,
+	} = props
 	const classes = useStyles()
 	const { t, i18n } = useTranslation()
 	if (!data.length) {
