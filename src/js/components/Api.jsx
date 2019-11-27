@@ -119,7 +119,11 @@ function ApiHandler(props) {
 					formData={node}
 					setFormData={setNode}
 				/>
-				<ApiHandlerExample data={data} formData={formData} />
+				<ApiHandlerExample
+					data={data}
+					formData={formData}
+					node={node}
+				/>
 				<FormResult data={formResult} />
                         </CardContent>
 			<CardActions>
@@ -139,8 +143,11 @@ function ApiHandlerExample(props) {
 	const { t, i18n } = useTranslation()
 	const { oidcUser } = useReactOidc()
 	const classes = useStyles()
-	const { data, formData } = props
+	const { data, formData, node } = props
 	var buff = "curl -s --http2 -X " + data.routes[0].method
+	if (node) {
+		buff += " -H 'o-node: " + node.node + "'"
+	}
 	if (data.stream) {
 		buff += " -N -H 'Content-Type: text/event-stream'"
 	} else {
