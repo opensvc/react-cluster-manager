@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "../hooks/User.jsx"
 import { useStateValue } from '../state.js';
 import { apiNodeAction } from "../api.js";
 import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
@@ -12,7 +12,7 @@ import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew"
 import RefreshIcon from "@material-ui/icons/Refresh"
 
 function NodeActions(props) {
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const [{cstat}, dispatch] = useStateValue()
 	const { dispatchAlerts } = useApiResponse()
 	if (cstat.monitor === undefined) {
@@ -44,7 +44,7 @@ function NodeActions(props) {
 				props.value,
 				{},
 				(data) => dispatchAlerts({data: data}),
-				oidcUser
+				auth
 			)
 		}
 	}

@@ -4,6 +4,7 @@ import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next';
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 import { NetworkAdd } from "./NetworkAdd.jsx"
+
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -15,7 +16,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Hidden from '@material-ui/core/Hidden';
-import { useReactOidc } from '@axa-fr/react-oidc-context'
 
 const useStyles = makeStyles(theme => ({
         root: {
@@ -46,10 +46,7 @@ function Networks(props) {
 	const { t, i18n } = useTranslation()
         const data = useNetworksStatus()
 	const [{}, dispatch] = useStateValue()
-	const { isEnabled, login, logout, oidcUser } = useReactOidc()
-	//const { profile } = oidcUser
         var lines = getLines(data)
-	console.log(oidcUser)
 
 	return (
                 <Card id="networks" className={classes.root}>

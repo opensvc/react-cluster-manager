@@ -11,7 +11,9 @@ function useAuthInfo(props) {
 					console.log(data)
 					setAuthInfo(data)
 				})
-				.catch(console.log)
+				.catch((e) => {
+					console.log(e)
+				})
 		}
 		fetchData()
 	}, [])

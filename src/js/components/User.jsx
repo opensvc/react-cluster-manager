@@ -51,6 +51,7 @@ function UserDigest(props) {
 	function handleLogout(e) {
 		logout()
 		dispatch({type: "setAuthChoice", data: ""})
+		dispatch({type: "setBasicLogin", data: {}})
 	}
 	return (
 		<Card className={classes.root}>

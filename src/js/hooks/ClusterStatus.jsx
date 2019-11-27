@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from "react"
 import EventSource from "eventsource"
 import "../json_delta.js"
 import { useStateValue } from '../state.js'
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "./User.jsx"
+import { addAuthorizationHeader } from "../api.js"
 
 function useClusterStatus(props) {
 	const [{cstat, user}, dispatch] = useStateValue()
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const lastDispatch = useRef(Date.now())
 	const limit = 500
 
@@ -33,9 +34,7 @@ function useClusterStatus(props) {
 		}
 		console.log("initEventSource")
 		var eventSourceInitDict = {headers: {}}
-		if (oidcUser) {
-			eventSourceInitDict.headers.Authorization = "Bearer " + oidcUser.access_token
-		}
+		eventSourceInitDict.headers = addAuthorizationHeader(eventSourceInitDict.headers, auth)
 		eventSource = new EventSource("/events", eventSourceInitDict)
 		eventSource.onmessage = (e) => {
 			handleEvent(e)
@@ -102,10 +101,7 @@ function useClusterStatus(props) {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json',
 		}
-		if (oidcUser) {
-			headers["Authorization"] = "Bearer " + oidcUser.access_token
-		}
-
+		headers = addAuthorizationHeader(headers, auth)
 		fetch('/daemon_status', {headers: headers})
 			.then(res => res.json())
 			.then((data) => {

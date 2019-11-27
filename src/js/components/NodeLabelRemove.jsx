@@ -1,5 +1,5 @@
 import React from "react"
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "../hooks/User.jsx"
 import { useTranslation } from 'react-i18next'
 import { apiNodeAction } from "../api.js"
 import useApiResponse from "../hooks/ApiResponse.jsx"
@@ -10,7 +10,7 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
 function NodeLabelRemove(props) {
 	const {node, labelKey} = props
 	const { dispatchAlerts } = useApiResponse()
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 
 	function unset() {
                 console.log("unset", node, "label", labelKey)
@@ -20,7 +20,7 @@ function NodeLabelRemove(props) {
                 }
                 var _kw = "labels."+labelKey
                 kw.push(_kw)
-                apiNodeAction(node, "unset", {kw: kw}, (data) => dispatchAlerts({data: data}), oidcUser)
+                apiNodeAction(node, "unset", {kw: kw}, (data) => dispatchAlerts({data: data}), auth)
         }
 
         return (

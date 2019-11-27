@@ -4,9 +4,14 @@ import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { apiWhoAmI } from "../api.js";
 
 function useUser(props) {
-	const [{user}, dispatch] = useStateValue()
+	const [{user, basicLogin}, dispatch] = useStateValue()
 	const { oidcUser } = useReactOidc()
 
+	var auth = {
+		"access_token": oidcUser ? oidcUser.access_token : null,
+		"username": basicLogin.username,
+		"password": basicLogin.password,
+	}
         function loadUser() {
                 apiWhoAmI(data => {
                         console.log("I am", data)
@@ -14,7 +19,7 @@ function useUser(props) {
                                 type: "loadUser",
                                 data: data
                         })
-                }, oidcUser)
+                }, auth)
         }
 	function unloadUser() {
 		dispatch({
@@ -25,10 +30,11 @@ function useUser(props) {
 
 	useEffect(() => {
 		loadUser()
-	}, [oidcUser ? oidcUser.access_token : null])
+	}, [auth.access_token, auth.username])
 
 	return {
 		user: user,
+		auth: auth,
 		loadUser: loadUser,
 		unloadUser: unloadUser,
 	}

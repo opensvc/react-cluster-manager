@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react"
 import EventSource from "eventsource"
-import { useReactOidc } from '@axa-fr/react-oidc-context'
-import { apiFetchLogs } from "../api.js"
+import useUser from "./User.jsx"
+import { apiFetchLogs, addAuthorizationHeader } from "../api.js"
 
 function useLog(url) {
 	const [log, _setLog] = useState(null)
 	const [es, setEs] = useState(null)
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const logRef = React.useRef(log)
 
 	const setLog = x => {
@@ -21,7 +21,7 @@ function useLog(url) {
 		let _url = url + "/backlogs"
 		apiFetchLogs(_url, {"backlog": "10k"}, (lines) => {
 			setLog(lines)
-		}, oidcUser)
+		}, auth)
 	}
 	function initEventSource() {
 		if (es !== null) {
@@ -30,9 +30,7 @@ function useLog(url) {
 		let _url = url + "/logs"
 		console.log("init", _url, "logs event source")
 		var eventSourceInitDict = {headers: {}}
-		if (oidcUser) {
-			eventSourceInitDict.headers.Authorization = "Bearer " + oidcUser.access_token
-		}
+		eventSourceInitDict.headers = addAuthorizationHeader(eventSourceInitDict.headers, auth)
 		var _es = new EventSource(_url, eventSourceInitDict)
 		_es.onmessage = (e) => {
 			var lines = JSON.parse(e.data)

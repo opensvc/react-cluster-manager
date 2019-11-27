@@ -1,5 +1,3 @@
-import React from "react";
-
 function encodeQueryData(data) {
 	const ret = []
 	for (let d in data) {
@@ -84,6 +82,15 @@ function parseApiResponse(data, ok) {
 	return alerts
 }
 
+function addAuthorizationHeader(headers, user) {
+	if (user.password) {
+		headers['Authorization'] = "Basic " + Buffer.from(user.username + ":" + user.password).toString('base64')
+	} else if (user) {
+		headers["Authorization"] = "Bearer " + user.access_token
+	}
+	return headers
+}
+
 //
 // API calls
 //
@@ -92,9 +99,7 @@ function apiWhoAmI(callback, user) {
 		'Accept': 'application/json',
 		'Content-Type': 'application/json',
 	}
-	if (user) {
-		headers["Authorization"] = "Bearer " + user.access_token
-	}
+	headers = addAuthorizationHeader(headers, user)
 	fetch('/whoami', {
 		headers: headers,
 		method: "GET",
@@ -112,9 +117,7 @@ function apiNodeAction(node, action, options, callback, user) {
 		'Content-Type': 'application/json',
 		'o-node': node
 	}
-	if (user) {
-		headers["Authorization"] = "Bearer " + user.access_token
-	}
+	headers = addAuthorizationHeader(headers, user)
 	if (!options) {
 		options = {}
 	}
@@ -140,9 +143,7 @@ function apiInstanceAction(node, path, action, options, callback, user) {
 		'Content-Type': 'application/json',
 		'o-node': node
 	}
-	if (user) {
-		headers["Authorization"] = "Bearer " + user.access_token
-	}
+	headers = addAuthorizationHeader(headers, user)
 	fetch('/object_action', {
 		headers: headers,
 		method: "POST",
@@ -165,9 +166,7 @@ function apiNodeSetMonitor(global_expect, callback, user) {
 		'Accept': 'application/json',
 		'Content-Type': 'application/json'
 	}
-	if (user) {
-		headers["Authorization"] = "Bearer " + user.access_token
-	}
+	headers = addAuthorizationHeader(headers, user)
 	fetch('/node_monitor', {
 		headers: headers,
 		method: "POST",
@@ -187,9 +186,7 @@ function apiObjSetMonitor(path, global_expect, callback, user) {
 		'Accept': 'application/json',
 		'Content-Type': 'application/json'
 	}
-	if (user) {
-		headers["Authorization"] = "Bearer " + user.access_token
-	}
+	headers = addAuthorizationHeader(headers, user)
 	fetch('/object_monitor', {
 		headers: headers,
 		method: "POST",
@@ -211,9 +208,7 @@ function apiObjGetConfig(options, callback, user) {
 		'Content-Type': 'application/json',
 		'o-node': 'ANY'
 	}
-	if (user) {
-		headers["Authorization"] = "Bearer " + user.access_token
-	}
+	headers = addAuthorizationHeader(headers, user)
 	var request = {
 		"headers": headers,
 		"method": "GET",
@@ -240,9 +235,7 @@ function apiReq(method, node, path, options, callback, user) {
 		'Content-Type': 'application/json',
 		'o-node': node,
 	}
-	if (user) {
-		headers["Authorization"] = "Bearer " + user.access_token
-	}
+	headers = addAuthorizationHeader(headers, user)
 	var request = {
 		"headers": headers,
 		"method": method,
@@ -299,9 +292,7 @@ function apiFetchLogs(path, options, callback, user) {
 		'Content-Type': 'application/json',
 		'o-node': '*'
 	}
-	if (user) {
-		headers["Authorization"] = "Bearer " + user.access_token
-	}
+	headers = addAuthorizationHeader(headers, user)
 	var request = {
 		"headers": headers,
 		"method": "GET",
@@ -328,9 +319,7 @@ function apiObjCreate(data, callback, user) {
 		'Content-Type': 'application/json',
 		'o-node': 'ANY'
 	}
-	if (user) {
-		headers["Authorization"] = "Bearer " + user.access_token
-	}
+	headers = addAuthorizationHeader(headers, user)
 	fetch('/create', {
 		headers: headers,
 		method: "POST",
@@ -347,6 +336,7 @@ function apiObjCreate(data, callback, user) {
 
 export {
 	addQueryData,
+	addAuthorizationHeader,
 	parseApiResponse,
 	apiWhoAmI,
 	apiNodeAction,

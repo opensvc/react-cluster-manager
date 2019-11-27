@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "../hooks/User.jsx"
 import { apiPostAny } from "../api.js"
 import { splitPath } from "../utils.js"
 
@@ -32,7 +32,7 @@ function ObjKeyAdd(props) {
 	if (["cfg", "sec", "usr"].indexOf(sp.kind) < 0) {
 		return null
 	}
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const [open, setOpen] = React.useState(false)
 	const source = {
 		"INPUT": "User Input",
@@ -60,7 +60,7 @@ function ObjKeyAdd(props) {
 			apiPostAny("/key", {path: path, key: keyName, data: inputValue}, (data) => {
 				// reload config custom hook
 				console.log(data)
-			}, oidcUser)
+			}, auth)
 		}
 		handleClose(e)
 	}

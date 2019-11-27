@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "../hooks/User.jsx"
 import { useStateValue } from '../state.js';
 import { apiNodeSetMonitor } from "../api.js";
 import { confirmations } from "../confirmations.js";
@@ -10,7 +10,7 @@ import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled"
 import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
 
 function ClusterActions(props) {
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const [{cstat}, dispatch] = useStateValue()
 	const { dispatchAlerts } = useApiResponse()
 	if (cstat.monitor === undefined) {
@@ -21,7 +21,7 @@ function ClusterActions(props) {
 		apiNodeSetMonitor(
 			props.value,
 			(data) => dispatchAlerts({data: data}),
-			oidcUser
+			auth
 		)
 	}
 

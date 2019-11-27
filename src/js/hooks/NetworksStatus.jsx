@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "./User.jsx"
 import { apiGetAny } from "../api.js";
 
 function useNetworksStatus() {
 	const [data, setData] = useState(null)
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 
 	function getData() {
 		if (data !== null) {
@@ -12,7 +12,7 @@ function useNetworksStatus() {
 		}
 		apiGetAny("/networks", {}, (data) => {
 			setData(data)
-                }, oidcUser)
+                }, auth)
 	}
 
 	useEffect(() => {

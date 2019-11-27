@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "../hooks/User.jsx"
 import { useTranslation } from 'react-i18next'
 import { useStateValue } from "../state.js"
 import { apiNodeAction } from "../api.js"
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 
 function NodeLabelAdd(props) {
 	const {node} = props
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const [open, setOpen] = useState(false)
 	const [key, setKey] = useState(props.key ? props.key : "")
 	const [val, setVal] = useState(props.val ? props.val : "")
@@ -54,7 +54,7 @@ function NodeLabelAdd(props) {
 		}
 		var _kw = "labels."+key+"="+val
 		kw.push(_kw)
-		apiNodeAction(node, "set", {kw: kw}, (data) => dispatch({data: data}), oidcUser)
+		apiNodeAction(node, "set", {kw: kw}, (data) => dispatch({data: data}), auth)
 		setKey("")
 		setVal("")
 		handleClose(e)

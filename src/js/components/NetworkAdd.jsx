@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "../hooks/User.jsx"
 import { apiInstanceAction } from "../api.js"
 import { useKeywords } from "../hooks/Keywords.jsx"
 import { SectionForm } from "./SectionForm.jsx"
@@ -21,7 +21,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 function NetworkAdd(props) {
 	const {path} = props
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const [open, setOpen] = React.useState(false)
 	const [data, setData] = useState({})
 	const kws = useKeywords("ccfg")
@@ -55,7 +55,7 @@ function NetworkAdd(props) {
 			kw.push(_kw)
 		}
 		console.log("SUBMIT", data.sectionName, data.type, data, "=>", kw)
-		apiInstanceAction("ANY", "cluster", "set", {kw: kw}, (data) => dispatchAlerts({data: data}), oidcUser)
+		apiInstanceAction("ANY", "cluster", "set", {kw: kw}, (data) => dispatchAlerts({data: data}), auth)
 		handleClose(e)
 	}
 	return (

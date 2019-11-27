@@ -1,5 +1,5 @@
 import React from "react";
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "../hooks/User.jsx"
 import { useStateValue } from '../state.js';
 import { splitPath } from '../utils.js';
 import { confirmations } from '../confirmations.js';
@@ -21,7 +21,7 @@ import ReplayIcon from "@material-ui/icons/Replay"
 import SkipNextIcon from "@material-ui/icons/SkipNext"
 
 function ObjInstanceResourceActions(props) {
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const [{cstat}, dispatch] = useStateValue()
 	const { dispatchAlerts } = useApiResponse()
 	const sp = splitPath(props.path)
@@ -36,7 +36,7 @@ function ObjInstanceResourceActions(props) {
 				"rid": rids.join(",")
 			},
 			(data) => dispatchAlerts({data: data}),
-			oidcUser
+			auth
 		)
 	}
 	function disable_enable() {

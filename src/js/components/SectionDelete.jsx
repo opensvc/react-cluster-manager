@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "../hooks/User.jsx"
 import { useTranslation } from 'react-i18next';
 import { useStateValue } from '../state.js';
 import { splitPath, createDataHasPathKey } from '../utils.js';
@@ -25,7 +25,7 @@ function SectionDelete(props) {
                 return null
         }
 
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const [open, setOpen] = useState(false)
 	const { t, i18n } = useTranslation()
 	const [{}, dispatch] = useStateValue()
@@ -44,7 +44,7 @@ function SectionDelete(props) {
                 apiInstanceAction("ANY", path, "delete", _data, ($) => dispatchAlerts({
                         ok: ok,
                         data: $
-                }), oidcUser)
+                }), auth)
 		handleClose()
 	}
 

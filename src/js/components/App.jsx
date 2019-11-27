@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import ReactDOM from "react-dom";
 import { useReactOidc } from "@axa-fr/react-oidc-context"
 import { useTranslation } from "react-i18next"
@@ -17,6 +17,7 @@ import Authenticating from "./Authenticating.jsx"
 import oidcConfiguration from "../OidcConfiguration.js"
 import Main from "./Main.jsx";
 import LoginCallback from "./LoginCallback.jsx";
+import Login from "./Login.jsx";
 import { AuthenticationProvider, oidcLog, OidcSecure } from '@axa-fr/react-oidc-context';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -141,6 +142,7 @@ const AppStateProvider = (props) => {
 		authChoice: localStorage.getItem("opensvc.authChoice"),
 		cstat: {},
 		user: {},
+		basicLogin: {},
 		alerts: [],      // ex: [{level: "warning", body: (<div>foo</div>)}],
 	}
 
@@ -150,6 +152,12 @@ const AppStateProvider = (props) => {
 				return {
 					...state,
 					user: action.data
+				}
+
+			case 'setBasicLogin':
+				return {
+					...state,
+					basicLogin: action.data
 				}
 
 			case 'setAuthChoice':
@@ -216,7 +224,8 @@ const AppStateProvider = (props) => {
 
 function AuthProvider(props) {
 	const authInfo = useAuthInfo()
-	const [{ authChoice, user }, dispatch] = useStateValue()
+	const history = useHistory()
+	const [{ authChoice, user, basicLogin }, dispatch] = useStateValue()
 	try {
 		const { oidcUser } = useReactOidc()
 	} catch(e) {
@@ -225,7 +234,9 @@ function AuthProvider(props) {
 	if (!authInfo) {
 		return null
 	}
-	console.log("authChoice", authChoice)
+	if ((authChoice == "basic") && (!basicLogin.username || !basicLogin.password)) {
+                return <Login />
+	}
 	if (!authChoice && !oidcUser && location.pathname != "/authentication/callback") {
 		return <AuthChoice />
 	}
@@ -237,7 +248,6 @@ function AuthProvider(props) {
 	} catch(e) {
 		var enabled = false
 	}
-	console.log("oidc enabled:", enabled)
 	return (
 		<AuthenticationProvider
 			configuration={oidcConfiguration(authInfo)}

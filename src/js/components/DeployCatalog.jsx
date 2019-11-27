@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "../hooks/User.jsx"
 import { useStateValue } from '../state.js';
 import { useCatalogs } from '../hooks/Catalogs.jsx';
 import { useCatalogTemplates } from '../hooks/CatalogTemplates.jsx';
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 function DeployCatalog(props) {
 	const {data, set} = props
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const classes = useStyles()
 	const catalogs = useCatalogs()
 	if ((catalogs.length > 0) && !data.catalog) {
@@ -43,7 +43,7 @@ function DeployCatalog(props) {
 		apiGetAny("/template", {catalog: data.catalog.name, template: template.id}, (buff) => {
 			console.log(buff)
 			set({...data, template: template, text: buff, data: toData(buff)})
-		}, oidcUser)
+		}, auth)
 	}
 	function handleCatalogChange(selected) {
 		console.log("selected catalog:", selected)

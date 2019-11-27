@@ -1,5 +1,5 @@
 import React from "react";
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "../hooks/User.jsx"
 import { useTranslation } from 'react-i18next';
 import { apiNodeAction } from "../api.js";
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
@@ -93,10 +93,10 @@ function Thread(props) {
 }
 
 function ThreadActions(props) {
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	function handleClick(e) {
 		var action = e.target.getAttribute("value")
-		apiNodeAction(props.node, action, {thread_id: props.thread_id}, oidcUser)
+		apiNodeAction(props.node, action, {thread_id: props.thread_id}, auth)
 	}
 	return (
 		<div className="dropdown">

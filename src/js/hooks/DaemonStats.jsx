@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react"
-import { useStateValue } from '../state.js'
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import { useStateValue } from "../state.js"
+import useUser from "./User.jsx"
+import { addAuthorizationHeader } from "../api.js"
 
 function useDaemonStats(props) {
 	const [{user}, dispatch] = useStateValue()
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const [ series, setSeries ]  = useState({last: null, prev: null})
 	const [ playing, setPlaying ]  = useState(true)
 	const playingRef = useRef(playing)
@@ -39,9 +40,7 @@ function useDaemonStats(props) {
 				"o-node": node,
 			}
 		}
-		if (oidcUser) {
-			options.headers.Authorization = "Bearer " + oidcUser.access_token
-		}
+		options.headers = addAuthorizationHeader(options.headers, auth)
 		try {
 			fetch('/daemon_stats', options)
 				.then(res => res.json())
@@ -86,7 +85,7 @@ function useDaemonStats(props) {
 		return () => {
 			stop()
 		}
-	}, [oidcUser ? oidcUser.access_token : null])
+	}, [auth.access_token])
 
 	return {
 		last: series.last,

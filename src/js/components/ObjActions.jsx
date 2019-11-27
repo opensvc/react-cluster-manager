@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "../hooks/User.jsx"
 import { useStateValue } from '../state.js';
 import { splitPath } from '../utils.js';
 import { apiObjSetMonitor } from "../api.js";
@@ -19,7 +19,7 @@ import ShuffleIcon from "@material-ui/icons/Shuffle"
 import LabelIcon from "@material-ui/icons/Label"
 
 function ObjActions(props) {
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const [{cstat}, dispatch] = useStateValue()
 	const { dispatchAlerts } = useApiResponse()
 	if (cstat.monitor === undefined) {
@@ -62,7 +62,7 @@ function ObjActions(props) {
 				path,
 				props.value,
 				(data) => dispatchAlerts({data: data}),
-				oidcUser
+				auth
 			)
 		}
 		var nInstancesGet = () => {
@@ -152,7 +152,7 @@ function ObjActions(props) {
 					p,
 					props.value,
 					(data) => dispatchAlerts({data: data}),
-					oidcUser
+					auth
 				)
 			}
 		}

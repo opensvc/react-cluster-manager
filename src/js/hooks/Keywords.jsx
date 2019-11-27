@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "./User.jsx"
 import { apiGetAny } from "../api.js"
 
 function useKeywords(kind) {
 	const [data, setData] = useState(null)
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 
 	function getKeywords() {
 		console.log(kind, "keywords:", data)
@@ -13,7 +13,7 @@ function useKeywords(kind) {
 		}
 		apiGetAny("/keywords", {"kind": kind}, ($) => {
 			setData($)
-		}, oidcUser)
+		}, auth)
 	}
 	useEffect(() => {
 		getKeywords()

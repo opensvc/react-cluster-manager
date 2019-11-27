@@ -1,8 +1,10 @@
 import React from "react";
+import { withOidcUser } from '@axa-fr/react-oidc-context';
 import { useHistory } from 'react-router'
 import { Switch, Route } from 'react-router-dom';
 import { useStateValue } from '../state.js';
 import Cluster from "./Cluster.jsx";
+import Login from "./Login.jsx";
 import { Threads } from "./Threads.jsx";
 import { Nodes } from "./Nodes.jsx";
 import { NodeDetails } from "./NodeDetails.jsx";
@@ -19,21 +21,11 @@ import { NetworkDetails } from "./NetworkDetails.jsx"
 import Api from "./Api.jsx"
 import Stats from "./Stats.jsx"
 import { NotFound } from "./NotFound.jsx"
-import { withOidcUser, OidcSecure } from '@axa-fr/react-oidc-context';
-
 
 function Main(props) {
 	const [{ nav }, dispatch] = useStateValue();
 	const history = useHistory()
-	const objects = {
-		"Objects": null,
-		"Services": "svc",
-		"Volumes": "vol",
-		"Configs": "cfg",
-		"Secrets": "sec",
-		"Users": "usr",
-	}
-	console.log("router path:", history.location.pathname)
+	//console.log("router path:", history.location.pathname)
 
 	return (
 		<Switch>
@@ -87,9 +79,6 @@ function Main(props) {
 			</Route>
 			<Route exact path="/node">
 				<NodeDetails />
-			</Route>
-			<Route exact path="/pool">
-				<NotFound />
 			</Route>
 			<Route exact path="/object">
 				<ObjDetails />

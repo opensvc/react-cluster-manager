@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "../hooks/User.jsx"
 import { createDataHasPathKey } from '../utils.js';
 import { Deploy } from "./Deploy.jsx"
 import { apiObjGetConfig, apiObjCreate } from "../api.js"
@@ -16,7 +16,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton'
 
 function DeployButton(props) {
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const [open, setOpen] = useState(false)
         const [data, setData] = useState({
 		active: 0,
@@ -70,7 +70,7 @@ function DeployButton(props) {
                 apiObjCreate(_data, ($) => dispatchAlerts({
                         ok: "Object " + path + " created",
                         data: $
-                }), oidcUser)
+                }), auth)
         }
         function createClone() {
                 var path = [data.clone.namespace, "svc", data.clone.name].join("/")
@@ -89,7 +89,7 @@ function DeployButton(props) {
                                 ok: "Object " + path + " cloned",
                                 data: $
                         }))
-                }, oidcUser)
+                }, auth)
         }
         function createTemplate() {
                 if (createDataHasPathKey()) {
@@ -118,7 +118,7 @@ function DeployButton(props) {
                 apiObjCreate(_data, ($) => dispatchAlerts({
                         ok: ok,
                         data: $,
-                }), oidcUser)
+                }), auth)
         }
         function createCatalog() {
                 if (createDataHasPathKey()) {
@@ -149,7 +149,7 @@ function DeployButton(props) {
                 apiObjCreate(_data, ($) => dispatchAlerts({
                         ok: ok,
                         data: $
-                }), oidcUser)
+                }), auth)
         }
         function handleSubmit(e) {
 		if (data.active == 0) {

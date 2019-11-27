@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useHistory, useLocation } from "react-router"
 import { SectionForm } from "./SectionForm.jsx"
 import { addQueryData, apiReq } from "../api.js"
-import { useReactOidc } from "@axa-fr/react-oidc-context"
+import useUser from "../hooks/User.jsx"
 
 import { makeStyles } from "@material-ui/core/styles"
 import Card from "@material-ui/core/Card"
@@ -84,7 +84,7 @@ function Api(props) {
 
 function ApiHandler(props) {
 	const {data, index} = props
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const classes = useStyles()
 	const [node, setNode] = useState({"node": "ANY"})
 	const [formData, setFormData] = useState({})
@@ -93,7 +93,7 @@ function ApiHandler(props) {
 	function handleSubmit(e) {
 		apiReq(data.routes[0].method, node.node, data.routes[0].path, formData, (_) => {
 			setFormResult(_)
-		}, oidcUser)
+		}, auth)
 	}
 
 	return (
@@ -141,7 +141,7 @@ function ApiHandler(props) {
 
 function ApiHandlerExample(props) {
 	const { t, i18n } = useTranslation()
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const classes = useStyles()
 	const { data, formData, node } = props
 	var buff = "curl -s --http2 -X " + data.routes[0].method
@@ -153,8 +153,10 @@ function ApiHandlerExample(props) {
 	} else {
 		buff += " -H 'Content-Type: application/json'"
 	}
-        if (oidcUser && oidcUser.access_token) {
+        if (auth && auth.access_token) {
 		buff += " -H 'Authorization: Bearer <token>'"
+        } else if (auth && auth.username) {
+		buff += " -u " + auth.username
 	} else {
 		buff += " --cert-type P12 -E <p12file>:<pass>"
 	}

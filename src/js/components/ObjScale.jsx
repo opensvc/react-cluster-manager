@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useReactOidc } from '@axa-fr/react-oidc-context'
+import useUser from "../hooks/User.jsx"
 import { apiInstanceAction } from "../api.js"
 import { useStateValue } from '../state.js';
 import useApiResponse from "../hooks/ApiResponse.jsx"
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 
 function ObjScale(props) {
         const {path} = props
-	const { oidcUser } = useReactOidc()
+	const { auth } = useUser()
 	const [{ cstat }, dispatch] = useStateValue()
 	const { dispatchAlerts } = useApiResponse()
 
@@ -64,7 +64,7 @@ function ObjScale(props) {
 			"scale",
 			{"to": scale},
 			(data) => dispatchAlerts({data: data}),
-			oidcUser
+			auth
 		)
 		handleClose()
 	}
