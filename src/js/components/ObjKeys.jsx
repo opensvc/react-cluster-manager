@@ -45,7 +45,7 @@ function ObjKeys(props) {
 	}
 	var confData = parseIni(conf.data)
 	if (confData.data === undefined) {
-		return (<div>"This configuration hosts no key yet."</div>)
+		confData.data = {}
 	}
 	var rowCount = Object.keys(confData.data).length
 	function handleSelectAllClick(event) {

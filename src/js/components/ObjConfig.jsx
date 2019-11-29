@@ -129,7 +129,7 @@ function ObjConfigFile(props) {
                 var content = (
                         <Fragment>
                                 <Typography variant="caption" color="textSecondary">Last Modified {date.toLocaleString()}</Typography>
-                                <pre style={{overflowX: "scroll"}}>{data.data}</pre>
+                                <pre style={{overflowX: "auto"}}>{data.data}</pre>
                         </Fragment>
                 )
         }

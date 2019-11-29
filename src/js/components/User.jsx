@@ -83,12 +83,15 @@ function UserAuthMethod(props) {
 	const { user } = props
 	const { i18n, t } = useTranslation()
 	const classes = useStyles()
+	if (!user.auth) {
+		return t("Not authenticated")
+	}
 	return (
 		<Fragment>
 			{t("Authenticated via")}
 			&nbsp;
 			<Link href={"#"+user.auth}>
-				{user.auth ? user.auth : <Skeleton width="5rem" className={classes.inline} />}
+				{user.auth}
 			</Link>
 			.
 		</Fragment>
@@ -114,9 +117,9 @@ function OidcProvider(props) {
 		return <Skeleton />
 	}
 	if (authInfo.openid === undefined) {
-		return "n/a"
+		return null
 	}
-	if (!oidcUser || (authInfo.openid === undefined)) {
+	if (!oidcUser) {
 		return null
 	}
 	return (
@@ -173,6 +176,9 @@ function UserGrants(props) {
 		return <Skeleton variant="rect" width="100%" height="8rem" />
 	}
 	var data = parseGrant(user.grant)
+	if (!data.length) {
+		return null
+	}
 	return (
 		<Card className={classes.root}>
 			<CardHeader
