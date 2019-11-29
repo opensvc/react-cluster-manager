@@ -86,7 +86,7 @@ function ApiHandler(props) {
 	const {data, index} = props
 	const { auth } = useUser()
 	const classes = useStyles()
-	const [node, setNode] = useState({"node": "ANY"})
+	const [node, setNode] = useState({"node": ""})
 	const [formData, setFormData] = useState({})
 	const [formResult, setFormResult] = useState("")
 
@@ -145,7 +145,7 @@ function ApiHandlerExample(props) {
 	const classes = useStyles()
 	const { data, formData, node } = props
 	var buff = "curl -s --http2 -X " + data.routes[0].method
-	if (node) {
+	if (node && node.node) {
 		buff += " -H 'o-node: " + node.node + "'"
 	}
 	if (data.stream) {
@@ -254,7 +254,7 @@ function ApiHandlerRouting(props) {
 	var kws = [
 		{
 			"keyword": "node",
-			"default": "ANY",
+			"default": "",
 			"convert": "node_selector",
 			"text": "Route request to nodes",
 		}
