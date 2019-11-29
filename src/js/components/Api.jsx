@@ -125,7 +125,6 @@ function ApiHandler(props) {
 					formData={formData}
 					node={node}
 				/>
-				<FormResult data={formResult} />
                         </CardContent>
 			<CardActions>
 				<Button
@@ -136,6 +135,11 @@ function ApiHandler(props) {
 					{data.routes[0].method}
 				</Button>
 			</CardActions>
+			{formResult &&
+                        <CardContent>
+				<FormResult data={formResult} />
+                        </CardContent>
+			}
 		</Card>
 	)
 }
