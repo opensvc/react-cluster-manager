@@ -91,6 +91,7 @@ function ApiHandler(props) {
 	const [formResult, setFormResult] = useState("")
 
 	function handleSubmit(e) {
+		setFormResult("")
 		apiReq(data.routes[0].method, node.node, data.routes[0].path, formData, (_) => {
 			setFormResult(_)
 		}, auth)
