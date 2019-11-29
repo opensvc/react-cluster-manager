@@ -34,7 +34,11 @@ function Login(props) {
 			data: {"username": username, "password": password},
 		})
 	}
-
+	function handleEnterKeyDown(e){
+		if(e.keyCode == 13) {
+			handleSubmit(e)
+		}
+	}
 	function handleChangeMethod(e) {
 		dispatch({type: "setAuthChoice", data: ""})
 	}
@@ -51,6 +55,7 @@ function Login(props) {
 				<FormControl className={classes.control} fullWidth>
 					<TextField
 						placeholder={t("Username")}
+						autoFocus={true}
 						onChange={(e) => setUsername(e.target.value)}
 					/>
 				</FormControl>
@@ -60,6 +65,7 @@ function Login(props) {
 						type="password"
 						placeholder={t("password")}
 						onChange={(e) => setPassword(e.target.value)}
+						onKeyDown={handleEnterKeyDown}
 					/>
 				</FormControl>
                         </DialogContent>
