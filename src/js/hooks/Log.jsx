@@ -30,6 +30,9 @@ function useLog(url) {
 		let _url = url + "/logs"
 		console.log("init", _url, "logs event source")
 		var eventSourceInitDict = {headers: {}}
+		if (/^\/object\//, url) {
+			eventSourceInitDict.headers["o-node"] = "*"
+		}
 		eventSourceInitDict.headers = addAuthorizationHeader(eventSourceInitDict.headers, auth)
 		var _es = new EventSource(_url, eventSourceInitDict)
 		_es.onmessage = (e) => {

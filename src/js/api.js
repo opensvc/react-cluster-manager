@@ -307,7 +307,7 @@ function apiFetchLogs(path, options, callback, user) {
                 for (var node in data.nodes) {
                         _data = _data.concat(data.nodes[node])
                 }
-		_data.sort()
+		_data.sort((a, b) => a.t - b.t)
                 if (callback) { callback(_data) }
         })
         .catch(console.log)
