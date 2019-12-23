@@ -199,6 +199,16 @@ function getBool(val){
 	return !isNaN(num) ? !!num : !!String(val).toLowerCase().replace(!!0,'');
 }
 
+function TSH(s) {
+	for(var i=0,h=9;i<s.length;)h=Math.imul(h^s.charCodeAt(i++),9**9)
+	return h^h>>>9
+}
+
+function stringToHslColor(str, s, l) {
+	var h = TSH(str) % 360;
+	return 'hsl('+h+', '+s+'%, '+l+'%)'
+}
+
 export {
 	state,
 	mergeStates,
@@ -210,4 +220,5 @@ export {
 	namespaceValid,
 	createDataHasPathKey,
 	getBool,
+	stringToHslColor,
 }
