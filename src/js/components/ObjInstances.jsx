@@ -7,6 +7,7 @@ import { fmtPath, splitPath } from "../utils.js";
 import { ObjInstanceState } from "./ObjInstanceState.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
+import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -111,7 +112,7 @@ function ObjInstances(props) {
                 <Card className={classes.card}>
                         <CardHeader
                                 title={t("Instances")}
-				subheader={props.path}
+				subheader=<ObjInstanceCounts path={props.path} />
 				action={
 					<TableToolbar selected={selected}>
 						{(selected.length > 0) && <ObjInstanceActions selected={selected} title="" />}

@@ -3,7 +3,6 @@ import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useHistory } from 'react-router';
 import { ObjStateList } from "./ObjStateList.jsx";
-import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjScale } from "./ObjScale.jsx";
 
@@ -65,7 +64,6 @@ function ObjDigest(props) {
 				}
 			/>
 			<CardContent>
-				<ObjInstanceCounts path={path} />&nbsp;{t("instances")}
 				<ObjStateList path={path} />
 			</CardContent>
 		</Card>
