@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useStateValue } from '../state.js'
 import { useReactOidc } from '@axa-fr/react-oidc-context'
-import { apiWhoAmI } from "../api.js";
+import { addAuthorizationHeader } from "../api.js";
+
+const context = {}
 
 function useUser(props) {
 	const [{user, basicLogin}, dispatch] = useStateValue()
@@ -12,16 +14,8 @@ function useUser(props) {
 		"username": basicLogin.username,
 		"password": basicLogin.password,
 	}
-        function loadUser() {
-                apiWhoAmI(data => {
-                        console.log("I am", data)
-                        dispatch({
-                                type: "loadUser",
-                                data: data
-                        })
-                }, auth)
-        }
 	function unloadUser() {
+		context = {}
 		dispatch({
 			type: "loadUser",
 			data: null,
@@ -29,13 +23,43 @@ function useUser(props) {
 	}
 
 	useEffect(() => {
-		loadUser()
-	}, [auth.access_token, auth.username])
+		async function fetchData() {
+			if (context.isLoading) {
+				return
+			}
+			if (context.auth && (context.auth.access_token == auth.access_token) && (context.auth.username == auth.username)) {
+				return
+			}
+			context.isLoading = true
+			context.auth = auth
+			var headers = {
+				"Accept": "application/json",
+				"Content-Type": "application/json",
+			}
+			headers = addAuthorizationHeader(headers, auth)
+			try {
+				const fetcher = await fetch("/whoami", {
+					headers: headers,
+					method: "GET",
+				})
+				const data = await fetcher.json()
+				console.log("I am", data)
+				dispatch({
+					type: "loadUser",
+					data: data,
+				})
+			} catch (error) {
+				context = {}
+			} finally {
+				context.isLoading = false
+			}
+		}
+		fetchData()
+	})
 
 	return {
 		user: user,
 		auth: auth,
-		loadUser: loadUser,
 		unloadUser: unloadUser,
 	}
 }

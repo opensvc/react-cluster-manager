@@ -94,23 +94,6 @@ function addAuthorizationHeader(headers, user) {
 //
 // API calls
 //
-function apiWhoAmI(callback, user) {
-	var headers = {
-		'Accept': 'application/json',
-		'Content-Type': 'application/json',
-	}
-	headers = addAuthorizationHeader(headers, user)
-	fetch('/whoami', {
-		headers: headers,
-		method: "GET",
-	})
-	.then(res => res.json())
-	.then(data => {
-		if (callback) { callback(data) }
-	})
-	.catch(console.log)
-}
-
 function apiNodeAction(node, action, options, callback, user) {
 	var headers = {
 		'Accept': 'application/json',
@@ -338,7 +321,6 @@ export {
 	addQueryData,
 	addAuthorizationHeader,
 	parseApiResponse,
-	apiWhoAmI,
 	apiNodeAction,
 	apiInstanceAction,
 	apiNodeSetMonitor,

@@ -5,114 +5,115 @@ import { useStateValue } from '../state.js'
 import useUser from "./User.jsx"
 import { addAuthorizationHeader } from "../api.js"
 
+const context = {
+	eventSource: null,
+	timer: null,
+	evtimer: null,
+	cstat: null,
+	lastReload: 0,
+	lastPatchId: 0,
+}
+
 function useClusterStatus(props) {
 	const [{cstat, user}, dispatch] = useStateValue()
 	const { auth } = useUser()
 	const lastDispatch = useRef(Date.now())
 	const limit = 500
 
-	var timer = null
-	var evtimer = null
-	var eventSource = null
-	var lastReload = 0
-	var lastPatchId = 0
-	var cstatRef = React.createRef()
-
 	function stopEventSource() {
-		if (eventSource === null) {
+		if (context.eventSource === null) {
 			return
 		}
-		clearTimeout(timer)
-		clearTimeout(evtimer)
-		eventSource.close()
-		eventSource = null
+		clearTimeout(context.timer)
+		clearTimeout(context.evtimer)
+		context.eventSource.close()
+		context.eventSource = null
 	}
 
 	function initEventSource() {
-		if (eventSource !== null) {
+		if (context.eventSource !== null) {
 			return
 		}
-		console.log("initEventSource")
+		console.log("initEventSource", context)
 		var eventSourceInitDict = {headers: {}}
 		eventSourceInitDict.headers = addAuthorizationHeader(eventSourceInitDict.headers, auth)
-		eventSource = new EventSource("/events", eventSourceInitDict)
-		eventSource.onmessage = (e) => {
+		context.eventSource = new EventSource("/events", eventSourceInitDict)
+		context.eventSource.onmessage = (e) => {
 			handleEvent(e)
 		}
-		//eventSource.onerror = () => {
+		//context.eventSource.onerror = () => {
 		//      stopEventSource()
 		//}
-		//eventSource.addEventListener("closedConnection", (e) => {
+		//context.eventSource.addEventListener("closedConnection", (e) => {
 		//      stopEventSource()
 		//})
 	}
 
 	function handleEvent(e) {
-		if (!cstatRef.current) {
-			console.log("initial cluster status fetch")
-			loadCstat()
-			return
-		}
 		var data = JSON.parse(e.data)
 		console.log("event", e.data)
 		if (data.kind != "patch") {
 			return
 		}
 		try {
-			if (lastPatchId && (lastPatchId+1 != data.id)) {
+			if (context.lastPatchId && (context.lastPatchId+1 != data.id)) {
 				console.log("broken patch chain")
 				loadCstat()
-				lastPatchId = data.id
+				context.lastPatchId = data.id
 				return
 			}
-			cstatRef.current = JSON_delta.patch(cstatRef.current, data.data)
-			evtimer = setTimeout(function() {
+			context.cstat = JSON_delta.patch(context.cstat, data.data)
+			context.evtimer = setTimeout(function() {
 				if (Date.now() - lastDispatch.current >= limit) {
 					dispatch({
 						"type": "loadCstat",
-						"data": cstatRef.current
+						"data": context.cstat
 					})
 					lastDispatch.current = Date.now()
 				}
 			}, limit - (Date.now() - lastDispatch.current))
 
-			lastPatchId = data.id
+			context.lastPatchId = data.id
 			console.log("patched cluster status, id", data.id)
 		} catch(e) {
 			console.log("error patching cstat:", e)
 			loadCstat()
-			lastPatchId = data.id
+			context.lastPatchId = data.id
 		}
 	}
 
-	function loadCstat(last) {
+	async function loadCstat() {
 		const now = + new Date()
-		if (last && (lastReload > last)) {
+		if (context.isLoading) {
 			//console.log("already reloaded by another event ... drop")
 			return
 		}
-		if ((now - lastReload) < 1000) {
-			//console.log("last reload too fresh ... delay")
-			timer = setTimeout(loadCstat, 1000)
+		if ((now - context.lastReload) < 1000) {
+			console.log("last reload too fresh ... delay", context.lastReload, now, now - context.lastReload)
+			context.timer = setTimeout(loadCstat, 1000)
 			return
 		}
-		lastReload = now
+		context.isLoading = true
+		context.lastReload = now
 		var headers = {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json',
 		}
 		headers = addAuthorizationHeader(headers, auth)
-		fetch('/daemon_status', {headers: headers})
-			.then(res => res.json())
-			.then((data) => {
-				console.log(data)
-				cstatRef.current = data
-				dispatch({
-					"type": "loadCstat",
-					"data": data
-				})
+		try {
+			const fetcher = await fetch('/daemon_status', {headers: headers})
+			const data = await fetcher.json()
+			console.log(data)
+			context.cstat = data
+			dispatch({
+				"type": "loadCstat",
+				"data": data
 			})
-			.catch(console.log)
+		} catch(e) {
+			console.log("loadCstat:", e)
+		} finally {
+			context.isLoading = false
+		}
 	}
 
 	function reset() {
@@ -122,7 +123,7 @@ function useClusterStatus(props) {
 	}
 
 	function init() {
-		if (cstat.monitor === undefined) {
+		if (!context.cstat) {
 			loadCstat()
 		}
 		initEventSource()
@@ -130,9 +131,6 @@ function useClusterStatus(props) {
 
 	useEffect(() => {
 		init()
-		return () => {
-			stopEventSource()
-		}
 	}, [])
 
 	return {cstat: cstat, reset: reset, init: init}
