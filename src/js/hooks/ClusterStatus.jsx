@@ -12,6 +12,7 @@ const context = {
 	cstat: null,
 	lastReload: 0,
 	lastPatchId: 0,
+	auth: null,
 }
 
 function useClusterStatus(props) {
@@ -122,6 +123,14 @@ function useClusterStatus(props) {
 		initEventSource()
 	}
 
+	function close() {
+		stopEventSource()
+		dispatch({
+			"type": "loadCstat",
+			"data": {}
+		})
+	}
+
 	function init() {
 		if (!context.cstat) {
 			loadCstat()
@@ -130,10 +139,15 @@ function useClusterStatus(props) {
 	}
 
 	useEffect(() => {
-		init()
+		if (!context.auth || (context.auth.access_token == auth.access_token) && (context.auth.username == auth.username)) {
+			init()
+		} else {
+			reset()
+		}
+		context.auth = auth
 	}, [])
 
-	return {cstat: cstat, reset: reset, init: init}
+	return {cstat: cstat, reset: reset, init: init, close: close}
 }
 
 export default useClusterStatus

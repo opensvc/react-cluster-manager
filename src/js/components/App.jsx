@@ -240,7 +240,7 @@ function AuthProvider(props) {
 	if (!authChoice && !oidcUser && location.pathname != "/authentication/callback") {
 		return <AuthChoice />
 	}
-	if (!oidcUser && location.pathname != "/authentication/callback" && user.status == 401) {
+	if (!oidcUser && location.pathname != "/authentication/callback" && user && user.status == 401) {
 		return <NotAuthorized />
 	}
 	try {

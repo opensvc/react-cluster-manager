@@ -82,11 +82,14 @@ function parseApiResponse(data, ok) {
 	return alerts
 }
 
-function addAuthorizationHeader(headers, user) {
-	if (user.password) {
-		headers['Authorization'] = "Basic " + Buffer.from(user.username + ":" + user.password).toString('base64')
-	} else if (user) {
-		headers["Authorization"] = "Bearer " + user.access_token
+function addAuthorizationHeader(headers, auth) {
+	if (!auth || !auth.authChoice) {
+		return headers
+	}
+	if (auth.authChoice == "basic") {
+		headers['Authorization'] = "Basic " + Buffer.from(auth.username + ":" + auth.password).toString('base64')
+	} else if (auth.authChoice == "openid") {
+		headers["Authorization"] = "Bearer " + auth.access_token
 	}
 	return headers
 }

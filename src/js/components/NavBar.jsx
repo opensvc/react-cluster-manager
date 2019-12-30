@@ -242,7 +242,7 @@ function UserLink(props) {
 	const { user } = useUser()
 	const history = useHistory()
 	const authInfo = useAuthInfo()
-	if (!authInfo) {
+	if (!authInfo || !user) {
 		return null
 	}
 	function handleClick(e) {

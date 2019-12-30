@@ -6,19 +6,22 @@ import { addAuthorizationHeader } from "../api.js";
 const context = {}
 
 function useUser(props) {
-	const [{user, basicLogin}, dispatch] = useStateValue()
+	const [{user, basicLogin, authChoice}, dispatch] = useStateValue()
 	const { oidcUser } = useReactOidc()
 
 	var auth = {
 		"access_token": oidcUser ? oidcUser.access_token : null,
 		"username": basicLogin.username,
 		"password": basicLogin.password,
+		"authChoice": authChoice,
 	}
 	function unloadUser() {
-		context = {}
+		context.isLoading = false
+		context.auth = null
+		context.error = null
 		dispatch({
 			type: "loadUser",
-			data: null,
+			data: {},
 		})
 	}
 
@@ -49,7 +52,8 @@ function useUser(props) {
 					data: data,
 				})
 			} catch (error) {
-				context = {}
+				context.auth = null
+				context.error = error
 			} finally {
 				context.isLoading = false
 			}

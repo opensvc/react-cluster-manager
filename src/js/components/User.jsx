@@ -1,6 +1,8 @@
 import React, { Fragment } from "react"
 import { useReactOidc } from "@axa-fr/react-oidc-context"
 import useAuthInfo from "../hooks/AuthInfo.jsx"
+import useClusterStatus from "../hooks/ClusterStatus.jsx"
+import useUser from "../hooks/User.jsx"
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
@@ -46,12 +48,17 @@ function User(props) {
 function UserDigest(props) {
 	const { oidcUser, logout } = useReactOidc()
 	const { i18n, t } = useTranslation()
+	const { close } = useClusterStatus()
+	const { unloadUser } = useUser()
 	const [{ user }, dispatch] = useStateValue()
 	const classes = useStyles()
+
 	function handleLogout(e) {
 		logout()
 		dispatch({type: "setAuthChoice", data: ""})
 		dispatch({type: "setBasicLogin", data: {}})
+		unloadUser()
+		close()
 	}
 	return (
 		<Card className={classes.root}>
@@ -64,7 +71,7 @@ function UserDigest(props) {
 					<UserAuthMethod user={user}/>
 				</Typography>
 				<br />
-				<Typography>
+				<Typography component="div">
 					<OidcProvider />
 				</Typography>
 			</CardContent>
