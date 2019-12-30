@@ -28,6 +28,7 @@ import Avatar from "@material-ui/core/Avatar"
 import Chip from "@material-ui/core/Chip"
 import MenuIcon from "@material-ui/icons/Menu"
 import BlockIcon from "@material-ui/icons/Block"
+import WifiOffIcon from "@material-ui/icons/WifiOff"
 
 const StyledBreadcrumb = withStyles(theme => ({
 	root: {
@@ -177,6 +178,7 @@ function NavBar(props) {
 		<Toolbar className={classes.root}>
 			<NavBarMenu />
 			<Crumbs />
+			<ConnectionAlive />
 			<Alerts />
 			<UserLink />
 		</Toolbar>
@@ -261,6 +263,17 @@ function UserLink(props) {
 		<Avatar color="inherit" href="#" onClick={handleClick}>
 			{user.name[0].toUpperCase()}
 		</Avatar>
+	)
+}
+
+function ConnectionAlive(props) {
+	const { eventSourceAlive } = useClusterStatus()
+
+	if (eventSourceAlive) {
+		return null
+	}
+	return (
+		<WifiOffIcon />
 	)
 }
 

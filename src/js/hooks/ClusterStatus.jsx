@@ -16,10 +16,14 @@ const context = {
 }
 
 function useClusterStatus(props) {
-	const [{cstat, user}, dispatch] = useStateValue()
+	const [{cstat, user, eventSourceAlive}, dispatch] = useStateValue()
 	const { auth } = useUser()
 	const lastDispatch = useRef(Date.now())
 	const limit = 500
+
+	function setEventSourceAlive(val) {
+		dispatch({type: "setEventSourceAlive", "data": val})
+	}
 
 	function stopEventSource() {
 		if (context.eventSource === null) {
@@ -39,15 +43,17 @@ function useClusterStatus(props) {
 		var eventSourceInitDict = {headers: {}}
 		eventSourceInitDict.headers = addAuthorizationHeader(eventSourceInitDict.headers, auth)
 		context.eventSource = new EventSource("/events", eventSourceInitDict)
+		setEventSourceAlive(true)
 		context.eventSource.onmessage = (e) => {
+			setEventSourceAlive(true)
 			handleEvent(e)
 		}
-		//context.eventSource.onerror = () => {
-		//      stopEventSource()
-		//}
-		//context.eventSource.addEventListener("closedConnection", (e) => {
-		//      stopEventSource()
-		//})
+		context.eventSource.onerror = (e) => {
+			setEventSourceAlive(false)
+		}
+		context.eventSource.addEventListener("closedConnection", (e) => {
+			setEventSourceAlive(false)
+		})
 	}
 
 	function handleEvent(e) {
@@ -147,7 +153,13 @@ function useClusterStatus(props) {
 		context.auth = auth
 	}, [])
 
-	return {cstat: cstat, reset: reset, init: init, close: close}
+	return {
+		cstat: cstat,
+		reset: reset,
+		init: init,
+		close: close,
+		eventSourceAlive: eventSourceAlive,
+	}
 }
 
 export default useClusterStatus

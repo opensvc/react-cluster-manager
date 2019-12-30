@@ -144,6 +144,7 @@ const AppStateProvider = (props) => {
 		user: {},
 		basicLogin: {},
 		alerts: [],      // ex: [{level: "warning", body: (<div>foo</div>)}],
+		eventSourceAlive: false,
 	}
 
 	const reducer = (state, action) => {
@@ -152,6 +153,12 @@ const AppStateProvider = (props) => {
 				return {
 					...state,
 					user: action.data
+				}
+
+			case 'setEventSourceAlive':
+				return {
+					...state,
+					eventSourceAlive: action.data
 				}
 
 			case 'setBasicLogin':
