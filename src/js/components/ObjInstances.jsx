@@ -48,8 +48,12 @@ function getInstances(path, cstat, isSlice) {
 	} else {
 		var sliceNum = null
 	}
-	for (var node in cstat.monitor.nodes) {
-		var instance = cstat.monitor.nodes[node].services.status[path]
+	for (var node of cstat.cluster.nodes) {
+		try {
+			var instance = cstat.monitor.nodes[node].services.status[path]
+		} catch(e) {
+			continue
+		}
 		if (!instance) {
 			continue
 		}
