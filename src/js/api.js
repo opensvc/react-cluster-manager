@@ -84,6 +84,20 @@ function parseApiResponse(data, ok) {
 	return alerts
 }
 
+function hasAuthorizationHeader(auth) {
+	if (!auth || !auth.authChoice) {
+		return false
+	}
+	if (auth.authChoice == "basic") {
+		return (auth.username && auth.password) ? true : false
+	} else if (auth.authChoice == "openid") {
+		return auth.access_token ? true : false
+	} else if (auth.authChoice == "x509") {
+		return true
+	}
+	return false
+}
+
 function addAuthorizationHeader(headers, auth) {
 	if (!auth || !auth.authChoice) {
 		return headers
@@ -325,6 +339,7 @@ function apiObjCreate(data, callback, user) {
 export {
 	addQueryData,
 	addAuthorizationHeader,
+	hasAuthorizationHeader,
 	parseApiResponse,
 	apiNodeAction,
 	apiInstanceAction,

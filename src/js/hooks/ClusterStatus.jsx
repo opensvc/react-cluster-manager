@@ -3,7 +3,7 @@ import EventSource from "eventsource"
 import "../json_delta.js"
 import { useStateValue } from '../state.js'
 import useUser from "./User.jsx"
-import { addAuthorizationHeader } from "../api.js"
+import { hasAuthorizationHeader, addAuthorizationHeader } from "../api.js"
 
 const context = {
 	eventSource: null,
@@ -37,6 +37,9 @@ function useClusterStatus(props) {
 
 	function initEventSource() {
 		if (context.eventSource !== null) {
+			return
+		}
+		if (!hasAuthorizationHeader(auth)) {
 			return
 		}
 		console.log("initEventSource", context)
@@ -90,6 +93,10 @@ function useClusterStatus(props) {
 	}
 
 	async function loadCstat() {
+		if (!hasAuthorizationHeader(auth)) {
+			console.log("loadCstat", false, auth)
+			return
+		}
 		const now = + new Date()
 		if (context.isLoading) {
 			//console.log("already reloaded by another event ... drop")
