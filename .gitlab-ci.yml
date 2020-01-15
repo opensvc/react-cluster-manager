@@ -26,6 +26,5 @@ test_build:
   script:
     - npm install
     - rm -rf debug
-    - [ -d dist ] && mv dist debug
     - npm config set opensvc-cluster-manager:mode production
     - npm run build
