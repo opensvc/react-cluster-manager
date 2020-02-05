@@ -38,7 +38,7 @@ function KeyDecode(props) {
 				Decode
 			</Button>
                         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                                <DialogTitle id="form-dialog-title">Add Key</DialogTitle>
+                                <DialogTitle id="form-dialog-title">{keyName}</DialogTitle>
                                 <DialogContent>
 					<KeyData path={path} keyName={keyName} />
                                 </DialogContent>
