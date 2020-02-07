@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import useUser from "./User.jsx"
 import { apiGetAny } from "../api.js";
 
-function useKeyGet(props) {
+function useKey(props) {
 	const {path, keyName} = props
 	const [data, setData] = useState(null)
 	const { auth } = useUser()
@@ -20,9 +20,14 @@ function useKeyGet(props) {
 		getData()
 	}, [])
 
-	return data
+	return [data, setData]
+}
+
+function useKeyGet(props) {
+	return useKey(props)[0]
 }
 
 export {
 	useKeyGet,
+	useKey,
 }

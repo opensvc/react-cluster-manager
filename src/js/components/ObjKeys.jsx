@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,7 @@ import { useObjConfig } from "../hooks/ObjConfig.jsx";
 import { TableToolbar } from "./TableToolbar.jsx"
 import { ObjKeyActions } from "./ObjKeyActions.jsx"
 import { KeyDecode } from "./KeyDecode.jsx"
+import { KeyEdit } from "./KeyEdit.jsx"
 import { ObjKeyAdd } from "./ObjKeyAdd.jsx"
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -120,9 +121,20 @@ function ObjKey(props) {
 	const {index, path, keyName, keyValue, selected, setSelected} = props
 	var i = keyValue.indexOf(":")
 	var valueType = keyValue.slice(0, i)
-	var value = keyValue.slice(i+1)
-	if (valueType != "literal") {
-		var value = ( <KeyDecode path={path} keyName={keyName} /> )
+	if (valueType == "literal") {
+		var value = (
+			<Fragment>
+				keyValue.slice(i+1)
+				<KeyEdit path={path} keyName={keyName} />
+			</Fragment>
+		)
+	} else {
+		var value = (
+			<Fragment>
+				<KeyDecode path={path} keyName={keyName} />
+				<KeyEdit path={path} keyName={keyName} />
+			</Fragment>
+		)
 	}
         function handleClick(event) {
                 event.stopPropagation()
