@@ -1,6 +1,7 @@
 import React from "react";
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import useUser from "../hooks/User.jsx"
+import { apiGetAny } from "../api.js";
 import { useTranslation } from 'react-i18next';
 import { splitPath } from '../utils.js';
 import { ObjAvail } from "./ObjAvail.jsx";
@@ -12,6 +13,7 @@ import { useColorStyles } from '../styles.js'
 
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -26,6 +28,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import FilterListIcon from '@material-ui/icons/FilterList';
+import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';
 
 const useStyles = makeStyles(theme => ({
         tableWrapper: {
@@ -40,7 +43,29 @@ const useStyles = makeStyles(theme => ({
 	content: {
 		margin: -theme.spacing(2),
 	},
+	grow: {
+		flexGrow: "1",
+	}
 }))
+
+function ObjInstanceResourceEnter(props) {
+	const { path, rid } = props
+	if (!rid.match(/^container#/)) {
+		return null
+	}
+	function handleClick(e) {
+		apiGetAny("/object_enter", {path: path, rid: rid}, ($) => {
+			window.open($.data.url, "_blank")
+		})
+	}
+	return (
+		<IconButton
+			onClick={handleClick}
+		>
+			<OpenInBrowserIcon />
+		</IconButton>
+	)
+}
 
 function ObjInstanceResources(props) {
 	//
@@ -162,9 +187,16 @@ function ObjInstanceResourceLine(props) {
                                 />
                         </TableCell>
 			<TableCell>
-				<Typography component="div" noWrap className={classes.iconText}>
-					{rid}
-				</Typography>
+				<Grid container direction="row" alignItems="center">
+					<Grid item className={classes.grow}>
+						<Typography component="div" noWrap className={classes.iconText}>
+							{rid}
+						</Typography>
+					</Grid>
+					<Grid item>
+						<ObjInstanceResourceEnter path={path} rid={rid} />
+					</Grid>
+				</Grid>
 			</TableCell>
 			<TableCell><ObjAvail avail={rdata.status} /></TableCell>
 			<TableCell><ObjInstanceResourceFlags rid={rid} data={rdata} idata={idata} /></TableCell>
