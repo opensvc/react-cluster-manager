@@ -50,13 +50,14 @@ const useStyles = makeStyles(theme => ({
 
 function ObjInstanceResourceEnter(props) {
 	const { path, rid } = props
+	const { auth } = useUser()
 	if (!rid.match(/^container#/)) {
 		return null
 	}
 	function handleClick(e) {
 		apiGetAny("/object_enter", {path: path, rid: rid}, ($) => {
 			window.open($.data.url, "_blank")
-		})
+		}, auth)
 	}
 	return (
 		<IconButton
