@@ -70,7 +70,7 @@ function Login(props) {
 				</FormControl>
                         </DialogContent>
                         <DialogActions>
-                                <Button onClick={handleSubmit}>
+                                <Button onClick={handleSubmit} disabled={!username || !password} color="primary">
                                         {t("Submit")}
                                 </Button>
                                 <Button onClick={handleChangeMethod}>
