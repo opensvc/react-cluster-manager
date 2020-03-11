@@ -78,7 +78,7 @@ function ConfirmationDialog(props) {
 	}
 	function handleCancel(e, m) {
 		props.handleClose()
-		setData({...data, acks: [], action: null})
+		setData({...data, acks: [], confirmations: [], action: null})
 	}
 	function handleOk(e, m) {
 		props.submit({value: data.action})
