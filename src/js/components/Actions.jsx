@@ -55,6 +55,9 @@ function ConfirmationDialog(props) {
 	})
 
 	function submitDisabled() {
+		if (!data.action) {
+			return true
+		}
 		if (!data.confirmations) {
 			return false
 		} else if (!data.confirmations.length) {
@@ -213,6 +216,9 @@ function ActionsItem(props) {
 	}
 	function disabled() {
 		if (props.disabled) {
+			return true
+		}
+		if (props.data.action) {
 			return true
 		}
 		if (props.requires === undefined) {
