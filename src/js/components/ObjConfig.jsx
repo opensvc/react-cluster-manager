@@ -61,6 +61,32 @@ function EditButton(props) {
         )
 }
 
+function ExpandRawConfigButton(props) {
+        const { path, expanded, setExpanded } = props
+	const [{ user }, dispatch] = useStateValue()
+        const classes = useStyles()
+	const sp = splitPath(path)
+        if (!user.grant) {
+                return null
+        }
+        if (!("root" in user.grant) && (user.grant.admin.indexOf(sp.namespace) < 0)) {
+                return null
+	}
+	function handleExpandClick(e) {
+		setExpanded(!expanded)
+	}
+	return (
+		<IconButton
+			className={clsx(classes.expand, {[classes.expandOpen]: expanded})}
+			onClick={handleExpandClick}
+			aria-expanded={expanded}
+			aria-label="show more"
+		>
+			<ExpandMoreIcon />
+		</IconButton>
+	)
+}
+
 function ObjConfigDigest(props) {
 	const { path, edit } = props
 	const [{ cstat, user }, dispatch] = useStateValue()
@@ -148,9 +174,6 @@ function ObjConfig(props) {
 	const [expanded, setExpanded] = useState(false)
 	const [edit, setEdit] = useState(false)
 
-	function handleExpandClick(e) {
-		setExpanded(!expanded)
-	}
         return (
                 <Card className={classes.card}>
                         <CardHeader
@@ -167,14 +190,7 @@ function ObjConfig(props) {
 				<ObjConfigDigest path={path} edit={edit} />
                         </CardContent>
 			<CardActions disableSpacing>
-				<IconButton
-					className={clsx(classes.expand, {[classes.expandOpen]: expanded})}
-					onClick={handleExpandClick}
-					aria-expanded={expanded}
-					aria-label="show more"
-				>
-					<ExpandMoreIcon />
-				</IconButton>
+				<ExpandRawConfigButton path={path} expanded={expanded} setExpanded={setExpanded} />
 			</CardActions>
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
 				<CardContent>

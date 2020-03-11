@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import useUser from "../hooks/User.jsx"
+import { useStateValue } from "../state.js"
 import { splitPath, createDataHasPathKey } from '../utils.js';
 import { ResourceAdd } from "./ResourceAdd.jsx"
 import { apiInstanceAction } from "../api.js"
@@ -24,6 +25,15 @@ function ResourceAddButton(props) {
         }
 
 	const { auth } = useUser()
+	const [{ user }, dispatch] = useStateValue()
+
+	if (!user.grant) {
+		return null
+	}
+	if (!("root" in user.grant) && (user.grant.admin.indexOf(sp.namespace) < 0)) {
+		return null
+	}
+
 	const { dispatchAlerts } = useApiResponse()
 	const [open, setOpen] = useState(false)
         const [data, setData] = useState({
