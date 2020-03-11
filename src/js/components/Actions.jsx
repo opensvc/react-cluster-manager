@@ -229,6 +229,9 @@ function ActionsItem(props) {
 			//console.log("item", props.value, "disabled: user must have the", props.requires.role, "role")
 			return true
 		}
+		if (props.requires.namespace == "") {
+			props.requires.namespace = "root"
+		}
 		if (props.requires.namespace && !intersectionLength(user.grant[props.requires.role], props.requires.namespace)) {
 			//console.log("item", props.value, "disabled: user is not", props.requires.role, "on namespace", props.requires.namespace)
 			return true
