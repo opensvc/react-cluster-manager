@@ -36,7 +36,7 @@ function useClusterStatus(props) {
 	}
 
 	function initEventSource() {
-		if (context.eventSource !== null) {
+		if (context.eventSource !== null && context.eventSource.readyState != 2) {
 			return
 		}
 		if (!hasAuthorizationHeader(auth)) {
@@ -45,7 +45,11 @@ function useClusterStatus(props) {
 		console.log("initEventSource", context)
 		var eventSourceInitDict = {headers: {}}
 		eventSourceInitDict.headers = addAuthorizationHeader(eventSourceInitDict.headers, auth)
-		context.eventSource = new EventSource("/events", eventSourceInitDict)
+		var es = new EventSource("/events", eventSourceInitDict)
+		if (es.readyState == 2) {
+			return
+		}
+		context.eventSource = es
 		setEventSourceAlive(true)
 		context.eventSource.onmessage = (e) => {
 			setEventSourceAlive(true)
@@ -117,12 +121,13 @@ function useClusterStatus(props) {
 		try {
 			const fetcher = await fetch('/daemon_status', {headers: headers})
 			const data = await fetcher.json()
-			console.log(data)
-			context.cstat = data
-			dispatch({
-				"type": "loadCstat",
-				"data": data
-			})
+			if (fetcher.status == 200) {
+				context.cstat = data
+				dispatch({
+					"type": "loadCstat",
+					"data": data
+				})
+			}
 		} catch(e) {
 			console.log("loadCstat:", e)
 		} finally {

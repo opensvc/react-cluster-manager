@@ -47,10 +47,18 @@ function useUser(props) {
 				})
 				const data = await fetcher.json()
 				console.log("I am", data)
-				dispatch({
-					type: "loadUser",
-					data: data,
-				})
+				if (data.name == "nobody") {
+					dispatch({
+						type: "setBasicLogin",
+						data: {},
+					})
+					unloadUser()
+				} else {
+					dispatch({
+						type: "loadUser",
+						data: data,
+					})
+				}
 			} catch (error) {
 				context.auth = null
 				context.error = error
