@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next"
 
 import useUser from "../hooks/User.jsx"
 import { apiInstanceAction } from "../api.js"
@@ -16,12 +17,14 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from "@material-ui/core/Tooltip"
 
 import AddIcon from '@material-ui/icons/Add';
 
 function NetworkAdd(props) {
 	const {path} = props
 	const { auth } = useUser()
+	const { t } = useTranslation()
 	const [open, setOpen] = React.useState(false)
 	const [data, setData] = useState({})
 	const kws = useKeywords("ccfg")
@@ -60,13 +63,15 @@ function NetworkAdd(props) {
 	}
 	return (
 		<React.Fragment>
-			<IconButton
-				aria-label="Add Network"
-				aria-haspopup={true}
-				onClick={handleClickOpen}
-			>
-				<AddIcon />
-			</IconButton>
+			<Tooltip title={t("Add Network")}>
+				<IconButton
+					aria-label="Add Network"
+					aria-haspopup={true}
+					onClick={handleClickOpen}
+				>
+					<AddIcon />
+				</IconButton>
+			</Tooltip>
 			<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
 				<DialogTitle id="form-dialog-title">Create New Network</DialogTitle>
 				<DialogContent>
