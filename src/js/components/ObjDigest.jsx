@@ -12,6 +12,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from "@material-ui/core/Tooltip"
 
 import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight';
 
@@ -24,18 +25,21 @@ const useStyles = makeStyles(theme => ({
 function Goto(props) {
 	const history = useHistory()
 	const loc = useLocation()
+	const { t } = useTranslation()
 	const { path } = props
 	if (loc.pathname == "/object") {
 		return null
 	}
 	return (
-		<IconButton
-			aria-label="Go to object"
-			aria-haspopup={true}
-			onClick={() => {history.push("/object?path="+path)}}
-		>
-			<SubdirectoryArrowRightIcon />
-		</IconButton>
+		<Tooltip title={t("Go to object")}>
+			<IconButton
+				aria-label="Go to object"
+				aria-haspopup={true}
+				onClick={() => {history.push("/object?path="+path)}}
+			>
+				<SubdirectoryArrowRightIcon />
+			</IconButton>
+		</Tooltip>
 	)
 }
 
