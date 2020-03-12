@@ -19,6 +19,7 @@ import Tab from "@material-ui/core/Tab"
 import Typography from "@material-ui/core/Typography"
 import Box from "@material-ui/core/Box"
 import TextField from "@material-ui/core/TextField"
+import Tooltip from "@material-ui/core/Tooltip"
 
 import IconButton from "@material-ui/core/IconButton"
 import PauseIcon from "@material-ui/icons/Pause"
@@ -40,6 +41,7 @@ const useStyles = makeStyles(theme => ({
 
 function FilterButton(props) {
 	const { search, searchOpen, setSearchOpen } = props
+	const { t } = useTranslation()
 	function handleClick(e) {
 		if (search) {
 			return
@@ -47,36 +49,45 @@ function FilterButton(props) {
 		setSearchOpen(!searchOpen)
 	}
 	return (
-		<IconButton onClick={handleClick}>
-			<FilterListIcon />
-		</IconButton>
+		<Tooltip title={t("Filter")}>
+			<IconButton onClick={handleClick}>
+				<FilterListIcon />
+			</IconButton>
+		</Tooltip>
 	)
 }
 
 function AggStats(props) {
 	const { agg, setAgg } = props
+	const { t } = useTranslation()
 	return (
-		<IconButton
-			onClick={() => { (agg == "ns") ? setAgg("path") : setAgg("ns") }}
-		>
-			{(agg == "ns") ? <ViewStreamIcon /> : <ViewHeadlineIcon />}
-		</IconButton>
+		<Tooltip title={(agg == "ns") ? t("Toggle object aggregation") : t("Toggle namespace aggregation")}>
+			<IconButton
+				onClick={() => { (agg == "ns") ? setAgg("path") : setAgg("ns") }}
+			>
+				{(agg == "ns") ? <ViewStreamIcon /> : <ViewHeadlineIcon />}
+			</IconButton>
+		</Tooltip>
 	)
 }
 
 function PlayStats(props) {
 	const { playing, play, pause } = props
+	const { t } = useTranslation()
 	return (
-		<IconButton
-			onClick={() => { playing ? pause() : play() }}
-		>
-			{playing ? <PauseIcon /> : <PlayArrowIcon />}
-		</IconButton>
+		<Tooltip title={playing ? t("Pause feed") : t("Resume feed")}>
+			<IconButton
+				onClick={() => { playing ? pause() : play() }}
+			>
+				{playing ? <PauseIcon /> : <PlayArrowIcon />}
+			</IconButton>
+		</Tooltip>
 	)
 }
 
 function SortStats(props) {
 	const { sortKey, setSortKey } = props
+	const { t } = useTranslation()
 	function handleClick(e) {
 		if (sortKey == "value") {
 			setSortKey("alpha")
@@ -85,11 +96,13 @@ function SortStats(props) {
 		}
 	}
 	return (
-		<IconButton
-			onClick={(e) => handleClick(e)}
-		>
-			{(sortKey == "value") ? <SortIcon /> : <SortByAlphaIcon />}
-		</IconButton>
+		<Tooltip title={(sortKey == "value") ? t("Toggle sort by name") : t("Toggle sort by metric")}>
+			<IconButton
+				onClick={(e) => handleClick(e)}
+			>
+				{(sortKey == "value") ? <SortIcon /> : <SortByAlphaIcon />}
+			</IconButton>
+		</Tooltip>
 	)
 }
 
