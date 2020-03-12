@@ -1,34 +1,34 @@
-import React from "react";
+import React from "react"
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import useUser from "../hooks/User.jsx"
-import { apiGetAny } from "../api.js";
-import { useTranslation } from 'react-i18next';
-import { splitPath } from '../utils.js';
-import { ObjAvail } from "./ObjAvail.jsx";
-import { ObjProvisioned } from "./ObjProvisioned.jsx";
-import { ObjInstanceResourceActions } from "./ObjInstanceResourceActions.jsx";
-import { TableToolbar } from "./TableToolbar.jsx";
-import { useObjConfig } from "../hooks/ObjConfig.jsx";
-import { useColorStyles } from '../styles.js'
+import ObjInstanceResourceFlags from "./ObjInstanceResourceFlags.jsx"
+import { apiGetAny } from "../api.js"
+import { useTranslation } from "react-i18next"
+import { splitPath } from "../utils.js"
+import { ObjAvail } from "./ObjAvail.jsx"
+import { ObjProvisioned } from "./ObjProvisioned.jsx"
+import { ObjInstanceResourceActions } from "./ObjInstanceResourceActions.jsx"
+import { TableToolbar } from "./TableToolbar.jsx"
+import { useObjConfig } from "../hooks/ObjConfig.jsx"
+import { useColorStyles } from "../styles.js"
 
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import Checkbox from '@material-ui/core/Checkbox';
+import clsx from "clsx"
+import { makeStyles } from "@material-ui/core/styles"
+import Grid from "@material-ui/core/Grid"
+import Card from "@material-ui/core/Card"
+import CardHeader from "@material-ui/core/CardHeader"
+import CardContent from "@material-ui/core/CardContent"
+import Typography from "@material-ui/core/Typography"
+import Table from "@material-ui/core/Table"
+import TableHead from "@material-ui/core/TableHead"
+import TableBody from "@material-ui/core/TableBody"
+import TableRow from "@material-ui/core/TableRow"
+import TableCell from "@material-ui/core/TableCell"
+import Tooltip from "@material-ui/core/Tooltip"
+import IconButton from "@material-ui/core/IconButton"
+import Checkbox from "@material-ui/core/Checkbox"
 
-import FilterListIcon from '@material-ui/icons/FilterList';
-import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';
+import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser"
 
 const useStyles = makeStyles(theme => ({
         tableWrapper: {
@@ -51,6 +51,7 @@ const useStyles = makeStyles(theme => ({
 function ObjInstanceResourceEnter(props) {
 	const { path, rid } = props
 	const { auth } = useUser()
+	const { t } = useTranslation()
 	if (!rid.match(/^container#/)) {
 		return null
 	}
@@ -60,11 +61,13 @@ function ObjInstanceResourceEnter(props) {
 		}, auth)
 	}
 	return (
-		<IconButton
-			onClick={handleClick}
-		>
-			<OpenInBrowserIcon />
-		</IconButton>
+		<Tooltip title={t("Enter container")}>
+			<IconButton
+				onClick={handleClick}
+			>
+				<OpenInBrowserIcon />
+			</IconButton>
+		</Tooltip>
 	)
 }
 
@@ -203,39 +206,6 @@ function ObjInstanceResourceLine(props) {
 			<TableCell><ObjInstanceResourceFlags rid={rid} data={rdata} idata={idata} /></TableCell>
 			<TableCell><ObjInstanceResourceDesc data={rdata} /></TableCell>
 		</TableRow>
-	)
-}
-
-function ObjInstanceResourceFlags(props) {
-	const {rid, data, idata} = props
-	try {
-		var retries = idata.monitor.restart[rid]
-	} catch(e) {
-		var retries = 0
-	}
-	if (data.restart) {
-		var remaining_restart = data.restart - retries
-		if (remaining_restart < 0) {
-			remaining_restart = 0
-		}
-	}
-	var provisioned = null
-	if (data.provisioned) {
-		provisioned = data.provisioned.state
-	}
-	var flags = ""
-	flags += data.running ? "R" : "."
-	flags += data.monitor ? "M" : "."
-	flags += data.disable ? "D" : "."
-	flags += data.optional ? "O" : "."
-	flags += data.encap ? "E" : "."
-	flags += provisioned ? "." : (provisioned == null) ? "/" : "P"
-	flags += data.standby ? "S" : "."
-	flags += !data.restart ? "." : remaining_restart < 10 ? remaining_restart : "+"
-	return (
-		<pre>
-			{flags}
-		</pre>
 	)
 }
 
