@@ -21,15 +21,19 @@ import Tooltip from "@material-ui/core/Tooltip"
 
 function ResourceAddButton(props) {
         const sp = splitPath(props.path)
+	const { auth } = useUser()
+	const { t } = useTranslation()
+	const [{ user }, dispatch] = useStateValue()
+	const { dispatchAlerts } = useApiResponse()
+	const [open, setOpen] = useState(false)
+        const [data, setData] = useState({
+		kind: "",
+                keywords: {}
+	})
 
         if (["vol", "svc"].indexOf(sp.kind) < 0) {
                 return null
         }
-
-	const { auth } = useUser()
-	const { t } = useTranslation()
-	const [{ user }, dispatch] = useStateValue()
-
 	if (!user.grant) {
 		return null
 	}
@@ -37,12 +41,6 @@ function ResourceAddButton(props) {
 		return null
 	}
 
-	const { dispatchAlerts } = useApiResponse()
-	const [open, setOpen] = useState(false)
-        const [data, setData] = useState({
-		kind: "",
-                keywords: {}
-	})
         function handleClick(e) {
                 e.stopPropagation()
                 setOpen(true)
