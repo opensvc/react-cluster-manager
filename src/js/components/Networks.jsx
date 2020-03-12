@@ -18,46 +18,51 @@ import TableRow from '@material-ui/core/TableRow';
 import Hidden from '@material-ui/core/Hidden';
 
 const useStyles = makeStyles(theme => ({
-        root: {
-                marginTop: theme.spacing(3),
-        },
-        wrapper: {
-                overflowX: 'auto',
-                marginLeft: -theme.spacing(2),
-                marginRight: -theme.spacing(2),
-        },
+	root: {
+		marginTop: theme.spacing(3),
+	},
+	wrapper: {
+		overflowX: 'auto',
+		marginLeft: -theme.spacing(2),
+		marginRight: -theme.spacing(2),
+	},
+	row: {
+		'&:hover': {
+			cursor: "pointer",
+		},
+	},
 }))
 
 function getLines(data) {
-        if (!data) {
-                return []
-        }
-        var lines = []
-        for (var name in data) {
-                var _data = data[name]
+	if (!data) {
+		return []
+	}
+	var lines = []
+	for (var name in data) {
+		var _data = data[name]
 		_data.name = name
-                lines.push(_data)
-        }
-        return lines
+		lines.push(_data)
+	}
+	return lines
 }
 
 function Networks(props) {
 	const classes = useStyles()
 	const { t, i18n } = useTranslation()
-        const data = useNetworksStatus()
+	const data = useNetworksStatus()
 	const [{}, dispatch] = useStateValue()
-        var lines = getLines(data)
+	var lines = getLines(data)
 
 	return (
-                <Card id="networks" className={classes.root}>
-                        <CardHeader
-                                title={t("Networks")}
+		<Card id="networks" className={classes.root}>
+			<CardHeader
+				title={t("Networks")}
 				action={
 					<NetworkAdd />
 				}
-                        />
-                        <CardContent>
-                                <div className={classes.wrapper}>
+			/>
+			<CardContent>
+				<div className={classes.wrapper}>
 					<Table>
 						<TableHead>
 							<TableRow>
@@ -74,29 +79,30 @@ function Networks(props) {
 							))}
 						</TableBody>
 					</Table>
-                                </div>
-                        </CardContent>
-                </Card>
+				</div>
+			</CardContent>
+		</Card>
 	)
 }
 
 function NetworksLine(props) {
-        const {index, data} = props
+	const {index, data} = props
 	const [{}, dispatch] = useStateValue()
+	const classes = useStyles()
 	const history = useHistory()
-        function handleLineClick(event) {
+	function handleLineClick(event) {
 		event.stopPropagation()
 		history.push("/network?name="+data.name)
-        }
-        return (
-                <TableRow onClick={handleLineClick}>
-                        <TableCell>{data.name}</TableCell>
-                        <TableCell>{data.type}</TableCell>
-                        <TableCell>{data.network}</TableCell>
-                        <TableCell>{data.used}</TableCell>
-                        <TableCell>{data.pct.toFixed(2)}%</TableCell>
-                </TableRow>
-        )
+	}
+	return (
+		<TableRow onClick={handleLineClick} className={classes.row}>
+			<TableCell>{data.name}</TableCell>
+			<TableCell>{data.type}</TableCell>
+			<TableCell>{data.network}</TableCell>
+			<TableCell>{data.used}</TableCell>
+			<TableCell>{data.pct.toFixed(2)}%</TableCell>
+		</TableRow>
+	)
 }
 
 export {

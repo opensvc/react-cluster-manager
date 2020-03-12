@@ -36,6 +36,11 @@ const useStyles = makeStyles(theme => ({
 	tools: {
 		alignItems: "flex-end",
 	},
+	row: {
+		'&:hover': {
+			cursor: "pointer",
+		},
+	},
 	table: {
 		marginLeft: -theme.spacing(2),
 		marginRight: -theme.spacing(2),
@@ -192,6 +197,7 @@ function Objs(props) {
 
 function ObjLine(props) {
 	const history = useHistory()
+	const classes = useStyles()
 	const {index, path, selected, setSelected, withScalerSlaves, title, cstat } = props
 	const sp = splitPath(path)
 	function handleClick(event) {
@@ -233,6 +239,7 @@ function ObjLine(props) {
 			tabIndex={-1}
 			key={path}
 			selected={isItemSelected}
+			className={classes.row}
 		>
 			<TableCell padding="checkbox" onClick={handleClick}>
 				<Checkbox

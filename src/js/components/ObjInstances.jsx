@@ -26,15 +26,20 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
 const useStyles = makeStyles(theme => ({
-        tableWrapper: {
-                overflowX: 'auto',
-        },
-	        card: {
-                height: "100%",
-        },
-        content: {
-                margin: -theme.spacing(2),
-        },
+	tableWrapper: {
+		overflowX: 'auto',
+	},
+		card: {
+		height: "100%",
+	},
+	content: {
+		margin: -theme.spacing(2),
+	},
+	row: {
+		'&:hover': {
+			cursor: "pointer",
+		},
+	},
 }))
 
 function getInstances(path, cstat, isSlice) {
@@ -86,7 +91,7 @@ function ObjInstances(props) {
 	//
 	const classes = useStyles()
 	const { cstat } = useClusterStatus()
-        const [selected, setSelected] = React.useState([]);
+	const [selected, setSelected] = React.useState([]);
 	const { t, i18n } = useTranslation()
 
 	if (cstat.monitor === undefined) {
@@ -98,14 +103,14 @@ function ObjInstances(props) {
 	const instances = getInstances(props.path, cstat)
 	var rowCount = instances.length
 
-        function handleSelectAllClick(event) {
-                if (event.target.checked) {
-                        const newSelecteds = instances
-                        setSelected(newSelecteds);
-                        return;
-                }
-                setSelected([]);
-        }
+	function handleSelectAllClick(event) {
+		if (event.target.checked) {
+			const newSelecteds = instances
+			setSelected(newSelecteds);
+			return;
+		}
+		setSelected([]);
+	}
 
 	if ("scale" in cstat.monitor.services[props.path]) {
 		var slice = <TableCell>Slice</TableCell>
@@ -113,17 +118,17 @@ function ObjInstances(props) {
 		var slice
 	}
 	return (
-                <Card className={classes.card}>
-                        <CardHeader
-                                title={t("Instances")}
+		<Card className={classes.card}>
+			<CardHeader
+				title={t("Instances")}
 				subheader=<ObjInstanceCounts path={props.path} />
 				action={
 					<TableToolbar selected={selected}>
 						{(selected.length > 0) && <ObjInstanceActions selected={selected} title="" />}
 					</TableToolbar>
 				}
-                        />
-                        <CardContent className={classes.content}>
+			/>
+			<CardContent className={classes.content}>
 				<div className={classes.tableWrapper}>
 					<Table>
 						<TableHead>
@@ -162,6 +167,7 @@ function ObjInstances(props) {
 
 function InstanceLine(props) {
 	const loc = useLocation()
+	const classes = useStyles()
 	const { cstat } = useClusterStatus()
 	const {index, path, instance, selected, setSelected} = props
 	const history = useHistory()
@@ -171,8 +177,8 @@ function InstanceLine(props) {
 	if (!instance) {
 		return null
 	}
-        function handleClick(event) {
-                event.stopPropagation()
+	function handleClick(event) {
+		event.stopPropagation()
 		var key = {
 			node: instance.node,
 			path: instance.path
@@ -185,22 +191,22 @@ function InstanceLine(props) {
 				break
 			}
 		}
-                let newSelected = []
+		let newSelected = []
 
-                if (selectedIndex === -1) {
-                        newSelected = newSelected.concat(selected, key);
-                } else if (selectedIndex === 0) {
-                        newSelected = newSelected.concat(selected.slice(1));
-                } else if (selectedIndex === selected.length - 1) {
-                        newSelected = newSelected.concat(selected.slice(0, -1));
-                } else if (selectedIndex > 0) {
-                        newSelected = newSelected.concat(
-                                selected.slice(0, selectedIndex),
-                                selected.slice(selectedIndex + 1),
-                        );
-                }
-                setSelected(newSelected);
-        }
+		if (selectedIndex === -1) {
+			newSelected = newSelected.concat(selected, key);
+		} else if (selectedIndex === 0) {
+			newSelected = newSelected.concat(selected.slice(1));
+		} else if (selectedIndex === selected.length - 1) {
+			newSelected = newSelected.concat(selected.slice(0, -1));
+		} else if (selectedIndex > 0) {
+			newSelected = newSelected.concat(
+				selected.slice(0, selectedIndex),
+				selected.slice(selectedIndex + 1),
+			);
+		}
+		setSelected(newSelected);
+	}
 	function handleLineClick(e) {
 		history.push({
 			pathname: "/instance",
@@ -208,17 +214,17 @@ function InstanceLine(props) {
 			state: loc.state,
 		})
 	}
-        const isItemSelected = selected.some(item => {return (item.path==instance.path) && (item.node==instance.node)})
-        const labelId = `nodes-checkbox-${index}`
+	const isItemSelected = selected.some(item => {return (item.path==instance.path) && (item.node==instance.node)})
+	const labelId = `nodes-checkbox-${index}`
 
 	return (
-		<TableRow onClick={handleLineClick}>
-                        <TableCell padding="checkbox" onClick={handleClick}>
-                                <Checkbox
-                                        checked={isItemSelected}
-                                        inputProps={{ 'aria-labelledby': labelId }}
-                                />
-                        </TableCell>
+		<TableRow onClick={handleLineClick} className={classes.row}>
+			<TableCell padding="checkbox" onClick={handleClick}>
+				<Checkbox
+					checked={isItemSelected}
+					inputProps={{ 'aria-labelledby': labelId }}
+				/>
+			</TableCell>
 			{instance.slice !== null && <TableCell>{instance.slice}</TableCell>}
 			<TableCell>{instance.node}</TableCell>
 			<TableCell><ObjInstanceState node={instance.node} path={path} /></TableCell>
