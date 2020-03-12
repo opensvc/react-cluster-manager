@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next"
 
 import useUser from "../hooks/User.jsx"
 import { useStateValue } from "../state.js"
@@ -16,6 +17,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from "@material-ui/core/Tooltip"
 
 function ResourceAddButton(props) {
         const sp = splitPath(props.path)
@@ -25,6 +27,7 @@ function ResourceAddButton(props) {
         }
 
 	const { auth } = useUser()
+	const { t } = useTranslation()
 	const [{ user }, dispatch] = useStateValue()
 
 	if (!user.grant) {
@@ -80,13 +83,15 @@ function ResourceAddButton(props) {
 
 	return (
 		<React.Fragment>
-			<IconButton
-				aria-label="Add Resource"
-				aria-haspopup="true"
-				onClick={handleClick}
-			>
-				<AddIcon />
-			</IconButton>
+			<Tooltip title={t("Add Resource")}>
+				<IconButton
+					aria-label="Add Resource"
+					aria-haspopup="true"
+					onClick={handleClick}
+				>
+					<AddIcon />
+				</IconButton>
+			</Tooltip>
                         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                                 <DialogTitle id="form-dialog-title">Add Resource to {props.path}</DialogTitle>
                                 <DialogContent>

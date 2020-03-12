@@ -1,29 +1,30 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment } from "react"
 
-import { useStateValue } from '../state.js';
-import { useObjConfig } from "../hooks/ObjConfig.jsx";
-import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
-import { ResourceAddButton } from "./ResourceAddButton.jsx";
+import { useStateValue } from "../state.js"
+import { useObjConfig } from "../hooks/ObjConfig.jsx"
+import { useTranslation } from "react-i18next"
+import clsx from "clsx"
+import { ResourceAddButton } from "./ResourceAddButton.jsx"
 import { parseIni, splitPath } from "../utils.js"
-import { SectionEdit } from "./SectionEdit.jsx";
-import { SectionDelete } from "./SectionDelete.jsx";
+import { SectionEdit } from "./SectionEdit.jsx"
+import { SectionDelete } from "./SectionDelete.jsx"
 
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import EditIcon from '@material-ui/icons/Edit';
-import Collapse from '@material-ui/core/Collapse';
+import { makeStyles } from "@material-ui/core/styles"
+import List from "@material-ui/core/List"
+import ListItem from "@material-ui/core/ListItem"
+import ListItemText from "@material-ui/core/ListItemText"
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction"
+import Card from "@material-ui/core/Card"
+import CardHeader from "@material-ui/core/CardHeader"
+import CardContent from "@material-ui/core/CardContent"
+import CardActions from "@material-ui/core/CardActions"
+import IconButton from "@material-ui/core/IconButton"
+import Typography from "@material-ui/core/Typography"
+import CircularProgress from "@material-ui/core/CircularProgress"
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import EditIcon from "@material-ui/icons/Edit"
+import Collapse from "@material-ui/core/Collapse"
+import Tooltip from "@material-ui/core/Tooltip"
 
 const useStyles = makeStyles(theme => ({
         card: {
@@ -44,6 +45,7 @@ const useStyles = makeStyles(theme => ({
 function EditButton(props) {
 	const sp = splitPath(props.path)
 	const [{ user }, dispatch] = useStateValue()
+	const { t } = useTranslation()
         if (!user.grant) {
                 return null
         }
@@ -51,19 +53,22 @@ function EditButton(props) {
                 return null
 	}
         return (
-                <IconButton
-                        aria-label="Edit Labels"
-                        aria-haspopup={true}
-                        onClick={props.toggle}
-                >
-                        <EditIcon />
-                </IconButton>
+		<Tooltip title={t("Edit")}>
+			<IconButton
+				aria-label="Edit Labels"
+				aria-haspopup={true}
+				onClick={props.toggle}
+			>
+				<EditIcon />
+			</IconButton>
+		</Tooltip>
         )
 }
 
 function ExpandRawConfigButton(props) {
         const { path, expanded, setExpanded } = props
 	const [{ user }, dispatch] = useStateValue()
+	const { t } = useTranslation()
         const classes = useStyles()
 	const sp = splitPath(path)
         if (!user.grant) {
@@ -76,14 +81,16 @@ function ExpandRawConfigButton(props) {
 		setExpanded(!expanded)
 	}
 	return (
-		<IconButton
-			className={clsx(classes.expand, {[classes.expandOpen]: expanded})}
-			onClick={handleExpandClick}
-			aria-expanded={expanded}
-			aria-label="show more"
-		>
-			<ExpandMoreIcon />
-		</IconButton>
+		<Tooltip title={t("Raw")}>
+			<IconButton
+				className={clsx(classes.expand, {[classes.expandOpen]: expanded})}
+				onClick={handleExpandClick}
+				aria-expanded={expanded}
+				aria-label="show more"
+			>
+				<ExpandMoreIcon />
+			</IconButton>
+		</Tooltip>
 	)
 }
 
