@@ -1,22 +1,25 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
+import { useTranslation } from "react-i18next"
 
 import useUser from "../hooks/User.jsx"
-import { createDataHasPathKey } from '../utils.js';
+import { createDataHasPathKey } from "../utils.js"
 import { Deploy } from "./Deploy.jsx"
 import { apiObjGetConfig, apiObjCreate } from "../api.js"
 import useApiResponse from "../hooks/ApiResponse.jsx"
 
-import AddIcon from '@material-ui/icons/Add';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton'
+import AddIcon from "@material-ui/icons/Add"
+import Dialog from "@material-ui/core/Dialog"
+import DialogActions from "@material-ui/core/DialogActions"
+import DialogContent from "@material-ui/core/DialogContent"
+import DialogContentText from "@material-ui/core/DialogContentText"
+import DialogTitle from "@material-ui/core/DialogTitle"
+import Button from "@material-ui/core/Button"
+import IconButton from "@material-ui/core/IconButton"
+import Tooltip from "@material-ui/core/Tooltip"
 
 function DeployButton(props) {
 	const { auth } = useUser()
+	const { t } = useTranslation()
 	const [open, setOpen] = useState(false)
         const [data, setData] = useState({
 		active: 0,
@@ -166,13 +169,15 @@ function DeployButton(props) {
 
 	return (
 		<React.Fragment>
-			<IconButton
-				onClick={handleClick}
-				aria-label="Deploy"
-                                aria-haspopup="true"
-			>
-				<AddIcon />
-			</IconButton>
+			<Tooltip title={t("Deploy")}>
+				<IconButton
+					onClick={handleClick}
+					aria-label="Deploy"
+					aria-haspopup="true"
+				>
+					<AddIcon />
+				</IconButton>
+			</Tooltip>
                         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                                 <DialogTitle id="form-dialog-title">Deploy</DialogTitle>
                                 <DialogContent>
