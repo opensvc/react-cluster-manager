@@ -64,7 +64,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function Log(props) {
-	const log = useLog(props.url)
+	const {title, subheader, hide, url } = props
+	const log = useLog(url)
 	const [searchOpen, setSearchOpen] = useState(false)
 	const [search, setSearch] = useState("")
 	const [skip, setSkip] = useState()
@@ -91,8 +92,8 @@ function Log(props) {
 	return (
                 <Card id="Log">
                         <CardHeader
-                                title={props.title}
-                                subheader={props.subheader}
+                                title={title}
+                                subheader={subheader}
 				action={
                                         <TableToolbar selected={[]} className={classes.table}>
 						{(Object.keys(context).length > 0) &&
@@ -138,6 +139,7 @@ function Log(props) {
 					setSkip={setSkip}
 					setContext={setContext}
 					context={context}
+					hide={hide}
 				/>
 			</CardContent>
                 </Card>
@@ -146,7 +148,7 @@ function Log(props) {
 }
 
 function LogLines(props) {
-	const { log, search, setSearch, setSkip, setContext, context } = props
+	const { log, search, setSearch, setSkip, setContext, context, hide } = props
 	const classes = useStyles()
 	if (!log) {
 		return ( <CircularProgress color="primary" /> )
@@ -170,6 +172,7 @@ function LogLines(props) {
 					setSkip={setSkip}
 					setContext={setContext}
 					context={context}
+					hide={hide}
 				/>
 			))}
 		</div>
@@ -177,9 +180,12 @@ function LogLines(props) {
 }
 
 function LogLineContextKey(props) {
-	const { k, v, context, setContext, dense } = props
+	const { k, v, context, setContext, dense, hide } = props
 	const classes = useStyles()
 	if (!k || !v) {
+		return null
+	}
+	if (hide && (hide.indexOf(k) >= 0)) {
 		return null
 	}
 	function dropContextKey() {
@@ -300,7 +306,7 @@ function NegativeContext(props) {
 }
 
 function LogLineContext(props) {
-	const { data, context, setContext } = props
+	const { data, context, setContext, hide } = props
 	const classes = useStyles()
 	if (Object.keys(data).length == 0) {
 		return null
@@ -315,6 +321,7 @@ function LogLineContext(props) {
 					context={context}
 					setContext={setContext}
 					dense={true}
+					hide={hide}
 				/>
 			))}
 		</div>
@@ -322,7 +329,7 @@ function LogLineContext(props) {
 }
 
 function LogLine(props) {
-	const { re, data, prev, context, setContext, setSearch, setSkip, id } = props
+	const { re, data, prev, context, setContext, setSearch, setSkip, id, hide } = props
 	const classes = useStyles()
 	if (!data) {
 		return <Skeleton />
@@ -356,6 +363,7 @@ function LogLine(props) {
 				data={data.x}
 				setContext={setContext}
 				context={context}
+				hide={hide}
 			/>
 			}
 			<div className={classes.logLine} id={id}>

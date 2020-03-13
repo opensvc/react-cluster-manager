@@ -113,7 +113,11 @@ function NodeLog(props) {
 		return null
 	}
 	return (
-		<Log title={t("Log")} url={"/node/"+props.node} />
+		<Log
+			title={t("Log")}
+			url={"/node/"+props.node}
+			hide={["n"]}
+		/>
 	)
 }
 

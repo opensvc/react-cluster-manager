@@ -130,6 +130,7 @@ function ObjLog(props) {
 			title={t("Log")}
 			subheader={props.path}
 			url={"/object/"+props.path}
+			hide={["o"]}
 		/>
 	)
 }
