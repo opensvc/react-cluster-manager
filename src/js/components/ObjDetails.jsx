@@ -131,6 +131,7 @@ function ObjLog(props) {
 			subheader={props.path}
 			url={"/object/"+props.path}
 			hide={["o"]}
+			initialContext={{"sc": {value: "n"}}}
 		/>
 	)
 }

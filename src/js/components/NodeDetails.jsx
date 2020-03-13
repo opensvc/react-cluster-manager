@@ -117,6 +117,7 @@ function NodeLog(props) {
 			title={t("Log")}
 			url={"/node/"+props.node}
 			hide={["n"]}
+			initialContext={{}}
 		/>
 	)
 }

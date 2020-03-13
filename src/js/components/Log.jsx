@@ -64,12 +64,12 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function Log(props) {
-	const {title, subheader, hide, url } = props
+	const {title, subheader, hide, url, initialContext} = props
 	const log = useLog(url)
 	const [searchOpen, setSearchOpen] = useState(false)
 	const [search, setSearch] = useState("")
 	const [skip, setSkip] = useState()
-	const [context, setContext] = useState({"sc": {value: "n"}})
+	const [context, setContext] = useState(initialContext)
 	const classes = useStyles()
 	const {t, i18n} = useTranslation()
 
