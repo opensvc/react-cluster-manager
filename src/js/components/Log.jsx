@@ -68,7 +68,7 @@ function Log(props) {
 	const [searchOpen, setSearchOpen] = useState(false)
 	const [search, setSearch] = useState("")
 	const [skip, setSkip] = useState()
-	const [context, setContext] = useState({})
+	const [context, setContext] = useState({"sc": {value: "n"}})
 	const classes = useStyles()
 	const {t, i18n} = useTranslation()
 
