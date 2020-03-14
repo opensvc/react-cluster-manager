@@ -19,10 +19,14 @@ import IconButton from '@material-ui/core/IconButton'
 import Skeleton from '@material-ui/lab/Skeleton'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import ClearIcon from '@material-ui/icons/Clear'
+import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight'
 
 const useStyles = makeStyles(theme => ({
 	content: {
 		paddingTop: 0,
+	},
+	context: {
+		padding: "0 0 1em 0",
 	},
 	textField: {
 		width: "100%",
@@ -71,7 +75,7 @@ function Log(props) {
 	const [skip, setSkip] = useState()
 	const [context, setContext] = useState(initialContext)
 	const classes = useStyles()
-	const {t, i18n} = useTranslation()
+	const { t } = useTranslation()
 
 	function handleClear(e) {
 		setContext({})
@@ -181,6 +185,7 @@ function LogLines(props) {
 
 function LogLineContextKey(props) {
 	const { k, v, context, setContext, dense, hide } = props
+	const { t } = useTranslation()
 	const classes = useStyles()
 	if (!k || !v) {
 		return null
@@ -218,32 +223,41 @@ function LogLineContextKey(props) {
 			setPositiveContextKey()
 		}
 	}
-	if ((k in context) && !context[k].negate) {
-		var color = "primary"
+	if (dense) {
+		if (k in context && !context[k].negate) {
+			return null
+		} else if (k == "sc") {
+			var label = (v == "y") ? t("scheduled") : t("not scheduled")
+		} else if (k == "sid") {
+			var label = "sid: " + v.slice(0, 4)
+		} else {
+			var label = k + ": " + v
+		}
 	} else {
-		var color = "default"
-	}
-	if (dense && (k == "sid")) {
-		var label = ""
-	} else {
-		var label = v
+		if (k == "sc") {
+			var label = (v == "y") ? t("scheduled") : t("not scheduled")
+		} else {
+			var label = k + ": " + v
+		}
 	}
 	return (
 		<Chip
 			className={classes.chip}
 			variant="outlined"
 			size="small"
-			color={color}
-			avatar={<Avatar style={{"backgroundColor": stringToHslColor(v, 30, 80)}}>{k}</Avatar>}
+			//color={color}
+			//avatar={<Avatar style={{"backgroundColor": stringToHslColor(v, 30, 80)}}>{k}</Avatar>}
 			label={label}
 			onClick={handleClick}
+			style={{"backgroundColor": stringToHslColor(v, 30, 80), "margin": dense ? "-8px 1em 0 0" : "0 1em 0 0"}}
 		/>
 	)
 }
 
 function PositiveContext(props) {
 	const { context, setContext } = props
-	const { t, i18n } = useTranslation()
+	const { t } = useTranslation()
+	const classes = useStyles()
 	var positiveContext = {}
 	for (var k in context) {
 		if (!context[k].negate) {
@@ -254,9 +268,9 @@ function PositiveContext(props) {
 		return null
 	}
 	return (
-		<Fragment>
+		<div className={classes.context}>
 			<Typography>
-				{t("With")}
+				{t("Show lines with")}
 			</Typography>
 			&nbsp;
 			{Object.keys(positiveContext).map((k) => (
@@ -269,13 +283,14 @@ function PositiveContext(props) {
 					dense={false}
 				/>
 			))}
-		</Fragment>
+		</div>
 	)
 }
 
 function NegativeContext(props) {
 	const { context, setContext } = props
-	const { t, i18n } = useTranslation()
+	const { t } = useTranslation()
+	const classes = useStyles()
 	var negativeContext = {}
 	for (var k in context) {
 		if (context[k].negate) {
@@ -286,9 +301,9 @@ function NegativeContext(props) {
 		return null
 	}
 	return (
-		<Fragment>
+		<div className={classes.context}>
 			<Typography>
-				{t("Excluding")}
+				{t("Show lines without")}
 			</Typography>
 			&nbsp;
 			{Object.keys(negativeContext).map((k) => (
@@ -301,7 +316,7 @@ function NegativeContext(props) {
 					dense={false}
 				/>
 			))}
-		</Fragment>
+		</div>
 	)
 }
 
@@ -311,8 +326,17 @@ function LogLineContext(props) {
 	if (Object.keys(data).length == 0) {
 		return null
 	}
+	function hasDisplayedMeta() {
+		for (var k in data) {
+			if ((!(k in context) || context[k].negate) && (hide.indexOf(k) < 0)) {
+				 return true
+			}
+		}
+		return false
+	}
 	return (
 		<div className={classes.context}>
+			{hasDisplayedMeta() && <SubdirectoryArrowRightIcon />}
 			{Object.keys(data).map((k) => (
 				<LogLineContextKey
 					key={k}
