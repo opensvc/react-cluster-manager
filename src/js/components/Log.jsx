@@ -249,7 +249,11 @@ function LogLineContextKey(props) {
 			//avatar={<Avatar style={{"backgroundColor": stringToHslColor(v, 30, 80)}}>{k}</Avatar>}
 			label={label}
 			onClick={handleClick}
-			style={{"backgroundColor": stringToHslColor(v, 30, 80), "margin": dense ? "-8px 1em 0 0" : "0 1em 0 0"}}
+			style={{
+				"color": "black",
+				"backgroundColor": stringToHslColor(v, 30, 80),
+				"margin": dense ? "-8px 1em 0 0" : "0 1em 0 0"
+			}}
 		/>
 	)
 }
