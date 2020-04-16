@@ -168,9 +168,9 @@ function ApiHandlerExample(props) {
 	if (data.routes[0].method == "POST") {
 		buff += " --data '" + JSON.stringify(formData) + "'"
 	}
-	buff += " https://" + window.location.host
+	buff += " https://" + window.location.host + "/" + data.routes[0].path
 	if (data.routes[0].method == "GET") {
-		buff += addQueryData("/" + data.routes[0].path, formData)
+		buff += addQueryData("", formData)
 	}
 	return (
 		<Box className={classes.section}>
