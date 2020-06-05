@@ -1,11 +1,13 @@
 import React from "react";
 import useUser from "../hooks/User.jsx"
+import { useTranslation } from "react-i18next"
 import { useStateValue } from '../state.js';
 import { splitPath } from '../utils.js';
 import { confirmations } from '../confirmations.js';
 import { apiInstanceAction } from "../api.js";
 import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
 import useApiResponse from "../hooks/ApiResponse.jsx"
+import { useObjConfirmations } from '../hooks/ObjConfirmations.jsx';
 
 import RefreshIcon from "@material-ui/icons/Refresh"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
@@ -26,15 +28,21 @@ function ObjInstanceResourceActions(props) {
 	const { dispatchAlerts } = useApiResponse()
 	const sp = splitPath(props.path)
 	const {node, path, rids, title, fab} = props
+	const { t } = useTranslation()
+	const objConfirmations = useObjConfirmations(props.path)
 
 	function submit(props) {
+		var options = {
+			"rid": rids.join(",")
+		}
+		if (props.value == "run") {
+			options["confirm"] = true
+		}
 		apiInstanceAction(
 			node,
 			path,
 			props.value,
-			{
-				"rid": rids.join(",")
-			},
+			options,
 			(data) => dispatchAlerts({data: data}),
 			auth
 		)
@@ -102,6 +110,17 @@ function ObjInstanceResourceActions(props) {
 		return true
 	}
 
+	function run_confirmations() {
+		var data = []
+		for (var rid of objConfirmations) {
+			if (rids.indexOf(rid) < 0) {
+				continue
+			}
+			data.push(t("I confirm {{rid}} action", {rid: rid}))
+		}
+		return data
+	}
+
 	function handleClick(e) {
 		e.stopPropagation()
 	}
@@ -117,6 +136,7 @@ function ObjInstanceResourceActions(props) {
 				/>
 				<ActionsItem value="run" text="Run" disabled={disable_run()} requires={{role: "operator", namespace: sp.namespace}}
 					icon=<SkipNextIcon />
+					confirmations={run_confirmations()}
 				/>
 				<ActionsItem value="enable" text="Enable" disabled={disable_enable()} requires={{role: "operator", namespace: sp.namespace}}
 					icon=<PauseCircleOutlineIcon />
