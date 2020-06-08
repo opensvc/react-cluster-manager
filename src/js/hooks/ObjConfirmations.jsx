@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import useUser from "./User.jsx"
+import { objectConfigChecksum } from "../utils.js"
 import { apiGetAny } from "../api.js"
+import useClusterStatus from "../hooks/ClusterStatus.jsx"
 
 function useObjConfirmations(path) {
 	const [data, setData] = useState([])
 	const { auth } = useUser()
+	const { cstat } = useClusterStatus()
+	var liveCsum = objectConfigChecksum(cstat, path)
 
 	function getObjConfirmations() {
 		if (data.length > 0) {
@@ -20,11 +24,15 @@ function useObjConfirmations(path) {
                         setData($.data)
                 }, auth)
 	}
-	getObjConfirmations()
+
+	useEffect(() => {
+		if (!liveCsum) {
+			return
+		}
+		getObjConfirmations()
+	}, [liveCsum])
 
 	return data
 }
 
-export {
-	useObjConfirmations,
-}
+export default useObjConfirmations

@@ -1,13 +1,13 @@
 import React from "react";
 import useUser from "../hooks/User.jsx"
 import { useTranslation } from "react-i18next"
-import { useStateValue } from '../state.js';
-import { splitPath } from '../utils.js';
-import { confirmations } from '../confirmations.js';
-import { apiInstanceAction } from "../api.js";
-import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
+import { useStateValue } from '../state.js'
+import { splitPath } from '../utils.js'
+import { confirmations } from '../confirmations.js'
+import { apiInstanceAction } from "../api.js"
+import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx'
 import useApiResponse from "../hooks/ApiResponse.jsx"
-import { useObjConfirmations } from '../hooks/ObjConfirmations.jsx';
+import useObjConfirmations from '../hooks/ObjConfirmations.jsx'
 
 import RefreshIcon from "@material-ui/icons/Refresh"
 import PlayArrowIcon from "@material-ui/icons/PlayArrow"
