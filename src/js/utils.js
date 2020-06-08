@@ -209,6 +209,17 @@ function stringToHslColor(str, s, l) {
 	return 'hsl('+h+', '+s+'%, '+l+'%)'
 }
 
+function objectConfigChecksum(cstat, path) {
+	if (!cstat.monitor) {
+		return null
+	}
+	for (var node in cstat.monitor.nodes) {
+		if (path in cstat.monitor.nodes[node].services.config) {
+			return cstat.monitor.nodes[node].services.config[path].csum
+		}
+	}
+}
+
 export {
 	state,
 	mergeStates,
@@ -221,4 +232,5 @@ export {
 	createDataHasPathKey,
 	getBool,
 	stringToHslColor,
+	objectConfigChecksum,
 }
