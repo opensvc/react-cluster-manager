@@ -53,6 +53,9 @@ function ObjInstanceActions(props) {
 	function disable_clear() {
 		for (var instance of selected) {
 			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (!idata) {
+				return true
+			}
 			if (idata.monitor.status && idata.monitor.status.match(/failed/)) {
 				return false
 			}
@@ -62,6 +65,9 @@ function ObjInstanceActions(props) {
 	function disable_enable() {
 		for (var instance of selected) {
 			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (!idata) {
+				return true
+			}
 			if (idata.disable) {
 				return false
 			}
@@ -71,6 +77,9 @@ function ObjInstanceActions(props) {
 	function disable_disable() {
 		for (var instance of selected) {
 			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (!idata) {
+				return true
+			}
 			if (!idata.disable) {
 				return false
 			}
@@ -80,6 +89,9 @@ function ObjInstanceActions(props) {
 	function disable_freeze() {
 		for (var instance of selected) {
 			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (!idata) {
+				return true
+			}
 			if (!idata.frozen) {
 				return false
 			}
@@ -89,6 +101,9 @@ function ObjInstanceActions(props) {
 	function disable_thaw() {
 		for (var instance of selected) {
 			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (!idata) {
+				return true
+			}
 			if (idata.frozen) {
 				return false
 			}
@@ -98,6 +113,9 @@ function ObjInstanceActions(props) {
 	function disable_start() {
 		for (var instance of selected) {
 			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (!idata) {
+				return true
+			}
 			if (idata.avail != "up") {
 				return false
 			}
@@ -107,6 +125,9 @@ function ObjInstanceActions(props) {
 	function disable_stop() {
 		for (var instance of selected) {
 			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (!idata) {
+				return true
+			}
 			if (idata.avail != "down") {
 				return false
 			}
@@ -116,6 +137,9 @@ function ObjInstanceActions(props) {
 	function disable_provision() {
 		for (var instance of selected) {
 			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (!idata) {
+				return true
+			}
 			if (!idata.provisioned) {
 				return false
 			}
@@ -125,6 +149,9 @@ function ObjInstanceActions(props) {
 	function disable_unprovision() {
 		for (var instance of selected) {
 			var idata = cstat.monitor.nodes[instance.node].services.status[instance.path]
+			if (!idata) {
+				return true
+			}
 			if (idata.provisioned) {
 				return false
 			}
