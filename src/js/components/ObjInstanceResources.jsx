@@ -85,7 +85,12 @@ function ObjInstanceResources(props) {
 		return null
 	}
 	const sp = splitPath(props.path)
-	const rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources
+	try {
+		var rdata = cstat.monitor.nodes[props.node].services.status[props.path].resources
+	} catch(e) {
+		var rdata = {}
+	}
+
 	var rowCount = Object.keys(rdata).length
 
         function handleSelectAllClick(event) {
