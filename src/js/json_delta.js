@@ -31,7 +31,7 @@ This implementation is based heavily on the original python2 version:
 see http://www.phil-roberts.name/json-delta/ for further
 documentation.  */
 
-JSON_delta = {
+export default {
     // Main entry points: ======================================================
     patch: function(struc, diff) {
         /* Apply the sequence of diff stanzas diff to the structure

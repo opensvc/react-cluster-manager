@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import EventSource from "eventsource"
-import "../json_delta.js"
+import JSON_delta from "../json_delta.js"
 import { useStateValue } from '../state.js'
 import useUser from "./User.jsx"
 import { hasAuthorizationHeader, addAuthorizationHeader } from "../api.js"
