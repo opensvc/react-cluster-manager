@@ -1,5 +1,5 @@
 language: minimal
-dist: bionic
+dist: focal
 
 env:
   - DEPLOY_NODE="repo.opensvc.com" DEPLOY_USER="opensvc" PRIVATE_RSA="./deploy/id_rsa_travis" ENCRYPTED_PRIVATE_RSA="${PRIVATE_RSA}.enc"
@@ -12,7 +12,7 @@ before_install:
 - echo -e "Host ${DEPLOY_NODE}\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - ssh-add ${PRIVATE_RSA}
 - ssh -qi ${PRIVATE_RSA} ${DEPLOY_USER}@${DEPLOY_NODE} "hostname ; pwd"
-- sudo apt -y install nodejs-dev node-gyp libssl1.0-dev npm
+- sudo apt -y install libnode-dev node-gyp libssl-dev npm
 addons:
   apt:
     update: true
