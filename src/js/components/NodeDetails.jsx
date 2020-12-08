@@ -34,15 +34,18 @@ function NodeDetails(props) {
         const loc = useLocation()
 	const { auth } = useUser()
 	const [nodeData, setNodeData] = useState()
+	const [loading, setLoading] = useState(false)
         let params = new URLSearchParams(loc.search)
         const name = params.get("name")
 
 	useEffect(() => {
-		if (nodeData) {
+		if (loading || nodeData) {
 			return
 		}
+		setLoading(true)
 		apiGetNode(name, "/node", {}, (data) => {
 			setNodeData(data)
+			setLoading(false)
 		}, auth)
 	})
 
@@ -64,7 +67,7 @@ function NodeDetails(props) {
 }
 
 function Main(props) {
-	if (!props.nodeData) {
+	if (!props.nodeData || !props.nodeData.manufacturer) {
 		return null
 	}
 	return (
