@@ -47,7 +47,9 @@ function useUser(props) {
 				})
 				const data = await fetcher.json()
 				console.log("I am", data)
-				if (data.name == "nobody") {
+				if ((data.name == "nobody") && (authChoice != "x509")) {
+					// return to the auth form except for x509
+					// to avoid looping on GET /whoami
 					dispatch({
 						type: "setBasicLogin",
 						data: {},
