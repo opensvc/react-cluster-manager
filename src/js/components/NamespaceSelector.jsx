@@ -61,7 +61,7 @@ function getAllNamespaces(cstat) {
 }
 
 function isSquatter(user) {
-	return "squatter" in user.grant
+	return ("squatter" in user.grant) || ("root" in user.grant)
 }
 
 function renderInputComponent(props) {
@@ -76,7 +76,7 @@ function renderInputComponent(props) {
 			helperText = "New namespace"
 		} else {
 			error = true
-			helperText = "You need the squatter role to create this new namespace"
+			helperText = "You need the squatter or root role to create this new namespace"
 		}
 	}
 
