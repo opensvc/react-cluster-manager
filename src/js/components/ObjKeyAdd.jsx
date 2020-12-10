@@ -4,25 +4,32 @@ import useUser from "../hooks/User.jsx"
 import { apiPostAny } from "../api.js"
 import { splitPath } from "../utils.js"
 
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import IconButton from '@material-ui/core/IconButton';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
+import TextField from '@material-ui/core/TextField'
+import MenuItem from '@material-ui/core/MenuItem'
+import IconButton from '@material-ui/core/IconButton'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import TextareaAutosize from '@material-ui/core/TextareaAutosize'
 
 import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles(theme => ({
 	formcontrol: {
 		margin: theme.spacing(2, 0),
+	},
+	textarea: {
+		fontFamily: "monospace",
+		width: "100%",
+                whiteSpace: "nowrap",
+                overflow: "auto !important",
 	},
 }))
 
@@ -55,13 +62,39 @@ function ObjKeyAdd(props) {
 	function handleSourceChange(e) {
 		setActive(e.target.value)
 	}
-	function handleSubmit(e) {
-		if (active == source.INPUT) {
-			apiPostAny("/key", {path: path, key: keyName, data: inputValue}, (data) => {
-				// reload config custom hook
-				console.log(data)
-			}, auth)
+	function handleLoadFile(e) {
+		if (active == source.LOCAL) {
+			console.log("fileValue", fileValue)
+			let file =  new File(fileValue, "foo", {
+				type: "text/plain",
+			})
+			let reader = new FileReader()
+			reader.onload = () => {
+				setInputValue(reader.result)
+				setActive(source.INPUT)
+			}
+			reader.readAsText(file)
+		} else {
+			setActive(source.LOCAL)
 		}
+	}
+	function handleLoadURL(e) {
+		if (active == source.REMOTE) {
+			fetch(urlValue)
+				.then(res => res.text())
+				.then(buff => {
+					setInputValue(buff)
+					setActive(source.INPUT)
+				})
+		} else {
+			setActive(source.REMOTE)
+		}
+	}
+	function handleSubmit(e) {
+		apiPostAny("/key", {path: path, key: keyName, data: inputValue}, (data) => {
+			// reload config custom hook
+			console.log(data)
+		}, auth)
 		handleClose(e)
 	}
 	return (
@@ -90,30 +123,15 @@ function ObjKeyAdd(props) {
 						/>
 					</FormControl>
 					<FormControl className={classes.formcontrol} fullWidth>
-						<Typography variant="caption" color="textSecondary">Value Source</Typography>
-						<Select
-							value={active}
-							onChange={handleSourceChange}
-							inputProps={{
-								name: 'source',
-								id: 'source',
-							}}
-						>
-							<MenuItem value={source.INPUT}>{source.INPUT}</MenuItem>
-							<MenuItem value={source.LOCAL}>{source.LOCAL}</MenuItem>
-							<MenuItem value={source.REMOTE}>{source.REMOTE}</MenuItem>
-						</Select>
-					</FormControl>
-					{(active==source.INPUT) &&
-					<FormControl className={classes.formcontrol} fullWidth>
-						<TextField
-							label="Key Value"
-							id="name"
-							value={inputValue}
+						<Typography variant="caption" color="textSecondary">Key Value</Typography>
+						<TextareaAutosize
+							className={classes.textarea}
+							rowsMax={25}
+							id="value"
 							onChange={(e) => setInputValue(e.target.value)}
+							value={inputValue}
 						/>
 					</FormControl>
-					}
 					{(active==source.REMOTE) &&
 					<FormControl className={classes.formcontrol} fullWidth>
 						<TextField
@@ -131,13 +149,18 @@ function ObjKeyAdd(props) {
 							label="File"
 							id="file"
 							type="file"
-							label={fileValue}
-							onChange={(e) => setFileValue(e.target.uploadFile)}
+							onChange={(e) => setFileValue(e.target.files)}
 						/>
 					</FormControl>
 					}
 				</DialogContent>
 				<DialogActions>
+					<Button onClick={handleLoadURL} color={(active == source.REMOTE) ? "secondary" : "primary"}>
+						Load URL
+					</Button>
+					<Button onClick={handleLoadFile} color={(active == source.LOCAL) ? "secondary" : "primary"}>
+						Load File
+					</Button>
 					<Button onClick={handleClose} color="primary">
 						Cancel
 					</Button>
