@@ -5,10 +5,18 @@ import { apiFetchLogs, addAuthorizationHeader } from "../api.js"
 
 function useLog(url) {
 	const [log, _setLog] = useState(null)
-	const [es, setEs] = useState(null)
+	const [es, _setEs] = useState(null)
 	const { auth } = useUser()
 	const logRef = React.useRef(log)
+	const esRef = React.useRef(es)
+	const backlog_url = url + "/backlogs"
+	const es_url = url + "/logs"
 
+	const setEs = x => {
+		console.log(es_url, "setEs", x)
+		esRef.current = x
+		_setEs(x)
+	}
 	const setLog = x => {
 		logRef.current = x
 		_setLog(x)
@@ -18,23 +26,21 @@ function useLog(url) {
 		if (logRef.current !== null) {
 			return
 		}
-		let _url = url + "/backlogs"
-		apiFetchLogs(_url, {"backlog": "10k"}, (lines) => {
+		apiFetchLogs(backlog_url, {"backlog": "10k"}, (lines) => {
 			setLog(lines)
 		}, auth)
 	}
 	function initEventSource() {
-		if (es !== null) {
+		if (esRef.current) {
 			return
 		}
-		let _url = url + "/logs"
-		console.log("init", _url, "logs event source")
+		console.log("init", es_url, "logs event source")
 		var eventSourceInitDict = {headers: {}}
 		if (/^\/object\//, url) {
 			eventSourceInitDict.headers["o-node"] = "*"
 		}
 		eventSourceInitDict.headers = addAuthorizationHeader(eventSourceInitDict.headers, auth)
-		var _es = new EventSource(_url, eventSourceInitDict)
+		var _es = new EventSource(es_url, eventSourceInitDict)
 		_es.onmessage = (e) => {
 			var lines = JSON.parse(e.data)
 			if (logRef.current === null) {
@@ -46,12 +52,11 @@ function useLog(url) {
 		setEs(_es)
 	}
 	function stopEventSource() {
-		let _url = url + "/logs"
-		console.log("stop", _url, "logs event source")
-		if (!es) {
+		console.log("stop", es_url, "logs event source", esRef.current)
+		if (!esRef.current) {
 			return
 		}
-		es.close()
+		esRef.current.close()
 		setEs(null)
 	}
 
