@@ -94,6 +94,7 @@ function ObjKeys(props) {
 									<TableCell>{t("Key")}</TableCell>
 									<TableCell>Type</TableCell>
 									<TableCell>{t("Value")}</TableCell>
+									<TableCell></TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -125,15 +126,11 @@ function ObjKey(props) {
 		var value = (
 			<Fragment>
 				{keyValue.slice(i+1)}
-				<KeyEdit path={path} keyName={keyName} />
 			</Fragment>
 		)
 	} else {
 		var value = (
-			<Fragment>
-				<KeyDecode path={path} keyName={keyName} />
-				<KeyEdit path={path} keyName={keyName} />
-			</Fragment>
+			<KeyDecode path={path} keyName={keyName} />
 		)
 	}
         function handleClick(event) {
@@ -170,6 +167,7 @@ function ObjKey(props) {
 			<TableCell>{keyName}</TableCell>
 			<TableCell><span className="badge badge-secondary mr-2">{valueType}</span></TableCell>
 			<TableCell>{value}</TableCell>
+			<TableCell><KeyEdit path={path} keyName={keyName} /></TableCell>
 		</TableRow>
 	)
 }
