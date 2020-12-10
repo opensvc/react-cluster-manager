@@ -207,7 +207,7 @@ function GrantLine(props) {
 	const { i18n, t } = useTranslation()
 
 	if (!props.namespaces) {
-		if (["hearbeat", "blacklistadmin", "squatter", "root"].indexOf(props.role) > -1) {
+		if (["heartbeat", "blacklistadmin", "squatter", "prioritizer", "root"].indexOf(props.role) > -1) {
 			var text = ""
 		} else {
 			return null

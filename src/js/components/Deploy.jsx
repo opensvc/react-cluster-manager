@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { DeployEmpty } from "./DeployEmpty.jsx";
-import { DeployClone } from "./DeployClone.jsx";
 import { DeployCatalog } from "./DeployCatalog.jsx";
 import { DeployTemplate } from "./DeployTemplate.jsx";
 
@@ -29,10 +28,6 @@ const useStyles = makeStyles(theme => ({
 const tabs = [
         {
                 name: "Empty",
-                disabled: false,
-        },
-        {
-                name: "Clone",
                 disabled: false,
         },
         {
@@ -72,9 +67,8 @@ function Deploy(props) {
                         </Tabs>
                         <Box className={classes.tabContent}>
                                 {data.active === 0 && <DeployEmpty data={data.empty} set={set("empty")} />}
-                                {data.active === 1 && <DeployClone data={data.clone} set={set("clone")} />}
-                                {data.active === 2 && <DeployCatalog data={data.catalog} set={set("catalog")} />}
-                                {data.active === 3 && <DeployTemplate data={data.template} set={set("template")} />}
+                                {data.active === 1 && <DeployCatalog data={data.catalog} set={set("catalog")} />}
+                                {data.active === 2 && <DeployTemplate data={data.template} set={set("template")} />}
                         </Box>
 		</React.Fragment>
 	)

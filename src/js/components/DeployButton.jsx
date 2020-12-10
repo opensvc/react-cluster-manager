@@ -75,25 +75,6 @@ function DeployButton(props) {
                         data: $
                 }), auth)
         }
-        function createClone() {
-                var path = [data.clone.namespace, "svc", data.clone.name].join("/")
-                var _data = {
-                        namespace: data.clone.namespace,
-                        provision: true,
-                        restore: false,
-                        data: {}
-                }
-                apiObjGetConfig({path: data.clone.src, format: "json"}, (cdata) => {
-                        if ("metadata" in cdata) {
-                                delete cdata["metadata"]
-                        }
-                        _data.data[path] = cdata
-                        apiObjCreate(_data, ($) => dispatchAlerts({
-                                ok: "Object " + path + " cloned",
-                                data: $
-                        }))
-                }, auth)
-        }
         function createTemplate() {
                 if (createDataHasPathKey()) {
                         var _data = {
@@ -158,10 +139,8 @@ function DeployButton(props) {
 		if (data.active == 0) {
 			createEmpty()
 		} else if (data.active == 1) {
-			createClone()
-		} else if (data.active == 2) {
 			createCatalog()
-		} else if (data.active == 3) {
+		} else if (data.active == 2) {
 			createTemplate()
 		}
 		handleClose(e)
