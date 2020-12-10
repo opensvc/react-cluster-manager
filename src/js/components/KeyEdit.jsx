@@ -18,9 +18,9 @@ import Typography from "@material-ui/core/Typography"
 import TextareaAutosize from "@material-ui/core/TextareaAutosize"
 
 const useStyles = makeStyles(theme => ({
-        formcontrol: {
-                margin: theme.spacing(2, 0),
-        },
+	formcontrol: {
+		margin: theme.spacing(2, 0),
+	},
 	textarea: {
 		fontFamily: "monospace",
 		width: "100%",
@@ -51,110 +51,124 @@ function KeyData(props) {
 
 function KeyEdit(props) {
 	const {path, keyName} = props
-	const { auth } = useUser()
 	const [open, setOpen] = useState(false)
-	const [value, setValue] = useKey({path: path, keyName: keyName})
-        const [urlValue, setUrlValue] = useState("")
-        const [fileValue, setFileValue] = useState("")
-	const { dispatchAlerts } = useApiResponse()
-	const classes = useStyles()
-        const source = {
-                "INPUT": "User Input",
-                "LOCAL": "Local File",
-                "REMOTE": "Remote Location",
-        }
-        const [active, setActive] = useState(source.INPUT)
-
-        function handleOpen(e) {
-                e.stopPropagation()
-                setOpen(true)
-        }
-        function handleClose(e) {
-                setOpen(false)
-        }
-        function handleSave(e) {
-		apiPostAny("/key", {path: path, key: keyName, data: value}, (data) => {
-			console.log(data)
-			dispatchAlerts({data: data})
-		}, auth)
-                //setOpen(false)
-        }
-        function handleLoadFile(e) {
-                if (active == source.LOCAL) {
-                        console.log("fileValue", fileValue)
-                        let file =  new File(fileValue, "foo", {
-                                type: "text/plain",
-                        })
-                        let reader = new FileReader()
-                        reader.onload = () => {
-                                setValue(reader.result)
-                                setActive(source.INPUT)
-                        }
-                        reader.readAsText(file)
-                } else {
-                        setActive(source.LOCAL)
-                }
-        }
-        function handleLoadURL(e) {
-                if (active == source.REMOTE) {
-                        fetch(urlValue)
-                                .then(res => res.text())
-                                .then(buff => {
-                                        setValue(buff)
-                                        setActive(source.INPUT)
-                                })
-                } else {
-                        setActive(source.REMOTE)
-                }
-        }
-
+	function handleOpen(e) {
+		e.stopPropagation()
+		setOpen(true)
+	}
+	function handleClose(e) {
+		setOpen(false)
+	}
 	return (
 		<React.Fragment>
 			<Button onClick={handleOpen} color="secondary">
 				Edit
 			</Button>
-                        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth="md" fullWidth={true}>
-                                <DialogTitle id="form-dialog-title">{keyName}</DialogTitle>
-                                <DialogContent>
-					<KeyData value={value} setValue={setValue} />
-                                        {(active==source.REMOTE) &&
-                                        <FormControl className={classes.formcontrol} fullWidth>
-                                                <TextField
-                                                        label="Remote Location"
-                                                        id="url"
-                                                        type="url"
-                                                        value={urlValue}
-                                                        onChange={(e) => setUrlValue(e.target.value)}
-                                                />
-                                        </FormControl>
-                                        }
-                                        {(active==source.LOCAL) &&
-                                        <FormControl className={classes.formcontrol} fullWidth>
-                                                <TextField
-                                                        label="File"
-                                                        id="file"
-                                                        type="file"
-                                                        onChange={(e) => setFileValue(e.target.files)}
-                                                />
-                                        </FormControl>
-                                        }
-                                </DialogContent>
-                                <DialogActions>
-                                        <Button onClick={handleLoadURL} color={(active == source.REMOTE) ? "secondary" : "primary"}>
-                                                Load URL
-                                        </Button>
-                                        <Button onClick={handleLoadFile} color={(active == source.LOCAL) ? "secondary" : "primary"}>
-                                                Load File
-                                        </Button>
-                                        <Button onClick={handleClose} color="primary">
-                                                Dismiss
-                                        </Button>
-                                        <Button onClick={handleSave} color="secondary">
-                                                Save
-                                        </Button>
-                                </DialogActions>
-                        </Dialog>
+			{open &&
+			<KeyEditDialog
+				path={path}
+				keyName={keyName}
+				open={open}
+				handleClose={handleClose}
+			/>
+			}
 		</React.Fragment>
+	)
+}
+
+function KeyEditDialog(props) {
+	const {path, keyName, open, handleClose} = props
+	const { auth } = useUser()
+	const [value, setValue] = useKey({path: path, keyName: keyName})
+	const [urlValue, setUrlValue] = useState("")
+	const [fileValue, setFileValue] = useState("")
+	const { dispatchAlerts } = useApiResponse()
+	const classes = useStyles()
+	const source = {
+		"INPUT": "User Input",
+		"LOCAL": "Local File",
+		"REMOTE": "Remote Location",
+	}
+	const [active, setActive] = useState(source.INPUT)
+
+	function handleSave(e) {
+		apiPostAny("/key", {path: path, key: keyName, data: value}, (data) => {
+			console.log(data)
+			dispatchAlerts({data: data})
+		}, auth)
+		//handleClose()
+	}
+	function handleLoadFile(e) {
+		if (active == source.LOCAL) {
+			console.log("fileValue", fileValue)
+			let file =  new File(fileValue, "foo", {
+				type: "text/plain",
+			})
+			let reader = new FileReader()
+			reader.onload = () => {
+				setValue(reader.result)
+				setActive(source.INPUT)
+			}
+			reader.readAsText(file)
+		} else {
+			setActive(source.LOCAL)
+		}
+	}
+	function handleLoadURL(e) {
+		if (active == source.REMOTE) {
+			fetch(urlValue)
+				.then(res => res.text())
+				.then(buff => {
+					setValue(buff)
+					setActive(source.INPUT)
+				})
+		} else {
+			setActive(source.REMOTE)
+		}
+	}
+
+	return (
+		<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth="md" fullWidth={true}>
+			<DialogTitle id="form-dialog-title">{keyName}</DialogTitle>
+			<DialogContent>
+				<KeyData value={value} setValue={setValue} />
+				{(active==source.REMOTE) &&
+				<FormControl className={classes.formcontrol} fullWidth>
+					<TextField
+						label="Remote Location"
+						id="url"
+						type="url"
+						value={urlValue}
+						onChange={(e) => setUrlValue(e.target.value)}
+					/>
+				</FormControl>
+				}
+				{(active==source.LOCAL) &&
+				<FormControl className={classes.formcontrol} fullWidth>
+					<TextField
+						label="File"
+						id="file"
+						type="file"
+						onChange={(e) => setFileValue(e.target.files)}
+					/>
+				</FormControl>
+				}
+			</DialogContent>
+			<DialogActions>
+				<Button onClick={handleLoadURL} color={(active == source.REMOTE) ? "secondary" : "primary"}>
+					Load URL
+				</Button>
+				<Button onClick={handleLoadFile} color={(active == source.LOCAL) ? "secondary" : "primary"}>
+					Load File
+				</Button>
+				<Button onClick={handleClose} color="primary">
+					Dismiss
+				</Button>
+				<Button onClick={handleSave} color="secondary">
+					Save
+				</Button>
+			</DialogActions>
+		</Dialog>
 	)
 }
 
