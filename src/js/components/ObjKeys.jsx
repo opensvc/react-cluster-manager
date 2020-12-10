@@ -124,7 +124,7 @@ function ObjKey(props) {
 	if (valueType == "literal") {
 		var value = (
 			<Fragment>
-				keyValue.slice(i+1)
+				{keyValue.slice(i+1)}
 				<KeyEdit path={path} keyName={keyName} />
 			</Fragment>
 		)
