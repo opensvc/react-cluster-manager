@@ -156,6 +156,9 @@ const AppStateProvider = (props) => {
 				}
 
 			case 'setEventSourceAlive':
+				if (action.data == state.eventSourceAlive) {
+					return state
+				}
 				return {
 					...state,
 					eventSourceAlive: action.data
