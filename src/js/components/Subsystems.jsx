@@ -6,6 +6,7 @@ import { clusterIssue, threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIss
 import { makeStyles } from '@material-ui/core/styles';
 import { state } from "../utils.js"
 import { useColorStyles } from "../styles.js"
+import ObjIcon from "./ObjIcon.jsx"
 import Badge from '@material-ui/core/Badge';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -19,14 +20,10 @@ import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import HowToVoteIcon from '@material-ui/icons/HowToVote';
 import StorageIcon from '@material-ui/icons/Storage';
 import WidgetsIcon from '@material-ui/icons/Widgets';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
-import LockIcon from '@material-ui/icons/Lock';
-import SaveIcon from '@material-ui/icons/Save';
 import GroupWorkIcon from '@material-ui/icons/GroupWork';
 import LinkIcon from '@material-ui/icons/Link';
 import CodeIcon from '@material-ui/icons/Code';
+import SaveIcon from '@material-ui/icons/Save'
 
 const useStyles = makeStyles(theme => ({
 	nested: {
@@ -130,7 +127,7 @@ function Subsystems(props) {
 				issue={objectsIssue(cstat, "svc")}
 				href="#svc"
 				title="Services"
-				icon={ <FiberManualRecordIcon /> }
+				icon={ <ObjIcon kind="svc" /> }
 				onClick={() => history.push("/services")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
@@ -139,7 +136,7 @@ function Subsystems(props) {
 				issue={objectsIssue(cstat, "vol")}
 				href="#vol"
 				title="Volumes"
-				icon={ <SaveIcon /> }
+				icon={ <ObjIcon kind="vol" /> }
 				onClick={() => history.push("/volumes")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
@@ -148,7 +145,7 @@ function Subsystems(props) {
 				issue={state.OPTIMAL}
 				href="#cfg"
 				title="Configs"
-				icon={ <LockOpenIcon /> }
+				icon={ <ObjIcon kind="cfg" /> }
 				onClick={() => history.push("/configs")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
@@ -157,7 +154,7 @@ function Subsystems(props) {
 				issue={state.OPTIMAL}
 				href="#sec"
 				title="Secrets"
-				icon={ <LockIcon /> }
+				icon={ <ObjIcon kind="sec" /> }
 				onClick={() => history.push("/secrets")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
@@ -166,7 +163,7 @@ function Subsystems(props) {
 				issue={state.OPTIMAL}
 				href="#usr"
 				title="Users"
-				icon={ <AccountCircleIcon /> }
+				icon={ <ObjIcon kind="usr" /> }
 				onClick={() => history.push("/users")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
