@@ -60,9 +60,6 @@ const useStyles = makeStyles(theme => ({
 		marginLeft: -theme.spacing(2),
 		marginRight: -theme.spacing(2),
 	},
-	gitem: {
-		paddingTop: "6px",
-	},
 	content: {
 		paddingTop: 0,
 	},
@@ -247,10 +244,12 @@ function ObjLines(props) {
 }
 
 const ObjLine = React.memo(({line, setSelected, handleLineClick}) => {
-	const classes = useStyles()
 	const handleClick = (event) => {
 		event.stopPropagation()
 		handleSelect(line.path)
+	}
+	const style = {
+		paddingTop: "6px"
 	}
 	console.log("line")
 	return (
@@ -261,22 +260,22 @@ const ObjLine = React.memo(({line, setSelected, handleLineClick}) => {
 			<ListItemText primary={line.path} />
                         <ListItemSecondaryAction>
 				<Grid container alignItems="center" alignContent="center" spacing={0}>
-					<Grid item className={classes.gitem}>
+					<Grid item style={style}>
 						<ObjActive path={line.path} />
 					</Grid>
-					<Grid item className={classes.gitem}>
+					<Grid item style={style}>
 						<ObjOverall overall={line.overall} />
 					</Grid>
-					<Grid item className={classes.gitem}>
+					<Grid item style={style}>
 						<ObjPlacement placement={line.placement} />
 					</Grid>
-					<Grid item className={classes.gitem}>
+					<Grid item style={style}>
 						<ObjFrozen frozen={line.frozen} />
 					</Grid>
-					<Grid item className={classes.gitem}>
+					<Grid item style={style}>
 						<ObjProvisioned provisioned={line.provisioned} />
 					</Grid>
-					<Grid item className={classes.gitem}>
+					<Grid item style={style}>
 					</Grid>
 					<Grid item>
 						<Checkbox
