@@ -6,25 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
-const useStyles = makeStyles(theme => ({
-	animate: {
-		animation: '$animate 1.5s ease-in-out infinite'
-	},
-	'@keyframes animate': {
-		'0%': {
-			opacity: 1
-		},
-		'50%': {
-			opacity: 0.4
-		},
-		'100%': {
-			opacity: 1
-		}
-	},
-}))
-
 function ObjActive(props) {
-	const classes = useStyles()
 	const [{ cstat }, dispatch] = useStateValue();
 	if (cstat.monitor === undefined) {
 		return null
@@ -45,7 +27,7 @@ function ObjActive(props) {
 		if (idata.monitor.global_expect || (idata.monitor.status != "idle")) {
 			return (
 				<Typography className={props.className} component="span">
-					<PlayArrowIcon color="primary" className={classes.animate} />
+					<PlayArrowIcon color="primary" />
 				</Typography>
 			)
 		}
