@@ -1,6 +1,7 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 import { splitPath, fmtPath } from '../utils.js'
+import Typography from '@material-ui/core/Typography'
 
 function slaveInstancesCount(path, cstat) {
 	var live = 0
@@ -63,7 +64,7 @@ function ObjInstanceCounts(props) {
 		return (<span />)
 	}
 	return (
-		<span>{live}/{target}</span>
+		<Typography component="span">{live}/{target}</Typography>
 	)
 }
 

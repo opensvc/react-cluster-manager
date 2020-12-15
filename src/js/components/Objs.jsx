@@ -1,32 +1,47 @@
-import React, { useState } from "react";
-import useClusterStatus from "../hooks/ClusterStatus.jsx"
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
-import { splitPath } from "../utils.js";
-import { ObjActions } from "./ObjActions.jsx";
-import { ObjState } from "./ObjState.jsx";
-import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
-import { TableToolbar } from "./TableToolbar.jsx";
-import { DeployButton } from "./DeployButton.jsx";
+import React, { useState, useReducer } from "react"
+import isEqual from "lodash.isequal"
+import ObjIcon from "./ObjIcon.jsx"
+import { useStateValue } from '../state.js'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router'
+import { splitPath } from "../utils.js"
+import { ObjActions } from "./ObjActions.jsx"
+import { TableToolbar } from "./TableToolbar.jsx"
+import { DeployButton } from "./DeployButton.jsx"
+import { ObjActive } from "./ObjActive.jsx"
+import { ObjOverall } from "./ObjOverall.jsx"
+import { ObjFrozen } from "./ObjFrozen.jsx"
+import { ObjPlacement } from "./ObjPlacement.jsx"
+import { ObjProvisioned } from "./ObjProvisioned.jsx"
+import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx"
 
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import TextField from '@material-ui/core/TextField';
-import Hidden from '@material-ui/core/Hidden';
+import useDebouncedValue from "../hooks/DebouncedValue.jsx"
 
-import FilterListIcon from '@material-ui/icons/FilterList';
+import { makeStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
+import CardContent from '@material-ui/core/CardContent'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableHead from '@material-ui/core/TableHead'
+import TablePagination from '@material-ui/core/TablePagination'
+import TableRow from '@material-ui/core/TableRow'
+import Container from '@material-ui/core/Container'
+import Checkbox from '@material-ui/core/Checkbox'
+import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
+import TextField from '@material-ui/core/TextField'
+import Hidden from '@material-ui/core/Hidden'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+
+import FilterListIcon from '@material-ui/icons/FilterList'
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -45,8 +60,15 @@ const useStyles = makeStyles(theme => ({
 		marginLeft: -theme.spacing(2),
 		marginRight: -theme.spacing(2),
 	},
+	gitem: {
+		paddingTop: "6px",
+	},
 	content: {
 		paddingTop: 0,
+	},
+	list: {
+		paddingLeft: 0,
+		paddingRight: 0,
 	},
 }))
 
@@ -69,9 +91,9 @@ function ObjsFilter(props) {
 }
 
 function getLines(props) {
-	const { kind, search, withScalerSlaves, cstat } = props
+	const { kind, search, withScalerSlaves, cstat, selected } = props
 	var lines = []
-	if (cstat.monitor === undefined) {
+	if (!cstat.monitor) {
 		return lines
 	}
 	if (search) {
@@ -79,7 +101,7 @@ function getLines(props) {
 	} else {
 		var rePath = null
 	}
-	for (var path in cstat.monitor.services) {
+	for (var path of Object.keys(cstat.monitor.services).sort()) {
 		var sp = splitPath(path)
 
 		// Apply filters
@@ -98,47 +120,74 @@ function getLines(props) {
 			// discard scaler slaves
 			continue
 		}
-		lines.push(path)
+		lines.push({
+			...cstat.monitor.services[path],
+			path: path,
+			selected: selected.has(path)
+		})
 	}
 	return lines
 }
 
+function getTitle(kind) {
+	const titles = {
+		svc: "Services",
+		vol: "Volumes",
+		cfg: "Configs",
+		sec: "Secrets",
+		usr: "Users",
+	}
+	var s = titles[kind]
+	if (s) {
+		return s
+	}
+	return "Objects"
+}
+
 function Objs(props) {
 	const classes = useStyles()
-	const { cstat } = useClusterStatus()
-	const [selected, setSelected] = useState([])
+	const [{ cstat }, dispatch] = useStateValue()
 	const [search, setSearch] = useState("")
+	const debouncedSearch = useDebouncedValue(search, 400)
 	const [searchOpen, setSearchOpen] = useState(false)
 	const { kind, withScalerSlaves } = props
 	const { t, i18n } = useTranslation()
-	var lines = getLines({kind: props.kind, search: search, cstat: cstat})
+	const history = useHistory()
+	const title = getTitle(props.kind)
+	const [selected, setSelected] = useReducer((state, path) => {
+		let newSelected = new Set(state)
+		if (newSelected.has(path)) {
+			newSelected.delete(path)
+		} else {
+			newSelected.add(path)
+		}
+		return newSelected
+	}, new Set())
 
-	if (cstat.monitor === undefined) {
-		return lines
+	if (!cstat.monitor) {
+		return null
 	}
+
+	console.log("getlines")
+	var lines = getLines({kind: props.kind, search: debouncedSearch, cstat: cstat, selected: selected})
+	var linesCount = lines.length
 
 	function handleSelectAllClick(event) {
 		if (event.target.checked) {
-			const newSelecteds = lines
-			setSelected(newSelecteds)
-			return;
+			setSelected(new Set(lines.map(x => x.path)))
+		} else {
+			setSelected(new Set())
 		}
-		setSelected([]);
+	}
+	function handleLineClick(path) {
+		history.push({
+			pathname: "/object",
+			search: "?path="+path,
+			state: {kind: title},
+		})
 	}
 
-	var rowCount = lines.length
-	var title = "Objects"
-	if (props.kind == "svc") {
-		title = "Services"
-	} else if (props.kind == "vol") {
-		title = "Volumes"
-	} else if (props.kind == "cfg") {
-		title = "Configs"
-	} else if (props.kind == "sec") {
-		title = "Secrets"
-	} else if (props.kind == "usr") {
-		title = "Users"
-	}
+	console.log("table")
 
 	return (
 		<Card className={classes.root}>
@@ -146,121 +195,102 @@ function Objs(props) {
 				title={t(title)}
 				subheader={cstat.cluster.name}
 				action={
-					<TableToolbar selected={selected} className={classes.table}>
-						{(selected.length > 0) && <ObjActions selected={selected} title="" />}
+					<TableToolbar selected={Array.from(selected)} className={classes.table}>
+						{(selected.size > 0) && <ObjActions selected={Array.from(selected)} title="" />}
 						<DeployButton kind={props.kind} />
 						<Tooltip title={t("Filters")}>
 							<IconButton aria-label="Filters" disabled={search?true:false} onClick={() => {(!search) && setSearchOpen(!searchOpen)}}>
 								<FilterListIcon />
 							</IconButton>
 						</Tooltip>
+						<Checkbox
+							indeterminate={selected.size > 0 && selected.size < linesCount}
+							checked={selected.size === linesCount}
+							disableRipple
+							onChange={handleSelectAllClick}
+							inputProps={{ 'aria-label': t("Select all") }}
+						/>
 					</TableToolbar>
 				}
 			/>
 			<CardContent className={classes.content}>
 				{(searchOpen || search) && <ObjsFilter search={search} setSearch={setSearch} />}
-				<div style={{overflowX: "auto"}} className={classes.table}>
-					<Table>
-						<TableHead>
-							<TableRow>
-								<TableCell padding="checkbox">
-									<Checkbox
-										indeterminate={selected.length > 0 && selected.length < rowCount}
-										checked={selected.length === rowCount}
-										onChange={handleSelectAllClick}
-										inputProps={{ 'aria-label': t("Select all") }}
-									/>
-								</TableCell>
-								<Hidden mdUp>
-									<TableCell>{t("Path")}</TableCell>
-								</Hidden>
-								<Hidden smDown>
-									<TableCell>{t("Namespace")}</TableCell>
-									<TableCell>{t("Kind")}</TableCell>
-									<TableCell>{t("Name")}</TableCell>
-								</Hidden>
-								<TableCell>{t("State")}</TableCell>
-								<TableCell>Instances</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{lines.sort().map((path, i) => (
-								<ObjLine key={path} index={i} path={path} selected={selected} setSelected={setSelected} title={title} cstat={cstat} />
-							))}
-						</TableBody>
-					</Table>
-				</div>
+				<ObjLines
+					lines={lines}
+					setSelected={setSelected}
+					handleLineClick={handleLineClick}
+				/>
 			</CardContent>
 		</Card>
 	)
 }
 
-function ObjLine(props) {
-	const history = useHistory()
+function ObjLines(props) {
 	const classes = useStyles()
-	const {index, path, selected, setSelected, withScalerSlaves, title, cstat } = props
-	const sp = splitPath(path)
-	function handleClick(event) {
-		event.stopPropagation()
-		const selectedIndex = selected.indexOf(path)
-		let newSelected = []
-
-		if (selectedIndex === -1) {
-			newSelected = newSelected.concat(selected, path);
-		} else if (selectedIndex === 0) {
-			newSelected = newSelected.concat(selected.slice(1));
-		} else if (selectedIndex === selected.length - 1) {
-			newSelected = newSelected.concat(selected.slice(0, -1));
-		} else if (selectedIndex > 0) {
-			newSelected = newSelected.concat(
-				selected.slice(0, selectedIndex),
-				selected.slice(selectedIndex + 1),
-			);
-		}
-		setSelected(newSelected);
-	}
-
-	function handleLineClick(e) {
-		history.push({
-			pathname: "/object",
-			search: "?path="+path,
-			state: {kind: title},
-		})
-	}
-	const isItemSelected = selected.indexOf(path) !== -1
-	const labelId = `objs-checkbox-${index}`
-
+	const {lines, setSelected, handleLineClick} = props
 	return (
-		<TableRow
-			onClick={handleLineClick}
-			hover
-			role="checkbox"
-			aria-checked={isItemSelected}
-			tabIndex={-1}
-			key={path}
-			selected={isItemSelected}
-			className={classes.row}
-		>
-			<TableCell padding="checkbox" onClick={handleClick}>
-				<Checkbox
-					checked={isItemSelected}
-					inputProps={{ 'aria-labelledby': labelId }}
+		<List className={classes.list}>
+			{lines.map((line, index) => (
+				<ObjLine
+					key={index}
+					line={line}
+					setSelected={setSelected}
+					handleLineClick={handleLineClick}
 				/>
-			</TableCell>
-
-			<Hidden mdUp>
-				<TableCell>{path}</TableCell>
-			</Hidden>
-			<Hidden smDown>
-				<TableCell>{sp.namespace}</TableCell>
-				<TableCell>{sp.kind}</TableCell>
-				<TableCell>{sp.name}</TableCell>
-			</Hidden>
-			<TableCell><ObjState path={path} /></TableCell>
-			<TableCell><ObjInstanceCounts path={path} /></TableCell>
-		</TableRow>
+			))}
+		</List>
 	)
 }
+
+const ObjLine = React.memo(({line, setSelected, handleLineClick}) => {
+	const classes = useStyles()
+	const handleClick = (event) => {
+		event.stopPropagation()
+		handleSelect(line.path)
+	}
+	console.log("line")
+	return (
+		<ListItem button disableRipple onClick={(e) => handleLineClick(line.path)}>
+			<ListItemIcon>
+				<ObjIcon path={line.path} avail={line.avail} />
+			</ListItemIcon>
+			<ListItemText primary={line.path} />
+                        <ListItemSecondaryAction>
+				<Grid container alignItems="center" alignContent="center" spacing={0}>
+					<Grid item className={classes.gitem}>
+						<ObjActive path={line.path} />
+					</Grid>
+					<Grid item className={classes.gitem}>
+						<ObjOverall overall={line.overall} />
+					</Grid>
+					<Grid item className={classes.gitem}>
+						<ObjPlacement placement={line.placement} />
+					</Grid>
+					<Grid item className={classes.gitem}>
+						<ObjFrozen frozen={line.frozen} />
+					</Grid>
+					<Grid item className={classes.gitem}>
+						<ObjProvisioned provisioned={line.provisioned} />
+					</Grid>
+					<Grid item className={classes.gitem}>
+					</Grid>
+					<Grid item>
+						<Checkbox
+							checked={line.selected}
+							onChange={(e) => setSelected(line.path)}
+							edge="end"
+							disableRipple
+						/>
+					</Grid>
+				</Grid>
+                        </ListItemSecondaryAction>
+
+		</ListItem>
+	)
+},
+function compare(p, n) {
+	return isEqual(p.line, n.line)
+})
 
 export {
 	Objs

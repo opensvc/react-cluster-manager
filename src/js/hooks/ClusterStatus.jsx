@@ -19,7 +19,7 @@ function useClusterStatus(props) {
 	const [{cstat, user, eventSourceAlive}, dispatch] = useStateValue()
 	const { auth } = useUser()
 	const lastDispatch = useRef(Date.now())
-	const limit = 500
+	const limit = 1000
 
 	function setEventSourceAlive(val) {
 		dispatch({type: "setEventSourceAlive", "data": val})

@@ -1,9 +1,7 @@
 import React from "react";
 
-import Typography from '@material-ui/core/Typography';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import clsx from 'clsx';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import { useTheme } from '@material-ui/styles';
 
 function CircleIcon(props) {
@@ -15,13 +13,6 @@ function CircleIcon(props) {
         )
 }
 
-function HomeIcon(props) {
-	return (
-		<SvgIcon {...props}>
-			<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-		</SvgIcon>
-	)
-}
 
 function ObjAvail(props) {
 	const {avail, overall, className} = props
