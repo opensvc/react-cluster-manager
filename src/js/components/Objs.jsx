@@ -155,6 +155,10 @@ function Objs(props) {
 	const history = useHistory()
 	const title = getTitle(props.kind)
 	const [selected, setSelected] = useReducer((state, path) => {
+		try {
+			path.has("foo")
+			return path
+		} catch {}
 		let newSelected = new Set(state)
 		if (newSelected.has(path)) {
 			newSelected.delete(path)
