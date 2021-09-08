@@ -19,19 +19,30 @@ function Flag(props) {
 	)
 }
 
+function has_retries(rid, instanceRestart) {
+	if (instanceRestart === undefined) {
+		return 0
+	}
+	if (! (rid in instanceRestart)) {
+		return 0
+	}
+	let retries = instanceRestart[rid].retries
+	if (retries === undefined) {
+		// fallback api version < v7
+		return instanceRestart[rid]
+	}
+	return retries
+}
+
 function ObjInstanceResourceFlags(props) {
 	const {rid, data, idata} = props
 	const { t } = useTranslation()
 	const classes = useStyles()
-	try {
-		var retries = idata.monitor.restart[rid]
-	} catch(e) {
-		var retries = 0
-	}
+	let remainingRestart
 	if (data.restart) {
-		var remaining_restart = data.restart - retries
-		if (remaining_restart < 0) {
-			remaining_restart = 0
+		remainingRestart = data.restart - has_retries(rid, idata.monitor.restart)
+		if (remainingRestart < 0) {
+			remainingRestart = 0
 		}
 	}
 	var provisioned = null
@@ -72,9 +83,9 @@ function ObjInstanceResourceFlags(props) {
 			}
 			{!data.restart ?
 				<Flag value="." title={t("No Restart")} /> :
-				remaining_restart < 10 ?
-					<Flag value={remaining_restart} title={t("Number of Restarts Left")} /> :
-					<Flag value="+" title={t("{{count}} Restarts Left", remaining_restart)} />
+				remainingRestart < 10 ?
+					<Flag value={remainingRestart} title={t("Number of Restarts Left")} /> :
+					<Flag value="+" title={t("{{count}} Restarts Left", {count: remainingRestart})} />
 			}
 		</div>
 	)
