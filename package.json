@@ -1,17 +1,19 @@
 {
   "name": "opensvc-cluster-manager",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "OpenSVC Cluster Management Frontend.",
   "main": "index.js",
   "config": {
     "mode": "development"
   },
   "scripts": {
-    "cleanup": "rm -f src/version.js",
-    "pkgversion": "echo \"export const version = \\\"$npm_package_version\\\"\" >> src/version.js",
+    "cleanup": "rm -rf src/version.js dist",
+    "check-version": "git describe --always --tags | egrep \"${npm_package_version}(-.*)*$\" > version && cat version && exit 0 || echo invalid versions: package:$npm_package_version != git:$(git describe --always --tags) && exit 1",
+    "pkgversion": "echo \"export const version = \\\"$(cat version)\\\"\" >> src/version.js",
     "commit": "echo \"export const commit = \\\"$(git log --max-count=1 --pretty=format:%H)\\\"\" >> src/version.js",
-    "dumpversion": "npm run cleanup && npm run pkgversion && npm run commit",
-    "build": "npm run dumpversion && webpack --mode $npm_package_config_mode"
+    "dumpversion": "npm run cleanup && npm run check-version && npm run pkgversion && npm run commit",
+    "build": "npm run dumpversion && webpack --mode production",
+    "build:dev": "npm run dumpversion && webpack --mode development"
   },
   "keywords": [],
   "author": "OpenSVC SAS",
