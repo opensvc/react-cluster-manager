@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: git describe --always --tags
+      - run: npm install
+      - run: npm list -g --depth=0
+      - run: npm run build:dev
+      - run: find dist -ls
+      - run: cd dist && tar -czf ../bundle.debug *
+      - run: npm run build
+      - run: find dist -ls
+      - run: cd dist && tar -czf ../bundle *
+      - name: Archive bundle and bundle.debug for release
+        uses: actions/upload-artifact@v2
+        with:
+          name: bundles
+          retention-days: 2
+          path: |
+            bundle
+            bundle.debug
+
+  release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Build changelog
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@main
+        with:
+          configuration: 'changelog-release.json'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: bundles
+          path: .
+
+      - run: ls -l bundle bundle.debug
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        id: Release
+        with:
+          body: ${{steps.build_changelog.outputs.changelog}}
+          files: |
+            bundle
+            bundle.debug
