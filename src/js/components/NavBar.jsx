@@ -29,6 +29,7 @@ import Chip from "@material-ui/core/Chip"
 import MenuIcon from "@material-ui/icons/Menu"
 import BlockIcon from "@material-ui/icons/Block"
 import WifiOffIcon from "@material-ui/icons/WifiOff"
+import {version} from "../../version";
 
 const StyledBreadcrumb = withStyles(theme => ({
 	root: {
@@ -204,7 +205,7 @@ function NavBarMenu(props) {
 	}
 	return (
 		<React.Fragment>
-			<IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="Menu" onClick={toggleDrawer(!drawerOpen)}>
+			<IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="Menu" onClick={toggleDrawer(!drawerOpen)} title={"app version " + version}>
 				<Badge badgeContent={count} classes={{badge: bgcolor[issue.name]}} variant="dot">
 					<MenuIcon />
 				</Badge>
