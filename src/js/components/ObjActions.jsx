@@ -67,7 +67,10 @@ function ObjActions(props) {
 		}
 		var nInstancesGet = () => {
 			var count = 0
-			for (var node in cstat.monitor.nodes) {
+			for (let node in cstat.monitor.nodes) {
+				if (Object.entries(cstat.monitor.nodes[node]).length === 0) {
+					continue
+				}
 				if (path in cstat.monitor.nodes[node].services.status) {
 					count++
 				}

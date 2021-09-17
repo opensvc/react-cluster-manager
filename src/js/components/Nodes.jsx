@@ -46,6 +46,13 @@ const useStyles = makeStyles(theme => ({
 	},
 }))
 
+function getNodeStat(cstat, node, key) {
+	if (Object.entries(cstat.monitor.nodes[node]).length === 0) {
+		return null
+	}
+	return cstat.monitor.nodes[node].stats[key]
+}
+
 function NodeCpuSparkline(props) {
 	var sampleData = [3, 2, 2, 1, 3, 5, 2]
 	return (
@@ -88,7 +95,7 @@ function NodeScore(props) {
 	return (
 		<NodeMetric
 			label="Score"
-			value={cstat.monitor.nodes[props.node].stats.score}
+			value={getNodeStat(cstat, props.node, "score")}
 			unit=""
 		/>
 	)
@@ -97,7 +104,7 @@ function NodeScore(props) {
 	return (
 		<NodeMetric
 			label="Load15m"
-			value={cstat.monitor.nodes[props.node].stats.load_15m}
+			value={getNodeStat(cstat, props.node, "load_15m")}
 			unit=""
 		/>
 	)
@@ -108,10 +115,10 @@ function NodeMem(props) {
 	return (
 		<NodeMetric
 			label="Avail Mem"
-			value={cstat.monitor.nodes[props.node].stats.mem_avail}
+			value={getNodeStat(cstat, props.node, "mem_avail")}
 			unit="%"
 			issue={memIssue}
-			refer={fancySizeMB(cstat.monitor.nodes[props.node].stats.mem_total)}
+			refer={fancySizeMB(getNodeStat(cstat, props.node, "mem_total"))}
 		/>
 	)
 }
@@ -121,10 +128,10 @@ function NodeSwap(props) {
 	return (
 		<NodeMetric
 			label="Avail Swap"
-			value={cstat.monitor.nodes[props.node].stats.mem_avail}
+			value={getNodeStat(cstat, props.node, "mem_avail")}
 			unit="%"
 			issue={swapIssue}
-			refer={fancySizeMB(cstat.monitor.nodes[props.node].stats.swap_total)}
+			refer={fancySizeMB(getNodeStat(cstat, props.node, "swap_total"))}
 		/>
 	)
 }

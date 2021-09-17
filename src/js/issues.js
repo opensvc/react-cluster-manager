@@ -147,7 +147,12 @@ function objectInstanceIssue(cstat, path, node) {
 	if (cstat.monitor === undefined) {
 		return state.NOTAPPLICABLE
 	}
-	var idata = cstat.monitor.nodes[node].services.status[path]
+	let idata
+	try {
+		idata = cstat.monitor.nodes[node].services.status[path]
+	} catch (e) {
+		return state.WARNING
+	}
 	if (idata === undefined) {
 		// no instance of path on node
 		return state.NOTAPPLICABLE

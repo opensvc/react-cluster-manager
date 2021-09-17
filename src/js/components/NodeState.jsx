@@ -17,11 +17,17 @@ const useStyles = makeStyles(theme => ({
 
 function NodeState(props) {
 	const classes = useStyles()
-	var items = [
+	let status
+	let globalExpect
+	if (Object.entries(props.data).length !== 0) {
+		status = props.data.monitor.status
+		globalExpect = props.data.monitor.global_expect
+	}
+	let items = [
 		<ObjFrozen className={classes.child} frozen={props.data.frozen} />,
 		<NodeStateSpeaker className={classes.child} speaker={props.data.speaker} />,
-		<MonitorStatusBadge className={classes.child} state={props.data.monitor.status} />,
-		<MonitorTargetBadge className={classes.child} target={props.data.monitor.global_expect} />,
+		<MonitorStatusBadge className={classes.child} state={status} />,
+		<MonitorTargetBadge className={classes.child} target={globalExpect} />,
 		<NodeStateMemOverload className={classes.child} data={props.data} />,
 		<NodeStateSwapOverload className={classes.child} data={props.data} />
 	]

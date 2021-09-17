@@ -17,6 +17,9 @@ function ObjActiveItem(props) {
 		return null
 	}
 	for (var node in cstat.monitor.nodes) {
+		if (Object.entries(cstat.monitor.nodes[node]).length === 0) {
+			continue
+		}
 		var idata = cstat.monitor.nodes[node].services.status[props.path]
 		if (idata === undefined) {
 			continue
