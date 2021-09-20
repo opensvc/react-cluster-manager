@@ -1,6 +1,6 @@
 {
   "name": "opensvc-cluster-manager",
-  "version": "7.1.2",
+  "version": "7.1.3",
   "description": "OpenSVC Cluster Management Frontend.",
   "main": "index.js",
   "config": {
