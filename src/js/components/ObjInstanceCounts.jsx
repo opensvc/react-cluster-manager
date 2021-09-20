@@ -32,6 +32,9 @@ function ObjInstanceCounts(props) {
 	var sp = splitPath(props.path)
 	for (var node in cstat.monitor.nodes) {
 		var nstat = cstat.monitor.nodes[node]
+		if (Object.entries(nstat).length === 0) {
+			continue
+		}
 		var instance = nstat.services.status[props.path]
 		if (!instance) {
 			continue

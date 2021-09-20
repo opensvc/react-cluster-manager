@@ -64,9 +64,12 @@ function ClusterDigest(props) {
                 return null
         }
 	for (var node in cstat.monitor.nodes) {
-		var n = cstat.monitor.nodes[node]
-		var memAvail = n.stats.mem_avail * n.stats.mem_total / 100
-		var swapAvail = n.stats.swap_avail * n.stats.swap_total / 100
+		let n = cstat.monitor.nodes[node]
+		if (Object.entries(n).length === 0) {
+			continue
+		}
+		let memAvail = n.stats.mem_avail * n.stats.mem_total / 100
+		let swapAvail = n.stats.swap_avail * n.stats.swap_total / 100
 		stats.memTotal += n.stats.mem_total
 		stats.memAvail += memAvail
 		stats.swapTotal += n.stats.swap_total
