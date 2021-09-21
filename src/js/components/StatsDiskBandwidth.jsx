@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography"
 import Grid from "@material-ui/core/Grid"
 import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
+import {isEmpty} from "lodash";
 
 const useStyles = makeStyles(theme => ({
 	itemGrid: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 
 function parseDiskBandwidth(last, prev, search) {
-	var d = {
+	let d = {
 		nodes: {},
 		sum: {
 			namespaces: {},
@@ -48,22 +49,27 @@ function parseDiskBandwidth(last, prev, search) {
 		return d
 	}
 	for (var node in last.nodes) {
-		var nlast = last.nodes[node].data
+		let nlast = last.nodes[node].data
+		if (isEmpty(nlast)) {
+			continue
+		}
+		let nprev
+		let elapsed
 		try {
-			var nprev = prev.nodes[node].data
+			nprev = prev.nodes[node].data
+			elapsed = nlast.timestamp - nprev.timestamp
 		} catch(e) {
 			continue
 		}
-		var elapsed = nlast.timestamp - nprev.timestamp
-		for (var path in nlast.services) {
+		for (let path in nlast.services) {
 			if (search && !path.match(search)) {
 				continue
 			}
-			var sp = splitPath(path)
-			var plast = nlast.services[path]
+			let sp = splitPath(path)
+			let plast = nlast.services[path]
+			let m = {}
 			try {
-				var pprev = nprev.services[path]
-				var m = {}
+				let pprev = nprev.services[path]
 				m.rb = (plast.blk.rb - pprev.blk.rb) / elapsed
 				m.wb = (plast.blk.wb - pprev.blk.wb) / elapsed
 				m.rwb = m.rb + m.wb
