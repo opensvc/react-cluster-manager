@@ -34,9 +34,12 @@ function NodeLabels(props) {
 	const { name } = props
 	const { cstat } = useClusterStatus()
 	const [edit, setEdit] = useState(false)
-
+	let labels
 	try {
-		var labels = cstat.monitor.nodes[name].labels
+		labels = cstat.monitor.nodes[name].labels
+		if (labels === undefined) {
+			return null
+		}
 	} catch(e) {
 		return null
 	}
