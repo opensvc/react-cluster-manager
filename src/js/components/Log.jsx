@@ -25,9 +25,6 @@ const useStyles = makeStyles(theme => ({
 	content: {
 		paddingTop: 0,
 	},
-	context: {
-		padding: "0 0 1em 0",
-	},
 	textField: {
 		width: "100%",
 	},
@@ -359,14 +356,14 @@ function LogLineContext(props) {
 function LogLine(props) {
 	const { re, data, prev, context, setContext, setSearch, setSkip, id, hide } = props
 	const classes = useStyles()
-	if (!data) {
+	if (!data || (data.m === undefined)) {
 		return <Skeleton />
 	}
-	var level = data.l
-	var msg = data.m.join("\n")
-	var date = new Date(data.t*1000)
-	for (var k in context) {
-		var v = context[k]
+	let level = data.l
+	let msg = data.m.join("\n")
+	let date = new Date(data.t*1000)
+	for (let k in context) {
+		let v = context[k]
 		if (v.negate) {
 			if (data.x[k] == v.value) {
 				return null
