@@ -71,7 +71,8 @@ function ObjActions(props) {
 				if (Object.entries(cstat.monitor.nodes[node]).length === 0) {
 					continue
 				}
-				if (path in cstat.monitor.nodes[node].services.status) {
+				let services = cstat.monitor.nodes[node].services
+				if ((services !== undefined) && (path in services.status)) {
 					count++
 				}
 			}
