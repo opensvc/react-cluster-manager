@@ -39,16 +39,16 @@ function ClusterDigest(props) {
 	const networks = useNetworksStatus()
 	const history = useHistory()
 
-	var counts = {
+	let counts = {
 		svc: 0,
 		vol: 0,
 		usr: 0,
 		sec: 0,
 		cfg: 0,
 		ccfg: 0,
-	}
-	var namespaces = {}
-	var stats = {
+	};
+	let namespaces = {};
+	let stats = {
 		memAvail: 0,
 		memTotal: 0,
 		memAvailMin: null,
@@ -60,8 +60,8 @@ function ClusterDigest(props) {
 		loadAvg: 0,
 		loadAvgMin: null,
 		loadAvgMax: null,
-	}
-        if (cstat.monitor === undefined) {
+	};
+	if (cstat.monitor === undefined) {
                 return null
         }
 	for (let node in cstat.monitor.nodes) {
@@ -169,7 +169,7 @@ function ClusterDigest(props) {
 						</Typography>
 						<Typography variant="h4" color="primary" component="h3">
 							{counts.nodes}
-							{nodesIssue(cstat) != state.OPTIMAL ? ( <WarningIcon className={classes.warn} /> ) : null}
+							{nodesIssue(cstat) !== state.OPTIMAL ? ( <WarningIcon className={classes.warn} /> ) : null}
 						</Typography>
 					</Grid>
 					<Grid item xs
@@ -181,7 +181,7 @@ function ClusterDigest(props) {
 						</Typography>
 						<Typography variant="h4" color="primary" component="h3">
 							{counts.heartbeats}
-							{heartbeatsIssue(cstat) != state.OPTIMAL ? ( <WarningIcon className={classes.warn} /> ) : null}
+							{heartbeatsIssue(cstat) !== state.OPTIMAL ? ( <WarningIcon className={classes.warn} /> ) : null}
 						</Typography>
 					</Grid>
 					<Grid item xs
