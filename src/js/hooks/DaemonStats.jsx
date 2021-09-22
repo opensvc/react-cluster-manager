@@ -14,6 +14,7 @@ function useDaemonStats(props) {
 
 	var period = props && props.period ? props.period : 3000
 	var node = props && props.node ? props.node : "*"
+	let fetching = false
 
 	function play() {
 		playingRef.current = true
@@ -33,6 +34,9 @@ function useDaemonStats(props) {
 		if (!playingRef.current) {
 			return
 		}
+		if (fetching) {
+			return
+		}
 		var options = {
 			headers: {
 				'Accept': 'application/json',
@@ -42,6 +46,7 @@ function useDaemonStats(props) {
 		}
 		options.headers = addAuthorizationHeader(options.headers, auth)
 		try {
+			fetching = true
 			fetch('/daemon_stats', options)
 				.then(res => res.json())
 				.then((data) => {
@@ -56,10 +61,15 @@ function useDaemonStats(props) {
 						prev: seriesRef.current.last,
 						last: data,
 					}
+					fetching = false
 				})
-				.catch(console.log)
+				.catch(err => {
+					fetching = false
+					console.log(err)
+				})
 		} catch(e) {
 			console.log(e)
+			fetching = false
 		}
 	}
 
