@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react"
+import React from "react"
 import { splitPath, fancySizeMB } from "../utils.js"
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography"
 import Grid from "@material-ui/core/Grid"
 import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
+import {isEmpty} from "lodash";
 
 const useStyles = makeStyles(theme => ({
 	itemGrid: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 
 
 function parseMem(last, prev, search) {
-	var d = {
+	let d = {
 		nodes: {},
 		sum: {
 			namespaces: {},
@@ -44,16 +45,20 @@ function parseMem(last, prev, search) {
 	if (!last || last.nodes === undefined) {
 		return d
 	}
-	for (var node in last.nodes) {
-		var nlast = last.nodes[node].data
-		for (var path in nlast.services) {
+	for (let node in last.nodes) {
+		let nlast = last.nodes[node].data
+		if (isEmpty(nlast)) {
+			continue
+		}
+		for (let path in nlast.services) {
 			if (search && !path.match(search)) {
 				continue
 			}
-			var sp = splitPath(path)
-			var plast = nlast.services[path]
+			let sp = splitPath(path)
+			let plast = nlast.services[path]
+			let pTotal
 			try {
-				var pTotal = plast.mem.total
+				pTotal = plast.mem.total
 			} catch(e) {
 				continue
 			}
@@ -87,23 +92,25 @@ function parseMem(last, prev, search) {
 function MemNodeMapItem(props) {
 	const { data, node, name, agg } = props
 	const classes = useStyles()
+	let pct, value
 	try {
-		if (agg == "ns") {
-			var value = data.nodes[node].namespaces[name]
-			var pct = 100 * value / data.sum.namespaces[name]
+		if (agg === "ns") {
+			value = data.nodes[node].namespaces[name]
+			pct = 100 * value / data.sum.namespaces[name]
 		} else {
-			var value = data.nodes[node].services[name]
-			var pct = 100 * value / data.sum.services[name]
+			value = data.nodes[node].services[name]
+			pct = 100 * value / data.sum.services[name]
 		}
 	} catch(e) {
-		var value = undefined
+		value = undefined
 	}
+	let height
 	if (value === undefined) {
-		var height = "1px"
+		height = "1px"
 	} else {
-		var height = pct.toFixed(0)+"%"
+		height = pct.toFixed(0)+"%"
 	}
-	var style = {
+	let style = {
 		width: "0.3em",
 		marginRight: "3px",
 		height: height,
@@ -118,7 +125,7 @@ function MemNodeMapItem(props) {
 function MemNodeMap(props) {
 	const classes = useStyles()
 	const { data, name, agg } = props
-	var nodes = Object.keys(data.nodes).sort()
+	let nodes = Object.keys(data.nodes).sort()
 	return (
 		<Grid container className={classes.mapGrid} spacing={0}>
 			{nodes.map((node) => (
@@ -141,14 +148,15 @@ function MemTotal(props) {
 function StatsMem(props) {
 	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
 	const classes = useStyles()
-	var mem = parseMem(last, prev, search)
-	if (agg == "ns") {
-		var data = mem.sum.namespaces
+	let mem = parseMem(last, prev, search)
+	let data
+	if (agg === "ns") {
+		data = mem.sum.namespaces
 	} else {
-		var data = mem.sum.services
+		data = mem.sum.services
 	}
-	var names = Object.keys(data)
-	if (sortKey == "value") {
+	let names = Object.keys(data)
+	if (sortKey === "value") {
 		names.sort(function(a, b) {
 			return data[b] - data[a]
 		})
@@ -156,7 +164,7 @@ function StatsMem(props) {
 		names.sort()
 	}
 	const handleClick = (name) => (e) => {
-		if (agg == "ns") {
+		if (agg === "ns") {
 			setSearch("^"+name+"/")
 		} else {
 			setSearch(name)

@@ -9,6 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import {isEmpty} from "lodash";
 
 function ObjActiveItem(props) {
 	const { t, i18n } = useTranslation()
@@ -16,11 +17,16 @@ function ObjActiveItem(props) {
 	if (cstat.monitor === undefined) {
 		return null
 	}
-	for (var node in cstat.monitor.nodes) {
-		if (Object.entries(cstat.monitor.nodes[node]).length === 0) {
+	for (let node in cstat.monitor.nodes) {
+		if (isEmpty(cstat.monitor.nodes[node])) {
 			continue
 		}
-		var idata = cstat.monitor.nodes[node].services.status[props.path]
+
+		let services = cstat.monitor.nodes[node].services
+		if (services === undefined) {
+			continue
+		}
+		let idata = services.status[props.path]
 		if (idata === undefined) {
 			continue
 		}

@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react"
+import React from "react"
 import { splitPath, fancySizeMB } from "../utils.js"
 import HorizontalBars from "./HorizontalBars.jsx"
 
@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography"
 import Grid from "@material-ui/core/Grid"
 import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
+import {isEmpty} from "lodash";
 
 const useStyles = makeStyles(theme => ({
 	itemGrid: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 
 function parseDiskBandwidth(last, prev, search) {
-	var d = {
+	let d = {
 		nodes: {},
 		sum: {
 			namespaces: {},
@@ -47,23 +48,28 @@ function parseDiskBandwidth(last, prev, search) {
 	if (!last || last.nodes === undefined) {
 		return d
 	}
-	for (var node in last.nodes) {
-		var nlast = last.nodes[node].data
+	for (let node in last.nodes) {
+		let nlast = last.nodes[node].data
+		if (isEmpty(nlast)) {
+			continue
+		}
+		let nprev
+		let elapsed
 		try {
-			var nprev = prev.nodes[node].data
+			nprev = prev.nodes[node].data
+			elapsed = nlast.timestamp - nprev.timestamp
 		} catch(e) {
 			continue
 		}
-		var elapsed = nlast.timestamp - nprev.timestamp
-		for (var path in nlast.services) {
+		for (let path in nlast.services) {
 			if (search && !path.match(search)) {
 				continue
 			}
-			var sp = splitPath(path)
-			var plast = nlast.services[path]
+			let sp = splitPath(path)
+			let plast = nlast.services[path]
+			let m = {}
 			try {
-				var pprev = nprev.services[path]
-				var m = {}
+				let pprev = nprev.services[path]
 				m.rb = (plast.blk.rb - pprev.blk.rb) / elapsed
 				m.wb = (plast.blk.wb - pprev.blk.wb) / elapsed
 				m.rwb = m.rb + m.wb
@@ -106,23 +112,24 @@ function parseDiskBandwidth(last, prev, search) {
 function DiskBandwidthNodeMapItem(props) {
 	const { data, node, name, agg } = props
 	const classes = useStyles()
+	let value, pct, height
 	try {
-		if (agg == "ns") {
-			var value = data.nodes[node].namespaces[name].rwb
-			var pct = 100 * value / data.sum.namespaces[name].rwb
+		if (agg === "ns") {
+			value = data.nodes[node].namespaces[name].rwb
+			pct = 100 * value / data.sum.namespaces[name].rwb
 		} else {
-			var value = data.nodes[node].services[name].rwb
-			var pct = 100 * value / data.sum.services[name].rwb
+			value = data.nodes[node].services[name].rwb
+			pct = 100 * value / data.sum.services[name].rwb
 		}
 	} catch(e) {
-		var value = undefined
+		value = undefined
 	}
 	if (value === undefined) {
-		var height = "1px"
+		height = "1px"
 	} else {
-		var height = pct.toFixed(0)+"%"
+		height = pct.toFixed(0)+"%"
 	}
-	var style = {
+	let style = {
 		height: height,
 	}
 	return (
@@ -135,7 +142,7 @@ function DiskBandwidthNodeMapItem(props) {
 function DiskBandwidthNodeMap(props) {
 	const classes = useStyles()
 	const { data, name, agg } = props
-	var nodes = Object.keys(data.nodes).sort()
+	let nodes = Object.keys(data.nodes).sort()
 	return (
 		<Grid container className={classes.mapGrid} spacing={0}>
 			{nodes.map((node) => (
@@ -157,7 +164,7 @@ function DiskBandwidth(props) {
 
 function DiskBandwidthBias(props) {
 	const { value } = props
-	var values = [
+	let values = [
 		{
 			label: "r",
 			value: value.rb,
@@ -175,14 +182,15 @@ function DiskBandwidthBias(props) {
 function StatsDiskBandwidth(props) {
 	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
 	const classes = useStyles()
-	var bw = parseDiskBandwidth(last, prev, search)
-	if (agg == "ns") {
-		var data = bw.sum.namespaces
+	let bw = parseDiskBandwidth(last, prev, search)
+	let data
+	if (agg === "ns") {
+		data = bw.sum.namespaces
 	} else {
-		var data = bw.sum.services
+		data = bw.sum.services
 	}
-	var names = Object.keys(data)
-	if (sortKey == "value") {
+	let names = Object.keys(data)
+	if (sortKey === "value") {
 		names.sort(function(a, b) {
 			return data[b].rwb - data[a].rwb
 		})
@@ -190,7 +198,7 @@ function StatsDiskBandwidth(props) {
 		names.sort()
 	}
 	const handleClick = (name) => (e) => {
-		if (agg == "ns") {
+		if (agg === "ns") {
 			setSearch("^"+name+"/")
 		} else {
 			setSearch(name)

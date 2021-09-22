@@ -32,6 +32,7 @@ import Link from '@material-ui/core/Link';
 import Hidden from '@material-ui/core/Hidden';
 
 import FilterListIcon from '@material-ui/icons/FilterList';
+import {isEmpty} from "lodash";
 
 const useStyles = makeStyles(theme => ({
         root: {
@@ -47,10 +48,14 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function getNodeStat(cstat, node, key) {
-	if (Object.entries(cstat.monitor.nodes[node]).length === 0) {
+	let monNode = cstat.monitor.nodes[node]
+	if (isEmpty(monNode)) {
 		return null
 	}
-	return cstat.monitor.nodes[node].stats[key]
+	if (monNode.stats === undefined) {
+		return null
+	}
+	return monNode.stats[key]
 }
 
 function NodeCpuSparkline(props) {
@@ -144,7 +149,7 @@ function Node(props) {
 		return null
 	}
 	var data = cstat.monitor.nodes[props.node]
-	if (data == undefined) {
+	if (data === undefined) {
 		return null
 	}
         function handleClick(event) {

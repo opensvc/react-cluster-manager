@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography"
 import Grid from "@material-ui/core/Grid"
 import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
+import {isEmpty} from "lodash";
 
 const useStyles = makeStyles(theme => ({
 	itemGrid: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 
 
 function parseCpu(last, prev, search) {
-	var d = {
+	let d = {
 		nodes: {},
 		sum: {
 			namespaces: {},
@@ -44,30 +45,37 @@ function parseCpu(last, prev, search) {
 	if (!last || last.nodes === undefined) {
 		return d
 	}
-	for (var node in last.nodes) {
-		var nlast = last.nodes[node].data
-		var nCpuTime = nlast.node.cpu.time
+	for (let node in last.nodes) {
+		let nlast = last.nodes[node].data
+		if (isEmpty(nlast)) {
+			continue
+		}
+		let nCpuTime = nlast.node.cpu.time
+		let nElapsed = 1
+		let nprev
 		try {
-			var nprev = prev.nodes[node].data
-			var nPrevCpuTime = nprev.node.cpu.time
-			var nElapsed = nCpuTime - nPrevCpuTime
+			nprev = prev.nodes[node].data
+			let nPrevCpuTime = nprev.node.cpu.time
+			nElapsed = nCpuTime - nPrevCpuTime
 		} catch(e) {
 			continue
 		}
-		for (var path in nlast.services) {
+		for (let path in nlast.services) {
 			if (search && !path.match(search)) {
 				continue
 			}
-			var sp = splitPath(path)
-			var plast = nlast.services[path]
+			let sp = splitPath(path)
+			let plast = nlast.services[path]
+			let pCpuTime = 0
+			let pPrevCpuTime = 0
 			try {
-				var pCpuTime = plast.cpu.time
-				var pprev = nprev.services[path]
-				var pPrevCpuTime = pprev.cpu.time
+				pCpuTime = plast.cpu.time
+				let pprev = nprev.services[path]
+				pPrevCpuTime = pprev.cpu.time
 			} catch(e) {
 				continue
 			}
-			var pct = (pCpuTime - pPrevCpuTime) / nElapsed
+			let pct = (pCpuTime - pPrevCpuTime) / nElapsed
 			if (!(node in d.nodes)) {
 				d.nodes[node] = {
 					namespaces: {},

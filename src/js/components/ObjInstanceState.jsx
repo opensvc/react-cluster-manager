@@ -25,7 +25,11 @@ function ObjInstanceState(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	const classes = useStyles()
 	if (cstat.monitor === undefined) {
-		return null
+		return (
+			<Grid container spacing={1}>
+				<MonitorStatusBadge className={classes.child} state="unkown" />
+			</Grid>
+		)
 	}
 	return (
 		<Grid container spacing={1}>

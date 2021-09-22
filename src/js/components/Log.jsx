@@ -9,7 +9,6 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Chip from '@material-ui/core/Chip'
-import Avatar from '@material-ui/core/Avatar'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
@@ -24,9 +23,6 @@ import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRigh
 const useStyles = makeStyles(theme => ({
 	content: {
 		paddingTop: 0,
-	},
-	context: {
-		padding: "0 0 1em 0",
 	},
 	textField: {
 		width: "100%",
@@ -64,7 +60,11 @@ const useStyles = makeStyles(theme => ({
 	},
 	chip: {
 		border: "none",
-	}
+	},
+	table: {
+		marginLeft: -theme.spacing(2),
+		marginRight: -theme.spacing(2),
+	},
 }))
 
 function Log(props) {
@@ -77,10 +77,10 @@ function Log(props) {
 	const classes = useStyles()
 	const { t } = useTranslation()
 
-	function handleClear(e) {
+	function handleClear() {
 		setContext({})
 	}
-	function handleFilter(e) {
+	function handleFilter() {
 		(!search) && setSearchOpen(!searchOpen)
 	}
 	function handleChange(e) {
@@ -102,13 +102,13 @@ function Log(props) {
                                         <TableToolbar selected={[]} className={classes.table}>
 						{(Object.keys(context).length > 0) &&
                                                 <Tooltip title={t("Clear Filters")}>
-                                                        <IconButton aria-label="Filters" disabled={search?true:false} onClick={handleClear}>
+                                                        <IconButton aria-label="Filters" disabled={!!search} onClick={handleClear}>
                                                                 <ClearIcon />
                                                         </IconButton>
                                                 </Tooltip>
 						}
                                                 <Tooltip title={t("Filters")}>
-                                                        <IconButton aria-label="Filters" disabled={search?true:false} onClick={handleFilter}>
+                                                        <IconButton aria-label="Filters" disabled={!!search} onClick={handleFilter}>
                                                                 <FilterListIcon />
                                                         </IconButton>
                                                 </Tooltip>
@@ -157,7 +157,7 @@ function LogLines(props) {
 	if (!log) {
 		return ( <CircularProgress color="primary" /> )
 	}
-	var re
+	let re
 	if (search && (search.length>1)) {
 		try {
 			re = RegExp(search, "i")
@@ -194,24 +194,24 @@ function LogLineContextKey(props) {
 		return null
 	}
 	function dropContextKey() {
-		var newContext = {...context}
+		let newContext = {...context}
 		delete newContext[k]
 		setContext(newContext)
 	}
 	function negateContextKey() {
-		var newContext = {...context}
+		let newContext = {...context}
 		newContext[k] = {"value": v, "negate": true}
 		setContext(newContext)
 	}
 	function setPositiveContextKey() {
-		var newContext = {...context}
+		let newContext = {...context}
 		newContext[k] = {"value": v}
 		setContext(newContext)
 	}
-	function handleClick(e) {
+	function handleClick() {
 		if (k in context) {
 			if (context[k].negate) {
-				if (context[k].value == v) {
+				if (context[k].value === v) {
 					dropContextKey()
 				} else {
 					setPositiveContextKey()
@@ -223,21 +223,22 @@ function LogLineContextKey(props) {
 			setPositiveContextKey()
 		}
 	}
+	let label
 	if (dense) {
 		if (k in context && !context[k].negate) {
 			return null
-		} else if (k == "sc") {
-			var label = (v == "y") ? t("scheduled") : t("not scheduled")
-		} else if (k == "sid") {
-			var label = "sid: " + v.slice(0, 4)
+		} else if (k === "sc") {
+			label = (v === "y") ? t("scheduled") : t("not scheduled")
+		} else if (k === "sid") {
+			label = "sid: " + v.slice(0, 4)
 		} else {
-			var label = k + ": " + v
+			label = k + ": " + v
 		}
 	} else {
-		if (k == "sc") {
-			var label = (v == "y") ? t("scheduled") : t("not scheduled")
+		if (k === "sc") {
+			label = (v === "y") ? t("scheduled") : t("not scheduled")
 		} else {
-			var label = k + ": " + v
+			label = k + ": " + v
 		}
 	}
 	return (
@@ -262,13 +263,13 @@ function PositiveContext(props) {
 	const { context, setContext } = props
 	const { t } = useTranslation()
 	const classes = useStyles()
-	var positiveContext = {}
-	for (var k in context) {
+	let positiveContext = {}
+	for (let k in context) {
 		if (!context[k].negate) {
 			positiveContext[k] = context[k]
 		}
 	}
-	if (Object.keys(positiveContext).length == 0) {
+  	if (Object.keys(positiveContext).length === 0) {
 		return null
 	}
 	return (
@@ -295,13 +296,13 @@ function NegativeContext(props) {
 	const { context, setContext } = props
 	const { t } = useTranslation()
 	const classes = useStyles()
-	var negativeContext = {}
-	for (var k in context) {
+	let negativeContext = {}
+	for (let k in context) {
 		if (context[k].negate) {
 			negativeContext[k] = context[k]
 		}
 	}
-	if (Object.keys(negativeContext).length == 0) {
+	if (Object.keys(negativeContext).length === 0) {
 		return null
 	}
 	return (
@@ -327,11 +328,11 @@ function NegativeContext(props) {
 function LogLineContext(props) {
 	const { data, context, setContext, hide } = props
 	const classes = useStyles()
-	if (Object.keys(data).length == 0) {
+	if (Object.keys(data).length === 0) {
 		return null
 	}
 	function hasDisplayedMeta() {
-		for (var k in data) {
+		for (let k in data) {
 			if ((!(k in context) || context[k].negate) && (hide.indexOf(k) < 0)) {
 				 return true
 			}
@@ -359,20 +360,20 @@ function LogLineContext(props) {
 function LogLine(props) {
 	const { re, data, prev, context, setContext, setSearch, setSkip, id, hide } = props
 	const classes = useStyles()
-	if (!data) {
+	if (!data || (data.m === undefined)) {
 		return <Skeleton />
 	}
-	var level = data.l
-	var msg = data.m.join("\n")
-	var date = new Date(data.t*1000)
-	for (var k in context) {
-		var v = context[k]
+	let level = data.l
+	let msg = data.m.join("\n")
+	let date = new Date(data.t*1000)
+	for (let k in context) {
+		let v = context[k]
 		if (v.negate) {
-			if (data.x[k] == v.value) {
+			if (data.x[k] === v.value) {
 				return null
 			}
 		} else {
-			if (data.x[k] != v.value) {
+			if (data.x[k] !== v.value) {
 				return null
 			}
 		}
@@ -380,13 +381,13 @@ function LogLine(props) {
 	if (re && !msg.match(re)) {
 		return null
 	}
-	function handleClick(e) {
+	function handleClick() {
 		setSearch("")
 		setSkip(id)
 	}
 	return (
 		<Fragment>
-			{(!prev || (JSON.stringify(prev.x) != JSON.stringify(data.x))) &&
+			{(!prev || (JSON.stringify(prev.x) !== JSON.stringify(data.x))) &&
 			<LogLineContext
 				data={data.x}
 				setContext={setContext}
