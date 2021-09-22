@@ -11,11 +11,15 @@ function ObjActive(props) {
 	if (cstat.monitor === undefined) {
 		return null
 	}
-	for (var node in cstat.monitor.nodes) {
+	for (let node in cstat.monitor.nodes) {
 		if (Object.entries(cstat.monitor.nodes[node]).length === 0) {
 			continue
 		}
-		var idata = cstat.monitor.nodes[node].services.status[props.path]
+		let services = cstat.monitor.nodes[node].services
+		if (services === undefined) {
+			continue
+		}
+		let idata = services.status[props.path]
 		if (idata === undefined) {
 			continue
 		}
@@ -27,7 +31,7 @@ function ObjActive(props) {
 				<PlayArrowIcon color="error" />
 			)
 		}
-		if (idata.monitor.global_expect || (idata.monitor.status != "idle")) {
+		if (idata.monitor.global_expect || (idata.monitor.status !== "idle")) {
 			return (
 				<Typography className={props.className} component="span">
 					<PlayArrowIcon color="primary" />
