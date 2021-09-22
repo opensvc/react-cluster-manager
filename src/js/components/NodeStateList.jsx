@@ -18,6 +18,13 @@ function NodeStateList(props) {
 		return null
 	}
 	const data = cstat.monitor.nodes[props.name]
+	if ((data === undefined) || (data.monitor === undefined)) {
+		return (
+			<List dense={true}>
+				<MonitorStatusBadgeItem state={"unknown"} />
+			</List>
+		)
+	}
 	return (
 		<List dense={true}>
 			<ObjFrozenItem frozen={data.frozen} />
