@@ -2,19 +2,20 @@ import React from "react";
 import { useStateValue } from '../state.js';
 import { splitPath, fmtPath } from '../utils.js'
 import Typography from '@material-ui/core/Typography'
+import {isEmpty} from "lodash";
 
 function slaveInstancesCount(path, cstat) {
-	var live = 0
-	for (var node in cstat.monitor.nodes) {
-		var nstat = cstat.monitor.nodes[node]
-		var instance = nstat.services.status[path]
+	let live = 0
+	for (let node in cstat.monitor.nodes) {
+		let nstat = cstat.monitor.nodes[node]
+		let instance = nstat.services.status[path]
 		if (!instance) {
 			continue
 		}
 		if (!instance.scaler_slave) {
 			continue
 		}
-		if (instance.avail == "up") {
+		if (instance.avail === "up") {
 			live += 1
 		}
 	}
@@ -26,16 +27,21 @@ function ObjInstanceCounts(props) {
 	if (cstat.monitor === undefined) {
 		return null
 	}
-	var live = 0
-	var total = 0
-	var target = 0
-	var sp = splitPath(props.path)
-	for (var node in cstat.monitor.nodes) {
-		var nstat = cstat.monitor.nodes[node]
-		if (Object.entries(nstat).length === 0) {
+	let live = 0
+	let total = 0
+	let target = 0
+	let sp = splitPath(props.path)
+	for (let node in cstat.monitor.nodes) {
+		let nstat = cstat.monitor.nodes[node]
+		if (isEmpty(nstat)) {
 			continue
 		}
-		var instance = nstat.services.status[props.path]
+		let instance
+		try {
+			instance = nstat.services.status[props.path]
+		} catch (e) {
+			continue
+		}
 		if (!instance) {
 			continue
 		}
@@ -45,7 +51,7 @@ function ObjInstanceCounts(props) {
 
 		if ("scale" in instance) {
 			target = instance.scale
-			for (var slavePath of instance.scaler_slaves) {
+			for (let slavePath of instance.scaler_slaves) {
 				slavePath = fmtPath(slavePath, sp.namespace, sp.kind)
 				live += slaveInstancesCount(slavePath, cstat)
 			}
@@ -54,16 +60,16 @@ function ObjInstanceCounts(props) {
 			)
 		}
 		total += 1
-		if (instance.topology == "failover") {
+		if (instance.topology === "failover") {
 			target = 1
-		} else if (instance.topology == "flex") {
+		} else if (instance.topology === "flex") {
 			target = instance.flex_target
 		}
-		if (instance.avail == "up") {
+		if (instance.avail === "up") {
 			live += 1
 		}
 	}
-	if (target == 0) {
+	if (target === 0) {
 		return (<span />)
 	}
 	return (
