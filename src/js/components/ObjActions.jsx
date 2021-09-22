@@ -35,12 +35,18 @@ function ObjActions(props) {
 		}
 	}
 	var disable_abort = () => {
-		for (var p of selected) {
-			for (var node in cstat.monitor.nodes) {
-				var idata = cstat.monitor.nodes[node].services.status[p]
-				if (!idata) {
+		for (let p of selected) {
+			for (let node in cstat.monitor.nodes) {
+				let idata
+				try {
+					idata = cstat.monitor.nodes[node].services.status[p]
+					if (!idata) {
+						continue
+					}
+				} catch (e) {
 					continue
 				}
+
 				if (idata.monitor.status && (idata.monitor.status.indexOf("failed") < 0)) {
 					return false
 				}
