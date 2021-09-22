@@ -17,6 +17,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import WarningIcon from '@material-ui/icons/Warning';
+import {isEmpty} from "lodash";
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -63,9 +64,9 @@ function ClusterDigest(props) {
         if (cstat.monitor === undefined) {
                 return null
         }
-	for (var node in cstat.monitor.nodes) {
+	for (let node in cstat.monitor.nodes) {
 		let n = cstat.monitor.nodes[node]
-		if (Object.entries(n).length === 0) {
+		if (isEmpty(n) || (n.stats === undefined)) {
 			continue
 		}
 		let memAvail = n.stats.mem_avail * n.stats.mem_total / 100
@@ -82,8 +83,8 @@ function ClusterDigest(props) {
 		stats.loadAvgMin = stats.loadAvgMin === null ? n.stats.load_15m : Math.min(n.stats.load_15m, stats.loadAvgMin)
 		stats.loadAvgMax = stats.loadAvgMax === null ? n.stats.load_15m : Math.max(n.stats.load_15m, stats.loadAvgMax)
 	}
-	for (var path in cstat.monitor.services) {
-		var sp = splitPath(path)
+	for (let path in cstat.monitor.services) {
+		let sp = splitPath(path)
 		counts[sp.kind]++
 		namespaces[sp.namespace] = null
 	}
