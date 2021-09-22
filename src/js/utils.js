@@ -213,9 +213,15 @@ function objectConfigChecksum(cstat, path) {
 	if (!cstat.monitor) {
 		return null
 	}
-	for (var node in cstat.monitor.nodes) {
-		if (path in cstat.monitor.nodes[node].services.config) {
-			return cstat.monitor.nodes[node].services.config[path].csum
+	for (let node in cstat.monitor.nodes) {
+		let configPaths
+		try {
+			configPaths = cstat.monitor.nodes[node].services.config
+		} catch (e) {
+			return null
+		}
+		if (path in configPaths) {
+			return configPaths[path].csum
 		}
 	}
 }
