@@ -61,7 +61,7 @@ function Api(props) {
 	let params = new URLSearchParams(loc.search)
 	const index = params.get("index")
 
-	if (data === undefined) {
+	if (!Array.isArray(data)) {
 		return null
 	}
 	var _data = data.sort((a, b) => {

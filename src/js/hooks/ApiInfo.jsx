@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from "react";
+import useUser from "./User.jsx"
+import { apiGetAny } from "../api.js";
 
 function useApiInfo(props) {
-	const [apiInfo, setApiInfo] = useState()
-	useEffect(() => {
-		async function fetchData() {
-			const res = await fetch('/api')
-			res
-				.json()
-				.then((data) => {
-					console.log(data)
-					setApiInfo(data)
-				})
-				.catch(console.log)
+	const [data, setData] = useState()
+	const { auth } = useUser()
+	function getData() {
+		if (data !== undefined) {
+			return
 		}
-		fetchData()
+		apiGetAny("/api", {}, ($) => {
+			setData($)
+                }, auth)
+	}
+
+	useEffect(() => {
+		getData()
 	}, [])
-	return apiInfo
+	return data
 }
 
 export default useApiInfo
