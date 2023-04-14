@@ -12,11 +12,11 @@ when installed in:
 
 # Releasing
 
-* patch and commit
-* execute `npm version major|minor|patch`
-  - bumps the version in `packages*.json` and commits
-  - create a new tag for the new version
-* push to github
-  - the github workflow is triggered
-  - a release is created
-  - bundle and debug bundle assets are created
+* Patch and commit
+* Execute `npm version major|minor|patch`
+  - The version in `packages*.json` is bumped and the change is commited
+  - The new version is git tagged
+* Push to github
+  - The github workflow is triggered
+  - A release is created
+  - The bundle and debug bundle assets are created
