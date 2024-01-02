@@ -1,7 +1,7 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useHistory } from 'react-router';
+import { useLocation, useHistory } from 'react-router-dom';
 import { ObjStateList } from "./ObjStateList.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjScale } from "./ObjScale.jsx";

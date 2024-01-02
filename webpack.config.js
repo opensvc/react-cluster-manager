@@ -1,10 +1,14 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const webpack = require('webpack');
 module.exports = {
   module: {
     rules: [
       {
         test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-        loader: 'url-loader?limit=100000'
+        loader: 'url-loader',
+        options: {
+           limit: 100000,
+        }
       },
       {
         test: /\.(js|jsx)$/,
@@ -53,10 +57,29 @@ module.exports = {
     new HtmlWebPackPlugin({
       template: "./src/index.html",
       filename: "./index.html"
-    })
+    }),
+    new webpack.ProvidePlugin({
+       process: 'process/browser.js'
+    }),
+    new webpack.ProvidePlugin({
+       Buffer: ['buffer','Buffer'],
+    }),
   ],
+  resolve: {
+     fallback: {
+        "util": require.resolve("util/"),
+        "http": require.resolve("stream-http"),
+        "https": require.resolve("https-browserify"),
+        "url": require.resolve("url/"),
+        "buffer": require.resolve("buffer/"),
+     },
+     alias: {
+        process: "process/browser.js"
+     },
+  },
   output: {
     publicPath: '/',
     filename: 'index.js',
+    hashFunction: 'md5',
   }
 };

@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 import { useReactOidc } from "@axa-fr/react-oidc-context"
 import { useTranslation } from "react-i18next"
 import { useStateValue } from '../state.js'
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { StateProvider, StateContext } from '../state.js';
 import { NavBar } from "./NavBar.jsx";

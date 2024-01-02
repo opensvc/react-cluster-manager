@@ -1,7 +1,7 @@
 import React from "react";
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
