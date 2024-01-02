@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import useUser from "../hooks/User.jsx"
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router'
+import { useLocation } from 'react-router-dom'
 import { apiGetNode } from "../api.js"
 import { Log } from "./Log.jsx"
 import { NodeActions } from "./NodeActions.jsx"

@@ -1,6 +1,6 @@
 import React from "react";
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
-import { useHistory } from 'react-router'
+import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import { state, fancySizeMB } from '../utils.js';
 import { arbitratorsIssue, heartbeatsIssue, nodesIssue, objectsIssue } from "../issues.js";

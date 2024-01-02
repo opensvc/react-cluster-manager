@@ -3,7 +3,7 @@ import isEqual from "lodash.isequal"
 import ObjIcon from "./ObjIcon.jsx"
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router'
+import { useHistory } from 'react-router-dom'
 import { splitPath } from "../utils.js"
 import { ObjActions } from "./ObjActions.jsx"
 import { TableToolbar } from "./TableToolbar.jsx"
