@@ -1,6 +1,5 @@
 import React from "react";
 import { withOidcUser } from '@axa-fr/react-oidc-context';
-import { useHistory } from 'react-router'
 import { Switch, Route } from 'react-router-dom';
 import { useStateValue } from '../state.js';
 import Cluster from "./Cluster.jsx";
@@ -24,8 +23,6 @@ import { NotFound } from "./NotFound.jsx"
 
 function Main(props) {
 	const [{ nav }, dispatch] = useStateValue();
-	const history = useHistory()
-	//console.log("router path:", history.location.pathname)
 
 	return (
 		<Switch>

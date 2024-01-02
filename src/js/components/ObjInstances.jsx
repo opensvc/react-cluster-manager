@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router'
+import { useHistory, useLocation } from 'react-router-dom'
 import { fmtPath, splitPath } from "../utils.js";
 import { ObjInstanceState } from "./ObjInstanceState.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";

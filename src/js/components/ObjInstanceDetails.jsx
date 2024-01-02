@@ -1,5 +1,5 @@
 import React, {useState} from "react"
-import { useLocation } from "react-router"
+import { useLocation } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { splitPath } from "../utils.js"
 import { ObjDigest } from "./ObjDigest.jsx"
