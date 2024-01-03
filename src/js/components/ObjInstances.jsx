@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { fmtPath, splitPath } from "../utils.js";
 import { ObjInstanceState } from "./ObjInstanceState.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
@@ -170,7 +170,7 @@ function InstanceLine(props) {
 	const classes = useStyles()
 	const { cstat } = useClusterStatus()
 	const {index, path, instance, selected, setSelected} = props
-	const history = useHistory()
+	const navigate = useNavigate()
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -208,7 +208,7 @@ function InstanceLine(props) {
 		setSelected(newSelected);
 	}
 	function handleLineClick(e) {
-		history.push({
+		navigate({
 			pathname: "/instance",
 			search: "?path=" + instance.path + "&node=" + instance.node,
 			state: loc.state,

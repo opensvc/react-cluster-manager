@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useStateValue } from '../state.js';
 import { makeStyles } from '@material-ui/core/styles';
@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 
 function SvcMap(props) {
 	const [{ cstat }, dispatch] = useStateValue();
-	const history = useHistory()
+	const navigate = useNavigate()
 	const classes = useStyles()
 	const { t, i18n } = useTranslation()
 	if (cstat.monitor === undefined) {
@@ -52,7 +52,7 @@ function SvcMap(props) {
 	}
 	const handleClick = path => event => {
 		event.stopPropagation()
-		history.push({
+		navigate({
 			pathname: "/object",
 			search: "?path="+path,
 			state: {kind: "Services"},

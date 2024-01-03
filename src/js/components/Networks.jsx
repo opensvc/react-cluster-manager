@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next';
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
@@ -89,10 +89,10 @@ function NetworksLine(props) {
 	const {index, data} = props
 	const [{}, dispatch] = useStateValue()
 	const classes = useStyles()
-	const history = useHistory()
+	const navigate = useNavigate()
 	function handleLineClick(event) {
 		event.stopPropagation()
-		history.push("/network?name="+data.name)
+		navigate("/network?name="+data.name)
 	}
 	return (
 		<TableRow onClick={handleLineClick} className={classes.row}>

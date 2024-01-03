@@ -5,8 +5,7 @@ import { useStateValue } from '../state.js'
 import useUser from "../hooks/User.jsx"
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import useAuthInfo from "../hooks/AuthInfo.jsx"
-import { useLocation, useHistory, matchPath } from "react-router-dom"
-import { Link as RouteLink } from "react-router-dom"
+import { useLocation, useNavigate, matchPath } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { state } from "../utils.js"
 import { allIssue } from "../issues.js"
@@ -85,7 +84,7 @@ function breadcrumbs() {
 		{ path: "/api", text: "Api", to: "/api" },
 	]
 	for (var head of heads) {
-		var match = matchPath(loc.pathname, {path: head.path, exact: true})
+		var match = matchPath({path: head.path, end: true, caseSensitive: false},loc.pathname)
 		if (match) {
 			crumbs.push({
 				text: head.text,
@@ -95,7 +94,7 @@ function breadcrumbs() {
 		}
 	}
 
-	var match = matchPath(loc.pathname, {path: "/node", exact: true})
+	var match = matchPath({path: "/node", end: true, caseSensitive: false},loc.pathname)
 	if (match) {
 		crumbs.push({
 			text: "Nodes",
@@ -107,7 +106,7 @@ function breadcrumbs() {
 		return crumbs
 	}
 
-	var match = matchPath(loc.pathname, {path: "/network", exact: true})
+	var match = matchPath({path: "/network", end: true, caseSensitive: false},loc.pathname)
 	if (match) {
 		crumbs.push({
 			text: "Networks",
@@ -119,7 +118,7 @@ function breadcrumbs() {
 		return crumbs
 	}
 
-	var match = matchPath(loc.pathname, {path: "/object", exact: true})
+	var match = matchPath({path: "/object", end: true, caseSensitive: false}, loc.pathname)
 	if (match) {
 		var kind = (loc.state !== undefined) ? loc.state.kind : "Objects"
 		crumbs.push({
@@ -132,7 +131,7 @@ function breadcrumbs() {
 		return crumbs
 	}
 
-	var match = matchPath(loc.pathname, {path: "/instance", exact: true})
+	var match = matchPath({path: "/instance", end: true, caseSensitive: false},loc.pathname)
 	if (match) {
 		var kind = (loc.state !== undefined) ? loc.state.kind : "Objects"
 		crumbs.push({
@@ -222,13 +221,13 @@ function NavBarMenu(props) {
 function NavLink(props) {
 	const {text, to} = props
 	const { t, i18n } = useTranslation()
-	const history = useHistory()
+	const navigate = useNavigate()
 	function handleClick(e) {
 		e.preventDefault()
 		if (!to) {
 			return
 		}
-		history.push(to)
+		navigate(to)
 	}
 	return (
 		<StyledBreadcrumb
@@ -243,13 +242,13 @@ function NavLink(props) {
 
 function UserLink(props) {
 	const { user } = useUser()
-	const history = useHistory()
+	const navigate = useNavigate()
 	const authInfo = useAuthInfo()
 	if (!authInfo || !user) {
 		return null
 	}
 	function handleClick(e) {
-		history.push("/user")
+		navigate("/user")
 	}
 	if (user.status == 401) {
 		localStorage.setItem("opensvc.authChoice", "")
