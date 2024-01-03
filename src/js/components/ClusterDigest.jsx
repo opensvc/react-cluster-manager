@@ -1,6 +1,6 @@
 import React from "react";
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import { state, fancySizeMB } from '../utils.js';
 import { arbitratorsIssue, heartbeatsIssue, nodesIssue, objectsIssue } from "../issues.js";
@@ -37,7 +37,7 @@ function ClusterDigest(props) {
         const classes = useStyles()
 	const pools = usePoolsStatus()
 	const networks = useNetworksStatus()
-	const history = useHistory()
+	const navigate = useNavigate()
 
 	let counts = {
 		svc: 0,
@@ -112,7 +112,7 @@ function ClusterDigest(props) {
 				<Grid container spacing={3}>
 					<Grid item xs
 						className={classes.item}
-						onClick={() => history.push("/stats")}
+						onClick={() => navigate("/stats")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Memory")}
@@ -129,7 +129,7 @@ function ClusterDigest(props) {
 					</Grid>
 					<Grid item xs
 						className={classes.item}
-						onClick={() => history.push("/stats")}
+						onClick={() => navigate("/stats")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Swap")}
@@ -146,7 +146,7 @@ function ClusterDigest(props) {
 					</Grid>
 					<Grid item xs
 						className={classes.item}
-						onClick={() => history.push("/stats")}
+						onClick={() => navigate("/stats")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Load")}
@@ -162,7 +162,7 @@ function ClusterDigest(props) {
 					</Grid>
 					<Grid item xs
 						className={classes.item}
-						onClick={() => history.push("/nodes")}
+						onClick={() => navigate("/nodes")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Nodes")}
@@ -174,7 +174,7 @@ function ClusterDigest(props) {
 					</Grid>
 					<Grid item xs
 						className={classes.item}
-						onClick={() => history.push("/heartbeats")}
+						onClick={() => navigate("/heartbeats")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Heartbeats")}
@@ -186,7 +186,7 @@ function ClusterDigest(props) {
 					</Grid>
 					<Grid item xs
 						className={classes.item}
-						onClick={() => history.push("/pools")}
+						onClick={() => navigate("/pools")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Pools")}
@@ -197,7 +197,7 @@ function ClusterDigest(props) {
 					</Grid>
 					<Grid item xs
 						className={classes.item}
-						onClick={() => history.push("/networks")}
+						onClick={() => navigate("/networks")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Networks")}
@@ -216,7 +216,7 @@ function ClusterDigest(props) {
 					</Grid>
 					<Grid item xs
 						className={classes.item}
-						onClick={() => history.push("/objects")}
+						onClick={() => navigate("/objects")}
 					>
 						<Typography variant="subtitle1" component="h3">
 							{t("Objects")}

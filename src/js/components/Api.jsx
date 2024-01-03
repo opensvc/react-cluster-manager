@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react"
 import useApiInfo from "../hooks/ApiInfo.jsx"
 import { useTranslation } from 'react-i18next'
-import { useHistory, useLocation } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { SectionForm } from "./SectionForm.jsx"
 import { addQueryData, apiReq } from "../api.js"
 import useUser from "../hooks/User.jsx"
@@ -364,10 +364,10 @@ function HandlerTitle(props) {
 
 function ApiHandlerItem(props) {
 	const {data, index} = props
-	const history = useHistory()
+	const navigate = useNavigate()
 
 	function handleClick(e) {
-		history.push("/api?index="+index)
+		navigate("/api?index="+index)
 	}
 
 	return (

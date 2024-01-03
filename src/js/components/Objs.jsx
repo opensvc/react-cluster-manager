@@ -3,7 +3,7 @@ import isEqual from "lodash.isequal"
 import ObjIcon from "./ObjIcon.jsx"
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { splitPath } from "../utils.js"
 import { ObjActions } from "./ObjActions.jsx"
 import { TableToolbar } from "./TableToolbar.jsx"
@@ -149,7 +149,7 @@ function Objs(props) {
 	const [searchOpen, setSearchOpen] = useState(false)
 	const { kind, withScalerSlaves } = props
 	const { t, i18n } = useTranslation()
-	const history = useHistory()
+	const navigate = useNavigate()
 	const title = getTitle(props.kind)
 	const [selected, setSelected] = useReducer((state, path) => {
 		try {
@@ -181,7 +181,7 @@ function Objs(props) {
 		}
 	}
 	function handleLineClick(path) {
-		history.push({
+		navigate({
 			pathname: "/object",
 			search: "?path="+path,
 			state: {kind: title},

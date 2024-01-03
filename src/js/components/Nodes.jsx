@@ -1,6 +1,6 @@
 import React from "react";
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { state, fancySizeMB } from "../utils.js";
 import { useColorStyles } from "../styles.js";
@@ -144,7 +144,7 @@ function NodeSwap(props) {
 function Node(props) {
 	const {index, node, selected, setSelected, withScalerSlaves } = props
 	const { cstat } = useClusterStatus()
-	const history = useHistory()
+	const navigate = useNavigate()
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -172,7 +172,7 @@ function Node(props) {
                 setSelected(newSelected);
         }
 	function handleLineClick(e) {
-		history.push("/node?name="+props.node)
+		navigate("/node?name="+props.node)
 	}
         const isItemSelected = selected.indexOf(node) !== -1
         const labelId = `nodes-checkbox-${index}`
