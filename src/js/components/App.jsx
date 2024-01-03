@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 import { useReactOidc } from "@axa-fr/react-oidc-context"
 import { useTranslation } from "react-i18next"
 import { useStateValue } from '../state.js'
-import { useHistory } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { StateProvider, StateContext } from '../state.js';
 import { NavBar } from "./NavBar.jsx";
@@ -234,7 +234,7 @@ const AppStateProvider = (props) => {
 
 function AuthProvider(props) {
 	const authInfo = useAuthInfo()
-	const history = useHistory()
+	const navigate = useNavigate()
 	const [{ authChoice, user, basicLogin }, dispatch] = useStateValue()
 	try {
 		const { oidcUser } = useReactOidc()
@@ -331,13 +331,13 @@ class ErrorBoundary extends React.Component {
 
 function AppError(props) {
 	const classes = useStyles()
-	const history = useHistory()
+	const navigate = useNavigate()
 	return (
 		<Paper className={classes.root}>
 			<Typography variant="h5" component="h3">
 				Something went wrong.
 			</Typography>
-			<Button color="secondary" onClick={() => {history.push("/");props.clear()}}>
+			<Button color="secondary" onClick={() => {navigate("/");props.clear()}}>
 				Clear
 			</Button>
 			<br />

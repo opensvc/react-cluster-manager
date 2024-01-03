@@ -1,7 +1,7 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ObjStateList } from "./ObjStateList.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjScale } from "./ObjScale.jsx";
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function Goto(props) {
-	const history = useHistory()
+	const navigate = useNavigate()
 	const loc = useLocation()
 	const { t } = useTranslation()
 	const { path } = props
@@ -35,7 +35,7 @@ function Goto(props) {
 			<IconButton
 				aria-label="Go to object"
 				aria-haspopup={true}
-				onClick={() => {history.push("/object?path="+path)}}
+				onClick={() => {navigate("/object?path="+path)}}
 			>
 				<SubdirectoryArrowRightIcon />
 			</IconButton>
