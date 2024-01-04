@@ -40,12 +40,12 @@ import grey from '@mui/material/colors/grey';
 import lightBlue from '@mui/material/colors/lightBlue';
 
 import { createTheme } from '@mui/material/styles';
-import { ThemeProvider } from '@mui/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
 
 const makeTheme = (data) => createTheme({
 	palette: {
-		type: data.theme ? data.theme : "light",
+		mode: data.theme ? data.theme : "light",
 		primary: { main: (data.theme == "light") ? lightBlue[900] : lightBlue[100]},
 		secondary: { main: "#ff392b" },
 	},
