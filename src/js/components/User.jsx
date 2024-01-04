@@ -16,7 +16,7 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
 import Button from '@mui/material/Button'
-import Skeleton from '@mui/lab/Skeleton'
+import Skeleton from '@mui/material/Skeleton'
 import LangSelector from "./LangSelector.jsx"
 import ThemeSelector from "./ThemeSelector.jsx"
 

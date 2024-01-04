@@ -18,7 +18,7 @@ import ListItem from "@mui/material/ListItem"
 import ListItemText from "@mui/material/ListItemText"
 import Button from "@mui/material/Button"
 import Box from "@mui/material/Box"
-import Skeleton from "@mui/lab/Skeleton"
+import Skeleton from "@mui/material/Skeleton"
 
 const useStyles = makeStyles(theme => ({
         root: {
