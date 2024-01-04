@@ -10,13 +10,13 @@ import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 import { ClusterActions } from "./ClusterActions.jsx"
 import { DeployButton } from "./DeployButton.jsx"
 
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import WarningIcon from '@material-ui/icons/Warning';
+import { makeStyles } from '@mui/styles';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import WarningIcon from '@mui/icons-material/Warning';
 import {isEmpty} from "lodash";
 
 const useStyles = makeStyles(theme => ({

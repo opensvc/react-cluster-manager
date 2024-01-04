@@ -2,9 +2,9 @@ import React from "react"
 import { useTranslation } from "react-i18next"
 
 import { useColorStyles } from "../styles.js"
-import Typography from "@material-ui/core/Typography"
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp"
-import Tooltip from "@material-ui/core/Tooltip"
+import Typography from "@mui/material/Typography"
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
+import Tooltip from "@mui/material/Tooltip"
 
 function ObjLeader(props) {
 	const classes = useColorStyles()

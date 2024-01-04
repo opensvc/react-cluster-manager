@@ -1,14 +1,14 @@
 import React from "react";
 import { splitPath } from "../utils.js"
-import IconButton from '@material-ui/core/IconButton'
+import IconButton from '@mui/material/IconButton'
 import { useColorStyles } from "../styles.js"
 
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import LockOpenIcon from '@material-ui/icons/LockOpen'
-import LockIcon from '@material-ui/icons/Lock'
-import SaveIcon from '@material-ui/icons/Save'
-import HelpIcon from '@material-ui/icons/Help'
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import LockOpenIcon from '@mui/icons-material/LockOpen'
+import LockIcon from '@mui/icons-material/Lock'
+import SaveIcon from '@mui/icons-material/Save'
+import HelpIcon from '@mui/icons-material/Help'
 
 
 function icon(kind, className) {

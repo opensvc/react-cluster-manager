@@ -2,11 +2,11 @@ import React from "react"
 import { splitPath, fancySizeMB } from "../utils.js"
 import HorizontalBars from "./HorizontalBars.jsx"
 
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from "@material-ui/core/Typography"
-import Grid from "@material-ui/core/Grid"
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
+import { makeStyles } from '@mui/styles'
+import Typography from "@mui/material/Typography"
+import Grid from "@mui/material/Grid"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
 import {isEmpty} from "lodash";
 
 const useStyles = makeStyles(theme => ({

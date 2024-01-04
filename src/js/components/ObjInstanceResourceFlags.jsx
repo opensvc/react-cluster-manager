@@ -1,8 +1,8 @@
 import React from "react"
 import { useTranslation } from "react-i18next"
-import { makeStyles } from "@material-ui/core/styles"
+import { makeStyles } from "@mui/styles"
 
-import Tooltip from "@material-ui/core/Tooltip"
+import Tooltip from "@mui/material/Tooltip"
 
 const useStyles = makeStyles(theme => ({
         flags: {

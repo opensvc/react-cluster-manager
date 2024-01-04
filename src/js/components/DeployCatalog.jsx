@@ -9,12 +9,12 @@ import { NamespaceSelector } from './NamespaceSelector.jsx';
 import { TemplateSelector } from './TemplateSelector.jsx';
 import { CatalogSelector } from './CatalogSelector.jsx';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@mui/styles';
+import Typography from '@mui/material/Typography';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import TextField from '@mui/material/TextField';
 
 const useStyles = makeStyles(theme => ({
         desc: {

@@ -4,8 +4,8 @@ import { nodeMemOverloadIssue } from "../issues.js"
 import { useTranslation } from "react-i18next"
 import { useStateValue } from '../state.js'
 import WarningIcon from './WarningIcon.jsx'
-import Tooltip from '@material-ui/core/Tooltip'
-import Typography from '@material-ui/core/Typography'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
 
 function NodeStateMemOverload(props) {
 	const { t, i18n } = useTranslation()

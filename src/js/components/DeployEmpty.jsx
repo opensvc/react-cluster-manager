@@ -3,11 +3,11 @@ import { nameValid } from "../utils.js";
 import { ObjKindSelector } from './ObjKindSelector.jsx';
 import { NamespaceSelector } from './NamespaceSelector.jsx';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@mui/styles';
+import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import TextField from '@mui/material/TextField';
 
 const useStyles = makeStyles(theme => ({
 	desc: {

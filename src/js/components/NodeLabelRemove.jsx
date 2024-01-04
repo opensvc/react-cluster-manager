@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { apiNodeAction } from "../api.js"
 import useApiResponse from "../hooks/ApiResponse.jsx"
 
-import IconButton from '@material-ui/core/IconButton'
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
+import IconButton from '@mui/material/IconButton'
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever"
 
 function NodeLabelRemove(props) {
 	const {node, labelKey} = props

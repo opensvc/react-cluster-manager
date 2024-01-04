@@ -4,21 +4,21 @@ import { useTranslation } from "react-i18next"
 import { TableToolbar } from "./TableToolbar.jsx"
 import { stringToHslColor } from "../utils.js"
 
-import { makeStyles } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Chip from '@material-ui/core/Chip'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
+import { makeStyles } from '@mui/styles'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import CircularProgress from '@mui/material/CircularProgress'
+import Chip from '@mui/material/Chip'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
 import clsx from 'clsx'
-import Tooltip from '@material-ui/core/Tooltip'
-import IconButton from '@material-ui/core/IconButton'
-import Skeleton from '@material-ui/lab/Skeleton'
-import FilterListIcon from '@material-ui/icons/FilterList'
-import ClearIcon from '@material-ui/icons/Clear'
-import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight'
+import Tooltip from '@mui/material/Tooltip'
+import IconButton from '@mui/material/IconButton'
+import Skeleton from '@mui/lab/Skeleton'
+import FilterListIcon from '@mui/icons-material/FilterList'
+import ClearIcon from '@mui/icons-material/Clear'
+import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight'
 
 const useStyles = makeStyles(theme => ({
 	content: {

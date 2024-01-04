@@ -2,11 +2,11 @@ import React from "react";
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 
-import { makeStyles, lighten } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles, lighten } from '@mui/styles';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 
-import ErrorIcon from '@material-ui/icons/Error';
+import ErrorIcon from '@mui/icons-material/Error';
 
 const useStyles = makeStyles(theme => ({
         root: {

@@ -3,27 +3,27 @@ import { useNavigate } from 'react-router-dom'
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { clusterIssue, threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue, objectsIssue } from "../issues.js";
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { state } from "../utils.js"
 import { useColorStyles } from "../styles.js"
 import ObjIcon from "./ObjIcon.jsx"
-import Badge from '@material-ui/core/Badge';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
+import Badge from '@mui/material/Badge';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
 
-import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
-import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
-import HowToVoteIcon from '@material-ui/icons/HowToVote';
-import StorageIcon from '@material-ui/icons/Storage';
-import WidgetsIcon from '@material-ui/icons/Widgets';
-import GroupWorkIcon from '@material-ui/icons/GroupWork';
-import LinkIcon from '@material-ui/icons/Link';
-import CodeIcon from '@material-ui/icons/Code';
-import SaveIcon from '@material-ui/icons/Save'
+import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import HowToVoteIcon from '@mui/icons-material/HowToVote';
+import StorageIcon from '@mui/icons-material/Storage';
+import WidgetsIcon from '@mui/icons-material/Widgets';
+import GroupWorkIcon from '@mui/icons-material/GroupWork';
+import LinkIcon from '@mui/icons-material/Link';
+import CodeIcon from '@mui/icons-material/Code';
+import SaveIcon from '@mui/icons-material/Save'
 
 const useStyles = makeStyles(theme => ({
 	nested: {

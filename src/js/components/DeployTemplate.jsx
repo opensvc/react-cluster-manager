@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { nameValid, namespaceValid, createDataHasPathKey, parseIni } from "../utils.js";
 import { NamespaceSelector } from './NamespaceSelector.jsx'
 
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import TextField from '@material-ui/core/TextField';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import Button from '@mui/material/Button';
+import { makeStyles } from '@mui/styles';
+import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import TextField from '@mui/material/TextField';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 
 const useStyles = makeStyles(theme => ({
         desc: {

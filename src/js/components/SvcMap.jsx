@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useStateValue } from '../state.js';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { ObjAvail } from "./ObjAvail.jsx"
 import { splitPath } from "../utils.js";
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography'
-import Chip from '@material-ui/core/Chip'
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography'
+import Chip from '@mui/material/Chip'
 
 const useStyles = makeStyles(theme => ({
 	root: {

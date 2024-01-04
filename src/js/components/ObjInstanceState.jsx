@@ -7,7 +7,7 @@ import { ObjLeader } from "./ObjLeader.jsx";
 import { ObjProvisioned } from "./ObjProvisioned.jsx";
 import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
 import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(theme => ({
         child: {
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
         },
 }))
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 
 function ObjInstanceState(props) {
 	//

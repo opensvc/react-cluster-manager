@@ -1,10 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next"
-import Typography from '@material-ui/core/Typography';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import SkipNextIcon from "@material-ui/icons/SkipNext"
+import Typography from '@mui/material/Typography';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import SkipNextIcon from "@mui/icons-material/SkipNext"
 
 function MonitorTargetBadgeItem(props) {
 	const { t, i18n } = useTranslation()

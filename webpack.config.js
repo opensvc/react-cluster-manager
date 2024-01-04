@@ -27,14 +27,12 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        use: ['css-loader']
       },
       {
         test: /\.(scss)$/,
         use: [
-          {
-            loader: 'style-loader', // inject CSS to page
-          }, {
+      {
             loader: 'css-loader', // translates CSS into CommonJS modules
           }, {
             loader: 'postcss-loader', // Run post css actions
