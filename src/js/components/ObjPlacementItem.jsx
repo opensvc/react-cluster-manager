@@ -1,12 +1,12 @@
 import React from "react";
 import { useTranslation } from 'react-i18next'
 
-import PlaceIcon from '@material-ui/icons/Place';
-import Typography from '@material-ui/core/Typography';
+import PlaceIcon from '@mui/icons-material/Place';
+import Typography from '@mui/material/Typography';
 import { useColorStyles } from "../styles.js"
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 
 function ObjPlacementItem(props) {
 	const { t, i18n } = useTranslation()

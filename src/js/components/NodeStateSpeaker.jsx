@@ -1,6 +1,6 @@
 import React from "react";
-import RssFeedIcon from '@material-ui/icons/RssFeed';
-import Typography from '@material-ui/core/Typography';
+import RssFeedIcon from '@mui/icons-material/RssFeed';
+import Typography from '@mui/material/Typography';
 
 function NodeStateSpeaker(props) {
 	if (props.speaker != true) {

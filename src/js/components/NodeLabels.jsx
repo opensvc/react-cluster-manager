@@ -7,8 +7,8 @@ import NodeLabelAdd from "./NodeLabelAdd.jsx"
 import NodeLabelEdit from "./NodeLabelEdit.jsx"
 import NodeLabelRemove from "./NodeLabelRemove.jsx"
 
-import IconButton from '@material-ui/core/IconButton'
-import EditIcon from '@material-ui/icons/Edit'
+import IconButton from '@mui/material/IconButton'
+import EditIcon from '@mui/icons-material/Edit'
 
 function EditButton(props) {
 	const { user } = useUser()

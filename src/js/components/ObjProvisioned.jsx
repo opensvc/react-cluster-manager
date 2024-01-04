@@ -1,6 +1,6 @@
 import React from "react";
-import WarningIcon from '@material-ui/icons/Warning';
-import Typography from '@material-ui/core/Typography';
+import WarningIcon from '@mui/icons-material/Warning';
+import Typography from '@mui/material/Typography';
 
 function ObjProvisioned(props) {
 	if (props.provisioned == false) {

@@ -1,8 +1,8 @@
 import React from "react"
 import clsx from "clsx"
 
-import MuiErrorIcon from '@material-ui/icons/Error'
-import { makeStyles } from '@material-ui/core/styles'
+import MuiErrorIcon from '@mui/icons-material/Error'
+import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles(theme => ({
 	root: {

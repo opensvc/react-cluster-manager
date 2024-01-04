@@ -1,8 +1,8 @@
 import React from "react"
 import clsx from "clsx"
 
-import MuiWarningIcon from '@material-ui/icons/Warning'
-import { makeStyles } from '@material-ui/core/styles'
+import MuiWarningIcon from '@mui/icons-material/Warning'
+import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles(theme => ({
 	root: {

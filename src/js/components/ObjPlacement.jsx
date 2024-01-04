@@ -1,6 +1,6 @@
 import React from "react";
-import PlaceIcon from '@material-ui/icons/Place';
-import Typography from '@material-ui/core/Typography';
+import PlaceIcon from '@mui/icons-material/Place';
+import Typography from '@mui/material/Typography';
 import { useColorStyles } from "../styles.js"
 
 function ObjPlacement(props) {
