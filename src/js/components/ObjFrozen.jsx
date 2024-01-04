@@ -1,6 +1,6 @@
 import React from "react";
-import AcUnitIcon from '@material-ui/icons/AcUnit';
-import Typography from '@material-ui/core/Typography';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import Typography from '@mui/material/Typography';
 
 function ObjFrozen(props) {
 	if (!props.frozen) {

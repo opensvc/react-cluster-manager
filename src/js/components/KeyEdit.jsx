@@ -5,17 +5,17 @@ import useApiResponse from "../hooks/ApiResponse.jsx"
 import useUser from "../hooks/User.jsx"
 import {useKey} from "../hooks/KeyGet.jsx"
 
-import { makeStyles } from "@material-ui/core/styles"
-import Button from "@material-ui/core/Button"
-import Dialog from "@material-ui/core/Dialog"
-import DialogActions from "@material-ui/core/DialogActions"
-import DialogContent from "@material-ui/core/DialogContent"
-import DialogContentText from "@material-ui/core/DialogContentText"
-import DialogTitle from "@material-ui/core/DialogTitle"
-import FormControl from '@material-ui/core/FormControl'
-import TextField from '@material-ui/core/TextField'
-import Typography from "@material-ui/core/Typography"
-import TextareaAutosize from "@material-ui/core/TextareaAutosize"
+import { makeStyles } from "@mui/styles"
+import Button from "@mui/material/Button"
+import Dialog from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogContentText from "@mui/material/DialogContentText"
+import DialogTitle from "@mui/material/DialogTitle"
+import FormControl from '@mui/material/FormControl'
+import TextField from '@mui/material/TextField'
+import Typography from "@mui/material/Typography"
+import TextareaAutosize from "@mui/material/TextareaAutosize"
 
 const useStyles = makeStyles(theme => ({
 	formcontrol: {

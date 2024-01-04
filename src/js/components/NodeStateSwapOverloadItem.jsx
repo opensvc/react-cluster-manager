@@ -4,10 +4,10 @@ import { nodeSwapOverloadIssue } from "../issues.js"
 import { useTranslation } from "react-i18next"
 import { useStateValue } from '../state.js'
 import WarningIcon from './WarningIcon.jsx'
-import Typography from '@material-ui/core/Typography'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
+import Typography from '@mui/material/Typography'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemIcon from '@mui/material/ListItemIcon'
 
 function NodeStateSwapOverloadItem(props) {
 	const { t, i18n } = useTranslation()

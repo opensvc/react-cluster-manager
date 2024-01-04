@@ -8,7 +8,7 @@ import { ObjLeaderItem } from "./ObjLeaderItem.jsx";
 import { MonitorStatusBadgeItem } from "./MonitorStatusBadgeItem.jsx";
 import { MonitorTargetBadgeItem } from "./MonitorTargetBadgeItem.jsx";
 
-import List from '@material-ui/core/List';
+import List from '@mui/material/List';
 
 function ObjInstanceStateList(props) {
 	const { path, node } = props

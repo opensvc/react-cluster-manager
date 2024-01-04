@@ -1,7 +1,7 @@
 import React from "react";
-import WarningIcon from '@material-ui/icons/Warning';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import WarningIcon from '@mui/icons-material/Warning';
+import { makeStyles } from '@mui/styles';
+import Typography from '@mui/material/Typography';
 
 const useStyles = makeStyles(theme => ({
         root: {

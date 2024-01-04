@@ -1,15 +1,15 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import ToggleButton from '@mui/lab/ToggleButton';
+import ToggleButtonGroup from '@mui/lab/ToggleButtonGroup';
 
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
-import LockIcon from '@material-ui/icons/Lock';
-import CopyrightIcon from '@material-ui/icons/Copyright';
-import SaveIcon from '@material-ui/icons/Save';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockIcon from '@mui/icons-material/Lock';
+import CopyrightIcon from '@mui/icons-material/Copyright';
+import SaveIcon from '@mui/icons-material/Save';
 
 const kinds = [
 	{

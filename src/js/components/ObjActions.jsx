@@ -7,16 +7,16 @@ import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.
 import { confirmations } from "../confirmations.js"
 import useApiResponse from "../hooks/ApiResponse.jsx"
 
-import CancelIcon from "@material-ui/icons/Cancel"
-import PlayArrowIcon from "@material-ui/icons/PlayArrow"
-import StopIcon from "@material-ui/icons/Stop"
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
-import DeleteIcon from "@material-ui/icons/Delete"
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline"
-import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled"
-import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
-import ShuffleIcon from "@material-ui/icons/Shuffle"
-import LabelIcon from "@material-ui/icons/Label"
+import CancelIcon from "@mui/icons-material/Cancel"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
+import StopIcon from "@mui/icons-material/Stop"
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever"
+import DeleteIcon from "@mui/icons-material/Delete"
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
+import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled"
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline"
+import ShuffleIcon from "@mui/icons-material/Shuffle"
+import LabelIcon from "@mui/icons-material/Label"
 
 function ObjActions(props) {
 	const { auth } = useUser()

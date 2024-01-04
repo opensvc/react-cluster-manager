@@ -3,12 +3,12 @@ import { state } from "../utils.js"
 import { versionIssue } from "../issues.js"
 import { useTranslation } from "react-i18next"
 import { useStateValue } from '../state.js'
-import Typography from '@material-ui/core/Typography'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import WarningIcon from "@material-ui/icons/Warning"
-import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@mui/material/Typography'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import WarningIcon from "@mui/icons-material/Warning"
+import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles(theme => ({
         root: {
