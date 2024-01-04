@@ -17,7 +17,7 @@ import TableCell from '@mui/material/TableCell';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
-import Skeleton from '@mui/lab/Skeleton';
+import Skeleton from '@mui/material/Skeleton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const useStyles = makeStyles(theme => ({

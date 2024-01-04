@@ -12,7 +12,6 @@ import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
 import Chip from '@mui/material/Chip'
 import Divider from '@mui/material/Divider'
-import Skeleton from '@mui/lab/Skeleton'
 
 const useStyles = makeStyles(theme => ({
 	content: {
