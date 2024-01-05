@@ -120,7 +120,7 @@ function breadcrumbs() {
 
 	var match = matchPath({path: "/object", end: true, caseSensitive: false}, loc.pathname)
 	if (match) {
-		var kind = (loc.state !== undefined) ? loc.state.kind : "Objects"
+		var kind = (loc.state !== null) ? loc.state.kind : "Objects"
 		crumbs.push({
 			text: kind,
 			to: "/" + kind.toLowerCase(),
@@ -133,7 +133,7 @@ function breadcrumbs() {
 
 	var match = matchPath({path: "/instance", end: true, caseSensitive: false},loc.pathname)
 	if (match) {
-		var kind = (loc.state !== undefined) ? loc.state.kind : "Objects"
+		var kind = (loc.state !== null) ? loc.state.kind : "Objects"
 		crumbs.push({
 			text: kind,
 			to: "/" + kind.toLowerCase(),
