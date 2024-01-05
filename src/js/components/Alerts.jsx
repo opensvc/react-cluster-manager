@@ -97,7 +97,7 @@ function Alert(props) {
 				<NotificationsIcon color={data.color} />
 			</ListItemIcon>
 			<ListItemText
-				primary=<Typography component="span" variant="caption">{data.date.toLocaleString()}</Typography>
+				primary={<Typography component="span" variant="caption">{data.date.toLocaleString()}</Typography>}
 				secondary={data.body}
 				secondaryTypographyProps={{component: "div"}}
 			/>
