@@ -30,22 +30,28 @@ import BlockIcon from "@mui/icons-material/Block"
 import WifiOffIcon from "@mui/icons-material/WifiOff"
 import {version} from "../../version";
 
-const StyledBreadcrumb = withStyles(theme => ({
+const useStyles2 = makeStyles(theme => ({
 	root: {
-		backgroundColor: "inherit",
+		backgroundColor: 'inherit',
 		height: theme.spacing(3),
-		color: "inherit",
+		color: 'inherit',
 		fontWeight: theme.typography.fontWeightRegular,
-		fontSize: "inherit",
+		fontSize: 'inherit',
 		'&:hover, &:focus': {
-			backgroundColor: "rgba(255, 255, 255, 0.3)",
+			backgroundColor: 'rgba(255, 255, 255, 0.3)',
 		},
 		'&:active': {
 			boxShadow: theme.shadows[1],
-			backgroundColor: "inherit",
+			backgroundColor: 'inherit',
 		},
 	},
-}))(Chip); // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
+}));
+
+const StyledBreadcrumb = ({ ...props }) => {
+	const classes = useStyles2();
+
+	return <Chip className={classes.root} {...props} />;
+};
 
 const useStyles = makeStyles(theme => ({
 	breadcrumbs: {
