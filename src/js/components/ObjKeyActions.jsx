@@ -6,16 +6,17 @@ import { apiInstanceAction } from "../api.js";
 import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
 import useApiResponse from "../hooks/ApiResponse.jsx"
 
-import RefreshIcon from "@mui/icons-material/Refresh"
-import PlayArrowIcon from "@mui/icons-material/PlayArrow"
-import StopIcon from "@mui/icons-material/Stop"
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever"
+
 import DeleteIcon from "@mui/icons-material/Delete"
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
-import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled"
-import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline"
-import ShuffleIcon from "@mui/icons-material/Shuffle"
-import LabelIcon from "@mui/icons-material/Label"
+//import RefreshIcon from "@mui/icons-material/Refresh"
+//import PlayArrowIcon from "@mui/icons-material/PlayArrow"
+//import StopIcon from "@mui/icons-material/Stop"
+//import DeleteForeverIcon from "@mui/icons-material/DeleteForever"
+//import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
+//import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled"
+//import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline"
+//import ShuffleIcon from "@mui/icons-material/Shuffle"
+//import LabelIcon from "@mui/icons-material/Label"
 
 function ObjKeyActions(props) {
 	const { auth } = useUser()

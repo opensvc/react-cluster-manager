@@ -1,6 +1,5 @@
 'use strict';
-
-import React, { Component, Fragment } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import { useReactOidc } from "@axa-fr/react-oidc-context"
 import { useTranslation } from "react-i18next"
@@ -19,7 +18,6 @@ import Main from "./Main.jsx";
 import LoginCallback from "./LoginCallback.jsx";
 import Login from "./Login.jsx";
 import { AuthenticationProvider, oidcLog, OidcSecure } from '@axa-fr/react-oidc-context';
-
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -31,13 +29,11 @@ import Container from '@mui/material/Container';
 import Slide from '@mui/material/Slide';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-
 import amber from '@mui/material/colors/amber';
 import red from '@mui/material/colors/red';
 import green from '@mui/material/colors/green';
 import grey from '@mui/material/colors/grey';
 import lightBlue from '@mui/material/colors/lightBlue';
-
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';

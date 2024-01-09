@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import useUser from "../hooks/User.jsx"
-import { useStateValue } from '../state.js';
 import { useCatalogs } from '../hooks/Catalogs.jsx';
 import { useCatalogTemplates } from '../hooks/CatalogTemplates.jsx';
 import { apiGetAny } from "../api.js";
@@ -8,7 +7,6 @@ import { nameValid, namespaceValid, parseIni, createDataHasPathKey } from "../ut
 import { NamespaceSelector } from './NamespaceSelector.jsx';
 import { TemplateSelector } from './TemplateSelector.jsx';
 import { CatalogSelector } from './CatalogSelector.jsx';
-
 import Typography from '@mui/material/Typography';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import FormControl from '@mui/material/FormControl';

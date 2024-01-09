@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import useUser from "./User.jsx"
 import { apiGetAny } from "../api.js"
 

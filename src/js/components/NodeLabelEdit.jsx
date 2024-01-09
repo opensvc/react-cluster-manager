@@ -1,14 +1,9 @@
 import React, { useState } from "react"
 import useUser from "../hooks/User.jsx"
 import { useTranslation } from 'react-i18next'
-
 import { apiNodeAction } from "../api.js"
-import { useKeywords } from "../hooks/Keywords.jsx"
-import { SectionForm } from "./SectionForm.jsx"
 import { useStateValue } from '../state.js'
 import useApiResponse from "../hooks/ApiResponse.jsx"
-
-import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -18,7 +13,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
 import FormControl from '@mui/material/FormControl'
 import TextField from '@mui/material/TextField'
-
 import EditIcon from '@mui/icons-material/Edit'
 import useClasses from "../hooks/useClasses.jsx";
 

@@ -1,6 +1,5 @@
 import React from "react"
 import { useTranslation } from 'react-i18next'
-
 import WarningIcon from './WarningIcon.jsx'
 import Typography from '@mui/material/Typography'
 import ListItem from '@mui/material/ListItem'

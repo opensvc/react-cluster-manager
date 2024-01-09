@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from 'react-i18next'
-
 import PlaceIcon from '@mui/icons-material/Place';
 import Typography from '@mui/material/Typography';
 import { ColorStyles } from "../styles.js"

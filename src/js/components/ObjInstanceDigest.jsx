@@ -3,8 +3,6 @@ import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { ObjInstanceStateList } from "./ObjInstanceStateList.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
-
-import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';

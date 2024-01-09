@@ -1,6 +1,5 @@
 import React from "react";
 import { splitPath } from "../utils.js"
-import IconButton from '@mui/material/IconButton'
 import { ColorStyles } from "../styles.js"
 
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord'

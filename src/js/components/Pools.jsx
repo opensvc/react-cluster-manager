@@ -2,10 +2,6 @@ import React from "react";
 import { usePoolsStatus } from "../hooks/PoolsStatus.jsx"
 import { useTranslation } from 'react-i18next';
 import { PoolAdd } from './PoolAdd.jsx';
-
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';

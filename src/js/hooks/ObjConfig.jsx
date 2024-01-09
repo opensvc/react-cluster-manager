@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import useUser from "./User.jsx"
 import { apiObjGetConfig } from "../api.js"
 import { objectConfigChecksum } from "../utils.js"
-import { useStateValue } from "../state.js"
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 
 function useObjConfig(path) {

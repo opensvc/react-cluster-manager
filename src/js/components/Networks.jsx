@@ -4,17 +4,14 @@ import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next';
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 import { NetworkAdd } from "./NetworkAdd.jsx"
-
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Hidden from '@mui/material/Hidden';
 import useClasses from "../hooks/useClasses.jsx";
 
 const styles = theme => ({
