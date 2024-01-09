@@ -9,9 +9,9 @@ import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import MenuItem from '@mui/material/MenuItem';
 import Popper from '@mui/material/Popper';
-import { makeStyles } from '@mui/styles';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		flexGrow: 1,
 	},
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 		padding: 0,
 		listStyleType: 'none',
 	},
-}))
+})
 
 function getRoleNamespaces(user, role) {
 	if (user.grant === undefined) {
@@ -147,7 +147,7 @@ function NamespaceSelector(props) {
 	} else {
 		namespaces = getNamespaces(cstat)
 	}
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [anchorEl, _setAnchorEl] = useState(null)
 	const [stateSuggestions, setSuggestions] = useState([])
 

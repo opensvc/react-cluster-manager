@@ -20,7 +20,6 @@ import LoginCallback from "./LoginCallback.jsx";
 import Login from "./Login.jsx";
 import { AuthenticationProvider, oidcLog, OidcSecure } from '@axa-fr/react-oidc-context';
 
-import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -42,6 +41,7 @@ import lightBlue from '@mui/material/colors/lightBlue';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
+import useClasses from "../hooks/useClasses.jsx";
 
 const makeTheme = (data) => createTheme({
 	palette: {
@@ -82,12 +82,12 @@ HideOnScroll.propTypes = {
 	children: PropTypes.node.isRequired,
 };
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		padding: theme.spacing(3, 2),
 		marginTop: theme.spacing(3),
 	}
-}))
+})
 
 const App = () => {
 	return (
@@ -330,7 +330,7 @@ class ErrorBoundary extends React.Component {
 }
 
 function AppError(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const navigate = useNavigate()
 	return (
 		<Paper className={classes.root}>

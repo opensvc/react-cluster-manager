@@ -9,7 +9,6 @@ import { parseIni, splitPath } from "../utils.js"
 import { SectionEdit } from "./SectionEdit.jsx"
 import { SectionDelete } from "./SectionDelete.jsx"
 
-import { makeStyles } from "@mui/styles"
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import ListItemText from "@mui/material/ListItemText"
@@ -25,8 +24,9 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import EditIcon from "@mui/icons-material/Edit"
 import Collapse from "@mui/material/Collapse"
 import Tooltip from "@mui/material/Tooltip"
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         card: {
                 height: "100%",
         },
@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 	expandOpen: {
 		transform: 'rotate(180deg)',
 	},
-}))
+})
 
 function EditButton(props) {
 	const sp = splitPath(props.path)
@@ -69,7 +69,7 @@ function ExpandRawConfigButton(props) {
         const { path, expanded, setExpanded } = props
 	const [{ user }, dispatch] = useStateValue()
 	const { t } = useTranslation()
-        const classes = useStyles()
+        const classes = useClasses(styles)
 	const sp = splitPath(path)
         if (!user.grant) {
                 return null
@@ -176,7 +176,7 @@ function ObjConfigFile(props) {
 
 function ObjConfig(props) {
 	const { path } = props
-        const classes = useStyles()
+        const classes = useClasses(styles)
         const { t, i18n } = useTranslation()
 	const [expanded, setExpanded] = useState(false)
 	const [edit, setEdit] = useState(false)

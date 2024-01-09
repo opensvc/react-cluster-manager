@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { NodeActions } from "./NodeActions.jsx"
 import { NodeStateList } from "./NodeStateList.jsx"
 
-import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
@@ -12,18 +11,19 @@ import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
 import Chip from '@mui/material/Chip'
 import Divider from '@mui/material/Divider'
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	content: {
 		height: "100%",
 	},
 	divider: {
 		marginBottom: theme.spacing(2),
 	},
-}))
+})
 
 function NodeDigest(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { name, nodeData } = props
 	const { t, i18n } = useTranslation()
 	const [{user}, dispatch] = useStateValue()

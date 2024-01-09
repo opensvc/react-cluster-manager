@@ -2,7 +2,6 @@ import React from "react";
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles } from '@mui/styles';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';

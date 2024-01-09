@@ -5,7 +5,6 @@ import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import useUser from "../hooks/User.jsx"
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
-import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import Link from '@mui/material/Link'
 import List from '@mui/material/List'
@@ -19,8 +18,9 @@ import Button from '@mui/material/Button'
 import Skeleton from '@mui/material/Skeleton'
 import LangSelector from "./LangSelector.jsx"
 import ThemeSelector from "./ThemeSelector.jsx"
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		marginTop: theme.spacing(3),
 	},
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 		fontFamily: "monospace",
 		wordBreak: "break-all",
 	},
-}))
+})
 
 function User(props) {
 	return (
@@ -51,7 +51,7 @@ function UserDigest(props) {
 	const { close } = useClusterStatus()
 	const { unloadUser } = useUser()
 	const [{ user }, dispatch] = useStateValue()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 
 	function handleLogout(e) {
 		logout()
@@ -89,7 +89,7 @@ function UserDigest(props) {
 function UserAuthMethod(props) {
 	const { user } = props
 	const { i18n, t } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!user.auth) {
 		return t("Not authenticated")
 	}
@@ -119,7 +119,7 @@ function OidcProvider(props) {
 	const { oidcUser } = useReactOidc()
 	const { i18n, t } = useTranslation()
 	const authInfo = useAuthInfo()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!authInfo) {
 		return <Skeleton />
 	}
@@ -142,7 +142,7 @@ function OidcProvider(props) {
 function OidcAccessToken(props) {
 	const { oidcUser } = useReactOidc()
 	const { i18n, t } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!oidcUser) {
 		return null
 	}
@@ -177,7 +177,7 @@ function parseGrant(grant) {
 function UserGrants(props) {
 	const [{ user }, dispatch] = useStateValue()
 	const { i18n, t } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 
 	if (user.grant === undefined) {
 		return <Skeleton variant="rect" width="100%" height="8rem" />

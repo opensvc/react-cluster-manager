@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 import { NetworkAdd } from "./NetworkAdd.jsx"
 
-import { makeStyles } from '@mui/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -16,8 +15,9 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Hidden from '@mui/material/Hidden';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		marginTop: theme.spacing(3),
 	},
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 			cursor: "pointer",
 		},
 	},
-}))
+});
 
 function getLines(data) {
 	if (!data) {
@@ -47,7 +47,7 @@ function getLines(data) {
 }
 
 function Networks(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t, i18n } = useTranslation()
 	const data = useNetworksStatus()
 	const [{}, dispatch] = useStateValue()
@@ -88,7 +88,7 @@ function Networks(props) {
 function NetworksLine(props) {
 	const {index, data} = props
 	const [{}, dispatch] = useStateValue()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const navigate = useNavigate()
 	function handleLineClick(event) {
 		event.stopPropagation()

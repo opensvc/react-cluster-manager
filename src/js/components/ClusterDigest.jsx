@@ -10,7 +10,6 @@ import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 import { ClusterActions } from "./ClusterActions.jsx"
 import { DeployButton } from "./DeployButton.jsx"
 
-import { makeStyles } from '@mui/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -18,8 +17,9 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import WarningIcon from '@mui/icons-material/Warning';
 import {isEmpty} from "lodash";
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		height: "100%",
 	},
@@ -29,12 +29,12 @@ const useStyles = makeStyles(theme => ({
         warn: {
                 color: theme.status.warning,
         },
-}))
+});
 
 function ClusterDigest(props) {
 	const { t, i18n } = useTranslation()
         const { cstat } = useClusterStatus()
-        const classes = useStyles()
+        const classes = useClasses(styles)
 	const pools = usePoolsStatus()
 	const networks = useNetworksStatus()
 	const navigate = useNavigate()

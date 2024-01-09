@@ -5,7 +5,6 @@ import useApiResponse from "../hooks/ApiResponse.jsx"
 import useUser from "../hooks/User.jsx"
 import {useKey} from "../hooks/KeyGet.jsx"
 
-import { makeStyles } from "@mui/styles"
 import Button from "@mui/material/Button"
 import Dialog from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"
@@ -16,8 +15,9 @@ import FormControl from '@mui/material/FormControl'
 import TextField from '@mui/material/TextField'
 import Typography from "@mui/material/Typography"
 import TextareaAutosize from "@mui/material/TextareaAutosize"
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	formcontrol: {
 		margin: theme.spacing(2, 0),
 	},
@@ -27,11 +27,11 @@ const useStyles = makeStyles(theme => ({
 		whiteSpace: "nowrap",
 		overflow: "auto !important",
 	},
-}))
+})
 
 function KeyData(props) {
 	const {value, setValue} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 
 	function handleTextChange(e) {
 		setValue(e.target.value)
@@ -83,7 +83,7 @@ function KeyEditDialog(props) {
 	const [urlValue, setUrlValue] = useState("")
 	const [fileValue, setFileValue] = useState("")
 	const { dispatchAlerts } = useApiResponse()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const source = {
 		"INPUT": "User Input",
 		"LOCAL": "Local File",

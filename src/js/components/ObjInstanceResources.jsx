@@ -10,10 +10,9 @@ import { ObjProvisioned } from "./ObjProvisioned.jsx"
 import { ObjInstanceResourceActions } from "./ObjInstanceResourceActions.jsx"
 import { TableToolbar } from "./TableToolbar.jsx"
 import { useObjConfig } from "../hooks/ObjConfig.jsx"
-import { useColorStyles } from "../styles.js"
+import { ColorStyles } from "../styles.js"
 
 import clsx from "clsx"
-import { makeStyles } from "@mui/styles"
 import Grid from "@mui/material/Grid"
 import Card from "@mui/material/Card"
 import CardHeader from "@mui/material/CardHeader"
@@ -29,8 +28,9 @@ import IconButton from "@mui/material/IconButton"
 import Checkbox from "@mui/material/Checkbox"
 
 import OpenInBrowserIcon from "@mui/icons-material/OpenInBrowser"
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         tableWrapper: {
                 overflowX: "auto",
         },
@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 	grow: {
 		flexGrow: "1",
 	}
-}))
+})
 
 function ObjInstanceResourceEnter(props) {
 	const { path, rid } = props
@@ -78,7 +78,7 @@ function ObjInstanceResources(props) {
 	//
 	const { cstat } = useClusterStatus()
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [selected, setSelected] = React.useState([])
 
 	if (cstat.monitor === undefined) {
@@ -157,7 +157,7 @@ function ObjInstanceResourceLine(props) {
 	const { cstat } = useClusterStatus()
 	const { user } = useUser()
 	const {index, node, path, rid, selected, setSelected, sp} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -216,7 +216,7 @@ function ObjInstanceResourceLine(props) {
 
 function ObjInstanceResourceDesc(props) {
 	const {data} = props
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 	var log = []
 	if (data.log) {
 		for (var i=0; i<data.log.length; i++) {

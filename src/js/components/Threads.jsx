@@ -6,7 +6,6 @@ import useClusterStatus from "../hooks/ClusterStatus.jsx"
 
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@mui/styles';
 import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -18,9 +17,10 @@ import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
-import { useColorStyles } from "../styles.js";
+import { ColorStyles } from "../styles.js";
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles =theme => ({
 	root: {
 		marginTop: theme.spacing(3),
 	},
@@ -32,12 +32,12 @@ const useStyles = makeStyles(theme => ({
 	chip: {
 		margin: theme.spacing(1),
 	},
-}))
+})
 
 
 function Threads(props) {
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { cstat } = useClusterStatus()
 	if (!("monitor" in cstat)) {
 		return null
@@ -76,7 +76,7 @@ function Threads(props) {
 }
 
 function Thread(props) {
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 	if (!props.data) {
 		return null
 	}

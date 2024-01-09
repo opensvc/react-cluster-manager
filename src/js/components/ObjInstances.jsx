@@ -9,7 +9,6 @@ import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
 import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
 
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -24,8 +23,9 @@ import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
 
 import FilterListIcon from '@mui/icons-material/FilterList';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	tableWrapper: {
 		overflowX: 'auto',
 	},
@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 			cursor: "pointer",
 		},
 	},
-}))
+});
 
 function getInstances(path, cstat, isSlice) {
 	var instances = []
@@ -89,7 +89,7 @@ function ObjInstances(props) {
 	//
 	// props.path
 	//
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { cstat } = useClusterStatus()
 	const [selected, setSelected] = React.useState([]);
 	const { t, i18n } = useTranslation()
@@ -167,7 +167,7 @@ function ObjInstances(props) {
 
 function InstanceLine(props) {
 	const loc = useLocation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { cstat } = useClusterStatus()
 	const {index, path, instance, selected, setSelected} = props
 	const navigate = useNavigate()

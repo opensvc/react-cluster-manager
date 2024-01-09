@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useStateValue } from "../state.js"
-import { makeStyles } from "@mui/styles"
 import IconButton from "@mui/material/IconButton"
 import Button from "@mui/material/Button"
 import Menu from "@mui/material/Menu"
@@ -23,8 +22,9 @@ import FormGroup from "@mui/material/FormGroup"
 import Fab from "@mui/material/Fab"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import Tooltip from "@mui/material/Tooltip"
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		width: '100%',
 		maxWidth: 360,
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
         fab: {
                 marginTop: theme.spacing(2),
         },
-}))
+});
 
 function ActionsDivider(props) {
 	if (props.data.action) {
@@ -49,7 +49,7 @@ function ActionsDivider(props) {
 }
 
 function ConfirmationDialog(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [data, setData] = useState({
 		action: null,
 		acks: [],
@@ -136,7 +136,7 @@ function ConfirmationDialog(props) {
 
 function Actions(props) {
 	const [open, setOpen] = React.useState(false)
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t } = useTranslation()
 
 	function handleClickOpen(e) {

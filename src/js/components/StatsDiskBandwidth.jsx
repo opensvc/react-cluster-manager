@@ -2,14 +2,14 @@ import React from "react"
 import { splitPath, fancySizeMB } from "../utils.js"
 import HorizontalBars from "./HorizontalBars.jsx"
 
-import { makeStyles } from '@mui/styles'
 import Typography from "@mui/material/Typography"
 import Grid from "@mui/material/Grid"
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import {isEmpty} from "lodash";
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	itemGrid: {
 		flexWrap: "wrap",
 	},
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 		borderBottomColor: theme.palette.primary.main,
 		transition: "height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
 	},
-}))
+})
 
 
 function parseDiskBandwidth(last, prev, search) {
@@ -111,7 +111,7 @@ function parseDiskBandwidth(last, prev, search) {
 
 function DiskBandwidthNodeMapItem(props) {
 	const { data, node, name, agg } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	let value, pct, height
 	try {
 		if (agg === "ns") {
@@ -140,7 +140,7 @@ function DiskBandwidthNodeMapItem(props) {
 }
 
 function DiskBandwidthNodeMap(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { data, name, agg } = props
 	let nodes = Object.keys(data.nodes).sort()
 	return (
@@ -154,7 +154,7 @@ function DiskBandwidthNodeMap(props) {
 
 function DiskBandwidth(props) {
 	const { value } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	return (
 		<Typography component="div" className={classes.value}>
 			{fancySizeMB(value.rwb/1048576)}b/s
@@ -181,7 +181,7 @@ function DiskBandwidthBias(props) {
 
 function StatsDiskBandwidth(props) {
 	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	let bw = parseDiskBandwidth(last, prev, search)
 	let data
 	if (agg === "ns") {

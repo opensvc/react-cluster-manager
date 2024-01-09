@@ -6,7 +6,6 @@ import { ResourceAdd } from "./ResourceAdd.jsx"
 import { apiInstanceAction } from "../api.js"
 import useApiResponse from "../hooks/ApiResponse.jsx"
 
-import { makeStyles } from '@mui/styles';
 import Fab from '@mui/material/Fab';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -16,12 +15,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 
 import EditIcon from '@mui/icons-material/Edit';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         icon: {
                 marginLeft: theme.spacing(1),
         },
-}))
+})
 
 function SectionEdit(props) {
 	const {path, rid, conf} = props
@@ -33,7 +33,7 @@ function SectionEdit(props) {
 
 	const { auth } = useUser()
 	const [open, setOpen] = useState(false)
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { dispatchAlerts } = useApiResponse()
 	const [data, setData] = useState(null)
 	var sectionData = conf[rid]

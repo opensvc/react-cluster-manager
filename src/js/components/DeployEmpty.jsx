@@ -3,24 +3,24 @@ import { nameValid } from "../utils.js";
 import { ObjKindSelector } from './ObjKindSelector.jsx';
 import { NamespaceSelector } from './NamespaceSelector.jsx';
 
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	desc: {
 		padding: theme.spacing(3, 0),
 	},
         formcontrol: {
                 margin: theme.spacing(2, 0),
         },
-}))
+})
 
 function DeployEmpty(props) {
 	const {data, set} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 
 	function handleObjKindClick(e, kind) {
 		set({...data, kind: kind})

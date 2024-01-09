@@ -3,7 +3,7 @@ import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { state, fancySizeMB } from "../utils.js";
-import { useColorStyles } from "../styles.js";
+import { ColorStyles } from "../styles.js";
 import { nodeMemOverloadIssue, nodeSwapOverloadIssue, compatIssue, versionIssue } from "../issues.js";
 import { NodeActions } from "./NodeActions.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
@@ -11,7 +11,6 @@ import { NodeState } from "./NodeState.jsx";
 import { Sparklines, SparklinesLine, SparklinesReferenceLine, SparklinesNormalBand } from 'react-sparklines';
 
 import clsx from 'clsx';
-import { makeStyles } from '@mui/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -33,8 +32,9 @@ import Hidden from '@mui/material/Hidden';
 
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {isEmpty} from "lodash";
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 marginTop: theme.spacing(3),
         },
@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 		marginLeft: -theme.spacing(2),
 		marginRight: -theme.spacing(2),
 	},
-}))
+});
 
 function getNodeStat(cstat, node, key) {
 	let monNode = cstat.monitor.nodes[node]
@@ -207,7 +207,7 @@ function Node(props) {
 }
 
 function NodeVersion(props) {
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 	return (
 		<React.Fragment>
 			<Typography component="span" className={classes[props.compatIssue.name]}>
@@ -224,7 +224,7 @@ function NodeVersion(props) {
 function Nodes(props) {
 	const { cstat } = useClusterStatus()
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [selected, setSelected] = React.useState([]);
 
 	if (cstat.monitor === undefined) {

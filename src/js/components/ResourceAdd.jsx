@@ -5,7 +5,6 @@ import { useKeywords } from '../hooks/Keywords.jsx';
 import { SectionForm } from './SectionForm.jsx';
 
 import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
@@ -13,8 +12,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import CircularProgress from '@mui/material/CircularProgress';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
         root: {
                 padding: theme.spacing(3, 2),
                 marginTop: theme.spacing(3),
@@ -28,11 +28,11 @@ const useStyles = makeStyles(theme => ({
         formcontrol: {
                 margin: theme.spacing(2, 0),
         },
-}))
+});
 
 function ResourceAdd(props) {
 	const {path, data, setData} = props
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 	const sp = splitPath(path)
 	const kws = useKeywords(sp.kind)
 	if (!kws) {

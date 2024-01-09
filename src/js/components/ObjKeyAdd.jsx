@@ -4,7 +4,6 @@ import useUser from "../hooks/User.jsx"
 import { apiPostAny } from "../api.js"
 import { splitPath } from "../utils.js"
 
-import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
@@ -20,8 +19,9 @@ import DialogTitle from '@mui/material/DialogTitle'
 import TextareaAutosize from '@mui/material/TextareaAutosize'
 
 import AddIcon from '@mui/icons-material/Add';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	formcontrol: {
 		margin: theme.spacing(2, 0),
 	},
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
                 whiteSpace: "nowrap",
                 overflow: "auto !important",
 	},
-}))
+})
 
 function ObjKeyAdd(props) {
 	const {path} = props
@@ -51,7 +51,7 @@ function ObjKeyAdd(props) {
 	const [urlValue, setUrlValue] = useState("")
 	const [fileValue, setFileValue] = useState("")
 	const [keyName, setKeyName] = useState("")
-	const classes = useStyles()
+	const classes = useClasses(styles)
         function handleClickOpen(e) {
                 e.stopPropagation()
                 setOpen(true)

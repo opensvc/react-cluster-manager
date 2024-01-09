@@ -8,7 +8,6 @@ import { SectionForm } from "./SectionForm.jsx"
 import { useStateValue } from '../state.js';
 import useApiResponse from "../hooks/ApiResponse.jsx"
 
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';

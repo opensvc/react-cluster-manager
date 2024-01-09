@@ -6,7 +6,6 @@ import { ObjStateList } from "./ObjStateList.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjScale } from "./ObjScale.jsx";
 
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -15,12 +14,13 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from "@mui/material/Tooltip"
 
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         card: {
                 height: "100%",
         },
-}))
+})
 
 function Goto(props) {
 	const navigate = useNavigate()
@@ -47,7 +47,7 @@ function ObjDigest(props) {
 	const { path } = props
 	const { t, i18n } = useTranslation()
 	const [{ cstat }, dispatch] = useStateValue();
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!cstat.monitor) {
 		return null
 	}

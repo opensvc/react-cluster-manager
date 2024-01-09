@@ -1,17 +1,18 @@
 import React from "react";
 import { useTranslation } from 'react-i18next'
 
-import { useColorStyles } from '../styles.js'
+import { ColorStyles } from '../styles.js'
 import Typography from '@mui/material/Typography';
 import clsx from 'clsx';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import useClasses from "../hooks/useClasses.jsx";
 
 function ObjAvailItem(props) {
 	const {t, i18n} = useTranslation()
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 	const states = {
 		"up": "Available",
 		"down": "Unavailable",

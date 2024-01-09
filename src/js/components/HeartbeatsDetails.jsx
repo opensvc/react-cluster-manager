@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@mui/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -14,9 +13,10 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import { useColorStyles } from "../styles.js"
+import { ColorStyles } from "../styles.js"
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 marginTop: theme.spacing(3),
         },
@@ -25,10 +25,10 @@ const useStyles = makeStyles(theme => ({
                 marginLeft: -theme.spacing(2),
                 marginRight: -theme.spacing(2),
 	},
-}))
+});
 
 function HeartbeatsDetails(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { cstat } = useClusterStatus()
 	const { t, i18n } = useTranslation()
 	if (cstat.monitor === undefined) {
@@ -86,7 +86,7 @@ function NodeHeartbeats(props) {
 }
 
 function NodeHeartbeat(props) {
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 	const { cstat } = useClusterStatus()
 	if (cstat.monitor === undefined) {
 		return null

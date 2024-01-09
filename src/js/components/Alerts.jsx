@@ -1,7 +1,6 @@
 import React from "react"
 import { useStateValue } from '../state.js'
 
-import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
@@ -15,8 +14,9 @@ import NotificationsIcon from '@mui/icons-material/Notifications'
 import Badge from '@mui/material/Badge'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles({
+const useStyles = {
 	closeButton: {
 		alignSelf: "end",
 	},
@@ -26,12 +26,12 @@ const useStyles = makeStyles({
 	fullList: {
 		width: 'auto',
 	},
-})
+}
 
 function Alerts(props) {
 	const [{ alerts }, dispatch] = useStateValue()
 	const [state, setState] = React.useState(false)
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 	if (!alerts) {
 		return null
 	}
