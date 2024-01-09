@@ -3,7 +3,6 @@ import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
-import { makeStyles } from '@mui/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -14,8 +13,9 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Hidden from '@mui/material/Hidden';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 marginTop: theme.spacing(3),
         },
@@ -24,14 +24,14 @@ const useStyles = makeStyles(theme => ({
                 marginLeft: -theme.spacing(2),
                 marginRight: -theme.spacing(2),
         },
-}))
+})
 
 function NetworkDetails(props) {
 	const loc = useLocation()
 	let params = new URLSearchParams(loc.search)
 	const name = params.get("name")
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	return (
                 <Card className={classes.root}>
                         <CardHeader

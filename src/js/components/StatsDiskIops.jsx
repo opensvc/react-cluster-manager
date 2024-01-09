@@ -2,13 +2,13 @@ import React, { useState, Fragment } from "react"
 import { splitPath, fancySizeMB } from "../utils.js"
 import HorizontalBars from "./HorizontalBars.jsx"
 
-import { makeStyles } from '@mui/styles'
 import Typography from "@mui/material/Typography"
 import Grid from "@mui/material/Grid"
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	itemGrid: {
 		flexWrap: "wrap",
 	},
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 		borderBottomColor: theme.palette.primary.main,
 		transition: "height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
 	},
-}))
+})
 
 
 function parseDiskIops(last, prev, search) {
@@ -103,7 +103,7 @@ function parseDiskIops(last, prev, search) {
 
 function DiskIopsNodeMapItem(props) {
 	const { data, node, name, agg } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	try {
 		if (agg == "ns") {
 			var value = data.nodes[node].namespaces[name].rw
@@ -133,7 +133,7 @@ function DiskIopsNodeMapItem(props) {
 }
 
 function DiskIopsNodeMap(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { data, name, agg } = props
 	var nodes = Object.keys(data.nodes).sort()
 	return (
@@ -164,7 +164,7 @@ function DiskIopsBias(props) {
 
 function DiskIops(props) {
 	const { value } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	return (
 		<Typography component="div" className={classes.value}>
 			{fancySizeMB(value.rw/1048576)}rw/s
@@ -174,7 +174,7 @@ function DiskIops(props) {
 
 function StatsDiskIops(props) {
 	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	var iops = parseDiskIops(last, prev, search)
 	if (agg == "ns") {
 		var data = iops.sum.namespaces

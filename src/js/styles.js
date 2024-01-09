@@ -1,6 +1,4 @@
-import { makeStyles } from '@mui/styles';
-
-const useBgColorStyles = makeStyles(theme => ({
+const bgColorStyles = theme => ({
         "optimal": {
                 backgroundColor: theme.status.up,
         },
@@ -13,9 +11,9 @@ const useBgColorStyles = makeStyles(theme => ({
         "n/a": {
                 backgroundColor: theme.status.notapplicable,
         },
-}))
+});
 
-const useColorStyles = makeStyles(theme => ({
+const ColorStyles = theme => ({
         "running": {
                 color: theme.status.up,
         },
@@ -49,10 +47,10 @@ const useColorStyles = makeStyles(theme => ({
         "undef": {
                 color: theme.status.notapplicable,
         },
-}))
+})
 
 
 export {
-	useColorStyles,
-	useBgColorStyles
+	ColorStyles,
+	bgColorStyles
 }

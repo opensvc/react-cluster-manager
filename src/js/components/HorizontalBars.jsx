@@ -1,7 +1,7 @@
 import React from "react"
-import { makeStyles } from '@mui/styles'
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	biasContainer: {
 		textAlign: "center",
 	},
@@ -34,11 +34,11 @@ const useStyles = makeStyles(theme => ({
 		borderLeftColor: theme.palette.primary.main,
 		transition: "width 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
 	},
-}))
+});
 
 function HorizontalBars(props) {
 	const { values } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	var sum = 0
 	for (var value of values) {
 		sum += value.value

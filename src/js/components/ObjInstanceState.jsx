@@ -7,15 +7,13 @@ import { ObjLeader } from "./ObjLeader.jsx";
 import { ObjProvisioned } from "./ObjProvisioned.jsx";
 import { MonitorStatusBadge } from "./MonitorStatusBadge.jsx";
 import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles(theme => ({
+import Grid from '@mui/material/Grid';           
+import useClasses from "../hooks/useClasses.jsx";
+const styles = theme => ({
         child: {
                 marginRight: theme.spacing(1),
         },
-}))
-
-import Grid from '@mui/material/Grid';
+})
 
 function ObjInstanceState(props) {
 	//
@@ -23,7 +21,7 @@ function ObjInstanceState(props) {
 	// props.node
 	//
 	const [{ cstat }, dispatch] = useStateValue();
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (cstat.monitor === undefined) {
 		return (
 			<Grid container spacing={1}>

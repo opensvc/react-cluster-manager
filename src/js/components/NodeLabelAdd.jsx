@@ -5,7 +5,6 @@ import { useStateValue } from "../state.js"
 import { apiNodeAction } from "../api.js"
 import useApiResponse from "../hooks/ApiResponse.jsx"
 
-import { makeStyles } from '@mui/styles'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -17,12 +16,13 @@ import FormControl from '@mui/material/FormControl'
 import TextField from '@mui/material/TextField'
 
 import AddIcon from '@mui/icons-material/Add'
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	formcontrol: {
 		margin: theme.spacing(2, 0),
 	},
-}))
+})
 
 function NodeLabelAdd(props) {
 	const {node} = props
@@ -33,7 +33,7 @@ function NodeLabelAdd(props) {
 	const [{user}, dispatch] = useStateValue()
 	const { dispatchAlerts } = useApiResponse()
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!user.grant) {
 		return null
 	}

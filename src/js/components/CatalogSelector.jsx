@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { makeStyles } from '@mui/styles';
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -12,8 +11,9 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Typography from '@mui/material/Typography';
 
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
 	selected: {
 		cursor: "pointer",
 	},
@@ -26,10 +26,10 @@ const useStyles = makeStyles(theme => ({
 		width: '80%',
 		maxHeight: 435,
 	},
-}))
+});
 
 function CatalogSelectorDialog(props) {
-	const classes = useStyles()
+	const classes = useStyles(useStyles)
 	if (!props.options) {
 		return null
 	}
@@ -79,7 +79,7 @@ function CatalogSelector(props) {
 	if (props.options === undefined) {
 		return null
 	}
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 	const [open, setOpen] = React.useState(false)
 
 	function handleClickOpen(e) {

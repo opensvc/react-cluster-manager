@@ -1,14 +1,14 @@
 import React from "react"
 import { splitPath, fancySizeMB } from "../utils.js"
 
-import { makeStyles } from '@mui/styles'
 import Typography from "@mui/material/Typography"
 import Grid from "@mui/material/Grid"
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import {isEmpty} from "lodash";
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	itemGrid: {
 		flexWrap: "nowrap",
 	},
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 		borderBottomColor: theme.palette.primary.main,
 		transition: "height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
 	},
-}))
+})
 
 
 function parseMem(last, prev, search) {
@@ -91,7 +91,7 @@ function parseMem(last, prev, search) {
 
 function MemNodeMapItem(props) {
 	const { data, node, name, agg } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	let pct, value
 	try {
 		if (agg === "ns") {
@@ -123,7 +123,7 @@ function MemNodeMapItem(props) {
 }
 
 function MemNodeMap(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { data, name, agg } = props
 	let nodes = Object.keys(data.nodes).sort()
 	return (
@@ -137,7 +137,7 @@ function MemNodeMap(props) {
 
 function MemTotal(props) {
 	const { value } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	return (
 		<Typography component="div" className={classes.value}>
 			{fancySizeMB(value/1048576)}
@@ -147,7 +147,7 @@ function MemTotal(props) {
 
 function StatsMem(props) {
 	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	let mem = parseMem(last, prev, search)
 	let data
 	if (agg === "ns") {

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { makeStyles } from '@mui/styles';
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -13,8 +12,9 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         selected: {
                 cursor: "pointer",
         },
@@ -28,10 +28,10 @@ const useStyles = makeStyles(theme => ({
 		maxHeight: 435,
 	},
 
-}))
+})
 
 function TemplateSelectorDialog(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [search, setSearch] = useState("")
 	function handleCancel(e, m) {
 		props.handleClose()
@@ -96,7 +96,7 @@ function TemplateSelector(props) {
 	if (props.options === undefined) {
 		return null
 	}
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [open, setOpen] = React.useState(false)
 
 	function handleClickOpen(e) {

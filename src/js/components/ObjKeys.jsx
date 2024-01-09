@@ -10,7 +10,6 @@ import { KeyDecode } from "./KeyDecode.jsx"
 import { KeyEdit } from "./KeyEdit.jsx"
 import { ObjKeyAdd } from "./ObjKeyAdd.jsx"
 
-import { makeStyles } from '@mui/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -25,8 +24,9 @@ import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
 
 import FilterListIcon from '@mui/icons-material/FilterList';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         tableWrapper: {
                 overflowX: 'auto',
         },
@@ -34,10 +34,10 @@ const useStyles = makeStyles(theme => ({
 		marginLeft: -theme.spacing(2),
                 marginRight: -theme.spacing(2),
 	},
-}))
+})
 
 function ObjKeys(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t, i18n } = useTranslation()
 	const [selected, setSelected] = React.useState([])
 	var conf = useObjConfig(props.path)

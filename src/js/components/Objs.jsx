@@ -17,7 +17,6 @@ import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx"
 
 import useDebouncedValue from "../hooks/DebouncedValue.jsx"
 
-import { makeStyles } from '@mui/styles'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
@@ -41,10 +40,11 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
 
 import FilterListIcon from '@mui/icons-material/FilterList'
+import useClasses from "../hooks/useClasses.jsx";
 
 
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		marginTop: theme.spacing(3),
 	},
@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
 		paddingLeft: 0,
 		paddingRight: 0,
 	},
-}))
+})
 
 function ObjsFilter(props) {
 	const {search, setSearch} = props
@@ -142,7 +142,7 @@ function getTitle(kind) {
 }
 
 function Objs(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [{ cstat }, dispatch] = useStateValue()
 	const [search, setSearch] = useState("")
 	const debouncedSearch = useDebouncedValue(search, 400)
@@ -227,7 +227,7 @@ function Objs(props) {
 }
 
 function ObjLines(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const {lines, setSelected, handleLineClick} = props
 	return (
 		<List className={classes.list}>

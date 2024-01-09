@@ -8,7 +8,6 @@ import { SectionForm } from "./SectionForm.jsx"
 import { useStateValue } from '../state.js'
 import useApiResponse from "../hooks/ApiResponse.jsx"
 
-import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -21,12 +20,13 @@ import FormControl from '@mui/material/FormControl'
 import TextField from '@mui/material/TextField'
 
 import EditIcon from '@mui/icons-material/Edit'
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	formcontrol: {
 		margin: theme.spacing(2, 0),
 	},
-}))
+});
 
 function NodeLabelEdit(props) {
 	const {node, labelKey, labelCurrent} = props
@@ -36,7 +36,7 @@ function NodeLabelEdit(props) {
 	const [{user}, dispatch] = useStateValue()
 	const { dispatchAlerts } = useApiResponse()
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!user.grant) {
 		return null
 	}

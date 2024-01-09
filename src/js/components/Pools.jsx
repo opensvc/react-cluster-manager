@@ -3,7 +3,6 @@ import { usePoolsStatus } from "../hooks/PoolsStatus.jsx"
 import { useTranslation } from 'react-i18next';
 import { PoolAdd } from './PoolAdd.jsx';
 
-import { makeStyles } from '@mui/styles';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
@@ -16,8 +15,9 @@ import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Hidden from '@mui/material/Hidden';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 marginTop: theme.spacing(3),
         },
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
                 marginLeft: -theme.spacing(2),
                 marginRight: -theme.spacing(2),
         },
-}))
+});
 
 function getLines(data) {
 	if (!data) {
@@ -41,7 +41,7 @@ function getLines(data) {
 }
 
 function Pools(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t, i18n } = useTranslation()
 	const data = usePoolsStatus()
 	var lines = getLines(data)

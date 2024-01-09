@@ -8,12 +8,12 @@ import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx"
 import { ObjInstanceResources } from "./ObjInstanceResources.jsx"
 import { Log } from "./Log.jsx"
 
-import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		flexGrow: 1,
 	},
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 		padding: theme.spacing(1),
 		overflowX: "auto",
 	}
-}))
+});
 
 function ObjInstanceDetails(props) {
 	const [active, setActive] = useState(0)
@@ -29,7 +29,7 @@ function ObjInstanceDetails(props) {
 	let params = new URLSearchParams(loc.search)
 	const path = params.get("path")
 	const node = params.get("node")
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const sp = splitPath(path)
 
 	const handleChange = (event, newValue) => {

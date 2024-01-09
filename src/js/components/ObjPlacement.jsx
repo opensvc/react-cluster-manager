@@ -1,10 +1,11 @@
 import React from "react";
 import PlaceIcon from '@mui/icons-material/Place';
 import Typography from '@mui/material/Typography';
-import { useColorStyles } from "../styles.js"
+import { ColorStyles } from "../styles.js"
+import useClasses from "../hooks/useClasses.jsx";
 
 function ObjPlacement(props) {
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 	if (props.placement == "optimal") {
 		return null
 	} else if (props.placement == "n/a") {

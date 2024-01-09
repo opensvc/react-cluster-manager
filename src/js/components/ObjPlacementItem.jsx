@@ -3,14 +3,15 @@ import { useTranslation } from 'react-i18next'
 
 import PlaceIcon from '@mui/icons-material/Place';
 import Typography from '@mui/material/Typography';
-import { useColorStyles } from "../styles.js"
+import { ColorStyles } from "../styles.js"
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import useClasses from "../hooks/useClasses.jsx";
 
 function ObjPlacementItem(props) {
 	const { t, i18n } = useTranslation()
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 	if (props.placement == "optimal") {
 		return null
 	} else if (props.placement == "n/a") {

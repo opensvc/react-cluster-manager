@@ -11,15 +11,15 @@ import { ObjInstances } from "./ObjInstances.jsx"
 import { ObjKeys } from "./ObjKeys.jsx"
 import ObjConfig from "./ObjConfig.jsx"
 
-import { makeStyles } from '@mui/styles';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 flewGrow: 1,
         },
@@ -32,13 +32,13 @@ const useStyles = makeStyles(theme => ({
 	tabSection: {
                 marginBottom: theme.spacing(3),
 	},
-}))
+})
 
 function ObjDetails(props) {
         const loc = useLocation()
         let params = new URLSearchParams(loc.search)
         const path = params.get("path")
-	const classes = useStyles()
+	const classes = useClasses(styles)
         const [nodeData, setNodeData] = useState()
         const [active, setActive] = useState(0)
         const [{user}, dispatch] = useStateValue()
@@ -74,7 +74,7 @@ function ObjMain(props) {
 }
 
 function CfgMain(props) {
-	const classes = useStyles()
+	const classes = styles()
 	const sp = splitPath(props.path)
 	return (
 		<Grid item xs={12} className={classes.section}>
@@ -84,7 +84,7 @@ function CfgMain(props) {
 }
 
 function UsrMain(props) {
-	const classes = useStyles()
+	const classes = styles()
 	const sp = splitPath(props.path)
 	return (
 		<Grid item xs={12} className={classes.section}>
@@ -96,7 +96,7 @@ function UsrMain(props) {
 function SvcMain(props) {
 	const sp = splitPath(props.path)
 	const [{ cstat }, dispatch] = useStateValue();
-	const classes = useStyles()
+	const classes = styles()
 
 	if (cstat.monitor === undefined) {
 		return null

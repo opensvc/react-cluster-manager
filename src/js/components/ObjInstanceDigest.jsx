@@ -4,22 +4,22 @@ import { useTranslation } from 'react-i18next';
 import { ObjInstanceStateList } from "./ObjInstanceStateList.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
 
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
         card: {
                 height: "100%",
         },
-}))
+})
 
 function ObjInstanceDigest(props) {
 	const { t, i18n } = useTranslation()
 	const [{ cstat }, dispatch] = useStateValue();
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 	var instance = props.path+"@"+props.node
 	return (
 		<Card className={classes.card}>

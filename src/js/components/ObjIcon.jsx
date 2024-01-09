@@ -1,7 +1,7 @@
 import React from "react";
 import { splitPath } from "../utils.js"
 import IconButton from '@mui/material/IconButton'
-import { useColorStyles } from "../styles.js"
+import { ColorStyles } from "../styles.js"
 
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
@@ -9,6 +9,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen'
 import LockIcon from '@mui/icons-material/Lock'
 import SaveIcon from '@mui/icons-material/Save'
 import HelpIcon from '@mui/icons-material/Help'
+import useClasses from "../hooks/useClasses.jsx";
 
 
 function icon(kind, className) {
@@ -28,7 +29,7 @@ function icon(kind, className) {
 
 function ObjIcon(props) {
 	const { path, kind, avail } = props
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 
 	if (kind) {
 		var k = kind
