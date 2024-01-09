@@ -1,9 +1,7 @@
 import React from "react";
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useTranslation } from 'react-i18next';
-import { state } from "../utils.js";
 import { ColorStyles } from "../styles.js";
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';

@@ -4,13 +4,9 @@ import { useTranslation } from "react-i18next"
 import { splitPath } from "../utils.js"
 import { ObjDigest } from "./ObjDigest.jsx"
 import { ObjInstanceDigest } from "./ObjInstanceDigest.jsx"
-import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx"
 import { ObjInstanceResources } from "./ObjInstanceResources.jsx"
 import { Log } from "./Log.jsx"
-
-import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
-import Paper from '@mui/material/Paper'
 import useClasses from "../hooks/useClasses.jsx";
 
 const styles = theme => ({

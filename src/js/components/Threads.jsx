@@ -3,10 +3,7 @@ import useUser from "../hooks/User.jsx"
 import { useTranslation } from 'react-i18next';
 import { apiNodeAction } from "../api.js";
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
-
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import Button from '@mui/material/Button';
+//import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -16,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
-import Chip from '@mui/material/Chip';
+//import Chip from '@mui/material/Chip';
 import { ColorStyles } from "../styles.js";
 import useClasses from "../hooks/useClasses.jsx";
 

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { namespaceValid, splitPath } from '../utils.js';
-
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';

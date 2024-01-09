@@ -1,22 +1,14 @@
 import React, { useState } from "react";
-
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { splitPath } from "../utils.js";
-import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjDigest } from "./ObjDigest.jsx";
 import { Log } from "./Log.jsx"
 import { ObjInstances } from "./ObjInstances.jsx"
 import { ObjKeys } from "./ObjKeys.jsx"
 import ObjConfig from "./ObjConfig.jsx"
-
 import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import useClasses from "../hooks/useClasses.jsx";
 
 const styles = theme => ({

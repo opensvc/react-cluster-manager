@@ -1,16 +1,11 @@
-import React, { useState } from "react";
-import { useStateValue } from '../state.js';
+import React from "react";
 import { splitPath } from '../utils.js';
 import { useKeywords } from '../hooks/Keywords.jsx';
 import { SectionForm } from './SectionForm.jsx';
-
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
 import CircularProgress from '@mui/material/CircularProgress';
 import useClasses from "../hooks/useClasses.jsx";
 

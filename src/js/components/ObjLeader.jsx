@@ -1,6 +1,5 @@
 import React from "react"
 import { useTranslation } from "react-i18next"
-
 import { ColorStyles } from "../styles.js"
 import Typography from "@mui/material/Typography"
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"

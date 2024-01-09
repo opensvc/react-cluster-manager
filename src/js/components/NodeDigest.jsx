@@ -1,10 +1,8 @@
-import React, { useState } from "react"
+import React from "react"
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
 import { NodeActions } from "./NodeActions.jsx"
 import { NodeStateList } from "./NodeStateList.jsx"
-
-import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'

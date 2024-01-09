@@ -1,4 +1,3 @@
-import React from "react";
 import useClusterStatus from '../hooks/ClusterStatus.jsx'
 import { useStateValue } from "../state.js"
 

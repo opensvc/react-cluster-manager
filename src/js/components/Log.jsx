@@ -3,7 +3,6 @@ import { useLog } from "../hooks/Log.jsx"
 import { useTranslation } from "react-i18next"
 import { TableToolbar } from "./TableToolbar.jsx"
 import { stringToHslColor } from "../utils.js"
-
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'

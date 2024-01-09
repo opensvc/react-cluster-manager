@@ -5,20 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { apiGetNode } from "../api.js"
 import { Log } from "./Log.jsx"
-import { NodeActions } from "./NodeActions.jsx"
 import { NodeNetwork } from "./NodeNetwork.jsx"
 import { NodeHardware } from "./NodeHardware.jsx"
 import { NodeInitiators } from "./NodeInitiators.jsx"
-import { NodeStateList } from "./NodeStateList.jsx"
 import { NodeDigest } from "./NodeDigest.jsx"
 import PropGroup from "./PropGroup.jsx"
 import Prop from "./Prop.jsx"
 import NodeLabels from "./NodeLabels.jsx"
-
-import Typography from '@mui/material/Typography'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
 import useClasses from "../hooks/useClasses.jsx";
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import EventSource from "eventsource"
 import JSON_delta from "../json_delta.js"
 import { useStateValue } from '../state.js'

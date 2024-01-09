@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useStateValue } from '../state.js'
 import { useReactOidc } from '@axa-fr/react-oidc-context'
 import { addAuthorizationHeader } from "../api.js";

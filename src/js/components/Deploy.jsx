@@ -1,11 +1,7 @@
-import React, { useState } from "react";
-import { useStateValue } from '../state.js';
+import React from "react";
 import { DeployEmpty } from "./DeployEmpty.jsx";
 import { DeployCatalog } from "./DeployCatalog.jsx";
 import { DeployTemplate } from "./DeployTemplate.jsx";
-
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';

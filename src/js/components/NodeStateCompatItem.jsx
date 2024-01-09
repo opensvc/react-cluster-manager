@@ -3,7 +3,6 @@ import { state } from "../utils.js"
 import { compatIssue } from "../issues.js";
 import { useTranslation } from "react-i18next"
 import { useStateValue } from '../state.js';
-import Typography from '@mui/material/Typography'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
