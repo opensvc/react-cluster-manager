@@ -1,7 +1,6 @@
 "use strict";
 
 import React from "react"
-import { useStateValue } from '../state.js'
 import useUser from "../hooks/User.jsx"
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import useAuthInfo from "../hooks/AuthInfo.jsx"
@@ -12,14 +11,10 @@ import { allIssue } from "../issues.js"
 import Alerts from "./Alerts.jsx"
 import { Subsystems } from "./Subsystems.jsx"
 import { bgColorStyles } from "../styles.js"
-
 import Drawer from "@mui/material/Drawer"
 import Breadcrumbs from "@mui/material/Breadcrumbs"
-import Typography from "@mui/material/Typography"
-import Link from "@mui/material/Link"
 import Badge from "@mui/material/Badge"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
-import Button from "@mui/material/Button"
 import IconButton from "@mui/material/IconButton"
 import Toolbar from "@mui/material/Toolbar"
 import Avatar from "@mui/material/Avatar"

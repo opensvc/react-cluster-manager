@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useStateValue } from "../state.js"
 import useUser from "./User.jsx"
 import { addAuthorizationHeader } from "../api.js"

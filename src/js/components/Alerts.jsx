@@ -1,10 +1,8 @@
 import React from "react"
 import { useStateValue } from '../state.js'
-
 import Typography from '@mui/material/Typography'
 import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
-import Divider from '@mui/material/Divider'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'

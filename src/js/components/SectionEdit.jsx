@@ -1,19 +1,14 @@
 import React, { useState } from "react";
-
 import useUser from "../hooks/User.jsx"
-import { splitPath, createDataHasPathKey } from '../utils.js';
+import { splitPath } from '../utils.js';
 import { ResourceAdd } from "./ResourceAdd.jsx"
 import { apiInstanceAction } from "../api.js"
 import useApiResponse from "../hooks/ApiResponse.jsx"
-
-import Fab from '@mui/material/Fab';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
-
 import EditIcon from '@mui/icons-material/Edit';
 import useClasses from "../hooks/useClasses.jsx";
 

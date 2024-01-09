@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useTranslation } from 'react-i18next';
@@ -7,9 +7,6 @@ import { fmtPath, splitPath } from "../utils.js";
 import { ObjInstanceState } from "./ObjInstanceState.jsx";
 import { ObjInstanceActions } from "./ObjInstanceActions.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
-import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx";
-
-import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -18,11 +15,7 @@ import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
-import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
-
-import FilterListIcon from '@mui/icons-material/FilterList';
 import useClasses from "../hooks/useClasses.jsx";
 
 const styles = theme => ({

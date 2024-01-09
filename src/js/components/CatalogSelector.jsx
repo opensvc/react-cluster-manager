@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -7,10 +7,7 @@ import Dialog from '@mui/material/Dialog';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import Typography from '@mui/material/Typography';
-
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import useClasses from "../hooks/useClasses.jsx";
 
 const useStyles = theme => ({

@@ -9,7 +9,6 @@ import { NodeActions } from "./NodeActions.jsx";
 import { TableToolbar } from "./TableToolbar.jsx";
 import { NodeState } from "./NodeState.jsx";
 import { Sparklines, SparklinesLine, SparklinesReferenceLine, SparklinesNormalBand } from 'react-sparklines';
-
 import clsx from 'clsx';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -18,18 +17,12 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import Switch from '@mui/material/Switch';
-import Link from '@mui/material/Link';
 import Hidden from '@mui/material/Hidden';
-
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {isEmpty} from "lodash";
 import useClasses from "../hooks/useClasses.jsx";

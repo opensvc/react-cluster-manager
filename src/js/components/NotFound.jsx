@@ -1,10 +1,8 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
-
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-
 import ErrorIcon from '@mui/icons-material/Error';
 import useClasses from "../hooks/useClasses.jsx";
 

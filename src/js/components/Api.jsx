@@ -5,7 +5,6 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { SectionForm } from "./SectionForm.jsx"
 import { addQueryData, apiReq } from "../api.js"
 import useUser from "../hooks/User.jsx"
-
 import Card from "@mui/material/Card"
 import CardHeader from "@mui/material/CardHeader"
 import CardContent from "@mui/material/CardContent"

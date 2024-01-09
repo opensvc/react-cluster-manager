@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import useUser from "../hooks/User.jsx"
 import { useStateValue } from '../state.js';
 import { splitPath } from '../utils.js';

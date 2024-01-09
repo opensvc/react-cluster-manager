@@ -2,7 +2,6 @@ import React from "react"
 import { state } from "../utils.js"
 import { nodeSwapOverloadIssue } from "../issues.js"
 import { useTranslation } from "react-i18next"
-import { useStateValue } from '../state.js'
 import WarningIcon from './WarningIcon.jsx'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'

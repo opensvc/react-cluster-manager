@@ -3,7 +3,6 @@ import { withOidcUser } from '@axa-fr/react-oidc-context';
 import { Routes, Route } from 'react-router-dom';
 import { useStateValue } from '../state.js';
 import Cluster from "./Cluster.jsx";
-import Login from "./Login.jsx";
 import { Threads } from "./Threads.jsx";
 import { Nodes } from "./Nodes.jsx";
 import { NodeDetails } from "./NodeDetails.jsx";

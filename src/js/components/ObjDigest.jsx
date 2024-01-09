@@ -5,14 +5,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ObjStateList } from "./ObjStateList.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjScale } from "./ObjScale.jsx";
-
-import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from "@mui/material/Tooltip"
-
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import useClasses from "../hooks/useClasses.jsx";
 

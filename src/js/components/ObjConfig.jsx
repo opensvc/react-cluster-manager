@@ -1,5 +1,4 @@
 import React, { useState, Fragment } from "react"
-
 import { useStateValue } from "../state.js"
 import { useObjConfig } from "../hooks/ObjConfig.jsx"
 import { useTranslation } from "react-i18next"
@@ -8,7 +7,6 @@ import { ResourceAddButton } from "./ResourceAddButton.jsx"
 import { parseIni, splitPath } from "../utils.js"
 import { SectionEdit } from "./SectionEdit.jsx"
 import { SectionDelete } from "./SectionDelete.jsx"
-
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import ListItemText from "@mui/material/ListItemText"

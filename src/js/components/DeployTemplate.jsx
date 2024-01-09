@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { nameValid, namespaceValid, createDataHasPathKey, parseIni } from "../utils.js";
 import { NamespaceSelector } from './NamespaceSelector.jsx'
-
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';

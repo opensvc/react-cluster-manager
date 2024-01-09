@@ -3,13 +3,12 @@ import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import { state, fancySizeMB } from '../utils.js';
-import { arbitratorsIssue, heartbeatsIssue, nodesIssue, objectsIssue } from "../issues.js";
+import { heartbeatsIssue, nodesIssue, objectsIssue } from "../issues.js";
 import { splitPath } from "../utils.js";
 import { usePoolsStatus } from "../hooks/PoolsStatus.jsx"
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 import { ClusterActions } from "./ClusterActions.jsx"
 import { DeployButton } from "./DeployButton.jsx"
-
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';

@@ -6,14 +6,11 @@ import { clusterIssue, threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIss
 import { state } from "../utils.js"
 import { ColorStyles } from "../styles.js"
 import ObjIcon from "./ObjIcon.jsx"
-import Badge from '@mui/material/Badge';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
-
+//import Link from '@mui/material/Link';
 import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import HowToVoteIcon from '@mui/icons-material/HowToVote';

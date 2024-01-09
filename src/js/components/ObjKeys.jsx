@@ -1,6 +1,4 @@
-import React, { Fragment, useState } from "react";
-
-import { useStateValue } from '../state.js';
+import React, { Fragment } from "react";
 import { useTranslation } from 'react-i18next';
 import { parseIni } from "../utils.js";
 import { useObjConfig } from "../hooks/ObjConfig.jsx";
@@ -9,11 +7,9 @@ import { ObjKeyActions } from "./ObjKeyActions.jsx"
 import { KeyDecode } from "./KeyDecode.jsx"
 import { KeyEdit } from "./KeyEdit.jsx"
 import { ObjKeyAdd } from "./ObjKeyAdd.jsx"
-
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
@@ -22,7 +18,6 @@ import TableCell from '@mui/material/TableCell';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
-
 import FilterListIcon from '@mui/icons-material/FilterList';
 import useClasses from "../hooks/useClasses.jsx";
 

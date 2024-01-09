@@ -7,11 +7,8 @@ import Dialog from '@mui/material/Dialog';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import useClasses from "../hooks/useClasses.jsx";
 
 const styles = theme => ({
