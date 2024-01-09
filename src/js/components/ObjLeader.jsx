@@ -1,13 +1,14 @@
 import React from "react"
 import { useTranslation } from "react-i18next"
 
-import { useColorStyles } from "../styles.js"
+import { ColorStyles } from "../styles.js"
 import Typography from "@mui/material/Typography"
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
 import Tooltip from "@mui/material/Tooltip"
+import useClasses from "../hooks/useClasses.jsx";
 
 function ObjLeader(props) {
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 	if (props.placement != "leader") {
 		return null
 	}

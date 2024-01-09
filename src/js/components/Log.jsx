@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next"
 import { TableToolbar } from "./TableToolbar.jsx"
 import { stringToHslColor } from "../utils.js"
 
-import { makeStyles } from '@mui/styles'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -19,8 +18,9 @@ import Skeleton from '@mui/material/Skeleton'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import ClearIcon from '@mui/icons-material/Clear'
 import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight'
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	content: {
 		paddingTop: 0,
 	},
@@ -65,7 +65,7 @@ const useStyles = makeStyles(theme => ({
 		marginLeft: -theme.spacing(2),
 		marginRight: -theme.spacing(2),
 	},
-}))
+});
 
 function Log(props) {
 	const {title, subheader, hide, url, initialContext} = props
@@ -74,7 +74,7 @@ function Log(props) {
 	const [search, setSearch] = useState("")
 	const [skip, setSkip] = useState()
 	const [context, setContext] = useState(initialContext)
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t } = useTranslation()
 
 	function handleClear() {
@@ -153,7 +153,7 @@ function Log(props) {
 
 function LogLines(props) {
 	const { log, search, setSearch, setSkip, setContext, context, hide } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!log) {
 		return ( <CircularProgress color="primary" /> )
 	}
@@ -186,7 +186,7 @@ function LogLines(props) {
 function LogLineContextKey(props) {
 	const { k, v, context, setContext, dense, hide } = props
 	const { t } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!k || !v) {
 		return null
 	}
@@ -262,7 +262,7 @@ function LogLineContextKey(props) {
 function PositiveContext(props) {
 	const { context, setContext } = props
 	const { t } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	let positiveContext = {}
 	for (let k in context) {
 		if (!context[k].negate) {
@@ -295,7 +295,7 @@ function PositiveContext(props) {
 function NegativeContext(props) {
 	const { context, setContext } = props
 	const { t } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	let negativeContext = {}
 	for (let k in context) {
 		if (context[k].negate) {
@@ -327,7 +327,7 @@ function NegativeContext(props) {
 
 function LogLineContext(props) {
 	const { data, context, setContext, hide } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (Object.keys(data).length === 0) {
 		return null
 	}
@@ -359,7 +359,7 @@ function LogLineContext(props) {
 
 function LogLine(props) {
 	const { re, data, prev, context, setContext, setSearch, setSkip, id, hide } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!data || (data.m === undefined)) {
 		return <Skeleton />
 	}

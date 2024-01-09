@@ -1,27 +1,27 @@
 import React, { useState } from "react"
 import { useTranslation } from 'react-i18next'
 import { useStateValue } from '../state.js'
-import { makeStyles } from '@mui/styles'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
 import Button from '@mui/material/Button'
 
 import LanguageIcon from '@mui/icons-material/Language'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import useClasses from "../hooks/useClasses.jsx";
 
 const themes = [
 	"dark",
 	"light",
 ]
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
 	formControl: {
 		margin: theme.spacing(1),
 	},
-}))
+});
 
 function ThemeSelector(props) {
-	const classes = useStyles();
+	const classes = useClasses(useStyles);
 	const [anchorEl, setAnchorEl] = React.useState(null)
         const { t, i18n } = useTranslation()
 	const [{ theme }, dispatch] = useStateValue()

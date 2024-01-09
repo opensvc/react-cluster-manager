@@ -9,14 +9,14 @@ import { NamespaceSelector } from './NamespaceSelector.jsx';
 import { TemplateSelector } from './TemplateSelector.jsx';
 import { CatalogSelector } from './CatalogSelector.jsx';
 
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles =theme => ({
         desc: {
                 padding: theme.spacing(3, 0),
         },
@@ -27,12 +27,12 @@ const useStyles = makeStyles(theme => ({
         formcontrol: {
                 margin: theme.spacing(2, 0),
         },
-}))
+})
 
 function DeployCatalog(props) {
 	const {data, set} = props
 	const { auth } = useUser()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const catalogs = useCatalogs()
 	if ((catalogs.length > 0) && !data.catalog) {
 		set({...data, catalog: catalogs[0]})

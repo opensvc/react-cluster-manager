@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -19,8 +18,9 @@ import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import Skeleton from '@mui/material/Skeleton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	tableWrapper: {
                 overflowX: 'auto',
 		marginLeft: -theme.spacing(2),
@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
         expandOpen: {
                 transform: 'rotate(180deg)',
         },
-}))
+})
 
 function NetworkInterface(props) {
 	return props.data.map((e, i) => (
@@ -60,7 +60,7 @@ function NetworkLine(props) {
 
 function NodeNetwork(props) {
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [expanded, setExpanded] = React.useState(false);
 
 	if (expanded) {
@@ -134,7 +134,7 @@ function NetworkDigest(props) {
 }
 
 function NetworkTable(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (props.nodeData === undefined) {
 		return null
 	}

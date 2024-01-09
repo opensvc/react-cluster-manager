@@ -5,7 +5,6 @@ import { apiInstanceAction } from "../api.js"
 import { useStateValue } from '../state.js';
 import useApiResponse from "../hooks/ApiResponse.jsx"
 
-import { makeStyles } from '@mui/styles';
 import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -17,12 +16,13 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 import LinearScaleIcon from '@mui/icons-material/LinearScale';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
         formcontrol: {
                 margin: theme.spacing(2, 0),
         },
-}))
+})
 
 function ObjScale(props) {
         const {path} = props
@@ -41,7 +41,7 @@ function ObjScale(props) {
 	}
         const [open, setOpen] = React.useState(false)
 	const [scale, setScale] = useState(cstat.monitor.services[path].scale)
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 
 	function handleChange(e) {
 		if (e.target.value < 0) {

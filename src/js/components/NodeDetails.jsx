@@ -15,22 +15,22 @@ import PropGroup from "./PropGroup.jsx"
 import Prop from "./Prop.jsx"
 import NodeLabels from "./NodeLabels.jsx"
 
-import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 marginTop: theme.spacing(3),
 		flexGrow: 1,
         },
-}))
+})
 
 function NodeDetails(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
         const loc = useLocation()
 	const { auth } = useUser()
 	const [nodeData, setNodeData] = useState()

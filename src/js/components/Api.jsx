@@ -6,7 +6,6 @@ import { SectionForm } from "./SectionForm.jsx"
 import { addQueryData, apiReq } from "../api.js"
 import useUser from "../hooks/User.jsx"
 
-import { makeStyles } from "@mui/styles"
 import Card from "@mui/material/Card"
 import CardHeader from "@mui/material/CardHeader"
 import CardContent from "@mui/material/CardContent"
@@ -19,8 +18,9 @@ import ListItemText from "@mui/material/ListItemText"
 import Button from "@mui/material/Button"
 import Box from "@mui/material/Box"
 import Skeleton from "@mui/material/Skeleton"
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 marginTop: theme.spacing(3),
         },
@@ -51,11 +51,11 @@ const useStyles = makeStyles(theme => ({
                 whiteSpace: "pre",
 		fontFamily: "monospace",
         },
-}))
+})
 
 function Api(props) {
 	const data = useApiInfo()
-	const classes = useStyles()
+	const classes = useClasses(styles)
         const loc = useLocation()
 	const { t, i18n } = useTranslation()
 	let params = new URLSearchParams(loc.search)
@@ -85,7 +85,7 @@ function Api(props) {
 function ApiHandler(props) {
 	const {data, index} = props
 	const { auth } = useUser()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [node, setNode] = useState({"node": ""})
 	const [formData, setFormData] = useState({})
 	const [formResult, setFormResult] = useState("")
@@ -147,7 +147,7 @@ function ApiHandler(props) {
 function ApiHandlerExample(props) {
 	const { t, i18n } = useTranslation()
 	const { auth } = useUser()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { data, formData, node } = props
 	var buff = "curl -s --http2 -X " + data.routes[0].method
 	if (node && node.node) {
@@ -188,7 +188,7 @@ function ApiHandlerExample(props) {
 
 function ApiHandlerAccess(props) {
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { data } = props
 	var buff = ""
 	if (data == "custom") {
@@ -226,7 +226,7 @@ function ApiHandlerAccess(props) {
 
 function FormResult(props) {
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { data } = props
 	if (!data) {
 		return null
@@ -251,7 +251,7 @@ function ApiHandlerRouting(props) {
 		formData,
 		setFormData
 	} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t, i18n } = useTranslation()
 	if (!data.multiplex == "never") {
 		return null
@@ -286,7 +286,7 @@ function ApiHandlerParameters(props) {
 		formData,
 		setFormData,
 	} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t, i18n } = useTranslation()
 	if (!data.length) {
 		return null
@@ -339,7 +339,7 @@ function ApiHandlers(props) {
 
 function Method(props) {
 	const { method } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	return (
 		<Chip
 			color={method == "GET" ? "primary" : "secondary"}

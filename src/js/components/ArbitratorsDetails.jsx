@@ -2,9 +2,8 @@ import React from "react";
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import { useTranslation } from 'react-i18next';
 import { state } from "../utils.js";
-import { useColorStyles } from "../styles.js";
+import { ColorStyles } from "../styles.js";
 
-import { makeStyles } from '@mui/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -14,8 +13,9 @@ import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 marginTop: theme.spacing(3),
         },
@@ -24,10 +24,10 @@ const useStyles = makeStyles(theme => ({
                 marginLeft: -theme.spacing(2),
                 marginRight: -theme.spacing(2),
         },
-}))
+})
 
 function ArbitratorsDetails(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t, i18n } = useTranslation()
 	const { cstat } = useClusterStatus()
 	var arbitrators = {}
@@ -89,7 +89,7 @@ function ArbitratorsDetails(props) {
 }
 
 function ArbitratorDetails(props) {
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 	var ans = []
 	var an
 	for (an in props.arbitrators) {

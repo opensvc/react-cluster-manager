@@ -2,22 +2,22 @@ import React from "react";
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 
-import { makeStyles, lighten } from '@mui/styles';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
 import ErrorIcon from '@mui/icons-material/Error';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 marginTop: theme.spacing(3),
                 padding: theme.spacing(3),
         },
-}))
+})
 
 function NotFound(props) {
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
         return (
 		<Paper className={classes.root}>
 			<Typography component="div" variant="h2" align="center">

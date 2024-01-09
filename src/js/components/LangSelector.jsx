@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@mui/styles';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Button from '@mui/material/Button';
 
 import LanguageIcon from '@mui/icons-material/Language';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import useClasses from "../hooks/useClasses.jsx";
 
 const languages = [
 	{
@@ -19,14 +19,14 @@ const languages = [
 	},
 ]
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	formControl: {
 		margin: theme.spacing(1),
 	},
-}))
+})
 
 function LangSelector(props) {
-	const classes = useStyles();
+	const classes = useClasses(styles);
 	const [anchorEl, setAnchorEl] = React.useState(null)
         const { t, i18n } = useTranslation()
 

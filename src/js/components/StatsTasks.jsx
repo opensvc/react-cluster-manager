@@ -1,14 +1,14 @@
 import React, { useState, Fragment } from "react"
 import { splitPath } from "../utils.js"
 
-import { makeStyles } from '@mui/styles'
 import Typography from "@mui/material/Typography"
 import Grid from "@mui/material/Grid"
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import {isEmpty} from "lodash";
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	itemGrid: {
 		flexWrap: "nowrap",
 	},
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 		borderBottomColor: theme.palette.primary.main,
 		transition: "height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
 	},
-}))
+});
 
 
 function parseTasks(last, prev, search) {
@@ -89,7 +89,7 @@ function parseTasks(last, prev, search) {
 
 function TasksNodeMapItem(props) {
 	const { data, node, name, agg } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	try {
 		if (agg == "ns") {
 			var value = data.nodes[node].namespaces[name]
@@ -119,7 +119,7 @@ function TasksNodeMapItem(props) {
 }
 
 function TasksNodeMap(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { data, name, agg } = props
 	var nodes = Object.keys(data.nodes).sort()
 	return (
@@ -133,7 +133,7 @@ function TasksNodeMap(props) {
 
 function Tasks(props) {
 	const { value } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	return (
 		<Typography component="div" className={classes.value}>
 			{value}
@@ -143,7 +143,7 @@ function Tasks(props) {
 
 function StatsTasks(props) {
 	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	var tasks = parseTasks(last, prev, search)
 	if (agg == "ns") {
 		var data = tasks.sum.namespaces

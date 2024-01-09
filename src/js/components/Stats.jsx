@@ -9,7 +9,6 @@ import StatsDiskBandwidth from "./StatsDiskBandwidth.jsx"
 import StatsNetIops from "./StatsNetIops.jsx"
 import StatsNetBandwidth from "./StatsNetBandwidth.jsx"
 
-import { makeStyles } from '@mui/styles'
 import Card from "@mui/material/Card"
 import CardHeader from "@mui/material/CardHeader"
 import CardContent from "@mui/material/CardContent"
@@ -29,15 +28,16 @@ import SortByAlphaIcon from "@mui/icons-material/SortByAlpha"
 import ViewStreamIcon from "@mui/icons-material/ViewStream"
 import ViewHeadlineIcon from "@mui/icons-material/ViewHeadline"
 import FilterListIcon from "@mui/icons-material/FilterList"
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 marginTop: theme.spacing(3),
         },
 	tabs: {
 		marginBottom: theme.spacing(2),
 	},
-}))
+})
 
 function FilterButton(props) {
 	const { search, searchOpen, setSearchOpen } = props
@@ -158,7 +158,7 @@ function Stats(props) {
 	const [search, setSearch] = useState("")
 	const [searchOpen, setSearchOpen] = useState(false)
 	const { i18n, t } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 
 	const handleChange = (event, newValue) => {
 		setTab(newValue);

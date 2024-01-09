@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useStateValue } from '../state.js';
-import { makeStyles } from '@mui/styles';
 import { ObjAvail } from "./ObjAvail.jsx"
 import { splitPath } from "../utils.js";
 import Card from '@mui/material/Card';
@@ -10,8 +9,9 @@ import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		height: "100%",
 	},
@@ -26,12 +26,12 @@ const useStyles = makeStyles(theme => ({
 		paddingRight: theme.spacing(1),
 		paddingBottom: theme.spacing(1),
 	},
-}))
+})
 
 function SvcMap(props) {
 	const [{ cstat }, dispatch] = useStateValue();
 	const navigate = useNavigate()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t, i18n } = useTranslation()
 	if (cstat.monitor === undefined) {
 		return null

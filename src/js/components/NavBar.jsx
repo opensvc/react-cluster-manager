@@ -11,9 +11,8 @@ import { state } from "../utils.js"
 import { allIssue } from "../issues.js"
 import Alerts from "./Alerts.jsx"
 import { Subsystems } from "./Subsystems.jsx"
-import { useBgColorStyles } from "../styles.js"
+import { bgColorStyles } from "../styles.js"
 
-import { makeStyles, withStyles, emphasize } from "@mui/styles"
 import Drawer from "@mui/material/Drawer"
 import Breadcrumbs from "@mui/material/Breadcrumbs"
 import Typography from "@mui/material/Typography"
@@ -29,8 +28,9 @@ import MenuIcon from "@mui/icons-material/Menu"
 import BlockIcon from "@mui/icons-material/Block"
 import WifiOffIcon from "@mui/icons-material/WifiOff"
 import {version} from "../../version";
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles2 = makeStyles(theme => ({
+const styles2 = theme => ({
 	root: {
 		backgroundColor: 'inherit',
 		height: theme.spacing(3),
@@ -45,15 +45,15 @@ const useStyles2 = makeStyles(theme => ({
 			backgroundColor: 'inherit',
 		},
 	},
-}));
+});
 
 const StyledBreadcrumb = ({ ...props }) => {
-	const classes = useStyles2();
+	const classes = useClasses(styles2);
 
 	return <Chip className={classes.root} {...props} />;
 };
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	breadcrumbs: {
 		flexGrow: 1,
 	},
@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
 	root: {
 		flexGrow: 1,
 	},
-}))
+});
 
 function breadcrumbs() {
 	const loc = useLocation()
@@ -154,7 +154,7 @@ function breadcrumbs() {
 }
 
 function Crumbs(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { cstat } = useClusterStatus()
 	const crumbs = breadcrumbs()
 	try {
@@ -179,7 +179,7 @@ function Crumbs(props) {
 }
 
 function NavBar(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	return (
 		<Toolbar className={classes.root}>
 			<NavBarMenu />
@@ -194,8 +194,8 @@ function NavBar(props) {
 function NavBarMenu(props) {
 	const [drawerOpen, setDrawerOpen] = React.useState(false)
 	const { cstat } = useClusterStatus()
-	const bgcolor = useBgColorStyles()
-	const classes = useStyles()
+	const bgcolor = useClasses(bgColorStyles)
+	const classes = useClasses(styles)
 	const toggleDrawer = (open) => event => {
 		if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
 			return

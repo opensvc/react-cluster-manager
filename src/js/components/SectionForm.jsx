@@ -6,7 +6,6 @@ import SizeInput from "./SizeInput.jsx"
 import JsonInput from "./JsonInput.jsx"
 import clsx from "clsx"
 
-import { makeStyles } from "@mui/styles"
 import Typography from "@mui/material/Typography"
 import FormControl from "@mui/material/FormControl"
 import FormHelperText from "@mui/material/FormHelperText"
@@ -21,9 +20,10 @@ import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import useClasses from "../hooks/useClasses.jsx";
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
 	formcontrol: {
 		margin: theme.spacing(2, 0),
 	},
@@ -55,10 +55,10 @@ const useStyles = makeStyles(theme => ({
         expandOpen: {
                 transform: 'rotate(180deg)',
         },
-}))
+})
 
 function formatKeywordText(text) {
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
         const re = RegExp(":cmd:`(.*?)`|:kw:`(.*?)`|:opt:`(.*?)`|:c-.*:`(.*?)`|``(.*?)``")
 	if (text === undefined) {
 		return text
@@ -78,7 +78,7 @@ function formatKeywordText(text) {
 
 function SectionForm(props) {
 	const {kind, kws, data, setData, optionalTitle, requiredTitle, optionalExpanded} = props
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 	var typeKw
 	for (var kw of kws) {
 		if (kw.keyword == "type") {
@@ -146,7 +146,7 @@ function OptionalKeywords(props) {
 	const {title, kws, data, setData, typeKw, optionalExpanded} = props
 	const { t, i18n } = useTranslation()
 	const [expanded, setExpanded] = useState(optionalExpanded !== undefined ? optionalExpanded : false)
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 
         function handleExpandClick(e) {
                 setExpanded(!expanded)
@@ -190,7 +190,7 @@ function OptionalKeywords(props) {
 
 function Keyword(props) {
 	const {kwData, data, setData} = props
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 	if (kwData.keyword == "type") {
 		return null
 	}

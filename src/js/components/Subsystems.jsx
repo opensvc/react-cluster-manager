@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { clusterIssue, threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue, objectsIssue } from "../issues.js";
-import { makeStyles } from '@mui/styles';
 import { state } from "../utils.js"
-import { useColorStyles } from "../styles.js"
+import { ColorStyles } from "../styles.js"
 import ObjIcon from "./ObjIcon.jsx"
 import Badge from '@mui/material/Badge';
 import List from '@mui/material/List';
@@ -24,15 +23,16 @@ import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import LinkIcon from '@mui/icons-material/Link';
 import CodeIcon from '@mui/icons-material/Code';
 import SaveIcon from '@mui/icons-material/Save'
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	nested: {
 		paddingLeft: theme.spacing(4),
 	},
-}))
+})
 
 function SubsystemsLink(props) {
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 	const { t, i18n } = useTranslation()
 	function handleClick(e) {
 		props.onClick()
@@ -49,7 +49,7 @@ function SubsystemsLink(props) {
 function Subsystems(props) {
 	const [{ cstat }, dispatch] = useStateValue()
 	const navigate = useNavigate()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	return (
 		<List>
 			<SubsystemsLink
