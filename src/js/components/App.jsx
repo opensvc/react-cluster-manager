@@ -1,6 +1,6 @@
 'use strict';
 import React from "react";
-import ReactDOM from "react-dom";
+import {createRoot} from "react-dom/client";
 import { useReactOidc } from "@axa-fr/react-oidc-context"
 import { useTranslation } from "react-i18next"
 import { useStateValue } from '../state.js'
@@ -241,7 +241,7 @@ function AuthProvider(props) {
 		return null
 	}
 	if ((authChoice == "basic") && (!basicLogin.username || !basicLogin.password)) {
-                return <Login />
+		return <Login />
 	}
 	if (!authChoice && !oidcUser && location.pathname != "/authentication/callback") {
 		return <AuthChoice />
@@ -346,7 +346,6 @@ function AppError(props) {
 	)
 }
 
-
 const domContainer = document.querySelector('#app');
-ReactDOM.render(<App />, domContainer);
-
+const root = createRoot(domContainer)
+root.render(<App />)
