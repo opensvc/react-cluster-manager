@@ -66,7 +66,7 @@ function ObjMain(props) {
 }
 
 function CfgMain(props) {
-	const classes = styles()
+	const classes = useClasses(styles)
 	const sp = splitPath(props.path)
 	return (
 		<Grid item xs={12} className={classes.section}>
@@ -76,7 +76,7 @@ function CfgMain(props) {
 }
 
 function UsrMain(props) {
-	const classes = styles()
+	const classes = useClasses(styles)
 	const sp = splitPath(props.path)
 	return (
 		<Grid item xs={12} className={classes.section}>
@@ -88,7 +88,7 @@ function UsrMain(props) {
 function SvcMain(props) {
 	const sp = splitPath(props.path)
 	const [{ cstat }, dispatch] = useStateValue();
-	const classes = styles()
+	const classes = useClasses(styles)
 
 	if (cstat.monitor === undefined) {
 		return null
