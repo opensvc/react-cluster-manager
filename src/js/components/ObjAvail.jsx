@@ -1,8 +1,6 @@
 import React from "react";
-
-import SvgIcon from '@material-ui/core/SvgIcon';
-import clsx from 'clsx';
-import { useTheme } from '@material-ui/styles';
+import SvgIcon from '@mui/material/SvgIcon';
+import { useTheme } from '@mui/material/styles';
 
 function CircleIcon(props) {
         return (

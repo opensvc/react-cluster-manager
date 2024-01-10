@@ -1,27 +1,22 @@
 import React, { useState } from "react";
-
 import useUser from "../hooks/User.jsx"
-import { splitPath, createDataHasPathKey } from '../utils.js';
+import { splitPath } from '../utils.js';
 import { ResourceAdd } from "./ResourceAdd.jsx"
 import { apiInstanceAction } from "../api.js"
 import useApiResponse from "../hooks/ApiResponse.jsx"
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import EditIcon from '@mui/icons-material/Edit';
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-
-import EditIcon from '@material-ui/icons/Edit';
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         icon: {
                 marginLeft: theme.spacing(1),
         },
-}))
+})
 
 function SectionEdit(props) {
 	const {path, rid, conf} = props
@@ -33,7 +28,7 @@ function SectionEdit(props) {
 
 	const { auth } = useUser()
 	const [open, setOpen] = useState(false)
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { dispatchAlerts } = useApiResponse()
 	const [data, setData] = useState(null)
 	var sectionData = conf[rid]

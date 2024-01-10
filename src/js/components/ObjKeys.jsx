@@ -1,6 +1,4 @@
-import React, { Fragment, useState } from "react";
-
-import { useStateValue } from '../state.js';
+import React, { Fragment } from "react";
 import { useTranslation } from 'react-i18next';
 import { parseIni } from "../utils.js";
 import { useObjConfig } from "../hooks/ObjConfig.jsx";
@@ -9,24 +7,21 @@ import { ObjKeyActions } from "./ObjKeyActions.jsx"
 import { KeyDecode } from "./KeyDecode.jsx"
 import { KeyEdit } from "./KeyEdit.jsx"
 import { ObjKeyAdd } from "./ObjKeyAdd.jsx"
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import Checkbox from '@mui/material/Checkbox';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import Checkbox from '@material-ui/core/Checkbox';
-
-import FilterListIcon from '@material-ui/icons/FilterList';
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         tableWrapper: {
                 overflowX: 'auto',
         },
@@ -34,10 +29,10 @@ const useStyles = makeStyles(theme => ({
 		marginLeft: -theme.spacing(2),
                 marginRight: -theme.spacing(2),
 	},
-}))
+})
 
 function ObjKeys(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t, i18n } = useTranslation()
 	const [selected, setSelected] = React.useState([])
 	var conf = useObjConfig(props.path)

@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import useUser from "../hooks/User.jsx"
 import { useStateValue } from '../state.js';
 import { apiNodeSetMonitor } from "../api.js";
 import { confirmations } from "../confirmations.js";
 import { Actions, ActionsSection, ActionsItem } from './Actions.jsx';
 import useApiResponse from "../hooks/ApiResponse.jsx"
-
-import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled"
-import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
+import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled"
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline"
 
 function ClusterActions(props) {
 	const { auth } = useUser()

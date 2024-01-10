@@ -1,11 +1,10 @@
 'use strict';
-
-import React, { Component, Fragment } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import { useReactOidc } from "@axa-fr/react-oidc-context"
 import { useTranslation } from "react-i18next"
 import { useStateValue } from '../state.js'
-import { useHistory } from 'react-router';
+import { useNavigate} from 'react-router-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { StateProvider, StateContext } from '../state.js';
 import { NavBar } from "./NavBar.jsx";
@@ -19,33 +18,30 @@ import Main from "./Main.jsx";
 import LoginCallback from "./LoginCallback.jsx";
 import Login from "./Login.jsx";
 import { AuthenticationProvider, oidcLog, OidcSecure } from '@axa-fr/react-oidc-context';
-
-import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
-import Slide from '@material-ui/core/Slide';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-
-import amber from '@material-ui/core/colors/amber';
-import red from '@material-ui/core/colors/red';
-import green from '@material-ui/core/colors/green';
-import grey from '@material-ui/core/colors/grey';
-import lightBlue from '@material-ui/core/colors/lightBlue';
-
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import CssBaseline from '@mui/material/CssBaseline';
+import useScrollTrigger from '@mui/material/useScrollTrigger';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Slide from '@mui/material/Slide';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import amber from '@mui/material/colors/amber';
+import red from '@mui/material/colors/red';
+import green from '@mui/material/colors/green';
+import grey from '@mui/material/colors/grey';
+import lightBlue from '@mui/material/colors/lightBlue';
+import { createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { SnackbarProvider } from 'notistack';
+import useClasses from "../hooks/useClasses.jsx";
 
-const makeTheme = (data) => createMuiTheme({
+const makeTheme = (data) => createTheme({
 	palette: {
-		type: data.theme ? data.theme : "light",
+		mode: data.theme ? data.theme : "light",
 		primary: { main: (data.theme == "light") ? lightBlue[900] : lightBlue[100]},
 		secondary: { main: "#ff392b" },
 	},
@@ -82,12 +78,12 @@ HideOnScroll.propTypes = {
 	children: PropTypes.node.isRequired,
 };
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		padding: theme.spacing(3, 2),
 		marginTop: theme.spacing(3),
 	}
-}))
+})
 
 const App = () => {
 	return (
@@ -234,7 +230,7 @@ const AppStateProvider = (props) => {
 
 function AuthProvider(props) {
 	const authInfo = useAuthInfo()
-	const history = useHistory()
+	const navigate = useNavigate()
 	const [{ authChoice, user, basicLogin }, dispatch] = useStateValue()
 	try {
 		const { oidcUser } = useReactOidc()
@@ -330,14 +326,14 @@ class ErrorBoundary extends React.Component {
 }
 
 function AppError(props) {
-	const classes = useStyles()
-	const history = useHistory()
+	const classes = useClasses(styles)
+	const navigate = useNavigate()
 	return (
 		<Paper className={classes.root}>
 			<Typography variant="h5" component="h3">
 				Something went wrong.
 			</Typography>
-			<Button color="secondary" onClick={() => {history.push("/");props.clear()}}>
+			<Button color="secondary" onClick={() => {navigate("/");props.clear()}}>
 				Clear
 			</Button>
 			<br />

@@ -1,16 +1,16 @@
 import React from "react";
-import WarningIcon from '@material-ui/icons/Warning';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import WarningIcon from '@mui/icons-material/Warning';
+import Typography from '@mui/material/Typography';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
         root: {
                 color: theme.status.warning,
         },
-}))
+})
 
 function ObjOverall(props) {
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 	if (props.overall == "warn") {
 		return (
 			<Typography component="span" className={props.className}>

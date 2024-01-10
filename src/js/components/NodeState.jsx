@@ -5,19 +5,18 @@ import { MonitorTargetBadge } from "./MonitorTargetBadge.jsx";
 import { NodeStateSpeaker } from "./NodeStateSpeaker.jsx";
 import NodeStateSwapOverload from "./NodeStateSwapOverload.jsx"
 import NodeStateMemOverload from "./NodeStateMemOverload.jsx"
-
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import {isEmpty} from "lodash";
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         child: {
                 marginRight: theme.spacing(1),
         },
-}))
+})
 
 function NodeState(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	let status = "unknown"
 	let globalExpect
 	let frozen

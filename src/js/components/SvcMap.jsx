@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { useHistory } from 'react-router';
+import React from "react";
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useStateValue } from '../state.js';
-import { makeStyles } from '@material-ui/core/styles';
 import { ObjAvail } from "./ObjAvail.jsx"
 import { splitPath } from "../utils.js";
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography'
-import Chip from '@material-ui/core/Chip'
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography'
+import Chip from '@mui/material/Chip'
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		height: "100%",
 	},
@@ -26,12 +26,12 @@ const useStyles = makeStyles(theme => ({
 		paddingRight: theme.spacing(1),
 		paddingBottom: theme.spacing(1),
 	},
-}))
+})
 
 function SvcMap(props) {
 	const [{ cstat }, dispatch] = useStateValue();
-	const history = useHistory()
-	const classes = useStyles()
+	const navigate = useNavigate()
+	const classes = useClasses(styles)
 	const { t, i18n } = useTranslation()
 	if (cstat.monitor === undefined) {
 		return null
@@ -52,7 +52,7 @@ function SvcMap(props) {
 	}
 	const handleClick = path => event => {
 		event.stopPropagation()
-		history.push({
+		navigate({
 			pathname: "/object",
 			search: "?path="+path,
 			state: {kind: "Services"},

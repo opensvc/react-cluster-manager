@@ -2,35 +2,28 @@ import React, { useState, useEffect } from "react"
 import useUser from "../hooks/User.jsx"
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router'
+import { useLocation } from 'react-router-dom'
 import { apiGetNode } from "../api.js"
 import { Log } from "./Log.jsx"
-import { NodeActions } from "./NodeActions.jsx"
 import { NodeNetwork } from "./NodeNetwork.jsx"
 import { NodeHardware } from "./NodeHardware.jsx"
 import { NodeInitiators } from "./NodeInitiators.jsx"
-import { NodeStateList } from "./NodeStateList.jsx"
 import { NodeDigest } from "./NodeDigest.jsx"
 import PropGroup from "./PropGroup.jsx"
 import Prop from "./Prop.jsx"
 import NodeLabels from "./NodeLabels.jsx"
+import Grid from '@mui/material/Grid'
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-import Grid from '@material-ui/core/Grid'
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 marginTop: theme.spacing(3),
 		flexGrow: 1,
         },
-}))
+})
 
 function NodeDetails(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
         const loc = useLocation()
 	const { auth } = useUser()
 	const [nodeData, setNodeData] = useState()

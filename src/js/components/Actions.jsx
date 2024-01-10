@@ -1,30 +1,27 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useStateValue } from "../state.js"
-import { makeStyles } from "@material-ui/core/styles"
-import IconButton from "@material-ui/core/IconButton"
-import Button from "@material-ui/core/Button"
-import Menu from "@material-ui/core/Menu"
-import MenuItem from "@material-ui/core/MenuItem"
-import Divider from "@material-ui/core/Divider"
-import LinearProgress from "@material-ui/core/LinearProgress"
-import DialogTitle from "@material-ui/core/DialogTitle"
-import DialogContent from "@material-ui/core/DialogContent"
-import DialogActions from "@material-ui/core/DialogActions"
-import Dialog from "@material-ui/core/Dialog"
-import FormControlLabel from "@material-ui/core/FormControlLabel"
-import Checkbox from "@material-ui/core/Checkbox"
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
-import ListItemText from "@material-ui/core/ListItemText"
-import ListItemIcon from "@material-ui/core/ListItemIcon"
-import FormControl from "@material-ui/core/FormControl"
-import FormGroup from "@material-ui/core/FormGroup"
-import Fab from "@material-ui/core/Fab"
-import PlayArrowIcon from "@material-ui/icons/PlayArrow"
-import Tooltip from "@material-ui/core/Tooltip"
+import IconButton from "@mui/material/IconButton"
+import Button from "@mui/material/Button"
+import Divider from "@mui/material/Divider"
+import DialogTitle from "@mui/material/DialogTitle"
+import DialogContent from "@mui/material/DialogContent"
+import DialogActions from "@mui/material/DialogActions"
+import Dialog from "@mui/material/Dialog"
+import FormControlLabel from "@mui/material/FormControlLabel"
+import Checkbox from "@mui/material/Checkbox"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
+import ListItemText from "@mui/material/ListItemText"
+import ListItemIcon from "@mui/material/ListItemIcon"
+import FormControl from "@mui/material/FormControl"
+import FormGroup from "@mui/material/FormGroup"
+import Fab from "@mui/material/Fab"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
+import Tooltip from "@mui/material/Tooltip"
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		width: '100%',
 		maxWidth: 360,
@@ -37,7 +34,7 @@ const useStyles = makeStyles(theme => ({
         fab: {
                 marginTop: theme.spacing(2),
         },
-}))
+});
 
 function ActionsDivider(props) {
 	if (props.data.action) {
@@ -49,7 +46,7 @@ function ActionsDivider(props) {
 }
 
 function ConfirmationDialog(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [data, setData] = useState({
 		action: null,
 		acks: [],
@@ -136,7 +133,7 @@ function ConfirmationDialog(props) {
 
 function Actions(props) {
 	const [open, setOpen] = React.useState(false)
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t } = useTranslation()
 
 	function handleClickOpen(e) {

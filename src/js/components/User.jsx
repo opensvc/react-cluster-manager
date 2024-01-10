@@ -5,22 +5,22 @@ import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import useUser from "../hooks/User.jsx"
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import Link from '@material-ui/core/Link'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-import CardActions from '@material-ui/core/CardActions'
-import Button from '@material-ui/core/Button'
-import Skeleton from '@material-ui/lab/Skeleton'
+import Typography from '@mui/material/Typography'
+import Link from '@mui/material/Link'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
+import CardActions from '@mui/material/CardActions'
+import Button from '@mui/material/Button'
+import Skeleton from '@mui/material/Skeleton'
 import LangSelector from "./LangSelector.jsx"
 import ThemeSelector from "./ThemeSelector.jsx"
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		marginTop: theme.spacing(3),
 	},
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 		fontFamily: "monospace",
 		wordBreak: "break-all",
 	},
-}))
+})
 
 function User(props) {
 	return (
@@ -51,7 +51,7 @@ function UserDigest(props) {
 	const { close } = useClusterStatus()
 	const { unloadUser } = useUser()
 	const [{ user }, dispatch] = useStateValue()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 
 	function handleLogout(e) {
 		logout()
@@ -89,7 +89,7 @@ function UserDigest(props) {
 function UserAuthMethod(props) {
 	const { user } = props
 	const { i18n, t } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!user.auth) {
 		return t("Not authenticated")
 	}
@@ -119,7 +119,7 @@ function OidcProvider(props) {
 	const { oidcUser } = useReactOidc()
 	const { i18n, t } = useTranslation()
 	const authInfo = useAuthInfo()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!authInfo) {
 		return <Skeleton />
 	}
@@ -142,7 +142,7 @@ function OidcProvider(props) {
 function OidcAccessToken(props) {
 	const { oidcUser } = useReactOidc()
 	const { i18n, t } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!oidcUser) {
 		return null
 	}
@@ -177,7 +177,7 @@ function parseGrant(grant) {
 function UserGrants(props) {
 	const [{ user }, dispatch] = useStateValue()
 	const { i18n, t } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 
 	if (user.grant === undefined) {
 		return <Skeleton variant="rect" width="100%" height="8rem" />

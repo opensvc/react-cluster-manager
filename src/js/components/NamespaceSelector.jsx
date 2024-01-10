@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { useStateValue } from '../state.js';
 import { namespaceValid, splitPath } from '../utils.js';
-
 import Autosuggest from 'react-autosuggest';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
-import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
-import Popper from '@material-ui/core/Popper';
-import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@mui/material/TextField';
+import Paper from '@mui/material/Paper';
+import MenuItem from '@mui/material/MenuItem';
+import Popper from '@mui/material/Popper';
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		flexGrow: 1,
 	},
@@ -33,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 		padding: 0,
 		listStyleType: 'none',
 	},
-}))
+})
 
 function getRoleNamespaces(user, role) {
 	if (user.grant === undefined) {
@@ -147,7 +146,7 @@ function NamespaceSelector(props) {
 	} else {
 		namespaces = getNamespaces(cstat)
 	}
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [anchorEl, _setAnchorEl] = useState(null)
 	const [stateSuggestions, setSuggestions] = useState([])
 

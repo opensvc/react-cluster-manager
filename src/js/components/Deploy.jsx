@@ -1,18 +1,14 @@
-import React, { useState } from "react";
-import { useStateValue } from '../state.js';
+import React from "react";
 import { DeployEmpty } from "./DeployEmpty.jsx";
 import { DeployCatalog } from "./DeployCatalog.jsx";
 import { DeployTemplate } from "./DeployTemplate.jsx";
-
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Box from '@material-ui/core/Box';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
+import useClasses from "../hooks/useClasses.jsx";
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
         root: {
                 padding: theme.spacing(3, 2),
                 marginTop: theme.spacing(3),
@@ -23,7 +19,7 @@ const useStyles = makeStyles(theme => ({
         fab: {
                 marginTop: theme.spacing(2),
         },
-}))
+})
 
 const tabs = [
         {
@@ -42,7 +38,7 @@ const tabs = [
 
 function Deploy(props) {
 	const {data, setData} = props
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 
 	const set = key => val => {
 		setData({...data, [key]: val})

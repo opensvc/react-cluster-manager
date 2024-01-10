@@ -1,23 +1,20 @@
 import React from "react";
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next';
 import { useNetworksStatus } from "../hooks/NetworksStatus.jsx"
 import { NetworkAdd } from "./NetworkAdd.jsx"
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Hidden from '@material-ui/core/Hidden';
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		marginTop: theme.spacing(3),
 	},
@@ -31,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 			cursor: "pointer",
 		},
 	},
-}))
+});
 
 function getLines(data) {
 	if (!data) {
@@ -47,7 +44,7 @@ function getLines(data) {
 }
 
 function Networks(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t, i18n } = useTranslation()
 	const data = useNetworksStatus()
 	const [{}, dispatch] = useStateValue()
@@ -88,11 +85,11 @@ function Networks(props) {
 function NetworksLine(props) {
 	const {index, data} = props
 	const [{}, dispatch] = useStateValue()
-	const classes = useStyles()
-	const history = useHistory()
+	const classes = useClasses(styles)
+	const navigate = useNavigate()
 	function handleLineClick(event) {
 		event.stopPropagation()
-		history.push("/network?name="+data.name)
+		navigate("/network?name="+data.name)
 	}
 	return (
 		<TableRow onClick={handleLineClick} className={classes.row}>

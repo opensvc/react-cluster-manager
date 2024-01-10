@@ -7,19 +7,19 @@ import { apiInstanceAction } from "../api.js";
 import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
 import useApiResponse from "../hooks/ApiResponse.jsx"
 
-import RefreshIcon from "@material-ui/icons/Refresh"
-import PlayArrowIcon from "@material-ui/icons/PlayArrow"
-import StopIcon from "@material-ui/icons/Stop"
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
-import DeleteIcon from "@material-ui/icons/Delete"
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline"
-import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled"
-import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
-import ShuffleIcon from "@material-ui/icons/Shuffle"
-import LabelIcon from "@material-ui/icons/Label"
-import BackspaceIcon from "@material-ui/icons/Backspace"
-import ReplayIcon from "@material-ui/icons/Replay"
-import SyncIcon from "@material-ui/icons/Sync"
+import RefreshIcon from "@mui/icons-material/Refresh"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
+import StopIcon from "@mui/icons-material/Stop"
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever"
+import DeleteIcon from "@mui/icons-material/Delete"
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
+import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled"
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline"
+//import ShuffleIcon from "@mui/icons-material/Shuffle"
+import LabelIcon from "@mui/icons-material/Label"
+import BackspaceIcon from "@mui/icons-material/Backspace"
+import ReplayIcon from "@mui/icons-material/Replay"
+import SyncIcon from "@mui/icons-material/Sync"
 
 
 function ObjInstanceActions(props) {

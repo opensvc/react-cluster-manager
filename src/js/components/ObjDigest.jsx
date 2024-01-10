@@ -1,29 +1,26 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useHistory } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ObjStateList } from "./ObjStateList.jsx";
 import { ObjActions } from "./ObjActions.jsx";
 import { ObjScale } from "./ObjScale.jsx";
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from "@mui/material/Tooltip"
+import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from "@material-ui/core/Tooltip"
-
-import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight';
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         card: {
                 height: "100%",
         },
-}))
+})
 
 function Goto(props) {
-	const history = useHistory()
+	const navigate = useNavigate()
 	const loc = useLocation()
 	const { t } = useTranslation()
 	const { path } = props
@@ -35,7 +32,7 @@ function Goto(props) {
 			<IconButton
 				aria-label="Go to object"
 				aria-haspopup={true}
-				onClick={() => {history.push("/object?path="+path)}}
+				onClick={() => {navigate("/object?path="+path)}}
 			>
 				<SubdirectoryArrowRightIcon />
 			</IconButton>
@@ -47,7 +44,7 @@ function ObjDigest(props) {
 	const { path } = props
 	const { t, i18n } = useTranslation()
 	const [{ cstat }, dispatch] = useStateValue();
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!cstat.monitor) {
 		return null
 	}

@@ -6,9 +6,7 @@ import { ObjOverallItem } from "./ObjOverallItem.jsx";
 import { ObjFrozenItem } from "./ObjFrozenItem.jsx";
 import { ObjPlacementItem } from "./ObjPlacementItem.jsx";
 import { ObjProvisionedItem } from "./ObjProvisionedItem.jsx";
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
+import List from '@mui/material/List';
 
 function ObjStateList(props) {
 	const [{ cstat }, dispatch] = useStateValue();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import useUser from "./User.jsx"
 import { objectConfigChecksum } from "../utils.js"
 import { apiGetAny } from "../api.js"

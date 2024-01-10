@@ -1,11 +1,11 @@
 import React from "react"
 import { useTranslation } from 'react-i18next'
-import { lighten, makeStyles } from '@material-ui/core/styles'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
 import clsx from 'clsx'
+import useClasses from "../hooks/useClasses.jsx";
 
-const useToolbarStyles = makeStyles(theme => ({
+const toolbarStyles = theme => ({
         root: {
                 paddingLeft: theme.spacing(1),
                 paddingRight: theme.spacing(0),
@@ -18,7 +18,7 @@ const useToolbarStyles = makeStyles(theme => ({
                 }
                 : {
                         color: theme.palette.text.primary,
-                        backgroundColor: theme.palette.secondary.dark,
+                        //backgroundColor: theme.palette.secondary.dark,
                 },
         spacer: {
                 flex: '1 1 100%',
@@ -31,11 +31,11 @@ const useToolbarStyles = makeStyles(theme => ({
         title: {
                 flex: '0 0 auto',
         },
-}))
+});
 
 const TableToolbar = props => {
 	const { t, i18n } = useTranslation()
-        const classes = useToolbarStyles()
+        const classes = useClasses(toolbarStyles)
         const { selected } = props
 
         return (

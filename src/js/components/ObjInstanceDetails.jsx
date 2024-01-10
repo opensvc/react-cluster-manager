@@ -1,19 +1,15 @@
 import React, {useState} from "react"
-import { useLocation } from "react-router"
+import { useLocation } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { splitPath } from "../utils.js"
 import { ObjDigest } from "./ObjDigest.jsx"
 import { ObjInstanceDigest } from "./ObjInstanceDigest.jsx"
-import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx"
 import { ObjInstanceResources } from "./ObjInstanceResources.jsx"
 import { Log } from "./Log.jsx"
+import Grid from '@mui/material/Grid'
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		flexGrow: 1,
 	},
@@ -21,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 		padding: theme.spacing(1),
 		overflowX: "auto",
 	}
-}))
+});
 
 function ObjInstanceDetails(props) {
 	const [active, setActive] = useState(0)
@@ -29,7 +25,7 @@ function ObjInstanceDetails(props) {
 	let params = new URLSearchParams(loc.search)
 	const path = params.get("path")
 	const node = params.get("node")
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const sp = splitPath(path)
 
 	const handleChange = (event, newValue) => {

@@ -1,32 +1,31 @@
 import React, {useState} from "react"
 import { useTranslation } from "react-i18next"
 import { useStateValue } from "../state.js"
+import FormControl from "@mui/material/FormControl"
+import TextField from "@mui/material/TextField"
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import Button from '@mui/material/Button'
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from "@material-ui/core/styles"
-import FormControl from "@material-ui/core/FormControl"
-import TextField from "@material-ui/core/TextField"
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Button from '@material-ui/core/Button'
 
-
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
         control: {
 		marginBottom: theme.spacing(2),
 	},
         root: {
 		marginTop: theme.spacing(4),
         }
-}))
+})
 
 function Login(props) {
 	const [username, setUsername] = useState("")
 	const [password, setPassword] = useState("")
 	const [{ basicLogin }, dispatch] = useStateValue()
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 
 	function handleSubmit(e) {
 		dispatch({

@@ -1,14 +1,13 @@
-import React, { useState, Fragment } from "react"
+import React from "react"
 import { splitPath } from "../utils.js"
-
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from "@material-ui/core/Typography"
-import Grid from "@material-ui/core/Grid"
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
+import Typography from "@mui/material/Typography"
+import Grid from "@mui/material/Grid"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
 import {isEmpty} from "lodash";
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	itemGrid: {
 		flexWrap: "nowrap",
 	},
@@ -31,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 		borderBottomColor: theme.palette.primary.main,
 		transition: "height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
 	},
-}))
+})
 
 
 function parseCpu(last, prev, search) {
@@ -105,7 +104,7 @@ function parseCpu(last, prev, search) {
 
 function CpuNodeMapItem(props) {
 	const { data, node, name, agg } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	try {
 		if (agg == "ns") {
 			var value = data.nodes[node].namespaces[name]
@@ -135,7 +134,7 @@ function CpuNodeMapItem(props) {
 }
 
 function CpuNodeMap(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { data, name, agg } = props
 	var nodes = Object.keys(data.nodes).sort()
 	return (
@@ -149,7 +148,7 @@ function CpuNodeMap(props) {
 
 function CpuPct(props) {
 	const { value } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	var pct = (value*100).toFixed(2)
 	return (
 		<Typography component="div" className={classes.value}>
@@ -160,7 +159,7 @@ function CpuPct(props) {
 
 function StatsCpu(props) {
 	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	var cpu = parseCpu(last, prev, search)
 	if (agg == "ns") {
 		var data = cpu.sum.namespaces

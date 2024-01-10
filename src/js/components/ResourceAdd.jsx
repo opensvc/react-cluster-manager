@@ -1,20 +1,15 @@
-import React, { useState } from "react";
-import { useStateValue } from '../state.js';
+import React from "react";
 import { splitPath } from '../utils.js';
 import { useKeywords } from '../hooks/Keywords.jsx';
 import { SectionForm } from './SectionForm.jsx';
+import Typography from '@mui/material/Typography';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import CircularProgress from '@mui/material/CircularProgress';
+import useClasses from "../hooks/useClasses.jsx";
 
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import CircularProgress from '@material-ui/core/CircularProgress';
-
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
         root: {
                 padding: theme.spacing(3, 2),
                 marginTop: theme.spacing(3),
@@ -28,11 +23,11 @@ const useStyles = makeStyles(theme => ({
         formcontrol: {
                 margin: theme.spacing(2, 0),
         },
-}))
+});
 
 function ResourceAdd(props) {
 	const {path, data, setData} = props
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 	const sp = splitPath(path)
 	const kws = useKeywords(sp.kind)
 	if (!kws) {

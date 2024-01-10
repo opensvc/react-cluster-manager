@@ -4,25 +4,23 @@ import { useTranslation } from 'react-i18next'
 import { useStateValue } from "../state.js"
 import { apiNodeAction } from "../api.js"
 import useApiResponse from "../hooks/ApiResponse.jsx"
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import IconButton from '@mui/material/IconButton'
+import FormControl from '@mui/material/FormControl'
+import TextField from '@mui/material/TextField'
+import AddIcon from '@mui/icons-material/Add'
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import IconButton from '@material-ui/core/IconButton'
-import FormControl from '@material-ui/core/FormControl'
-import TextField from '@material-ui/core/TextField'
-
-import AddIcon from '@material-ui/icons/Add'
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	formcontrol: {
 		margin: theme.spacing(2, 0),
 	},
-}))
+})
 
 function NodeLabelAdd(props) {
 	const {node} = props
@@ -33,7 +31,7 @@ function NodeLabelAdd(props) {
 	const [{user}, dispatch] = useStateValue()
 	const { dispatchAlerts } = useApiResponse()
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (!user.grant) {
 		return null
 	}

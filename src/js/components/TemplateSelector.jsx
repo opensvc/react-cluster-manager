@@ -1,20 +1,17 @@
 import React, { useState } from "react";
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
+import Button from '@mui/material/Button';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Dialog from '@mui/material/Dialog';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import useClasses from "../hooks/useClasses.jsx";
 
-import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         selected: {
                 cursor: "pointer",
         },
@@ -28,10 +25,10 @@ const useStyles = makeStyles(theme => ({
 		maxHeight: 435,
 	},
 
-}))
+})
 
 function TemplateSelectorDialog(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [search, setSearch] = useState("")
 	function handleCancel(e, m) {
 		props.handleClose()
@@ -96,7 +93,7 @@ function TemplateSelector(props) {
 	if (props.options === undefined) {
 		return null
 	}
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [open, setOpen] = React.useState(false)
 
 	function handleClickOpen(e) {

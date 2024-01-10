@@ -1,7 +1,7 @@
 import React from "react";
 import { useStateValue } from '../state.js';
 import { splitPath, fmtPath } from '../utils.js'
-import Typography from '@material-ui/core/Typography'
+import Typography from '@mui/material/Typography'
 import {isEmpty} from "lodash";
 
 function slaveInstancesCount(path, cstat) {

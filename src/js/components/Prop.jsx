@@ -1,11 +1,10 @@
 import React from "react"
 import { useTranslation } from 'react-i18next'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	prop: {
                 paddingTop: theme.spacing(1),
 	},
@@ -18,10 +17,10 @@ const useStyles = makeStyles(theme => ({
 			marginRight: -theme.spacing(1),
 		},
 	},
-}))
+})
 
 function Prop(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { i18n, t } = useTranslation()
 	if (props.remove || props.change) {
 		var cols = {title: 4, value: 4, action: 4}

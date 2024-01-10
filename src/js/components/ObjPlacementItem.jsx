@@ -1,16 +1,16 @@
 import React from "react";
 import { useTranslation } from 'react-i18next'
-
-import PlaceIcon from '@material-ui/icons/Place';
-import Typography from '@material-ui/core/Typography';
-import { useColorStyles } from "../styles.js"
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import PlaceIcon from '@mui/icons-material/Place';
+import Typography from '@mui/material/Typography';
+import { ColorStyles } from "../styles.js"
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import useClasses from "../hooks/useClasses.jsx";
 
 function ObjPlacementItem(props) {
 	const { t, i18n } = useTranslation()
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 	if (props.placement == "optimal") {
 		return null
 	} else if (props.placement == "n/a") {

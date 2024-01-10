@@ -1,22 +1,20 @@
 import React from "react"
 import { useStateValue } from '../state.js'
+import Typography from '@mui/material/Typography'
+import Drawer from '@mui/material/Drawer'
+import IconButton from '@mui/material/IconButton'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
+import NotificationsIcon from '@mui/icons-material/Notifications'
+import Badge from '@mui/material/Badge'
+import DeleteIcon from '@mui/icons-material/Delete'
+import ArrowRightIcon from '@mui/icons-material/ArrowRight'
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import Drawer from '@material-ui/core/Drawer'
-import IconButton from '@material-ui/core/IconButton'
-import Divider from '@material-ui/core/Divider'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import NotificationsIcon from '@material-ui/icons/Notifications'
-import Badge from '@material-ui/core/Badge'
-import DeleteIcon from '@material-ui/icons/Delete'
-import ArrowRightIcon from '@material-ui/icons/ArrowRight'
-
-const useStyles = makeStyles({
+const useStyles = {
 	closeButton: {
 		alignSelf: "end",
 	},
@@ -26,12 +24,12 @@ const useStyles = makeStyles({
 	fullList: {
 		width: 'auto',
 	},
-})
+}
 
 function Alerts(props) {
 	const [{ alerts }, dispatch] = useStateValue()
 	const [state, setState] = React.useState(false)
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 	if (!alerts) {
 		return null
 	}
@@ -97,7 +95,7 @@ function Alert(props) {
 				<NotificationsIcon color={data.color} />
 			</ListItemIcon>
 			<ListItemText
-				primary=<Typography component="span" variant="caption">{data.date.toLocaleString()}</Typography>
+				primary={<Typography component="span" variant="caption">{data.date.toLocaleString()}</Typography>}
 				secondary={data.body}
 				secondaryTypographyProps={{component: "div"}}
 			/>

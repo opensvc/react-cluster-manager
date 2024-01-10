@@ -6,31 +6,29 @@ import { apiGetAny } from "../api.js"
 import { useTranslation } from "react-i18next"
 import { splitPath } from "../utils.js"
 import { ObjAvail } from "./ObjAvail.jsx"
-import { ObjProvisioned } from "./ObjProvisioned.jsx"
 import { ObjInstanceResourceActions } from "./ObjInstanceResourceActions.jsx"
 import { TableToolbar } from "./TableToolbar.jsx"
-import { useObjConfig } from "../hooks/ObjConfig.jsx"
-import { useColorStyles } from "../styles.js"
+import { ColorStyles } from "../styles.js"
 
 import clsx from "clsx"
-import { makeStyles } from "@material-ui/core/styles"
-import Grid from "@material-ui/core/Grid"
-import Card from "@material-ui/core/Card"
-import CardHeader from "@material-ui/core/CardHeader"
-import CardContent from "@material-ui/core/CardContent"
-import Typography from "@material-ui/core/Typography"
-import Table from "@material-ui/core/Table"
-import TableHead from "@material-ui/core/TableHead"
-import TableBody from "@material-ui/core/TableBody"
-import TableRow from "@material-ui/core/TableRow"
-import TableCell from "@material-ui/core/TableCell"
-import Tooltip from "@material-ui/core/Tooltip"
-import IconButton from "@material-ui/core/IconButton"
-import Checkbox from "@material-ui/core/Checkbox"
+import Grid from "@mui/material/Grid"
+import Card from "@mui/material/Card"
+import CardHeader from "@mui/material/CardHeader"
+import CardContent from "@mui/material/CardContent"
+import Typography from "@mui/material/Typography"
+import Table from "@mui/material/Table"
+import TableHead from "@mui/material/TableHead"
+import TableBody from "@mui/material/TableBody"
+import TableRow from "@mui/material/TableRow"
+import TableCell from "@mui/material/TableCell"
+import Tooltip from "@mui/material/Tooltip"
+import IconButton from "@mui/material/IconButton"
+import Checkbox from "@mui/material/Checkbox"
 
-import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser"
+import OpenInBrowserIcon from "@mui/icons-material/OpenInBrowser"
+import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         tableWrapper: {
                 overflowX: "auto",
         },
@@ -46,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 	grow: {
 		flexGrow: "1",
 	}
-}))
+})
 
 function ObjInstanceResourceEnter(props) {
 	const { path, rid } = props
@@ -78,7 +76,7 @@ function ObjInstanceResources(props) {
 	//
 	const { cstat } = useClusterStatus()
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [selected, setSelected] = React.useState([])
 
 	if (cstat.monitor === undefined) {
@@ -157,7 +155,7 @@ function ObjInstanceResourceLine(props) {
 	const { cstat } = useClusterStatus()
 	const { user } = useUser()
 	const {index, node, path, rid, selected, setSelected, sp} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (cstat.monitor === undefined) {
 		return null
 	}
@@ -216,7 +214,7 @@ function ObjInstanceResourceLine(props) {
 
 function ObjInstanceResourceDesc(props) {
 	const {data} = props
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 	var log = []
 	if (data.log) {
 		for (var i=0; i<data.log.length; i++) {

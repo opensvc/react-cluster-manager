@@ -1,15 +1,14 @@
 import React from "react"
 import { useTranslation } from "react-i18next"
-import { makeStyles } from "@material-ui/core/styles"
+import Tooltip from "@mui/material/Tooltip"
+import useClasses from "../hooks/useClasses.jsx";
 
-import Tooltip from "@material-ui/core/Tooltip"
-
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
         flags: {
 		fontFamily: "monospace",
 		whiteSpace: "pre",
         },
-}))
+})
 
 function Flag(props) {
 	return (
@@ -37,7 +36,7 @@ function has_retries(rid, instanceRestart) {
 function ObjInstanceResourceFlags(props) {
 	const {rid, data, idata} = props
 	const { t } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 	let remainingRestart
 	if (data.restart) {
 		remainingRestart = data.restart - has_retries(rid, idata.monitor.restart)

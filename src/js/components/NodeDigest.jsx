@@ -1,30 +1,27 @@
-import React, { useState } from "react"
+import React from "react"
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
 import { NodeActions } from "./NodeActions.jsx"
 import { NodeStateList } from "./NodeStateList.jsx"
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
+import Grid from '@mui/material/Grid'
+import Chip from '@mui/material/Chip'
+import Divider from '@mui/material/Divider'
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-import Grid from '@material-ui/core/Grid'
-import Chip from '@material-ui/core/Chip'
-import Divider from '@material-ui/core/Divider'
-import Skeleton from '@material-ui/lab/Skeleton'
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	content: {
 		height: "100%",
 	},
 	divider: {
 		marginBottom: theme.spacing(2),
 	},
-}))
+})
 
 function NodeDigest(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { name, nodeData } = props
 	const { t, i18n } = useTranslation()
 	const [{user}, dispatch] = useStateValue()

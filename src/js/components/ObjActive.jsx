@@ -1,10 +1,8 @@
 import React from "react";
 import { useStateValue } from '../state.js';
-
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 function ObjActive(props) {
 	const [{ cstat }, dispatch] = useStateValue();

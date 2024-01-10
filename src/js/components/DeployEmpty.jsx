@@ -2,25 +2,24 @@ import React, { useState } from "react";
 import { nameValid } from "../utils.js";
 import { ObjKindSelector } from './ObjKindSelector.jsx';
 import { NamespaceSelector } from './NamespaceSelector.jsx';
+import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import TextField from '@mui/material/TextField';
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import TextField from '@material-ui/core/TextField';
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	desc: {
 		padding: theme.spacing(3, 0),
 	},
         formcontrol: {
                 margin: theme.spacing(2, 0),
         },
-}))
+})
 
 function DeployEmpty(props) {
 	const {data, set} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 
 	function handleObjKindClick(e, kind) {
 		set({...data, kind: kind})

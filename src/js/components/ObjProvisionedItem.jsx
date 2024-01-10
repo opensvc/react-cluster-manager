@@ -1,11 +1,10 @@
 import React from "react";
 import { useTranslation } from 'react-i18next'
-
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import WarningIcon from '@material-ui/icons/Warning';
-import Typography from '@material-ui/core/Typography';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import WarningIcon from '@mui/icons-material/Warning';
+import Typography from '@mui/material/Typography';
 
 function ObjProvisionedItem(props) {
 	const {t, i18n} = useTranslation()

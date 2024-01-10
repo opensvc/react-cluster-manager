@@ -1,25 +1,17 @@
 import React, { useState } from "react";
-
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import { splitPath } from "../utils.js";
-import { ObjAvail } from "./ObjAvail.jsx";
 import { ObjDigest } from "./ObjDigest.jsx";
 import { Log } from "./Log.jsx"
 import { ObjInstances } from "./ObjInstances.jsx"
 import { ObjKeys } from "./ObjKeys.jsx"
 import ObjConfig from "./ObjConfig.jsx"
+import Grid from '@mui/material/Grid';
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 flewGrow: 1,
         },
@@ -32,13 +24,13 @@ const useStyles = makeStyles(theme => ({
 	tabSection: {
                 marginBottom: theme.spacing(3),
 	},
-}))
+})
 
 function ObjDetails(props) {
         const loc = useLocation()
         let params = new URLSearchParams(loc.search)
         const path = params.get("path")
-	const classes = useStyles()
+	const classes = useClasses(styles)
         const [nodeData, setNodeData] = useState()
         const [active, setActive] = useState(0)
         const [{user}, dispatch] = useStateValue()
@@ -74,7 +66,7 @@ function ObjMain(props) {
 }
 
 function CfgMain(props) {
-	const classes = useStyles()
+	const classes = styles()
 	const sp = splitPath(props.path)
 	return (
 		<Grid item xs={12} className={classes.section}>
@@ -84,7 +76,7 @@ function CfgMain(props) {
 }
 
 function UsrMain(props) {
-	const classes = useStyles()
+	const classes = styles()
 	const sp = splitPath(props.path)
 	return (
 		<Grid item xs={12} className={classes.section}>
@@ -96,7 +88,7 @@ function UsrMain(props) {
 function SvcMain(props) {
 	const sp = splitPath(props.path)
 	const [{ cstat }, dispatch] = useStateValue();
-	const classes = useStyles()
+	const classes = styles()
 
 	if (cstat.monitor === undefined) {
 		return null

@@ -1,10 +1,8 @@
 import React from "react";
 import { withOidcUser } from '@axa-fr/react-oidc-context';
-import { useHistory } from 'react-router'
-import { Switch, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { useStateValue } from '../state.js';
 import Cluster from "./Cluster.jsx";
-import Login from "./Login.jsx";
 import { Threads } from "./Threads.jsx";
 import { Nodes } from "./Nodes.jsx";
 import { NodeDetails } from "./NodeDetails.jsx";
@@ -24,81 +22,33 @@ import { NotFound } from "./NotFound.jsx"
 
 function Main(props) {
 	const [{ nav }, dispatch] = useStateValue();
-	const history = useHistory()
-	//console.log("router path:", history.location.pathname)
 
 	return (
-		<Switch>
-			<Route exact path="/">
-				<Cluster />
-			</Route>
-			<Route exact path="/authentication/callback">
-				<Cluster />
-			</Route>
-			<Route exact path="/threads">
-				<Threads />
-			</Route>
-			<Route exact path="/deploy">
-				<Deploy />
-			</Route>
-			<Route exact path="/heartbeats">
-				<HeartbeatsDetails />
-			</Route>
-			<Route exact path="/arbitrators">
-				<ArbitratorsDetails />
-			</Route>
-			<Route exact path="/nodes">
-				<Nodes />
-			</Route>
-			<Route exact path="/networks">
-				<Networks />
-			</Route>
-			<Route exact path="/pools">
-				<Pools />
-			</Route>
-			<Route exact path="/objects">
-				<Objs />
-			</Route>
-			<Route exact path="/services">
-				<Objs kind="svc" />
-			</Route>
-			<Route exact path="/volumes">
-				<Objs kind="vol" />
-			</Route>
-			<Route exact path="/configs">
-				<Objs kind="cfg" />
-			</Route>
-			<Route exact path="/secrets">
-				<Objs kind="sec" />
-			</Route>
-			<Route exact path="/users">
-				<Objs kind="usr" />
-			</Route>
-			<Route exact path="/network">
-				<NetworkDetails />
-			</Route>
-			<Route exact path="/node">
-				<NodeDetails />
-			</Route>
-			<Route exact path="/object">
-				<ObjDetails />
-			</Route>
-			<Route exact path="/instance">
-				<ObjInstanceDetails />
-			</Route>
-			<Route exact path="/user">
-				<User />
-			</Route>
-			<Route exact path="/stats">
-				<Stats />
-			</Route>
-			<Route exact path="/api">
-				<Api />
-			</Route>
-			<Route>
-				<NotFound />
-			</Route>
-		</Switch>
+		<Routes>
+			<Route path="/" element={<Cluster />} />
+			<Route path="/authentication/callback" element={<Cluster />} />
+			<Route path="/threads" element={<Threads />} />
+			<Route path="/deploy" element={<Deploy />} />
+			<Route path="/heartbeats" element={<HeartbeatsDetails />} />
+			<Route path="/arbitrators" element={<ArbitratorsDetails />} />
+			<Route path="/nodes" element={<Nodes />} />
+			<Route path="/networks" element={<Networks />} />
+			<Route path="/pools" element={<Pools />} />
+			<Route path="/objects" element={<Objs />} />
+			<Route path="/services" element={<Objs kind="svc" />} />
+			<Route path="/volumes" element={<Objs kind="vol" />} />
+			<Route path="/configs" element={<Objs kind="cfg" />} />
+			<Route path="/secrets" element={<Objs kind="sec" />} />
+			<Route path="/users" element={<Objs kind="usr" />} />
+			<Route path="/network" element={<NetworkDetails />} />
+			<Route path="/node" element={<NodeDetails />} />
+			<Route path="/object" element={<ObjDetails />} />
+			<Route path="/instance" element={<ObjInstanceDetails />} />
+			<Route path="/user" element={<User />} />
+			<Route path="/stats" element={<Stats />} />
+			<Route path="/api" element={<Api />} />
+			<Route element={<NotFound />} />
+		</Routes>
 	)
 }
 

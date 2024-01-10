@@ -1,28 +1,25 @@
 import React, { useState } from "react";
-
 import useUser from "../hooks/User.jsx"
 import { apiInstanceAction } from "../api.js"
 import { useStateValue } from '../state.js';
 import useApiResponse from "../hooks/ApiResponse.jsx"
+import IconButton from '@mui/material/IconButton';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import LinearScaleIcon from '@mui/icons-material/LinearScale';
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-
-import LinearScaleIcon from '@material-ui/icons/LinearScale';
-
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
         formcontrol: {
                 margin: theme.spacing(2, 0),
         },
-}))
+})
 
 function ObjScale(props) {
         const {path} = props
@@ -41,7 +38,7 @@ function ObjScale(props) {
 	}
         const [open, setOpen] = React.useState(false)
 	const [scale, setScale] = useState(cstat.monitor.services[path].scale)
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 
 	function handleChange(e) {
 		if (e.target.value < 0) {

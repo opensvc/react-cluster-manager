@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import useUser from "../hooks/User.jsx"
 import { useStateValue } from '../state.js';
 import { apiNodeAction } from "../api.js";
 import { Actions, ActionsSection, ActionsItem, ActionsDivider } from './Actions.jsx';
 import useApiResponse from "../hooks/ApiResponse.jsx"
 
-import PauseCircleFilledIcon from "@material-ui/icons/PauseCircleFilled"
-import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline"
-import InfoIcon from "@material-ui/icons/Info"
-import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew"
-import RefreshIcon from "@material-ui/icons/Refresh"
+import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled"
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline"
+import InfoIcon from "@mui/icons-material/Info"
+import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew"
+import RefreshIcon from "@mui/icons-material/Refresh"
 
 function NodeActions(props) {
 	const { auth } = useUser()

@@ -1,27 +1,22 @@
 import React, { useState } from "react";
-
 import useUser from "../hooks/User.jsx"
 import { apiPostAny } from "../api.js"
 import { splitPath } from "../utils.js"
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import FormControl from '@mui/material/FormControl'
+import TextField from '@mui/material/TextField'
+import IconButton from '@mui/material/IconButton'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import TextareaAutosize from '@mui/material/TextareaAutosize'
+import AddIcon from '@mui/icons-material/Add';
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import TextField from '@material-ui/core/TextField'
-import MenuItem from '@material-ui/core/MenuItem'
-import IconButton from '@material-ui/core/IconButton'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import TextareaAutosize from '@material-ui/core/TextareaAutosize'
-
-import AddIcon from '@material-ui/icons/Add';
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	formcontrol: {
 		margin: theme.spacing(2, 0),
 	},
@@ -31,7 +26,7 @@ const useStyles = makeStyles(theme => ({
                 whiteSpace: "nowrap",
                 overflow: "auto !important",
 	},
-}))
+})
 
 function ObjKeyAdd(props) {
 	const {path} = props
@@ -51,7 +46,7 @@ function ObjKeyAdd(props) {
 	const [urlValue, setUrlValue] = useState("")
 	const [fileValue, setFileValue] = useState("")
 	const [keyName, setKeyName] = useState("")
-	const classes = useStyles()
+	const classes = useClasses(styles)
         function handleClickOpen(e) {
                 e.stopPropagation()
                 setOpen(true)

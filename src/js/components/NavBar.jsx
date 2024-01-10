@@ -1,54 +1,54 @@
 "use strict";
 
 import React from "react"
-import { useStateValue } from '../state.js'
 import useUser from "../hooks/User.jsx"
 import useClusterStatus from "../hooks/ClusterStatus.jsx"
 import useAuthInfo from "../hooks/AuthInfo.jsx"
-import { useLocation, useHistory, matchPath } from "react-router"
-import { Link as RouteLink } from "react-router-dom"
+import { useLocation, useNavigate, matchPath } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { state } from "../utils.js"
 import { allIssue } from "../issues.js"
 import Alerts from "./Alerts.jsx"
 import { Subsystems } from "./Subsystems.jsx"
-import { useBgColorStyles } from "../styles.js"
-
-import { makeStyles, withStyles, emphasize } from "@material-ui/core/styles"
-import Drawer from "@material-ui/core/Drawer"
-import Breadcrumbs from "@material-ui/core/Breadcrumbs"
-import Typography from "@material-ui/core/Typography"
-import Link from "@material-ui/core/Link"
-import Badge from "@material-ui/core/Badge"
-import NavigateNextIcon from "@material-ui/icons/NavigateNext"
-import Button from "@material-ui/core/Button"
-import IconButton from "@material-ui/core/IconButton"
-import Toolbar from "@material-ui/core/Toolbar"
-import Avatar from "@material-ui/core/Avatar"
-import Chip from "@material-ui/core/Chip"
-import MenuIcon from "@material-ui/icons/Menu"
-import BlockIcon from "@material-ui/icons/Block"
-import WifiOffIcon from "@material-ui/icons/WifiOff"
+import { bgColorStyles } from "../styles.js"
+import Drawer from "@mui/material/Drawer"
+import Breadcrumbs from "@mui/material/Breadcrumbs"
+import Badge from "@mui/material/Badge"
+import NavigateNextIcon from "@mui/icons-material/NavigateNext"
+import IconButton from "@mui/material/IconButton"
+import Toolbar from "@mui/material/Toolbar"
+import Avatar from "@mui/material/Avatar"
+import Chip from "@mui/material/Chip"
+import MenuIcon from "@mui/icons-material/Menu"
+import BlockIcon from "@mui/icons-material/Block"
+import WifiOffIcon from "@mui/icons-material/WifiOff"
 import {version} from "../../version";
+import useClasses from "../hooks/useClasses.jsx";
 
-const StyledBreadcrumb = withStyles(theme => ({
+const styles2 = theme => ({
 	root: {
-		backgroundColor: "inherit",
+		backgroundColor: 'inherit',
 		height: theme.spacing(3),
-		color: "inherit",
+		color: 'inherit',
 		fontWeight: theme.typography.fontWeightRegular,
-		fontSize: "inherit",
+		fontSize: 'inherit',
 		'&:hover, &:focus': {
-			backgroundColor: "rgba(255, 255, 255, 0.3)",
+			backgroundColor: 'rgba(255, 255, 255, 0.3)',
 		},
 		'&:active': {
 			boxShadow: theme.shadows[1],
-			backgroundColor: "inherit",
+			backgroundColor: 'inherit',
 		},
 	},
-}))(Chip); // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
+});
 
-const useStyles = makeStyles(theme => ({
+const StyledBreadcrumb = ({ ...props }) => {
+	const classes = useClasses(styles2);
+
+	return <Chip className={classes.root} {...props} />;
+};
+
+const styles = theme => ({
 	breadcrumbs: {
 		flexGrow: 1,
 	},
@@ -62,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 	root: {
 		flexGrow: 1,
 	},
-}))
+});
 
 function breadcrumbs() {
 	const loc = useLocation()
@@ -85,7 +85,7 @@ function breadcrumbs() {
 		{ path: "/api", text: "Api", to: "/api" },
 	]
 	for (var head of heads) {
-		var match = matchPath(loc.pathname, {path: head.path, exact: true})
+		var match = matchPath({path: head.path, end: true, caseSensitive: false},loc.pathname)
 		if (match) {
 			crumbs.push({
 				text: head.text,
@@ -95,7 +95,7 @@ function breadcrumbs() {
 		}
 	}
 
-	var match = matchPath(loc.pathname, {path: "/node", exact: true})
+	var match = matchPath({path: "/node", end: true, caseSensitive: false},loc.pathname)
 	if (match) {
 		crumbs.push({
 			text: "Nodes",
@@ -107,7 +107,7 @@ function breadcrumbs() {
 		return crumbs
 	}
 
-	var match = matchPath(loc.pathname, {path: "/network", exact: true})
+	var match = matchPath({path: "/network", end: true, caseSensitive: false},loc.pathname)
 	if (match) {
 		crumbs.push({
 			text: "Networks",
@@ -119,9 +119,9 @@ function breadcrumbs() {
 		return crumbs
 	}
 
-	var match = matchPath(loc.pathname, {path: "/object", exact: true})
+	var match = matchPath({path: "/object", end: true, caseSensitive: false}, loc.pathname)
 	if (match) {
-		var kind = (loc.state !== undefined) ? loc.state.kind : "Objects"
+		var kind = (loc.state !== null) ? loc.state.kind : "Objects"
 		crumbs.push({
 			text: kind,
 			to: "/" + kind.toLowerCase(),
@@ -132,9 +132,9 @@ function breadcrumbs() {
 		return crumbs
 	}
 
-	var match = matchPath(loc.pathname, {path: "/instance", exact: true})
+	var match = matchPath({path: "/instance", end: true, caseSensitive: false},loc.pathname)
 	if (match) {
-		var kind = (loc.state !== undefined) ? loc.state.kind : "Objects"
+		var kind = (loc.state !== null) ? loc.state.kind : "Objects"
 		crumbs.push({
 			text: kind,
 			to: "/" + kind.toLowerCase(),
@@ -149,7 +149,7 @@ function breadcrumbs() {
 }
 
 function Crumbs(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { cstat } = useClusterStatus()
 	const crumbs = breadcrumbs()
 	try {
@@ -174,7 +174,7 @@ function Crumbs(props) {
 }
 
 function NavBar(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	return (
 		<Toolbar className={classes.root}>
 			<NavBarMenu />
@@ -189,8 +189,8 @@ function NavBar(props) {
 function NavBarMenu(props) {
 	const [drawerOpen, setDrawerOpen] = React.useState(false)
 	const { cstat } = useClusterStatus()
-	const bgcolor = useBgColorStyles()
-	const classes = useStyles()
+	const bgcolor = useClasses(bgColorStyles)
+	const classes = useClasses(styles)
 	const toggleDrawer = (open) => event => {
 		if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
 			return
@@ -222,13 +222,13 @@ function NavBarMenu(props) {
 function NavLink(props) {
 	const {text, to} = props
 	const { t, i18n } = useTranslation()
-	const history = useHistory()
+	const navigate = useNavigate()
 	function handleClick(e) {
 		e.preventDefault()
 		if (!to) {
 			return
 		}
-		history.push(to)
+		navigate(to)
 	}
 	return (
 		<StyledBreadcrumb
@@ -243,13 +243,13 @@ function NavLink(props) {
 
 function UserLink(props) {
 	const { user } = useUser()
-	const history = useHistory()
+	const navigate = useNavigate()
 	const authInfo = useAuthInfo()
 	if (!authInfo || !user) {
 		return null
 	}
 	function handleClick(e) {
-		history.push("/user")
+		navigate("/user")
 	}
 	if (user.status == 401) {
 		localStorage.setItem("opensvc.authChoice", "")

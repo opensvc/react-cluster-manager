@@ -1,5 +1,4 @@
 import React, { useState, Fragment } from "react"
-
 import { useStateValue } from "../state.js"
 import { useObjConfig } from "../hooks/ObjConfig.jsx"
 import { useTranslation } from "react-i18next"
@@ -8,25 +7,24 @@ import { ResourceAddButton } from "./ResourceAddButton.jsx"
 import { parseIni, splitPath } from "../utils.js"
 import { SectionEdit } from "./SectionEdit.jsx"
 import { SectionDelete } from "./SectionDelete.jsx"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
+import ListItemText from "@mui/material/ListItemText"
+import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction"
+import Card from "@mui/material/Card"
+import CardHeader from "@mui/material/CardHeader"
+import CardContent from "@mui/material/CardContent"
+import CardActions from "@mui/material/CardActions"
+import IconButton from "@mui/material/IconButton"
+import Typography from "@mui/material/Typography"
+import CircularProgress from "@mui/material/CircularProgress"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import EditIcon from "@mui/icons-material/Edit"
+import Collapse from "@mui/material/Collapse"
+import Tooltip from "@mui/material/Tooltip"
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from "@material-ui/core/styles"
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
-import ListItemText from "@material-ui/core/ListItemText"
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction"
-import Card from "@material-ui/core/Card"
-import CardHeader from "@material-ui/core/CardHeader"
-import CardContent from "@material-ui/core/CardContent"
-import CardActions from "@material-ui/core/CardActions"
-import IconButton from "@material-ui/core/IconButton"
-import Typography from "@material-ui/core/Typography"
-import CircularProgress from "@material-ui/core/CircularProgress"
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
-import EditIcon from "@material-ui/icons/Edit"
-import Collapse from "@material-ui/core/Collapse"
-import Tooltip from "@material-ui/core/Tooltip"
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         card: {
                 height: "100%",
         },
@@ -40,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 	expandOpen: {
 		transform: 'rotate(180deg)',
 	},
-}))
+})
 
 function EditButton(props) {
 	const sp = splitPath(props.path)
@@ -69,7 +67,7 @@ function ExpandRawConfigButton(props) {
         const { path, expanded, setExpanded } = props
 	const [{ user }, dispatch] = useStateValue()
 	const { t } = useTranslation()
-        const classes = useStyles()
+        const classes = useClasses(styles)
 	const sp = splitPath(path)
         if (!user.grant) {
                 return null
@@ -176,7 +174,7 @@ function ObjConfigFile(props) {
 
 function ObjConfig(props) {
 	const { path } = props
-        const classes = useStyles()
+        const classes = useClasses(styles)
         const { t, i18n } = useTranslation()
 	const [expanded, setExpanded] = useState(false)
 	const [edit, setEdit] = useState(false)

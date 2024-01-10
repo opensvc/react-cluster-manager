@@ -5,25 +5,23 @@ import NodeSelector from "./NodeSelector.jsx"
 import SizeInput from "./SizeInput.jsx"
 import JsonInput from "./JsonInput.jsx"
 import clsx from "clsx"
-
-import { makeStyles } from "@material-ui/core/styles"
-import Typography from "@material-ui/core/Typography"
-import FormControl from "@material-ui/core/FormControl"
-import FormHelperText from "@material-ui/core/FormHelperText"
-import Select from "@material-ui/core/Select"
-import TextField from "@material-ui/core/TextField"
-import MenuItem from "@material-ui/core/MenuItem"
-import Switch from "@material-ui/core/Switch"
-import Slider from "@material-ui/core/Slider"
-import Chip from "@material-ui/core/Chip"
-import Grid from "@material-ui/core/Grid"
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Typography from "@mui/material/Typography"
+import FormControl from "@mui/material/FormControl"
+import FormHelperText from "@mui/material/FormHelperText"
+import Select from "@mui/material/Select"
+import TextField from "@mui/material/TextField"
+import MenuItem from "@mui/material/MenuItem"
+import Switch from "@mui/material/Switch"
+import Slider from "@mui/material/Slider"
+import Chip from "@mui/material/Chip"
+import Grid from "@mui/material/Grid"
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import useClasses from "../hooks/useClasses.jsx";
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
 	formcontrol: {
 		margin: theme.spacing(2, 0),
 	},
@@ -55,10 +53,10 @@ const useStyles = makeStyles(theme => ({
         expandOpen: {
                 transform: 'rotate(180deg)',
         },
-}))
+})
 
 function formatKeywordText(text) {
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
         const re = RegExp(":cmd:`(.*?)`|:kw:`(.*?)`|:opt:`(.*?)`|:c-.*:`(.*?)`|``(.*?)``")
 	if (text === undefined) {
 		return text
@@ -78,7 +76,7 @@ function formatKeywordText(text) {
 
 function SectionForm(props) {
 	const {kind, kws, data, setData, optionalTitle, requiredTitle, optionalExpanded} = props
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 	var typeKw
 	for (var kw of kws) {
 		if (kw.keyword == "type") {
@@ -146,7 +144,7 @@ function OptionalKeywords(props) {
 	const {title, kws, data, setData, typeKw, optionalExpanded} = props
 	const { t, i18n } = useTranslation()
 	const [expanded, setExpanded] = useState(optionalExpanded !== undefined ? optionalExpanded : false)
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 
         function handleExpandClick(e) {
                 setExpanded(!expanded)
@@ -190,7 +188,7 @@ function OptionalKeywords(props) {
 
 function Keyword(props) {
 	const {kwData, data, setData} = props
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 	if (kwData.keyword == "type") {
 		return null
 	}

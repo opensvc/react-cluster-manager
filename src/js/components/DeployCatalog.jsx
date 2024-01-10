@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import useUser from "../hooks/User.jsx"
-import { useStateValue } from '../state.js';
 import { useCatalogs } from '../hooks/Catalogs.jsx';
 import { useCatalogTemplates } from '../hooks/CatalogTemplates.jsx';
 import { apiGetAny } from "../api.js";
@@ -8,15 +7,14 @@ import { nameValid, namespaceValid, parseIni, createDataHasPathKey } from "../ut
 import { NamespaceSelector } from './NamespaceSelector.jsx';
 import { TemplateSelector } from './TemplateSelector.jsx';
 import { CatalogSelector } from './CatalogSelector.jsx';
+import Typography from '@mui/material/Typography';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import TextField from '@mui/material/TextField';
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import TextField from '@material-ui/core/TextField';
-
-const useStyles = makeStyles(theme => ({
+const styles =theme => ({
         desc: {
                 padding: theme.spacing(3, 0),
         },
@@ -27,12 +25,12 @@ const useStyles = makeStyles(theme => ({
         formcontrol: {
                 margin: theme.spacing(2, 0),
         },
-}))
+})
 
 function DeployCatalog(props) {
 	const {data, set} = props
 	const { auth } = useUser()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const catalogs = useCatalogs()
 	if ((catalogs.length > 0) && !data.catalog) {
 		set({...data, catalog: catalogs[0]})

@@ -8,36 +8,33 @@ import StatsDiskIops from "./StatsDiskIops.jsx"
 import StatsDiskBandwidth from "./StatsDiskBandwidth.jsx"
 import StatsNetIops from "./StatsNetIops.jsx"
 import StatsNetBandwidth from "./StatsNetBandwidth.jsx"
+import Card from "@mui/material/Card"
+import CardHeader from "@mui/material/CardHeader"
+import CardContent from "@mui/material/CardContent"
+import Tabs from "@mui/material/Tabs"
+import Tab from "@mui/material/Tab"
+import Typography from "@mui/material/Typography"
+import Box from "@mui/material/Box"
+import TextField from "@mui/material/TextField"
+import Tooltip from "@mui/material/Tooltip"
+import IconButton from "@mui/material/IconButton"
+import PauseIcon from "@mui/icons-material/Pause"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
+import SortIcon from "@mui/icons-material/Sort"
+import SortByAlphaIcon from "@mui/icons-material/SortByAlpha"
+import ViewStreamIcon from "@mui/icons-material/ViewStream"
+import ViewHeadlineIcon from "@mui/icons-material/ViewHeadline"
+import FilterListIcon from "@mui/icons-material/FilterList"
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles'
-import Card from "@material-ui/core/Card"
-import CardHeader from "@material-ui/core/CardHeader"
-import CardContent from "@material-ui/core/CardContent"
-import AppBar from "@material-ui/core/AppBar"
-import Tabs from "@material-ui/core/Tabs"
-import Tab from "@material-ui/core/Tab"
-import Typography from "@material-ui/core/Typography"
-import Box from "@material-ui/core/Box"
-import TextField from "@material-ui/core/TextField"
-import Tooltip from "@material-ui/core/Tooltip"
-
-import IconButton from "@material-ui/core/IconButton"
-import PauseIcon from "@material-ui/icons/Pause"
-import PlayArrowIcon from "@material-ui/icons/PlayArrow"
-import SortIcon from "@material-ui/icons/Sort"
-import SortByAlphaIcon from "@material-ui/icons/SortByAlpha"
-import ViewStreamIcon from "@material-ui/icons/ViewStream"
-import ViewHeadlineIcon from "@material-ui/icons/ViewHeadline"
-import FilterListIcon from "@material-ui/icons/FilterList"
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 marginTop: theme.spacing(3),
         },
 	tabs: {
 		marginBottom: theme.spacing(2),
 	},
-}))
+})
 
 function FilterButton(props) {
 	const { search, searchOpen, setSearchOpen } = props
@@ -158,7 +155,7 @@ function Stats(props) {
 	const [search, setSearch] = useState("")
 	const [searchOpen, setSearchOpen] = useState(false)
 	const { i18n, t } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 
 	const handleChange = (event, newValue) => {
 		setTab(newValue);

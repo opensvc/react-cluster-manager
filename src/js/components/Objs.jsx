@@ -3,7 +3,7 @@ import isEqual from "lodash.isequal"
 import ObjIcon from "./ObjIcon.jsx"
 import { useStateValue } from '../state.js'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { splitPath } from "../utils.js"
 import { ObjActions } from "./ObjActions.jsx"
 import { TableToolbar } from "./TableToolbar.jsx"
@@ -13,38 +13,29 @@ import { ObjOverall } from "./ObjOverall.jsx"
 import { ObjFrozen } from "./ObjFrozen.jsx"
 import { ObjPlacement } from "./ObjPlacement.jsx"
 import { ObjProvisioned } from "./ObjProvisioned.jsx"
-import { ObjInstanceCounts } from "./ObjInstanceCounts.jsx"
-
 import useDebouncedValue from "../hooks/DebouncedValue.jsx"
+import Grid from '@mui/material/Grid'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
+//import Table from '@mui/material/Table'
+//import Container from '@mui/material/Container'
+import Checkbox from '@mui/material/Checkbox'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import TextField from '@mui/material/TextField'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
 
-import { makeStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableHead from '@material-ui/core/TableHead'
-import TablePagination from '@material-ui/core/TablePagination'
-import TableRow from '@material-ui/core/TableRow'
-import Container from '@material-ui/core/Container'
-import Checkbox from '@material-ui/core/Checkbox'
-import IconButton from '@material-ui/core/IconButton'
-import Tooltip from '@material-ui/core/Tooltip'
-import TextField from '@material-ui/core/TextField'
-import Hidden from '@material-ui/core/Hidden'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-
-import FilterListIcon from '@material-ui/icons/FilterList'
+import FilterListIcon from '@mui/icons-material/FilterList'
+import useClasses from "../hooks/useClasses.jsx";
 
 
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		marginTop: theme.spacing(3),
 	},
@@ -67,7 +58,7 @@ const useStyles = makeStyles(theme => ({
 		paddingLeft: 0,
 		paddingRight: 0,
 	},
-}))
+})
 
 function ObjsFilter(props) {
 	const {search, setSearch} = props
@@ -142,14 +133,14 @@ function getTitle(kind) {
 }
 
 function Objs(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [{ cstat }, dispatch] = useStateValue()
 	const [search, setSearch] = useState("")
 	const debouncedSearch = useDebouncedValue(search, 400)
 	const [searchOpen, setSearchOpen] = useState(false)
 	const { kind, withScalerSlaves } = props
 	const { t, i18n } = useTranslation()
-	const history = useHistory()
+	const navigate = useNavigate()
 	const title = getTitle(props.kind)
 	const [selected, setSelected] = useReducer((state, path) => {
 		try {
@@ -181,7 +172,7 @@ function Objs(props) {
 		}
 	}
 	function handleLineClick(path) {
-		history.push({
+		navigate({
 			pathname: "/object",
 			search: "?path="+path,
 			state: {kind: title},
@@ -227,7 +218,7 @@ function Objs(props) {
 }
 
 function ObjLines(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const {lines, setSelected, handleLineClick} = props
 	return (
 		<List className={classes.list}>

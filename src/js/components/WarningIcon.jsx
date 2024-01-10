@@ -1,17 +1,16 @@
 import React from "react"
 import clsx from "clsx"
+import MuiWarningIcon from '@mui/icons-material/Warning'
+import useClasses from "../hooks/useClasses.jsx";
 
-import MuiWarningIcon from '@material-ui/icons/Warning'
-import { makeStyles } from '@material-ui/core/styles'
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		color: theme.status.warning,
 	},
-}))
+});
 
 const WarningIcon = React.forwardRef(function WarningIcon(props, ref) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	return <MuiWarningIcon {...props} ref={ref} className={clsx(classes.root, props.className)} />
 })
 

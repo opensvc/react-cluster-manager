@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from "react"
 import { apiPostAny } from "../api.js"
-
 import useApiResponse from "../hooks/ApiResponse.jsx"
 import useUser from "../hooks/User.jsx"
 import {useKey} from "../hooks/KeyGet.jsx"
+import Button from "@mui/material/Button"
+import Dialog from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogTitle from "@mui/material/DialogTitle"
+import FormControl from '@mui/material/FormControl'
+import TextField from '@mui/material/TextField'
+import TextareaAutosize from "@mui/material/TextareaAutosize"
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from "@material-ui/core/styles"
-import Button from "@material-ui/core/Button"
-import Dialog from "@material-ui/core/Dialog"
-import DialogActions from "@material-ui/core/DialogActions"
-import DialogContent from "@material-ui/core/DialogContent"
-import DialogContentText from "@material-ui/core/DialogContentText"
-import DialogTitle from "@material-ui/core/DialogTitle"
-import FormControl from '@material-ui/core/FormControl'
-import TextField from '@material-ui/core/TextField'
-import Typography from "@material-ui/core/Typography"
-import TextareaAutosize from "@material-ui/core/TextareaAutosize"
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	formcontrol: {
 		margin: theme.spacing(2, 0),
 	},
@@ -27,11 +23,11 @@ const useStyles = makeStyles(theme => ({
 		whiteSpace: "nowrap",
 		overflow: "auto !important",
 	},
-}))
+})
 
 function KeyData(props) {
 	const {value, setValue} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 
 	function handleTextChange(e) {
 		setValue(e.target.value)
@@ -83,7 +79,7 @@ function KeyEditDialog(props) {
 	const [urlValue, setUrlValue] = useState("")
 	const [fileValue, setFileValue] = useState("")
 	const { dispatchAlerts } = useApiResponse()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const source = {
 		"INPUT": "User Input",
 		"LOCAL": "Local File",

@@ -1,26 +1,25 @@
-import React, { useState } from "react";
+import React from "react";
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Box from '@mui/material/Box';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Collapse from '@mui/material/Collapse';
+import Skeleton from '@mui/material/Skeleton';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Box from '@material-ui/core/Box';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Collapse from '@material-ui/core/Collapse';
-import Skeleton from '@material-ui/lab/Skeleton';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	tableWrapper: {
                 overflowX: 'auto',
 		marginLeft: -theme.spacing(2),
@@ -39,7 +38,7 @@ const useStyles = makeStyles(theme => ({
         expandOpen: {
                 transform: 'rotate(180deg)',
         },
-}))
+})
 
 function NetworkInterface(props) {
 	return props.data.map((e, i) => (
@@ -60,7 +59,7 @@ function NetworkLine(props) {
 
 function NodeNetwork(props) {
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [expanded, setExpanded] = React.useState(false);
 
 	if (expanded) {
@@ -134,7 +133,7 @@ function NetworkDigest(props) {
 }
 
 function NetworkTable(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	if (props.nodeData === undefined) {
 		return null
 	}

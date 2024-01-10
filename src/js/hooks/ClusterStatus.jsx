@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import EventSource from "eventsource"
 import JSON_delta from "../json_delta.js"
 import { useStateValue } from '../state.js'
@@ -45,7 +45,7 @@ function useClusterStatus(props) {
 		console.log("initEventSource", context)
 		var eventSourceInitDict = {headers: {}}
 		eventSourceInitDict.headers = addAuthorizationHeader(eventSourceInitDict.headers, auth)
-		var es = new EventSource("/events", eventSourceInitDict)
+		var es = new EventSource(window.location.protocol + "//" + window.location.host+"/events", eventSourceInitDict)
 		if (es.readyState == 2) {
 			return
 		}
@@ -56,6 +56,7 @@ function useClusterStatus(props) {
 			handleEvent(e)
 		}
 		context.eventSource.onerror = (e) => {
+			console.log(e)
 			setEventSourceAlive(false)
 		}
 		context.eventSource.addEventListener("closedConnection", (e) => {

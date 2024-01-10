@@ -1,26 +1,25 @@
 import React, { Fragment, useState } from "react"
 import useApiInfo from "../hooks/ApiInfo.jsx"
 import { useTranslation } from 'react-i18next'
-import { useHistory, useLocation } from "react-router"
+import { useNavigate, useLocation } from "react-router-dom"
 import { SectionForm } from "./SectionForm.jsx"
 import { addQueryData, apiReq } from "../api.js"
 import useUser from "../hooks/User.jsx"
+import Card from "@mui/material/Card"
+import CardHeader from "@mui/material/CardHeader"
+import CardContent from "@mui/material/CardContent"
+import CardActions from "@mui/material/CardActions"
+import Typography from "@mui/material/Typography"
+import Chip from "@mui/material/Chip"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
+import ListItemText from "@mui/material/ListItemText"
+import Button from "@mui/material/Button"
+import Box from "@mui/material/Box"
+import Skeleton from "@mui/material/Skeleton"
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from "@material-ui/core/styles"
-import Card from "@material-ui/core/Card"
-import CardHeader from "@material-ui/core/CardHeader"
-import CardContent from "@material-ui/core/CardContent"
-import CardActions from "@material-ui/core/CardActions"
-import Typography from "@material-ui/core/Typography"
-import Chip from "@material-ui/core/Chip"
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
-import ListItemText from "@material-ui/core/ListItemText"
-import Button from "@material-ui/core/Button"
-import Box from "@material-ui/core/Box"
-import Skeleton from "@material-ui/lab/Skeleton"
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
         root: {
                 marginTop: theme.spacing(3),
         },
@@ -51,11 +50,11 @@ const useStyles = makeStyles(theme => ({
                 whiteSpace: "pre",
 		fontFamily: "monospace",
         },
-}))
+})
 
 function Api(props) {
 	const data = useApiInfo()
-	const classes = useStyles()
+	const classes = useClasses(styles)
         const loc = useLocation()
 	const { t, i18n } = useTranslation()
 	let params = new URLSearchParams(loc.search)
@@ -85,7 +84,7 @@ function Api(props) {
 function ApiHandler(props) {
 	const {data, index} = props
 	const { auth } = useUser()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const [node, setNode] = useState({"node": ""})
 	const [formData, setFormData] = useState({})
 	const [formResult, setFormResult] = useState("")
@@ -147,7 +146,7 @@ function ApiHandler(props) {
 function ApiHandlerExample(props) {
 	const { t, i18n } = useTranslation()
 	const { auth } = useUser()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { data, formData, node } = props
 	var buff = "curl -s --http2 -X " + data.routes[0].method
 	if (node && node.node) {
@@ -188,7 +187,7 @@ function ApiHandlerExample(props) {
 
 function ApiHandlerAccess(props) {
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { data } = props
 	var buff = ""
 	if (data == "custom") {
@@ -226,7 +225,7 @@ function ApiHandlerAccess(props) {
 
 function FormResult(props) {
 	const { t, i18n } = useTranslation()
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { data } = props
 	if (!data) {
 		return null
@@ -251,7 +250,7 @@ function ApiHandlerRouting(props) {
 		formData,
 		setFormData
 	} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t, i18n } = useTranslation()
 	if (!data.multiplex == "never") {
 		return null
@@ -286,7 +285,7 @@ function ApiHandlerParameters(props) {
 		formData,
 		setFormData,
 	} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { t, i18n } = useTranslation()
 	if (!data.length) {
 		return null
@@ -339,7 +338,7 @@ function ApiHandlers(props) {
 
 function Method(props) {
 	const { method } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	return (
 		<Chip
 			color={method == "GET" ? "primary" : "secondary"}
@@ -364,10 +363,10 @@ function HandlerTitle(props) {
 
 function ApiHandlerItem(props) {
 	const {data, index} = props
-	const history = useHistory()
+	const navigate = useNavigate()
 
 	function handleClick(e) {
-		history.push("/api?index="+index)
+		navigate("/api?index="+index)
 	}
 
 	return (

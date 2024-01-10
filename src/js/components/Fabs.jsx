@@ -1,7 +1,7 @@
 import React from "react";
-import { makeStyles } from '@material-ui/core/styles';
+import useClasses from "../hooks/useClasses";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
         root: {
 		display: "flex",
 		flexDirection: "column",
@@ -9,10 +9,10 @@ const useStyles = makeStyles(theme => ({
                 bottom: theme.spacing(2),
                 right: theme.spacing(2),
         },
-}))
+});
 
 function Fabs(props) {
-	const classes = useStyles()
+	const classes = useClasses(useStyles)
 	return (
 		<div className={classes.root}>
 			{props.children}

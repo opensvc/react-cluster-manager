@@ -1,14 +1,13 @@
-import React, { useState, Fragment } from "react"
+import React from "react"
 import { splitPath, fancySizeMB } from "../utils.js"
 import HorizontalBars from "./HorizontalBars.jsx"
+import Typography from "@mui/material/Typography"
+import Grid from "@mui/material/Grid"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
+import useClasses from "../hooks/useClasses.jsx";
 
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from "@material-ui/core/Typography"
-import Grid from "@material-ui/core/Grid"
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	itemGrid: {
 		flexWrap: "wrap",
 	},
@@ -31,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 		borderBottomColor: theme.palette.primary.main,
 		transition: "height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
 	},
-}))
+})
 
 
 function parseNetIops(last, prev, search) {
@@ -103,7 +102,7 @@ function parseNetIops(last, prev, search) {
 
 function NetIopsNodeMapItem(props) {
 	const { data, node, name, agg } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	try {
 		if (agg == "ns") {
 			var value = data.nodes[node].namespaces[name].rw
@@ -133,7 +132,7 @@ function NetIopsNodeMapItem(props) {
 }
 
 function NetIopsNodeMap(props) {
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	const { data, name, agg } = props
 	var nodes = Object.keys(data.nodes).sort()
 	return (
@@ -164,7 +163,7 @@ function NetIopsBias(props) {
 
 function NetIops(props) {
 	const { value } = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	return (
 		<Typography component="div" className={classes.value}>
 			{fancySizeMB(value.rw/1048576)}rw/s
@@ -174,7 +173,7 @@ function NetIops(props) {
 
 function StatsNetIops(props) {
 	const {last, prev, sortKey, agg, setAgg, search, setSearch} = props
-	const classes = useStyles()
+	const classes = useClasses(styles)
 	var iops = parseNetIops(last, prev, search)
 	if (agg == "ns") {
 		var data = iops.sum.namespaces

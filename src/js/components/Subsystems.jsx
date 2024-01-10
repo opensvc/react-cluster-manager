@@ -1,38 +1,35 @@
 import React from "react";
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { useStateValue } from '../state.js';
 import { useTranslation } from 'react-i18next';
 import { clusterIssue, threadsIssue, arbitratorsIssue, heartbeatsIssue, nodesIssue, objectsIssue } from "../issues.js";
-import { makeStyles } from '@material-ui/core/styles';
 import { state } from "../utils.js"
-import { useColorStyles } from "../styles.js"
+import { ColorStyles } from "../styles.js"
 import ObjIcon from "./ObjIcon.jsx"
-import Badge from '@material-ui/core/Badge';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+//import Link from '@mui/material/Link';
+import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import HowToVoteIcon from '@mui/icons-material/HowToVote';
+import StorageIcon from '@mui/icons-material/Storage';
+import WidgetsIcon from '@mui/icons-material/Widgets';
+import GroupWorkIcon from '@mui/icons-material/GroupWork';
+import LinkIcon from '@mui/icons-material/Link';
+import CodeIcon from '@mui/icons-material/Code';
+import SaveIcon from '@mui/icons-material/Save'
+import useClasses from "../hooks/useClasses.jsx";
 
-import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
-import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
-import HowToVoteIcon from '@material-ui/icons/HowToVote';
-import StorageIcon from '@material-ui/icons/Storage';
-import WidgetsIcon from '@material-ui/icons/Widgets';
-import GroupWorkIcon from '@material-ui/icons/GroupWork';
-import LinkIcon from '@material-ui/icons/Link';
-import CodeIcon from '@material-ui/icons/Code';
-import SaveIcon from '@material-ui/icons/Save'
-
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	nested: {
 		paddingLeft: theme.spacing(4),
 	},
-}))
+})
 
 function SubsystemsLink(props) {
-	const classes = useColorStyles()
+	const classes = useClasses(ColorStyles)
 	const { t, i18n } = useTranslation()
 	function handleClick(e) {
 		props.onClick()
@@ -48,8 +45,8 @@ function SubsystemsLink(props) {
 
 function Subsystems(props) {
 	const [{ cstat }, dispatch] = useStateValue()
-	const history = useHistory()
-	const classes = useStyles()
+	const navigate = useNavigate()
+	const classes = useClasses(styles)
 	return (
 		<List>
 			<SubsystemsLink
@@ -57,7 +54,7 @@ function Subsystems(props) {
 				href="#cluster"
 				title="Cluster"
 				icon={ <GroupWorkIcon /> }
-				onClick={() => history.push("/")}
+				onClick={() => navigate("/")}
 				closeDrawer={props.closeDrawer}
 			/>
 			<SubsystemsLink
@@ -65,7 +62,7 @@ function Subsystems(props) {
 				href="#threads"
 				title="Threads"
 				icon={ <SubscriptionsIcon /> }
-				onClick={() => history.push("/threads")}
+				onClick={() => navigate("/threads")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -74,7 +71,7 @@ function Subsystems(props) {
 				href="#heartbeats"
 				title="Heartbeats"
 				icon={ <SwapHorizIcon /> }
-				onClick={() => history.push("/heartbeats")}
+				onClick={() => navigate("/heartbeats")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -83,7 +80,7 @@ function Subsystems(props) {
 				href="#arbitrators"
 				title="Arbitrators"
 				icon={ <HowToVoteIcon /> }
-				onClick={() => history.push("/arbitrators")}
+				onClick={() => navigate("/arbitrators")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -92,7 +89,7 @@ function Subsystems(props) {
 				href="#nodes"
 				title="Nodes"
 				icon={ <StorageIcon /> }
-				onClick={() => history.push("/nodes")}
+				onClick={() => navigate("/nodes")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -101,7 +98,7 @@ function Subsystems(props) {
 				href="#pools"
 				title="Pools"
 				icon={ <SaveIcon /> }
-				onClick={() => history.push("/pools")}
+				onClick={() => navigate("/pools")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -110,7 +107,7 @@ function Subsystems(props) {
 				href="#networks"
 				title="Networks"
 				icon={ <LinkIcon /> }
-				onClick={() => history.push("/networks")}
+				onClick={() => navigate("/networks")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -120,7 +117,7 @@ function Subsystems(props) {
 				href="#objects"
 				title="Objects"
 				icon={ <WidgetsIcon /> }
-				onClick={() => history.push("/objects")}
+				onClick={() => navigate("/objects")}
 				closeDrawer={props.closeDrawer}
 			/>
 			<SubsystemsLink
@@ -128,7 +125,7 @@ function Subsystems(props) {
 				href="#svc"
 				title="Services"
 				icon={ <ObjIcon kind="svc" /> }
-				onClick={() => history.push("/services")}
+				onClick={() => navigate("/services")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -137,7 +134,7 @@ function Subsystems(props) {
 				href="#vol"
 				title="Volumes"
 				icon={ <ObjIcon kind="vol" /> }
-				onClick={() => history.push("/volumes")}
+				onClick={() => navigate("/volumes")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -146,7 +143,7 @@ function Subsystems(props) {
 				href="#cfg"
 				title="Configs"
 				icon={ <ObjIcon kind="cfg" /> }
-				onClick={() => history.push("/configs")}
+				onClick={() => navigate("/configs")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -155,7 +152,7 @@ function Subsystems(props) {
 				href="#sec"
 				title="Secrets"
 				icon={ <ObjIcon kind="sec" /> }
-				onClick={() => history.push("/secrets")}
+				onClick={() => navigate("/secrets")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -164,7 +161,7 @@ function Subsystems(props) {
 				href="#usr"
 				title="Users"
 				icon={ <ObjIcon kind="usr" /> }
-				onClick={() => history.push("/users")}
+				onClick={() => navigate("/users")}
 				closeDrawer={props.closeDrawer}
 				className={classes.nested}
 			/>
@@ -174,7 +171,7 @@ function Subsystems(props) {
 				href="#api"
 				title="Api"
 				icon={ <CodeIcon /> }
-				onClick={() => history.push("/api")}
+				onClick={() =>navigate("/api")}
 				closeDrawer={props.closeDrawer}
 			/>
 		</List>
