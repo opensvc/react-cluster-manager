@@ -10,7 +10,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import useClasses from "../hooks/useClasses.jsx";
 
-const useStyles = theme => ({
+const styles = theme => ({
 	selected: {
 		cursor: "pointer",
 	},
@@ -26,7 +26,7 @@ const useStyles = theme => ({
 });
 
 function CatalogSelectorDialog(props) {
-	const classes = useStyles(useStyles)
+	const classes = useClasses(styles)
 	if (!props.options) {
 		return null
 	}
@@ -76,7 +76,7 @@ function CatalogSelector(props) {
 	if (props.options === undefined) {
 		return null
 	}
-	const classes = useClasses(useStyles)
+	const classes = useClasses(styles)
 	const [open, setOpen] = React.useState(false)
 
 	function handleClickOpen(e) {

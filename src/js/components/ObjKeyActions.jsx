@@ -48,7 +48,7 @@ function ObjKeyActions(props) {
 		<Actions path={path} title={title} submit={submit} fab={fab}>
 			<ActionsSection name="dangerous" color="danger" confirms={6}>
 				<ActionsItem value="delete" text="Delete" requires={{role: "admin", namespace: sp.namespace}}
-					icon=<DeleteIcon />
+							 icon=<DeleteIcon />
 				/>
 			</ActionsSection>
 		</Actions>
