@@ -15,7 +15,7 @@ when installed in:
 
 # How to release new patch on minor version ?
 
-  * checkout v7 branch HEAD commit
+  * checkout v7 branch HEAD commit, or `git pull --ff-only upstream v7`
     * Execute `npm version minor|patch`
       - The version in `packages*.json` is bumped and the change is committed
       - The new version is git tagged
