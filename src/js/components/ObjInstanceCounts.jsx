@@ -77,6 +77,6 @@ function ObjInstanceCounts(props) {
 	)
 }
 
-export {
+export default {
 	ObjInstanceCounts
 }

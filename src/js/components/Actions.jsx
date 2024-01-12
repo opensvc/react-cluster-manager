@@ -87,14 +87,11 @@ function ConfirmationDialog(props) {
 		props.handleClose()
 		setData({...data, acks: [], confirmations: [], action: null})
 	}
-	function handleEntering(e) {
-	}
 
 	return (
 		<Dialog
 			disableBackdropClick
 			maxWidth="xs"
-			onEntering={handleEntering}
 			onClose={handleCancel}
 			aria-labelledby="confirmation-dialog-title"
 			open={props.open}

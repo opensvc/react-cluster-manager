@@ -17,6 +17,7 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import Checkbox from '@mui/material/Checkbox';
 import useClasses from "../hooks/useClasses.jsx";
+import ObjInstanceCounts from "./ObjInstanceCounts.jsx"
 
 const styles = theme => ({
 	tableWrapper: {
@@ -114,12 +115,12 @@ function ObjInstances(props) {
 		<Card className={classes.card}>
 			<CardHeader
 				title={t("Instances")}
-				subheader=<ObjInstanceCounts path={props.path} />
-				action={
-					<TableToolbar selected={selected}>
-						{(selected.length > 0) && <ObjInstanceActions selected={selected} title="" />}
-					</TableToolbar>
-				}
+				subheaderTypographyProps=<ObjInstanceCounts path={props.path} />
+			action={
+			<TableToolbar selected={selected}>
+				{(selected.length > 0) && <ObjInstanceActions selected={selected} title="" />}
+			</TableToolbar>
+		}
 			/>
 			<CardContent className={classes.content}>
 				<div className={classes.tableWrapper}>

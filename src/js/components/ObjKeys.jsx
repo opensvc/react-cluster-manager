@@ -53,15 +53,15 @@ function ObjKeys(props) {
                 setSelected([]);
         }
 	return (
-                <Card>
-                        <CardHeader
-                                title={t("Keys")}
-                                subheader={props.path}
+		<Card>
+			<CardHeader
+				title={t("Keys")}
+				subheader={props.path}
 				action={
 					<ObjKeyAdd path={props.path} />
 				}
-                        />
-                        <CardContent>
+			/>
+			<CardContent>
 				<div className={classes.wrapper}>
 					<TableToolbar selected={selected}>
 						{selected.length > 0 ? (
