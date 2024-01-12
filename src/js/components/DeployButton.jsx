@@ -12,6 +12,7 @@ import DialogTitle from "@mui/material/DialogTitle"
 import Button from "@mui/material/Button"
 import IconButton from "@mui/material/IconButton"
 import Tooltip from "@mui/material/Tooltip"
+import {useCatalogs} from "../hooks/Catalogs.jsx";
 
 function DeployButton(props) {
 	const { auth } = useUser()
