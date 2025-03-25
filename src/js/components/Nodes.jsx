@@ -126,7 +126,7 @@ function NodeSwap(props) {
 	return (
 		<NodeMetric
 			label="Avail Swap"
-			value={getNodeStat(cstat, props.node, "mem_avail")}
+			value={getNodeStat(cstat, props.node, "swap_avail")}
 			unit="%"
 			issue={swapIssue}
 			refer={fancySizeMB(getNodeStat(cstat, props.node, "swap_total"))}
