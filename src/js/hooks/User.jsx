@@ -19,11 +19,11 @@ function useUser(props) {
 		context.isLoading = false
 		context.auth = null
 		context.error = null
-		dispatch({
-			type: "loadUser",
-			data: {},
-		})
-	}
+		dispatch({type: "loadUser", data: {}})
+        dispatch({type: "setAuthChoice", data: ""})
+        dispatch({type: "setBasicLogin", data: {}})
+        dispatch({type: "setAuthenticated", data: false})
+    }
 
 	useEffect(() => {
 		async function fetchData() {
@@ -48,22 +48,19 @@ function useUser(props) {
 				const data = await fetcher.json()
 				console.log("I am", data)
 				if ((data.name == "nobody") && (authChoice != "x509")) {
-					// return to the auth form except for x509
-					// to avoid looping on GET /whoami
-					dispatch({
-						type: "setBasicLogin",
-						data: {},
-					})
+					// return to the auth form to avoid looping on GET /whoami
 					unloadUser()
 				} else {
 					dispatch({
 						type: "loadUser",
 						data: data,
 					})
+                    dispatch({type: "setAuthenticated", data: true})
 				}
 			} catch (error) {
 				context.auth = null
 				context.error = error
+                unloadUser()
 			} finally {
 				context.isLoading = false
 			}

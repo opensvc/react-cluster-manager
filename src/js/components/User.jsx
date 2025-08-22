@@ -55,8 +55,6 @@ function UserDigest(props) {
 
 	function handleLogout(e) {
 		logout()
-		dispatch({type: "setAuthChoice", data: ""})
-		dispatch({type: "setBasicLogin", data: {}})
 		unloadUser()
 		close()
 	}
