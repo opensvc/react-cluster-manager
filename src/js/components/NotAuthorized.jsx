@@ -33,9 +33,6 @@ function NotAuthorized(props) {
                                         OpenId
                                 </Button>
                                 }
-                                <Button onClick={() => dispatch({type: "setAuthChoice", data: "x509"})}>
-                                        x509
-                                </Button>
                         </DialogActions>
 		</Dialog>
 	)

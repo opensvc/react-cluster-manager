@@ -32,9 +32,6 @@ function AuthChoice(props) {
                                         OpenId
                                 </Button>
 				}
-                                <Button onClick={() => dispatch({type: "setAuthChoice", data: "x509"})}>
-                                        x509
-                                </Button>
 				{authInfo && authInfo.methods && authInfo.methods.indexOf("basic") >= 0 &&
                                 <Button onClick={() => dispatch({type: "setAuthChoice", data: "basic"})}>
                                         Basic

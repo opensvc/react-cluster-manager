@@ -92,8 +92,6 @@ function hasAuthorizationHeader(auth) {
 		return (auth.username && auth.password) ? true : false
 	} else if (auth.authChoice == "openid") {
 		return auth.access_token ? true : false
-	} else if (auth.authChoice == "x509") {
-		return true
 	}
 	return false
 }
