@@ -3,7 +3,7 @@ const initData = {
 	client_id: "ringfs",
 	redirect_uri: baseUrl + "/authentication/callback",
 	response_type: "id_token token",
-	scope: "openid profile email",
+	scope: "openid profile email offline_access opensvc:om2 opensvc:om2:root opensvc:om2:guest grant",
 	silent_redirect_uri: baseUrl + "/authentication/silent_callback",
 	automaticSilentRenew: true,
 	loadUserInfo: false,
