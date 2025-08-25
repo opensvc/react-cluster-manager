@@ -16,8 +16,16 @@ function ObjInstanceStateList(props) {
 	if (cstat.monitor === undefined) {
 		return null
 	}
-	var data = cstat.monitor.nodes[node].services.status[path]
-	return (
+    let nodeData = cstat.monitor.nodes[node]
+    if (nodeData === undefined) {
+        return null
+    }
+    let data = nodeData.services.status[path]
+    if (data === undefined) {
+        return null
+    }
+
+    return (
 		<List dense={true}>
 			<ObjAvailItem avail={data.avail} />
 			<MonitorStatusBadgeItem state={data.monitor.status} />

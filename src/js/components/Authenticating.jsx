@@ -9,6 +9,11 @@ import Button from '@mui/material/Button'
 
 function Authenticating(props) {
 	const {i18n, t} = useTranslation()
+    const resetDefaultAuthChoice = () => {
+        localStorage.setItem("opensvc.authChoice", "")
+        window.location.reload()
+    }
+
 	return (
 		<Dialog
 			open={true}
@@ -26,6 +31,9 @@ function Authenticating(props) {
 				<Button onClick={() => location.reload()}>
 					{t("Reload")}
 				</Button>
+                <Button onClick={resetDefaultAuthChoice}>
+                    {t("Reset authentication method")}
+                </Button>
 			</DialogActions>
 		</Dialog>
 	)
