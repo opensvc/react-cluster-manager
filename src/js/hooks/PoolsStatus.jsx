@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import useUser from "./User.jsx"
 import { apiGetAny } from "../api.js";
+import {useStateValue} from "../state";
 
 function usePoolsStatus() {
-	const [data, setData] = useState(null)
+    const [{authenticated}] = useStateValue()
+    const [data, setData] = useState(null)
 	const { auth } = useUser()
 
 	function getData() {
@@ -16,8 +18,8 @@ function usePoolsStatus() {
 	}
 
 	useEffect(() => {
-		getData()
-	}, [])
+        if (authenticated) {getData()}
+    }, [authenticated])
 
 	return data
 }

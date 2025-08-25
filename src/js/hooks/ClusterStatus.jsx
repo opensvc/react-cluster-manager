@@ -16,7 +16,7 @@ const context = {
 }
 
 function useClusterStatus(props) {
-	const [{cstat, user, eventSourceAlive}, dispatch] = useStateValue()
+	const [{cstat, user, eventSourceAlive, authenticated}, dispatch] = useStateValue()
 	const { auth } = useUser()
 	const lastDispatch = useRef(Date.now())
 	const limit = 1000
@@ -36,6 +36,7 @@ function useClusterStatus(props) {
 	}
 
 	function initEventSource() {
+        if (!authenticated) {return;}
 		if (context.eventSource !== null && context.eventSource.readyState != 2) {
 			return
 		}
@@ -98,6 +99,7 @@ function useClusterStatus(props) {
 	}
 
 	async function loadCstat() {
+        if (!authenticated) {return;}
 		if (!hasAuthorizationHeader(auth)) {
 			console.log("loadCstat", false, auth)
 			return
@@ -151,20 +153,22 @@ function useClusterStatus(props) {
 	}
 
 	function init() {
-		if (!context.cstat) {
+        if (!authenticated) {return}
+        if (!context.cstat) {
 			loadCstat()
 		}
 		initEventSource()
 	}
 
 	useEffect(() => {
-		if (!context.auth || (context.auth.access_token == auth.access_token) && (context.auth.username == auth.username)) {
+        if (!authenticated) {return}
+        if (!context.auth || (context.auth.access_token == auth.access_token) && (context.auth.username == auth.username)) {
 			init()
 		} else {
 			reset()
 		}
 		context.auth = auth
-	}, [])
+	}, [authenticated])
 
 	return {
 		cstat: cstat,
