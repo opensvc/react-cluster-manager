@@ -42,7 +42,7 @@
     "html-webpack-plugin": "^5.0.0",
     "https-browserify": "^1.0.0",
     "i18next": "^23.2.3",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "lodash.isequal": "^4.5.0",
     "notistack": "^3.0.1",
     "oidc-client": "^1.10.1",
